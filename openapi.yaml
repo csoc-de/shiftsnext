@@ -1,0 +1,1320 @@
+openapi: 3.0.3
+info:
+  title: Shifts
+  description: TBD
+  termsOfService: TBD
+  contact:
+    email: dev@csoc.de
+  license:
+    name: AGPL
+    url: https://www.gnu.org/licenses/agpl-3.0.en.html
+  version: 2.0.0
+servers:
+  - url: https://nextcloud.local/index.php/apps/shifts/api
+tags:
+  - name: shift
+  - name: shift type
+  - name: shift exchange
+  - name: group shift admin relation
+  - name: group
+  - name: user
+  - name: calendar
+  - name: config
+paths:
+  /shifts:
+    post:
+      tags:
+        - shift
+      summary: Create shift
+      requestBody:
+        $ref: '#/components/requestBodies/Shift'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shift'
+        '400':
+          description: Body parsing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Input validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - shift
+      summary: Get shifts
+      parameters:
+        - in: query
+          name: group_ids[]
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/GroupId'
+          description: Filters shifts by groups
+        - in: query
+          name: user_id
+          schema:
+            $ref: '#/components/schemas/UserId'
+          description: Filters shifts by user
+        - in: query
+          name: calendar_date
+          schema:
+            type: string
+            format: date
+          example: 2024-01-01
+          description: Filters shifts by ISO 8601 calendar date.
+            Mutually exclusive to `week_date`.
+        - in: query
+          name: week_date
+          schema:
+            type: string
+          example: 2024-W01
+          description: Filters shifts by ISO 8601 week date (without day).
+            Mutually exclusive to `calendar_date`.
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Shift'
+        '422':
+          description: Input validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /shifts/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags:
+        - shift
+      summary: Get shift
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shift'
+        '404':
+          description: Shift not found
+    patch:
+      tags:
+        - shift
+      summary: Update user_id of shift
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftPatch'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shift'
+        '400':
+          description: Body parsing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Shift not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Input validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - shift
+      summary: Delete shift
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shift'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Shift not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /shift-types:
+    post:
+      tags:
+        - shift type
+      summary: Create shift type
+      requestBody:
+        $ref: '#/components/requestBodies/ShiftType'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShiftType'
+        '400':
+          description: Body parsing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Input validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - shift type
+      summary: Get shift types
+      parameters:
+        - in: query
+          name: group_ids[]
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/GroupId'
+          description: Filters shift types by groups
+        - in: query
+          name: restricted
+          schema:
+            type: boolean
+            default: false
+          description: If `true`, filters shift types by those groups for which
+            the caller has shift admin privileges
+        - in: query
+          name: sort_by
+          schema:
+            type: string
+            enum:
+                - id
+                - start
+            default: id
+          description: When set to `"start"`, the time part of the
+            `repetition.start` property is used.
+        - in: query
+          name: sort_direction
+          schema:
+            type: string
+            enum:
+                - ASC
+                - DESC
+            default: DESC
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShiftType'
+  /shift-types/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags:
+        - shift type
+      summary: Get shift type
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShiftType'
+        '404':
+          description: Shift type not found
+    put:
+      tags:
+        - shift type
+      summary: Update shift type
+      requestBody:
+        $ref: '#/components/requestBodies/ShiftType'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShiftType'
+        '400':
+          description: Body parsing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Shift type not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Input validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - shift type
+      summary: Delete shift type
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShiftType'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Shift type not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /shift-exchanges:
+    post:
+      tags:
+        - shift exchange
+      summary: Create shift exchange
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftExchangePost'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShiftExchangeGet'
+        '400':
+          description: Body parsing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Input validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - shift exchange
+      summary: Get shift exchanges
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShiftExchangeGet'
+  /shift-exchanges/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags:
+        - shift exchange
+      summary: Get shift exchange
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShiftExchangeGet'
+        '404':
+          description: Shift exchange not found
+    put:
+      tags:
+        - shift exchange
+      summary: Update shift exchange
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftExchangePut'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShiftExchangeGet'
+        '400':
+          description: Body parsing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Shift exchange not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Input validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - shift exchange
+      summary: Delete shift exchange
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShiftExchangeGet'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Shift exchange not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /group-shift-admin-relations:
+    post:
+      tags:
+        - group shift admin relation
+      summary: Create group shift admin relation
+      requestBody:
+        $ref: '#/components/requestBodies/GroupShiftAdminRelation'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupShiftAdminRelation'
+        '400':
+          description: Body parsing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Input validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - group shift admin relation
+      summary: Get group shift admin relations
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupShiftAdminRelation'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /group-shift-admin-relations/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      tags:
+        - group shift admin relation
+      summary: Get group shift admin relation
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupShiftAdminRelation'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Group shift admin relation not found
+    delete:
+      tags:
+        - group shift admin relation
+      summary: Delete group shift admin relation
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupShiftAdminRelation'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Group shift admin relation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /group-shift-admin-relations/grouped-by-group:
+    put:
+      tags:
+        - group shift admin relation
+      summary: Creates/deletes multiple group shift admin relations for a single
+        group
+      requestBody:
+        $ref: '#/components/requestBodies/GroupShiftAdminRelationGroupedByGroup'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupShiftAdminRelationGroupedByGroup'
+        '400':
+          description: Body parsing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: Input validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+        - group shift admin relation
+      summary: Get group shift admin relations grouped by group IDs
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupShiftAdminRelationGroupedByGroup'
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /groups:
+    get:
+      tags:
+        - group
+      summary: Get groups
+      parameters:
+        - in: query
+          name: restricted
+          schema:
+            type: boolean
+            default: false
+          description: If `true`, filters groups by those groups for which the
+            caller has shift admin privileges
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReadOnlyGroup'
+  /users:
+    get:
+      tags:
+        - user
+      summary: Get users
+      parameters:
+        - in: query
+          name: group_ids[]
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/GroupId'
+          description: Filters users types by groups
+        - in: query
+          name: restricted
+          schema:
+            type: boolean
+            default: false
+          description: If `true`, filters users by those groups for which the
+            caller has shift admin privileges
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReadOnlyUser'
+  /calendars/synchronize-by-groups:
+    post:
+      tags:
+        - calendar
+      summary: Synchronize shifts identified by `group_id` with calendars
+      description: When calling this endpoint, the backend only applies
+        previously created pending calendar changes. Those changes are created
+        automatically on certain actions, namely creating, updating or deleting
+        a shift (which includes updating a shift due to a shift exchange).
+      requestBody:
+        $ref: '#/components/requestBodies/SynchronizeCalendarByGroups'
+      responses:
+        '200':
+          description: It's possible that errors occur during synchronization.
+            The response contains an array with all the errors that occured.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: Lorem ipsum dolor sit amet
+        '400':
+          description: Body parsing error. Might also occur if some
+            configuration is missing, in which case the body contains more
+            details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /calendars/synchronize-by-shift:
+    post:
+      tags:
+        - calendar
+      summary: Synchronize a single shift with calendars
+      description: In contrast to `synchronize-by-groups`, this endpoint first
+        creates a new calendar change for the given `shift_id`. Afterwards, all
+        still pending changes for this `shift_id` as well as the newly created
+        change are applied sequentially.
+      requestBody:
+        $ref: '#/components/requestBodies/SynchronizeCalendarByShift'
+      responses:
+        '200':
+          description: It's possible that errors occur during synchronization.
+            The response contains an array with all the errors that occured.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: Lorem ipsum dolor sit amet
+        '400':
+          description: Body parsing error. Might also occur if some
+            configuration is missing, in which case the body contains more
+            details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /config/app:
+    put:
+      tags:
+        - config
+      summary: Sets app config settings
+      requestBody:
+        $ref: '#/components/requestBodies/AppConfig'
+      responses:
+        '204':
+          description: No content
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /config/user:
+    put:
+      tags:
+        - config
+      summary: Sets user config settings
+      requestBody:
+        $ref: '#/components/requestBodies/UserConfig'
+      responses:
+        '204':
+          description: No content
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /config/user/default-groups:
+    put:
+      tags:
+        - config
+      summary: Sets group IDs for the caller, which are used as the default
+        group filter values on the shifts view
+      requestBody:
+        $ref: '#/components/requestBodies/DefaultGroups'
+      responses:
+        '204':
+          description: No content
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  parameters:
+    Id:
+      in: path
+      name: id
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+  schemas:
+    PositiveInt32:
+      type: integer
+      format: int32
+      minimum: 1
+    NonNegativeInt32:
+      type: integer
+      format: int32
+      minimum: 0
+    PositiveInt64:
+      type: integer
+      format: int64
+      minimum: 1
+    Id:
+      $ref: '#/components/schemas/PositiveInt64'
+    ReadOnlyId:
+      allOf:
+        - $ref: '#/components/schemas/Id'
+        - readOnly: true
+    WriteOnlyId:
+      allOf:
+        - $ref: '#/components/schemas/Id'
+        - writeOnly: true
+    StringId:
+      type: string
+      pattern: '^\w{1,64}$'
+    ReadOnlyStringId:
+      allOf:
+        - $ref: '#/components/schemas/StringId'
+        - readOnly: true
+    GroupId:
+      allOf:
+        - $ref: '#/components/schemas/StringId'
+        - example: group1
+    WriteOnlyGroupId:
+      allOf:
+        - $ref: '#/components/schemas/GroupId'
+        - writeOnly: true
+    UserId:
+      allOf:
+        - $ref: '#/components/schemas/StringId'
+        - example: user1
+    WriteOnlyUserId:
+      allOf:
+        - $ref: '#/components/schemas/UserId'
+        - writeOnly: true
+    Shift:
+      required:
+        - id
+        - user_id
+        - user
+        - shift_type_id
+        - shift_type
+        - start
+        - end
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ReadOnlyId'
+        user_id:
+          $ref: '#/components/schemas/WriteOnlyUserId'
+        user:
+          $ref: '#/components/schemas/ReadOnlyUser'
+        shift_type_id:
+          $ref: '#/components/schemas/WriteOnlyId'
+        shift_type:
+          $ref: '#/components/schemas/ReadOnlyShiftType'
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+    ReadOnlyShift:
+      allOf:
+        - $ref: '#/components/schemas/Shift'
+        - readOnly: true
+    ShiftPatch:
+      required:
+        - user_id
+      type: object
+      properties:
+        user_id:
+          $ref: '#/components/schemas/WriteOnlyUserId'
+    ShiftType:
+      required:
+        - id
+        - group_id
+        - group
+        - name
+        - description
+        - color
+        - active
+        - start
+        - duration
+        - repetition
+        - caldav
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ReadOnlyId'
+        group_id:
+          $ref: '#/components/schemas/WriteOnlyGroupId'
+        group:
+          $ref: '#/components/schemas/ReadOnlyGroup'
+        name:
+          type: string
+          example: Night shift
+        description:
+          type: string
+          example: Lorem ipsum dolor sit amet
+        color:
+          type: string
+          example: '#FF0000'
+        active:
+          type: boolean
+        duration:
+          type: string
+          example: PT6H
+          description: The duration of a single shift, e.g. `"PT6H"`
+            specifies a shift of 6 hours
+          externalDocs:
+            url: https://en.wikipedia.org/wiki/ISO_8601#Durations
+        repetition:
+          anyOf:
+            - $ref: '#/components/schemas/ShiftTypeRepetitionWeeklyByDay'
+            - $ref: '#/components/schemas/ShiftTypeRepetitionWeeklyByWeek'
+        caldav:
+            $ref: '#/components/schemas/Caldav'
+    ReadOnlyShiftType:
+      allOf:
+        - $ref: '#/components/schemas/ShiftType'
+        - readOnly: true
+    ShiftRepetitionBase:
+      required:
+        - frequency
+        - interval
+        - start
+      type: object
+      properties:
+        interval:
+          $ref: '#/components/schemas/PositiveInt32'
+        start:
+          type: string
+          format: date-time
+    ShiftTypeRepetitionWeeklyByDay:
+      allOf:
+        - $ref: '#/components/schemas/ShiftRepetitionBase'
+        - type: object
+          properties:
+            frequency:
+              type: string
+              enum:
+                - weekly
+            by_day:
+              $ref: '#/components/schemas/ByDay'
+    ShiftTypeRepetitionWeeklyByWeek:
+      allOf:
+        - $ref: '#/components/schemas/ShiftRepetitionBase'
+        - type: object
+          properties:
+            frequency:
+              type: string
+              enum:
+                - weekly
+            by_week:
+              $ref: '#/components/schemas/PositiveInt32'
+    ByDay:
+      required:
+        - MO
+        - TU
+        - WE
+        - TH
+        - FR
+        - SA
+        - SU
+      type: object
+      properties:
+        MO:
+          $ref: '#/components/schemas/NonNegativeInt32'
+        TU:
+          $ref: '#/components/schemas/NonNegativeInt32'
+        WE:
+          $ref: '#/components/schemas/NonNegativeInt32'
+        TH:
+          $ref: '#/components/schemas/NonNegativeInt32'
+        FR:
+          $ref: '#/components/schemas/NonNegativeInt32'
+        SA:
+          $ref: '#/components/schemas/NonNegativeInt32'
+        SU:
+          $ref: '#/components/schemas/NonNegativeInt32'
+    Caldav:
+      required:
+        - categories
+      type: object
+      properties:
+        categories:
+          type: string
+          description: CATEGORIES added to the iCalendar event
+          example: Foo,Bar
+    ShiftExchangeBase:
+      required:
+        - comment
+      type: object
+      properties:
+        comment:
+          type: string
+          example: Lorem ipsum dolor sit amet
+    ShiftExchangePost:
+      oneOf:
+        - $ref: '#/components/schemas/RegularShiftExchangePost'
+        - $ref: '#/components/schemas/TransferShiftExchangePost'
+    ShiftExchangePostBase:
+      allOf:
+        - $ref: '#/components/schemas/ShiftExchangeBase'
+        - required:
+          - shift_a_id
+        - type: object
+          properties:
+            shift_a_id:
+              $ref: '#/components/schemas/WriteOnlyId'
+    RegularShiftExchangePost:
+      allOf:
+        - $ref: '#/components/schemas/ShiftExchangePostBase'
+        - required:
+            - shift_b_id
+        - type: object
+          properties:
+            shift_b_id:
+              $ref: '#/components/schemas/WriteOnlyId'
+    TransferShiftExchangePost:
+      allOf:
+        - $ref: '#/components/schemas/ShiftExchangePostBase'
+        - required:
+            - transfer_to_user_id
+        - type: object
+          properties:
+            transfer_to_user_id:
+              $ref: '#/components/schemas/WriteOnlyUserId'
+    ShiftExchangePut:
+      allOf:
+        - $ref: '#/components/schemas/ShiftExchangeBase'
+        - required:
+            - approveds
+        - type: object
+          properties:
+            approveds:
+              $ref: '#/components/schemas/Approveds'
+    Approveds:
+      oneOf:
+        - $ref: '#/components/schemas/UserApproved'
+        - $ref: '#/components/schemas/AdminApproved'
+      type: object
+    UserApproved:
+      properties:
+        user:
+          $ref: '#/components/schemas/Approved'
+    AdminApproved:
+      properties:
+        admin:
+          $ref: '#/components/schemas/Approved'
+    Approved:
+      type: boolean
+      nullable: true
+    ReadOnlyApproved:
+      allOf:
+        - $ref: '#/components/schemas/Approved'
+        - readOnly: true
+    ShiftExchangeGet:
+      oneOf:
+        - $ref: '#/components/schemas/RegularShiftExchangeGet'
+        - $ref: '#/components/schemas/TransferShiftExchangeGet'
+    ShiftExchangeGetBase:
+      allOf:
+        - $ref: '#/components/schemas/ShiftExchangeBase'
+        - required:
+          - id
+          - shift_a
+          - done
+          - approved
+          - user_a_approval
+          - user_b_approval
+          - admin_approval
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ReadOnlyId'
+            shift_a:
+              $ref: '#/components/schemas/ReadOnlyShift'
+            done:
+              type: boolean
+              readOnly: true
+            approved:
+              $ref: '#/components/schemas/ReadOnlyApproved'
+            user_a_approval:
+              $ref: '#/components/schemas/ReadOnlyShiftExchangeApproval'
+            user_b_approval:
+              $ref: '#/components/schemas/ReadOnlyShiftExchangeApproval'
+            admin_approval:
+              $ref: '#/components/schemas/ReadOnlyShiftExchangeApproval'
+    RegularShiftExchangeGet:
+      allOf:
+        - $ref: '#/components/schemas/ShiftExchangeGetBase'
+        - required:
+            - shift_b
+        - type: object
+          properties:
+            shift_b:
+              $ref: '#/components/schemas/ReadOnlyShift'
+    TransferShiftExchangeGet:
+      allOf:
+        - $ref: '#/components/schemas/ShiftExchangeGetBase'
+        - required:
+          - transfer_to_user
+        - type: object
+          properties:
+            transfer_to_user:
+              $ref: '#/components/schemas/ReadOnlyUser'
+    ShiftExchangeApproval:
+      required:
+        - user
+        - approved
+      type: object
+      properties:
+        user:
+          allOf:
+            - $ref: '#/components/schemas/ReadOnlyUser'
+            - nullable: true
+        approved:
+          $ref: '#/components/schemas/Approved'
+    ReadOnlyShiftExchangeApproval:
+      allOf:
+        - $ref: '#/components/schemas/ShiftExchangeApproval'
+        - readOnly: true
+    GroupShiftAdminRelation:
+      required:
+        - id
+        - group_id
+        - group
+        - user_id
+        - user
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ReadOnlyId'
+        group_id:
+          $ref: '#/components/schemas/WriteOnlyGroupId'
+        group:
+          $ref: '#/components/schemas/ReadOnlyGroup'
+        user_id:
+          $ref: '#/components/schemas/WriteOnlyUserId'
+        user:
+          $ref: '#/components/schemas/ReadOnlyUser'
+    GroupShiftAdminRelationGroupedByGroup:
+      required:
+        - group_id
+        - group
+        - user_ids
+        - users
+      type: object
+      properties:
+        group_id:
+          $ref: '#/components/schemas/WriteOnlyGroupId'
+        group:
+          $ref: '#/components/schemas/ReadOnlyGroup'
+        user_ids:
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/WriteOnlyUserId'
+        users:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ReadOnlyUser'
+    Group:
+      required:
+        - id
+        - display_name
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/GroupId'
+        display_name:
+          type: string
+          pattern: '^.{1,255}$'
+          example: Group 1
+    ReadOnlyGroup:
+      allOf:
+        - $ref: '#/components/schemas/Group'
+        - readOnly: true
+    User:
+      required:
+        - id
+        - display_name
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/UserId'
+        display_name:
+          type: string
+          pattern: '^.{1,64}$'
+          example: User 1
+    ReadOnlyUser:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - readOnly: true
+    SynchronizeCalendarByGroupsPost:
+      required:
+        - group_ids
+      type: object
+      properties:
+        group_ids:
+          description: Limits the synchronization to those shifts whose shift
+            type has one of the specified group IDs. All groups, for which the
+            caller has no shift admin privileges, are omitted.
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/WriteOnlyGroupId'
+    SynchronizeCalendarByShiftPost:
+      required:
+        - shift_id
+      type: object
+      properties:
+        shift_id:
+          $ref: '#/components/schemas/WriteOnlyId'
+    AppConfigEnvelope:
+      required:
+        - values
+      type: object
+      properties:
+        values:
+          $ref: '#/components/schemas/AppConfig'
+    AppConfig:
+      required:
+        - common_calendar_id
+        - absence_calendar_id
+        - sync_to_personal_calendar
+        - exchange_approval_type
+      type: object
+      properties:
+        common_calendar_id:
+          $ref: '#/components/schemas/WriteOnlyId'
+        absence_calendar_id:
+          $ref: '#/components/schemas/WriteOnlyId'
+        sync_to_personal_calendar:
+          type: boolean
+        exchange_approval_type:
+          type: string
+          enum:
+            - users
+            - admin
+            - all
+    UserConfigEnvelope:
+      required:
+        - values
+      type: object
+      properties:
+        values:
+          $ref: '#/components/schemas/UserConfig'
+    UserConfig:
+      required:
+        - defaultGroupIds
+      type: object
+      properties:
+        defaultGroupIds:
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/WriteOnlyGroupId'
+    DefaultGroups:
+      required:
+        - group_ids
+      type: object
+      properties:
+        group_ids:
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/WriteOnlyGroupId'
+    ErrorResponse:
+      required:
+        - error
+      type: object
+      properties:
+        error:
+          type: string
+          example: Lorem ipsum dolor sit amet
+  requestBodies:
+    Shift:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Shift'
+      required: true
+    ShiftType:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ShiftType'
+      required: true
+    GroupShiftAdminRelation:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GroupShiftAdminRelation'
+      required: true
+    GroupShiftAdminRelationGroupedByGroup:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GroupShiftAdminRelationGroupedByGroup'
+      required: true
+    SynchronizeCalendarByGroups:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SynchronizeCalendarByGroupsPost'
+    SynchronizeCalendarByShift:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SynchronizeCalendarByShiftPost'
+    AppConfig:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AppConfigEnvelope'
+    UserConfig:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserConfigEnvelope'
+    DefaultGroups:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DefaultGroups'

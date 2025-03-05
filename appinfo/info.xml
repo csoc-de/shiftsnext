@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>shiftsnext</id>
+	<name>Shifts Next</name>
+	<summary>App for organizing shifts</summary>
+	<description>Manage and organize your shifts</description>
+	<version>1.0.0</version>
+	<licence>agpl</licence>
+	<author mail="dev@csoc.de">CSOC</author>
+	<namespace>ShiftsNext</namespace>
+	<category>office</category>
+	<category>organization</category>
+	<bugs>https://github.com/csoc-de/Shifts/issues</bugs>
+	<dependencies>
+		<php min-version="8.3" min-int-size="64" />
+		<database>mysql</database>
+		<database>pgsql</database>
+		<nextcloud min-version="29" max-version="31" />
+	</dependencies>
+	<settings>
+		<admin>OCA\ShiftsNext\Settings\AdminSettings</admin>
+		<admin-section>OCA\ShiftsNext\Settings\AdminSection</admin-section>
+	</settings>
+	<navigations>
+		<navigation>
+			<id>shiftsnext</id>
+			<name>Shifts Next</name>
+			<route>shiftsnext.page.index</route>
+			<icon>app.svg</icon>
+			<type>link</type>
+		</navigation>
+	</navigations>
+</info>

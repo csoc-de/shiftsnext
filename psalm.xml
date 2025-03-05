@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<psalm
+	errorLevel="1"
+	resolveFromConfigFile="true"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="https://getpsalm.org/schema/config"
+	xsi:schemaLocation="https://getpsalm.org/schema/config vendor-bin/psalm/vendor/vimeo/psalm/config.xsd"
+	findUnusedBaselineEntry="true"
+	findUnusedCode="true"
+	findUnusedPsalmSuppress="true"
+>
+	<projectFiles>
+		<directory name="lib" />
+		<ignoreFiles>
+			<directory name="vendor" />
+		</ignoreFiles>
+	</projectFiles>
+	<extraFiles>
+		<directory name="vendor" />
+	</extraFiles>
+
+	<issueHandlers>
+		<InvalidThrow>
+			<errorLevel type="suppress">
+				<referencedClass name="OC\DB\Exceptions\DbalException" />
+			</errorLevel>
+		</InvalidThrow>
+		<PossiblyUnusedMethod>
+			<errorLevel type="suppress">
+				<referencedMethod name="*::__construct" />
+			</errorLevel>
+		</PossiblyUnusedMethod>
+		<PossiblyUnusedProperty>
+			<errorLevel type="suppress">
+				<directory name="lib/Db" />
+			</errorLevel>
+		</PossiblyUnusedProperty>
+		<PropertyNotSetInConstructor>
+			<errorLevel type="suppress">
+				<directory name="lib/Db" />
+			</errorLevel>
+		</PropertyNotSetInConstructor>
+		<UndefinedClass>
+			<errorLevel type="suppress">
+				<referencedClass name="Doctrine\DBAL\Exception\UniqueConstraintViolationException" />
+				<referencedClass name="OC\DB\Exceptions\DbalException" />
+				<referencedClass name="OCA\DAV\CalDAV\CalDavBackend" />
+				<referencedClass name="Sabre\VObject\Component\VCalendar" />
+			</errorLevel>
+		</UndefinedClass>
+		<UndefinedDocblockClass>
+			<errorLevel type="suppress">
+				<referencedClass name="Doctrine\DBAL\Schema\Table" />
+				<referencedClass name="OC\DB\Exceptions\DbalException" />
+			</errorLevel>
+		</UndefinedDocblockClass>
+		<UnusedClass>
+			<errorLevel type="suppress">
+				<directory name="lib/Controller" />
+				<directory name="lib/Migration" />
+				<directory name="lib/Psalm" />
+				<directory name="lib/Settings" />
+			</errorLevel>
+		</UnusedClass>
+	</issueHandlers>
+</psalm>
