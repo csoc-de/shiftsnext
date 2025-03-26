@@ -1,6 +1,6 @@
 {
   "name": "shiftsnext",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "author": "CSOC <dev@csoc.de>",
   "license": "AGPL-3.0-or-later",
   "private": true,
