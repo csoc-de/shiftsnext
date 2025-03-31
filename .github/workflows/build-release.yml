@@ -15,7 +15,7 @@ jobs:
       matrix:
         php-versions: ['8.3']
         nextcloud: ['stable29']
-        database: ['sqlite']
+        database: ['pgsql']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,7 +27,7 @@ jobs:
           extensions: pdo_sqlite,pdo_mysql,pdo_pgsql,gd,zip
           coverage: none
 
-      - name: Set up server non MySQL
+      - name: Set up server
         uses: SMillerDev/nextcloud-actions/setup-nextcloud@1e38cb369e2193642279c64ee140fc93ddd4fa77
         with:
           cron: false
