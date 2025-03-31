@@ -15,7 +15,7 @@ jobs:
       matrix:
         php-versions: ['8.3']
         nextcloud: ['stable29']
-        database: ['pgsql']
+        database: ['mysql']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
