@@ -23,7 +23,7 @@ start-w-pga:
 .ONESHELL:
 stop-containers:
 	@cd ../../../..
-	@docker compose stop nextcloud phpmyadmin
+	@docker compose stop nextcloud phpmyadmin pgadmin
 
 .ONESHELL:
 down-containers:
