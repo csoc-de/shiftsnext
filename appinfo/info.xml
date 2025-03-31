@@ -16,6 +16,7 @@
 		<php min-version="8.3" min-int-size="64" />
 		<database>mysql</database>
 		<database>pgsql</database>
+		<database>sqlite</database>
 		<nextcloud min-version="29" max-version="31" />
 	</dependencies>
 	<settings>
