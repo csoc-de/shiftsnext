@@ -16,6 +16,9 @@ jobs:
         php-versions: ['8.3']
         nextcloud: ['stable29']
         database: ['mysql']
+        database-name: ['nextcloud']
+        database-user: ['nextcloud']
+        database-password: ['nextcloud']
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,6 +36,9 @@ jobs:
           cron: false
           version: ${{ matrix.nextcloud }}
           database-type: ${{ matrix.database }}
+          database-name: ${{ matrix.database-name }}
+          database-user: ${{ matrix.database-user }}
+          database-password: ${{ matrix.database-password }}
 
       - name: Prime app build
         run: make build
