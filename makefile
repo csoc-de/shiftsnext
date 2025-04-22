@@ -93,7 +93,6 @@ appstore:
 	"css" \
 	"img" \
 	"js" \
-	"l10n" \
 	"lib" \
 	"templates" \
 	"vendor" \
