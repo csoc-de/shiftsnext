@@ -1,53 +1,10 @@
-.ONESHELL:
-setup-nextcloud-dev:
-	@cd ../../../..
-	@./bootstrap.sh
-	@bash ./scripts/download-full-history.sh
-	@apt install -y mkcert libnss3-tools
-	@mkcert --install
-	@bash ./scripts/update-certs
-	@bash ./scripts/update-hosts
-	@sed -i 's/^PROTOCOL=.*/PROTOCOL=https/' .env
-	@echo "PHP_VERSION=83" >> .env
-
-.ONESHELL:
-start-w-pma:
-	@cd ../../../..
-	@docker compose up -d nextcloud phpmyadmin
-
-.ONESHELL:
-start-w-pga:
-	@cd ../../../..
-	@docker compose up -d nextcloud pgadmin
-
-.ONESHELL:
-stop-containers:
-	@cd ../../../..
-	@docker compose stop nextcloud phpmyadmin pgadmin
-
-.ONESHELL:
-down-containers:
-	@cd ../../../..
-	@docker compose down
-
-.ONESHELL:
-down-v-containers:
-	@cd ../../../..
-	@docker compose down -v
-
-.ONESHELL:
-test-data:
-	@cd ../../../..
-	@docker compose exec nextcloud phpunit -c apps-extra/shiftsnext/tests/phpunit.xml
-
-.ONESHELL:
-xdebug:
-	@cd ../../../..
-	@./scripts/php-mod-config nextcloud xdebug.mode debug
-	@./scripts/php-mod-config nextcloud xdebug.start_with_request yes
+# shiftsnext
 
 app_name:=$(notdir $(CURDIR))
 build_tools_directory:=$(CURDIR)/build/tools
+source_build_directory:=$(CURDIR)/build/source/$(app_name)
+source_artifact_directory:=$(CURDIR)/build/artifacts/source
+source_package_name:=$(source_artifact_directory)/$(app_name)
 appstore_build_directory:=$(CURDIR)/build/appstore/$(app_name)
 appstore_artifact_directory:=$(CURDIR)/build/artifacts/appstore
 appstore_package_name:=$(appstore_artifact_directory)/$(app_name)
@@ -59,11 +16,21 @@ ifeq (,$(composer))
 	composer:=php "$(build_tools_directory)/composer.phar"
 endif
 
+#Support xDebug 3.0+
+export XDEBUG_MODE=coverage
+
+all: build
+
+# Fetches the PHP and JS dependencies and compiles the JS. If no composer.json
+# is present, the composer step is skipped, if no package.json or js/package.json
+# is present, the npm step is skipped
 .PHONY: build
 build:
 	$(MAKE) composer
 	$(MAKE) npm
 
+# Installs and updates the composer dependencies. If composer is not installed
+# a copy is fetched from the web
 .PHONY: composer
 composer:
 ifeq (, $(shell which composer 2> /dev/null))
@@ -74,6 +41,7 @@ ifeq (, $(shell which composer 2> /dev/null))
 endif
 	$(composer) install --prefer-dist --no-dev
 
+# Installs npm dependencies
 .PHONY: npm
 npm:
 ifneq (, $(npm))
@@ -84,6 +52,56 @@ else
 	@exit 1
 endif
 
+# Removes the appstore build and compiled js files
+.PHONY: clean
+clean:
+	rm -rf ./build ./js/*
+
+# Reports PHP codestyle violations
+.PHONY: phpcs
+phpcs:
+	./vendor/bin/phpcs --standard=PSR2 --ignore=lib/Migration/Version*.php lib
+
+# Reports PHP static violations
+.PHONY: phpstan
+phpstan:
+	./vendor/bin/phpstan analyse --level=1 lib
+
+# Same as clean but also removes dependencies installed by composer and
+# npm
+.PHONY: distclean
+distclean: clean
+	rm -rf vendor
+	rm -rf node_modules
+	rm -rf js/node_modules
+
+# Builds the source and appstore package
+.PHONY: dist
+dist:
+	make distclean
+	make build
+	make source
+	make appstore
+
+# Builds the source package
+.PHONY: source
+source:
+	rm -rf "$(source_build_directory)" "$(source_artifact_directory)"
+	mkdir -p "$(source_build_directory)" "$(source_artifact_directory)"
+	rsync -rv . "$(source_build_directory)" \
+	--exclude=/.git/ \
+	--exclude=/.idea/ \
+	--exclude=/build/ \
+	--exclude=/js/node_modules/ \
+	--exclude=*.log
+ifdef CAN_SIGN
+	$(sign) --path "$(source_build_directory)"
+else
+	@echo $(sign_skip_msg)
+endif
+	tar -cvzf "$(source_package_name).tar.gz" -C "$(source_build_directory)/../" $(app_name)
+
+# Builds the source package for the app store, ignores php and js tests
 .PHONY: appstore
 appstore:
 	rm -rf "$(appstore_build_directory)" "$(appstore_sign_dir)" "$(appstore_artifact_directory)"
@@ -92,7 +110,6 @@ appstore:
 	"appinfo" \
 	"css" \
 	"img" \
-	"js" \
 	"lib" \
 	"templates" \
 	"vendor" \
@@ -105,7 +122,9 @@ appstore:
 	# remove large test files
 	rm -rf "$(appstore_sign_dir)/$(app_name)/vendor/fivefilters/readability.php/test"
 
-	# remove stray .htaccess files since they are filtered by nextcloud
+	install "CHANGELOG.md" "$(appstore_sign_dir)/$(app_name)"
+
+	#remove stray .htaccess files since they are filtered by nextcloud
 	find "$(appstore_sign_dir)" -name .htaccess -exec rm {} \;
 
 	# on macOS there is no option "--parents" for the "cp" command
@@ -130,3 +149,47 @@ appstore:
 	fi
 	mkdir -p "$(appstore_artifact_directory)"
 	tar -czf "$(appstore_package_name).tar.gz" -C "$(appstore_sign_dir)" $(app_name)
+
+
+.PHONY: js-test
+js-test:
+	$(npm) run test
+
+.PHONY: php-test-dependencies
+php-test-dependencies:
+	$(composer) update --prefer-dist
+
+.PHONY: unit-test
+unit-test:
+	./vendor/phpunit/phpunit/phpunit -c phpunit.xml --coverage-clover build/php-unit.clover
+
+# Command for running JS and PHP tests. Works for package.json files in the js/
+# and root directory. If phpunit is not installed systemwide, a copy is fetched
+# from the internet
+.PHONY: test
+test: php-test-dependencies
+	$(MAKE) unit-test
+	$(MAKE) phpcs
+	$(MAKE) phpstan
+	$(MAKE) js-test
+	./bin/tools/generate_authors.php
+
+.PHONY: feed-test
+feed-test:
+	./bin/tools/check_feeds.sh
+
+.PHONY: feed-server
+feed-server:
+	php -S 127.0.0.1:8090 -t "$(CURDIR)/tests/test_helper/feeds"
+
+.PHONY: nextcloud-server
+nextcloud-server:
+	php -S 127.0.0.1:8080 -t "$(CURDIR)/../../."
+
+.PHONY: term
+term:
+	zellij --layout term.kdl attach nextcloud-shiftsnext -cf
+
+.PHONY: term-kill
+term-kill:
+	zellij delete-session nextcloud-shiftsnext -f
