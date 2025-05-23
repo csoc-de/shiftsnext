@@ -3,20 +3,21 @@
 	xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 	<id>shiftsnext</id>
 	<name>Shifts Next</name>
-	<summary>App for organizing shifts</summary>
-	<description>Manage and organize your shifts</description>
+	<summary>App for managing shifts</summary>
+	<description>Manage your shifts and sync them to your calendar</description>
 	<version>1.1.1</version>
 	<licence>agpl</licence>
 	<author mail="dev@csoc.de">CSOC</author>
 	<namespace>ShiftsNext</namespace>
 	<category>office</category>
 	<category>organization</category>
+	<website>https://github.com/csoc-de/shiftsnext</website>
+	<discussion>https://github.com/csoc-de/shiftsnext/issues</discussion>
 	<bugs>https://github.com/csoc-de/shiftsnext/issues</bugs>
+	<repository type="git">https://github.com/csoc-de/shiftsnext.git</repository>
+	<screenshot>https://raw.githubusercontent.com/csoc-de/shiftsnext/master/screenshots/shifts.png</screenshot>
 	<dependencies>
-		<php min-version="8.3" min-int-size="64" />
-		<database>mysql</database>
-		<database>pgsql</database>
-		<database>sqlite</database>
+		<php min-version="8.3" />
 		<nextcloud min-version="29" max-version="31" />
 	</dependencies>
 	<settings>
@@ -25,11 +26,8 @@
 	</settings>
 	<navigations>
 		<navigation>
-			<id>shiftsnext</id>
 			<name>Shifts Next</name>
 			<route>shiftsnext.page.index</route>
-			<icon>app.svg</icon>
-			<type>link</type>
 		</navigation>
 	</navigations>
 </info>

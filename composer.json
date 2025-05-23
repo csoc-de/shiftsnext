@@ -1,7 +1,7 @@
 {
-	"name": "nextcloud/shiftsnext",
-	"description": "Manage and organize your shifts",
-	"license": "AGPL-3.0-or-later",
+	"name": "csoc/shiftsnext",
+	"description": "Shifts management",
+	"license": "AGPL",
 	"authors": [
 		{
 			"name": "CSOC",
