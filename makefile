@@ -1,5 +1,55 @@
 # shiftsnext
 
+# dev
+
+makefile_dir := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
+nextcloud_dir := $(shell dirname $$(dirname $$(dirname $$(dirname "$(makefile_dir)"))))
+nextcloud_scripts_dir := "$(nextcloud_dir)/scripts"
+nextcloud_env_file := "$(nextcloud_dir)/.env"
+nextcloud_compose_file := "$(nextcloud_dir)/docker-compose.yml"
+
+.PHONY: setup-nextcloud-dev
+setup-nextcloud-dev:
+	"$(nextcloud_dir)/bootstrap.sh"
+	bash "$(nextcloud_scripts_dir)/download-full-history.sh"
+	apt install -y mkcert libnss3-tools
+	mkcert --install
+	bash "$(nextcloud_scripts_dir)/update-certs"
+	bash "$(nextcloud_scripts_dir)/update-hosts"
+	sed -i 's/^PROTOCOL=.*/PROTOCOL=https/' "$(nextcloud_env_file)"
+	echo "PHP_VERSION=83" >> "$(nextcloud_env_file)"
+
+.PHONY: start-w-pma
+start-w-pma:
+	docker compose -f $(nextcloud_compose_file) up -d nextcloud phpmyadmin
+
+.PHONY: start-w-pga
+start-w-pga:
+	docker compose -f $(nextcloud_compose_file) up -d nextcloud pgadmin
+
+.PHONY: stop-containers
+stop-containers:
+	docker compose -f $(nextcloud_compose_file) stop nextcloud phpmyadmin pgadmin
+
+.PHONY: down-containers
+down-containers:
+	docker compose -f $(nextcloud_compose_file) down
+
+.PHONY: down-v-containers
+down-v-containers:
+	docker compose -f $(nextcloud_compose_file) down -v
+
+.PHONY: test-data
+test-data:
+	docker compose -f $(nextcloud_compose_file) exec nextcloud phpunit -c apps-extra/shiftsnext/tests/phpunit.xml
+
+.PHONY: xdebug
+xdebug:
+	"$(nextcloud_scripts_dir)/php-mod-config" nextcloud xdebug.mode debug
+	"$(nextcloud_scripts_dir)/php-mod-config" nextcloud xdebug.start_with_request yes
+
+# build
+
 app_name:=$(notdir $(CURDIR))
 build_tools_directory:=$(CURDIR)/build/tools
 source_build_directory:=$(CURDIR)/build/source/$(app_name)
@@ -18,8 +68,6 @@ endif
 
 #Support xDebug 3.0+
 export XDEBUG_MODE=coverage
-
-all: build
 
 # Fetches the PHP and JS dependencies and compiles the JS. If no composer.json
 # is present, the composer step is skipped, if no package.json or js/package.json

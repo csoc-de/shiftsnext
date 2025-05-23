@@ -35,7 +35,7 @@ jobs:
           database-type: ${{ matrix.database }}
 
       - name: Prime app build
-        run: make
+        run: make build
 
       - name: Configure server with app
         uses: SMillerDev/nextcloud-actions/setup-nextcloud-app@1e38cb369e2193642279c64ee140fc93ddd4fa77
