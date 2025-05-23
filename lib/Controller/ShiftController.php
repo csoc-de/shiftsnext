@@ -10,6 +10,7 @@ use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Service\CalendarChangeService;
 use OCA\ShiftsNext\Service\CalendarService;
+use OCA\ShiftsNext\Service\ConfigService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\GroupUserRelationService;
 use OCA\ShiftsNext\Service\ShiftService;
@@ -36,6 +37,7 @@ class ShiftController extends Controller {
 		private CalendarChangeService $calendarChangeService,
 		private UserService $userService,
 		private CalendarService $calendarService,
+		private ConfigService $configService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -140,11 +142,17 @@ class ShiftController extends Controller {
 			}
 			$start = Util::unlocalizeEcma($start, $startDateTime);
 			$end = Util::unlocalizeEcma($end, $endDateTime);
-			if ($this->calendarService->isUserAbsent(
-				$user_id,
-				$startDateTime,
-				$endDateTime,
-			)) {
+			$ignoreAbsenceForByWeekShifts = $this->configService->getIgnoreAbsenceForByWeekShifts();
+			$weeklyType = $shiftType->getRepetition()['weekly_type'];
+			$checkAbsence = $weeklyType !== 'by_week' || !$ignoreAbsenceForByWeekShifts;
+			if (
+				$checkAbsence
+				&& $this->calendarService->isUserAbsent(
+					$user_id,
+					$startDateTime,
+					$endDateTime,
+				)
+			) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
 					"Cannot create shift for absent user_id `\"$user_id\"`",
@@ -200,11 +208,17 @@ class ShiftController extends Controller {
 					"The user_id `\"$user_id\"` is not a member of group `\"$groupId\"` of shift_type_id `$shiftTypeId`",
 				);
 			}
-			if ($this->calendarService->isUserAbsent(
-				$user_id,
-				Util::parseEcma($shift->getStart()),
-				Util::parseEcma($shift->getEnd()),
-			)) {
+			$ignoreAbsenceForByWeekShifts = $this->configService->getIgnoreAbsenceForByWeekShifts();
+			$weeklyType = $shiftType->getRepetition()['weekly_type'];
+			$checkAbsence = $weeklyType !== 'by_week' || !$ignoreAbsenceForByWeekShifts;
+			if (
+				$checkAbsence
+				&& $this->calendarService->isUserAbsent(
+					$user_id,
+					Util::parseEcma($shift->getStart()),
+					Util::parseEcma($shift->getEnd()),
+				)
+			) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
 					"Cannot move shift to absent user_id `\"$user_id\"`",

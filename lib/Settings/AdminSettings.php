@@ -56,6 +56,10 @@ class AdminSettings implements ISettings {
 			$this->configService->getSyncToPersonalCalendar(),
 		);
 		$this->initialState->provideInitialState(
+			'ignore_absence_for_by_week_shifts',
+			$this->configService->getIgnoreAbsenceForByWeekShifts(),
+		);
+		$this->initialState->provideInitialState(
 			'exchange_approval_types',
 			array_map(
 				fn ($type) => $type->value,

@@ -1218,6 +1218,7 @@ components:
         - common_calendar_id
         - absence_calendar_id
         - sync_to_personal_calendar
+        - ignore_absence_for_by_week_shifts
         - exchange_approval_type
       type: object
       properties:
@@ -1226,6 +1227,8 @@ components:
         absence_calendar_id:
           $ref: '#/components/schemas/WriteOnlyId'
         sync_to_personal_calendar:
+          type: boolean
+        ignore_absence_for_by_week_shifts:
           type: boolean
         exchange_approval_type:
           type: string

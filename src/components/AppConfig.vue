@@ -34,6 +34,15 @@
 							{{ t(APP_ID, "Synchronize") }}
 						</NcCheckboxRadioSwitch>
 					</InputGroup>
+					<InputGroup>
+						<label for="ignore-absence-for-by-week-shifts">
+							{{ t(APP_ID, "Absence check") }}</label>
+						<NcCheckboxRadioSwitch id="ignore-absence-for-by-week-shifts"
+							v-model="form.ignore_absence_for_by_week_shifts"
+							type="checkbox">
+							{{ t(APP_ID, "Ignore for weekly shifts") }}
+						</NcCheckboxRadioSwitch>
+					</InputGroup>
 				</div>
 			</CustomFieldset>
 
@@ -115,6 +124,10 @@ const syncToPersonalCalendar = ref(
 	loadState<boolean>(APP_ID, 'sync_to_personal_calendar', true),
 )
 
+const ignoreAbsenceForByWeekShifts = ref(
+	loadState<boolean>(APP_ID, 'ignore_absence_for_by_week_shifts', true),
+)
+
 const initialApprovalType = loadState<ExchangeApprovalType>(
 	APP_ID,
 	'exchange_approval_type',
@@ -133,6 +146,7 @@ const form = ref({
 	common_calendar_id: commonCalendarOption.value?.id,
 	absence_calendar_id: absenceCalendarOption.value?.id,
 	sync_to_personal_calendar: syncToPersonalCalendar.value,
+	ignore_absence_for_by_week_shifts: ignoreAbsenceForByWeekShifts.value,
 	exchange_approval_type: 'all',
 })
 

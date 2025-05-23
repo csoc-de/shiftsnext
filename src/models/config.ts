@@ -4,6 +4,7 @@ export interface AppConfig {
 	common_calendar_id: number
 	absence_calendar_id: number
 	sync_to_personal_calendar: boolean
+	ignore_absence_for_by_week_shifts: boolean
 	exchange_approval_type: ExchangeApprovalType
 }
 

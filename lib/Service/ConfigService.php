@@ -18,6 +18,7 @@ enum AppConfigKey: string {
 	case CommonCalendarId = 'common_calendar_id';
 	case AbsenceCalendarId = 'absence_calendar_id';
 	case SyncToPersonalCalendar = 'sync_to_personal_calendar';
+	case IgnoreAbsenceForByWeekShifts = 'ignore_absence_for_by_week_shifts';
 	case ExchangeApprovalType = 'exchange_approval_type';
 }
 
@@ -38,6 +39,7 @@ enum ExchangeApprovalType: string {
  *     common_calendar_id: int,
  *     absence_calendar_id: int,
  *     sync_to_personal_calendar: bool,
+ *     ignore_absence_for_by_week_shifts: bool,
  *     exchange_approval_type: 'users'|'admin'|'all',
  * }
  *
@@ -110,6 +112,27 @@ class ConfigService {
 		return $this->appConfig->getValueBool(
 			Application::APP_ID,
 			AppConfigKey::SyncToPersonalCalendar->value,
+			true,
+		);
+	}
+
+	/**
+	 * @psalm-suppress PossiblyUnusedMethod Called dynamically by
+	 * {@see OCA\ShiftsNext\Service\ConfigService::setConfigValue()}
+	 */
+	public function setIgnoreAbsenceForByWeekShifts(bool $value): static {
+		$this->appConfig->setValueBool(
+			Application::APP_ID,
+			AppConfigKey::IgnoreAbsenceForByWeekShifts->value,
+			$value,
+		);
+		return $this;
+	}
+
+	public function getIgnoreAbsenceForByWeekShifts(): bool {
+		return $this->appConfig->getValueBool(
+			Application::APP_ID,
+			AppConfigKey::IgnoreAbsenceForByWeekShifts->value,
 			true,
 		);
 	}

@@ -177,6 +177,8 @@ class ShiftExchangeController extends Controller {
 				);
 			}
 
+			$ignoreAbsenceForByWeekShifts = $this->configService->getIgnoreAbsenceForByWeekShifts();
+
 			if ($shiftB !== null) { // Regular
 				if ($userAId === $userBId) {
 					throw new HttpException(
@@ -203,12 +205,18 @@ class ShiftExchangeController extends Controller {
 					);
 				}
 
+				$weeklyType = $shiftB->shiftType->repetition['weekly_type'];
+				$checkAbsence = $weeklyType !== 'by_week' || !$ignoreAbsenceForByWeekShifts;
+
 				// Check if userA is absent during shiftB
-				if ($this->calendarService->isUserAbsent(
-					$userAId,
-					Util::parseEcma($shiftB->start),
-					Util::parseEcma($shiftB->end),
-				)) {
+				if (
+					$checkAbsence
+					&& $this->calendarService->isUserAbsent(
+						$userAId,
+						Util::parseEcma($shiftB->start),
+						Util::parseEcma($shiftB->end),
+					)
+				) {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
 						"User A `\"$userAId\"` appears to be absent during shift B",
@@ -246,12 +254,18 @@ class ShiftExchangeController extends Controller {
 				);
 			}
 
+			$weeklyType = $shiftA->shiftType->repetition['weekly_type'];
+			$checkAbsence = $weeklyType !== 'by_week' || !$ignoreAbsenceForByWeekShifts;
+
 			// Check if userB is absent during shiftA
-			if ($this->calendarService->isUserAbsent(
-				$userBId,
-				Util::parseEcma($shiftA->start),
-				Util::parseEcma($shiftA->end),
-			)) {
+			if (
+				$checkAbsence
+				&& $this->calendarService->isUserAbsent(
+					$userBId,
+					Util::parseEcma($shiftA->start),
+					Util::parseEcma($shiftA->end),
+				)
+			) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
 					"User B `\"$userBId\"` appears to be absent during shift A",
