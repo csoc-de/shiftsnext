@@ -195,17 +195,30 @@ const shiftBOptions = ref<NcSelectShiftOption[]>()
 const shiftBOptionsLoading = ref(false)
 const shiftBOption = ref<NcSelectShiftOption>()
 
-watch(shiftASelectDisabled, (disabled) => {
-	if (disabled) {
+/**
+ * Clear shift options and selected shift
+ *
+ * @param target The target to clear
+ */
+function clearShiftSelect(target: 'A' | 'B') {
+	if (target === 'A') {
 		shiftAOptions.value = []
 		shiftAOption.value = undefined
+	} else {
+		shiftBOptions.value = []
+		shiftBOption.value = undefined
+	}
+}
+
+watch(shiftASelectDisabled, (disabled) => {
+	if (disabled) {
+		clearShiftSelect('A')
 	}
 })
 
 watch(shiftBSelectDisabled, (disabled) => {
 	if (disabled) {
-		shiftBOptions.value = []
-		shiftBOption.value = undefined
+		clearShiftSelect('B')
 	}
 })
 
@@ -246,6 +259,7 @@ let shiftsA: Shift[] = []
  * Load shifts for user A
  */
 async function loadShiftsA(): Promise<void> {
+	clearShiftSelect('A')
 	if (!userAOption.value) {
 		return
 	}
@@ -288,6 +302,7 @@ async function loadUsersB(): Promise<void> {
  * Load shifts for user B
  */
 async function loadShiftsB(): Promise<void> {
+	clearShiftSelect('B')
 	if (!userBOption.value) {
 		return
 	}
