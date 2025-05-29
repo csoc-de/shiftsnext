@@ -3,6 +3,9 @@ import { generateUrl } from '@nextcloud/router'
 import { createRouter, createWebHistory } from 'vue-router'
 import { APP_ID } from '../appId'
 import type { Group } from '../models/group'
+import ShiftExchangesView from '../views/ShiftExchangesView.vue'
+import ShiftsView from '../views/ShiftsView.vue'
+import ShiftTypesView from '../views/ShiftTypesView.vue'
 
 declare module 'vue-router' {
 	interface RouteMeta {
@@ -20,18 +23,18 @@ const router = createRouter({
 		{
 			path: '/shifts',
 			name: 'shifts',
-			component: () => import('../views/ShiftsView.vue'),
+			component: ShiftsView,
 		},
 		{
 			path: '/shift-types',
 			name: 'shift-types',
-			component: () => import('../views/ShiftTypesView.vue'),
+			component: ShiftTypesView,
 			meta: { requiresShiftAdmin: true },
 		},
 		{
 			path: '/shift-exchanges',
 			name: 'shift-exchanges',
-			component: () => import('../views/ShiftExchangesView.vue'),
+			component: ShiftExchangesView,
 		},
 	],
 })
