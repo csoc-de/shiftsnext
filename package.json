@@ -21,33 +21,33 @@
   ],
   "dependencies": {
     "@mdi/svg": "^7.4.47",
-    "@nextcloud/auth": "^2.4.0",
+    "@nextcloud/auth": "^2.5.1",
     "@nextcloud/axios": "^2.5.1",
     "@nextcloud/dialogs": "~4.1.0",
     "@nextcloud/initial-state": "^2.2.0",
-    "@nextcloud/l10n": "^3.1.0",
+    "@nextcloud/l10n": "^3.2.0",
     "@nextcloud/router": "^3.0.1",
-    "@nextcloud/vue": "^9.0.0-alpha.5",
-    "@vueuse/core": "^12.3.0",
+    "@nextcloud/vue": "^9.0.0-rc.2",
+    "@vueuse/core": "^12.8.2",
     "floating-vue": "^5.2.2",
     "lodash-es": "^4.17.21",
-    "pinia": "^2.3.0",
-    "temporal-polyfill": "^0.2.5",
+    "pinia": "^2.3.1",
+    "temporal-polyfill": "^0.3.0",
     "vue": "^3.5.13",
     "vue-material-design-icons": "^5.3.1",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@nextcloud/browserslist-config": "^3.0.1",
-    "@nextcloud/eslint-config": "^8.4.1",
-    "@nextcloud/stylelint-config": "^3.0.1",
-    "@nextcloud/vite-config": "^2.2.2",
+    "@nextcloud/eslint-config": "^8.4.2",
+    "@nextcloud/stylelint-config": "^3.1.0",
+    "@nextcloud/vite-config": "^2.3.5",
     "@types/lodash-es": "^4.17.12",
     "@vue/tsconfig": "^0.7.0",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.4",
     "tailwindcss": "^3.4.17",
-    "typescript": "~5.5.4",
-    "vite": "^5.4.11"
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19"
   }
 }
