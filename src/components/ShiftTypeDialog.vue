@@ -33,7 +33,7 @@
 						v-model:shown="showColorPicker"
 						container=".modal-mask">
 						<div v-bind="attrs"
-							:style="{ 'background-color': color }"
+							:style="{ backgroundColor: color }"
 							class="h-nc-default-clickable-area !w-full rounded-nc-large" />
 					</NcColorPicker>
 				</InputGroup>

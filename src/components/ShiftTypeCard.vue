@@ -1,5 +1,5 @@
 <template>
-	<div :style="`border-color: ${shiftType.color}`"
+	<div :style="{ borderColor: shiftType.color }"
 		class="size-full h-full transform rounded-nc-large border-8 border-solid p-4 pt-2 text-center shadow transition duration-300 hover:-translate-y-1.5 hover:shadow-xl"
 		:class="{ 'line-through': deleting }">
 		<div class="flex justify-between items-center">
