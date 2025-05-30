@@ -13,10 +13,11 @@
 			{{ shiftTypeWrapper.shiftType.group.display_name }}<br>
 			{{ shiftTypeWrapper.shiftType.name }}
 		</div>
-		<CustomBadge :style="{
-			backgroundColor: contrastColor,
-			color: doubledContrastColor,
-		}">
+		<CustomBadge v-if="shiftTypeWrapper.amount > 1"
+			:style="{
+				backgroundColor: contrastColor,
+				color: doubledContrastColor,
+			}">
 			{{ shiftTypeWrapper.amount }}
 		</CustomBadge>
 	</div>
