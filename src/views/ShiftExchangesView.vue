@@ -1,5 +1,5 @@
 <template>
-	<HeaderNavigation :title="t(APP_ID, 'Shift exchanges')" :loading="loading">
+	<HeaderNavigation :title="t(APP_ID, 'Exchanges')" :loading="loading">
 		<template #right>
 			<NcButton :aria-label="t(APP_ID, 'Request shift exchange')"
 				@click="createDialogMounted = true">

@@ -5,9 +5,9 @@
 				<template #list>
 					<NcAppNavigationItem :name="t(APP_ID, 'Shifts')" to="/shifts" />
 					<NcAppNavigationItem v-if="isShiftAdmin"
-						:name="t(APP_ID, 'Shift types')"
+						:name="t(APP_ID, 'Types')"
 						to="/shift-types" />
-					<NcAppNavigationItem :name="t(APP_ID, 'Shift exchanges')"
+					<NcAppNavigationItem :name="t(APP_ID, 'Exchanges')"
 						to="/shift-exchanges" />
 				</template>
 

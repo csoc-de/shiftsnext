@@ -1,5 +1,5 @@
 <template>
-	<HeaderNavigation :title="t(APP_ID, 'Shift types')" :loading="loading">
+	<HeaderNavigation :title="t(APP_ID, 'Types')" :loading="loading">
 		<template #right>
 			<NcButton :aria-label="t(APP_ID, 'Create shift type')"
 				@click="createDialogMounted = true">
