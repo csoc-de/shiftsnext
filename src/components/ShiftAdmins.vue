@@ -1,72 +1,73 @@
 <template>
-	<h2>{{ t(APP_ID, "Shift admins") }}</h2>
-	<div class="overflow-auto">
-		<table class="w-full table-auto border-collapse border-x border-solid border-neutral-200 text-left dark:border-neutral-500">
-			<thead>
-				<tr>
-					<th class="border-b bg-neutral-200 px-4 py-3 font-bold dark:bg-neutral-500">
-						{{ t(APP_ID, "Group") }}
-					</th>
-					<th class="border-b bg-neutral-200 px-4 py-3 font-bold dark:bg-neutral-500">
-						{{ t(APP_ID, "Admins") }}
-					</th>
-					<th class="border-b bg-neutral-200 px-4 py-3 text-center font-bold dark:bg-neutral-500">
-						{{ t(APP_ID, "Actions") }}
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<template v-for="({ group: { id, display_name }, users: relationUsers }, index) in relations"
-					:key="id">
-					<tr v-if="relationUsers.length || group?.display_name === display_name"
-						class="border-b border-solid border-neutral-200 dark:border-neutral-500">
-						<td class="w-0 px-4 py-3">
-							{{ display_name }}
-						</td>
-						<td class="px-4 py-3">
-							<template v-if="disabledList[index]">
-								{{ relationUsers.map(({ display_name }) => display_name).join(', ') }}
-							</template>
-							<NcSelectUsers v-else
-								v-model="selectedUserOptions2D[index]"
-								class="min-w-56"
-								multiple
-								:keep-open="true"
-								:options="userOptions" />
-						</td>
-						<td class="w-0 border-solid border-neutral-500 px-4 py-3">
-							<div class="flex items-center justify-center">
-								<NcButton v-if="!editedList[index]"
-									@click="toggleRow(index, true)">
-									{{ t(APP_ID, "Edit") }}
-								</NcButton>
-								<NcButton v-else
-									:disabled="saving"
-									@click="
-										save(
-											index,
-											id,
-											selectedUserOptions2D[index]!.map(({ id }) => id),
-										)
-									">
-									{{ t(APP_ID, "Save") }}
-								</NcButton>
-							</div>
-						</td>
+	<NcSettingsSection :name="t(APP_ID, 'Shift admins')">
+		<div class="overflow-auto">
+			<table class="w-full table-auto border-collapse border-x border-solid border-neutral-200 text-left dark:border-neutral-500">
+				<thead>
+					<tr>
+						<th class="border-b bg-neutral-200 px-4 py-3 font-bold dark:bg-neutral-500">
+							{{ t(APP_ID, "Group") }}
+						</th>
+						<th class="border-b bg-neutral-200 px-4 py-3 font-bold dark:bg-neutral-500">
+							{{ t(APP_ID, "Admins") }}
+						</th>
+						<th class="border-b bg-neutral-200 px-4 py-3 text-center font-bold dark:bg-neutral-500">
+							{{ t(APP_ID, "Actions") }}
+						</th>
 					</tr>
-				</template>
-			</tbody>
-		</table>
-	</div>
-	<InputGroup class="mt-3 items-start">
-		<label for="selected-group">{{ t(APP_ID, "Add group") }}</label>
-		<NcSelect v-model="group"
-			input-id="selected-group"
-			:options="groups"
-			label="display_name"
-			:label-outside="true"
-			class="min-w-44" />
-	</InputGroup>
+				</thead>
+				<tbody>
+					<template v-for="({ group: { id, display_name }, users: relationUsers }, index) in relations"
+						:key="id">
+						<tr v-if="relationUsers.length || group?.display_name === display_name"
+							class="border-b border-solid border-neutral-200 dark:border-neutral-500">
+							<td class="w-0 px-4 py-3">
+								{{ display_name }}
+							</td>
+							<td class="px-4 py-3">
+								<template v-if="disabledList[index]">
+									{{ relationUsers.map(({ display_name }) => display_name).join(', ') }}
+								</template>
+								<NcSelectUsers v-else
+									v-model="selectedUserOptions2D[index]"
+									class="min-w-56"
+									multiple
+									:keep-open="true"
+									:options="userOptions" />
+							</td>
+							<td class="w-0 border-solid border-neutral-500 px-4 py-3">
+								<div class="flex items-center justify-center">
+									<NcButton v-if="!editedList[index]"
+										@click="toggleRow(index, true)">
+										{{ t(APP_ID, "Edit") }}
+									</NcButton>
+									<NcButton v-else
+										:disabled="saving"
+										@click="
+											save(
+												index,
+												id,
+												selectedUserOptions2D[index]!.map(({ id }) => id),
+											)
+										">
+										{{ t(APP_ID, "Save") }}
+									</NcButton>
+								</div>
+							</td>
+						</tr>
+					</template>
+				</tbody>
+			</table>
+		</div>
+		<InputGroup class="mt-3 items-start">
+			<label for="selected-group">{{ t(APP_ID, "Add group") }}</label>
+			<NcSelect v-model="group"
+				input-id="selected-group"
+				:options="groups"
+				label="display_name"
+				:label-outside="true"
+				class="min-w-44" />
+		</InputGroup>
+	</NcSettingsSection>
 </template>
 
 <script setup lang="ts">
@@ -75,6 +76,7 @@ import { t } from '@nextcloud/l10n'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
+import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import { computed, ref } from 'vue'
 import { APP_ID } from '../appId'
 import { putGroupShiftAdminRelationsGroupedByGroup } from '../db/groupShiftAdminRelation'
