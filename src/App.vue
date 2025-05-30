@@ -29,12 +29,10 @@
 <script setup lang="ts">
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import {
-	NcAppContent,
-	NcAppNavigation,
-	NcAppNavigationItem,
-	NcContent,
-} from '@nextcloud/vue'
+import NcAppContent from '@nextcloud/vue/components/NcAppContent'
+import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
+import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcContent from '@nextcloud/vue/components/NcContent'
 import { APP_ID } from './appId'
 import { checkConfig } from './checkConfig'
 import ConfigMissing from './components/ConfigMissing.vue'

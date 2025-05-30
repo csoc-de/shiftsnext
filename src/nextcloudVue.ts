@@ -4,7 +4,7 @@ import type {
 	NcSelectCalendarOption,
 	NcSelectExchangeApprovalTypeOption,
 	NcSelectShiftOption,
-	NcSelectUserOption,
+	NcSelectUsersOption,
 } from './models/nextcloudVue'
 import type { Shift } from './models/shift'
 import type { User } from './models/user'
@@ -12,15 +12,13 @@ import { t } from '@nextcloud/l10n'
 import { APP_ID } from './appId'
 
 /**
- * Get the NcSelectUserOption for a User
+ * Get the NcSelectUsersOption for a User
  * @param user User
  */
-export function getNcSelectUserOption(user: User): NcSelectUserOption {
+export function getNcSelectUsersOption(user: User): NcSelectUsersOption {
 	return {
 		displayName: user.display_name,
 		id: user.id,
-		showUserStatus: false,
-		user: user.id,
 	}
 }
 

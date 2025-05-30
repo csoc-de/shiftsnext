@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import NcLoadingIcon from '@nextcloud/vue/dist/Components/NcLoadingIcon.js'
+import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 
 defineProps<{
   title: string

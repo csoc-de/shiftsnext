@@ -1,5 +1,5 @@
 <template>
-	<NcDialog :can-close="false"
+	<NcDialog :no-close="true"
 		:name="t(APP_ID, 'Edit shift exchange')"
 		size="normal"
 		content-classes="mb-2">
@@ -43,8 +43,8 @@
 				{{ t(APP_ID, "Cancel") }}
 			</NcButton>
 			<NcButton :disabled="saving"
-				:native-type="ButtonNativeType.Submit"
-				:type="ButtonType.Primary"
+				type="submit"
+				variant="primary"
 				form="shift-exchange-form">
 				{{ t(APP_ID, "Save") }}
 			</NcButton>
@@ -54,13 +54,10 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import NcButton, {
-	ButtonNativeType,
-	ButtonType,
-} from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
-import NcTextArea from '@nextcloud/vue/dist/Components/NcTextArea.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import { computed, inject, ref } from 'vue'
 import { APP_ID } from '../appId'
 import type { StringifiedNullableBoolean } from '../models/misc'

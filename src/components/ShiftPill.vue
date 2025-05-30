@@ -16,7 +16,7 @@
 		</div>
 		<NcButton :disabled="disabled"
 			:aria-label="t(APP_ID, 'Delete shift')"
-			:type="ButtonType.TertiaryNoBackground"
+			variant="tertiary-no-background"
 			:style="{ color: contrastColor }"
 			@click.stop="startDeletion">
 			<template #icon>
@@ -31,9 +31,7 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import NcButton, {
-	ButtonType,
-} from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import { computed, inject, ref } from 'vue'
 // @ts-expect-error no types
 import Delete from 'vue-material-design-icons/Delete.vue'

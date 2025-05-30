@@ -1,48 +1,6 @@
-/* Remove the following rules when the UI bug is fixed */
-.v-select.select {
-	min-height: var(--default-clickable-area);
-	margin: 0 0 var(--default-grid-baseline);
-}
-
-.v-select.select .vs__selected-options {
-	min-height: calc(var(--default-clickable-area) - 2 * var(--vs-border-width));
-	padding: 0 5px;
-}
-
-.v-select.select .vs__search,
-.v-select.select .vs__search:focus {
-	margin: 0;
-}
-
-.v-select.select .vs__selected {
-	height: calc(
-		var(--default-clickable-area) - 2 * var(--vs-border-width) - var(
-			--default-grid-baseline
-		)
-	);
-	margin: calc(var(--default-grid-baseline) / 2);
-	padding-block: 0;
-	padding-inline: 12px 8px;
-	border-radius: 16px !important;
-	background: var(--color-primary-element-light);
-	border: none;
-}
-
-/* End of rules to remove */
-
 body {
 	.vs__dropdown-menu {
 		min-width: 0;
-	}
-
-	.option[user] {
-		height: auto;
-	}
-
-	.v-select.vs--single.user-select {
-		.vs__dropdown-toggle {
-			overflow-y: hidden;
-		}
 	}
 
 	.v-select.select {
@@ -68,15 +26,7 @@ body {
 		margin: 0;
 	}
 
-	.avatardiv {
-		line-height: 0 !important;
-	}
-
-	.checkbox-content__icon > * {
-		height: 26px !important;
-	}
-
-	.checkbox-content {
+	.checkbox-content--button-variant {
 		min-height: auto !important;
 	}
 }

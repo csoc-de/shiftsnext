@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { Temporal } from 'temporal-polyfill'
 import { computed, ref, watch, watchEffect } from 'vue'
 import {

@@ -1,5 +1,5 @@
 <template>
-	<div class="p-4 w-full max-w-xs sm:max-w-md grid grid-cols-2 gap-x-2 gap-y-3 sm:grid-cols-4 box-border">
+	<div class="p-4 w-full max-w-xs sm:max-w-md grid grid-cols-2 gap-x-2 gap-y-3 sm:grid-cols-4">
 		<NcTextField v-for="property in PROPERTIES"
 			:key="property"
 			v-model.trim="properties[property]"
@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import NcTextField from '@nextcloud/vue/dist/Components/NcTextField.js'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
 import { capitalize } from 'lodash-es'
 import { Temporal } from 'temporal-polyfill'
 import { ref, watchEffect } from 'vue'

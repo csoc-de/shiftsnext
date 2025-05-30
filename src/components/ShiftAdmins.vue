@@ -27,18 +27,16 @@
 							<template v-if="disabledList[index]">
 								{{ relationUsers.map(({ display_name }) => display_name).join(', ') }}
 							</template>
-							<NcSelect v-else
+							<NcSelectUsers v-else
 								v-model="selectedUserOptions2D[index]"
 								class="min-w-56"
 								multiple
-								:close-on-select="false"
-								:user-select="true"
+								:keep-open="true"
 								:options="userOptions" />
 						</td>
 						<td class="w-0 border-solid border-neutral-500 px-4 py-3">
 							<div class="flex items-center justify-center">
 								<NcButton v-if="!editedList[index]"
-									v-tooltip="t(APP_ID, 'Edit')"
 									:aria-label="t(APP_ID, 'Edit')"
 									@click="toggleRow(index, true)">
 									<template #icon>
@@ -46,7 +44,6 @@
 									</template>
 								</NcButton>
 								<NcButton v-else
-									v-tooltip="t(APP_ID, 'Save')"
 									:disabled="saving"
 									:aria-label="t(APP_ID, 'Save')"
 									@click="
@@ -81,8 +78,9 @@
 <script setup lang="ts">
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import { computed, ref } from 'vue'
 // @ts-expect-error no types
 import Check from 'vue-material-design-icons/Check.vue'
@@ -95,9 +93,9 @@ import type {
 	GroupShiftAdminRelationsByGroup,
 	GroupShiftAdminRelationsByGroupRequest,
 } from '../models/groupShiftAdminRelation'
-import type { NcSelectUserOption } from '../models/nextcloudVue'
+import type { NcSelectUsersOption } from '../models/nextcloudVue'
 import type { User } from '../models/user'
-import { getNcSelectUserOption } from '../nextcloudVue'
+import { getNcSelectUsersOption } from '../nextcloudVue'
 import { showSavedToast } from '../toast'
 import InputGroup from './InputGroup.vue'
 
@@ -112,12 +110,12 @@ const relations = ref(
 )
 
 const users = loadState<User[]>(APP_ID, 'users', [])
-const userOptions = computed<NcSelectUserOption[]>(() =>
-	users.map(getNcSelectUserOption),
+const userOptions = computed<NcSelectUsersOption[]>(() =>
+	users.map(getNcSelectUsersOption),
 )
 
-const selectedUserOptions2D = ref<NcSelectUserOption[][]>(
-	relations.value.map(({ users }) => users.map(getNcSelectUserOption)),
+const selectedUserOptions2D = ref<NcSelectUsersOption[][]>(
+	relations.value.map(({ users }) => users.map(getNcSelectUsersOption)),
 )
 
 const length = relations.value.length

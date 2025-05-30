@@ -14,14 +14,7 @@ export interface NcSelectExchangeApprovalTypeOption {
 	label: string
 }
 
-/**
- * @see {@link https://next--nextcloud-vue-components.netlify.app/#/Components/NcSelect?id=ncselect-1|NcSelect}
- * @see {@link https://next--nextcloud-vue-components.netlify.app/#/Components/NcListItems?id=nclistitemicon|NcListItemIcon}
- * @see {@link https://next--nextcloud-vue-components.netlify.app/#/Components/NcAvatar|NcAvatar}
- */
-export interface NcSelectUserOption {
+export interface NcSelectUsersOption {
 	displayName: string
 	id: string
-	showUserStatus: boolean
-	user: string
 }

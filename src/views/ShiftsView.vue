@@ -31,7 +31,7 @@
 					:options="groups"
 					label="display_name"
 					:label-outside="true"
-					:close-on-select="false"
+					:keep-open="true"
 					multiple
 					class="min-w-48" />
 			</HeaderNavigationInputGroup>
@@ -40,12 +40,12 @@
 			<div class="flex flex-wrap gap-2">
 				<NcButton v-if="shiftAdminGroups.length"
 					:disabled="synchronizing"
-					:type="ButtonType.Primary"
+					variant="primary"
 					@click="synchronizeByGroups()">
 					{{ t(APP_ID, "Synchronize") }}
 				</NcButton>
 				<NcButton v-if="multiStepAction.type"
-					:type="ButtonType.Error"
+					variant="error"
 					@click="resetMultiStepAction()">
 					{{ t(APP_ID, "Cancel") }}
 				</NcButton>
@@ -144,10 +144,8 @@
 <script setup lang="ts">
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import NcButton, {
-	ButtonType,
-} from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { onKeyStroke } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { Temporal } from 'temporal-polyfill'

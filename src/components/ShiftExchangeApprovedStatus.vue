@@ -1,14 +1,14 @@
 <template>
 	<ClockOutline v-if="approved === null"
-		v-tooltip="t(APP_ID, 'Approval pending')"
+		:title="t(APP_ID, 'Approval pending')"
 		:size="18"
 		class="text-yellow-500" />
 	<CheckCircleOutline v-else-if="approved"
-		v-tooltip="t(APP_ID, 'Approved')"
+		:title="t(APP_ID, 'Approved')"
 		:size="18"
 		class="text-green-500" />
 	<CloseCircleOutline v-else
-		v-tooltip="t(APP_ID, 'Rejected')"
+		:title="t(APP_ID, 'Rejected')"
 		:size="18"
 		class="text-red-500" />
 </template>

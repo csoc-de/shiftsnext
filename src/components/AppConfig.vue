@@ -62,7 +62,7 @@
 			</CustomFieldset>
 		</div>
 		<NcButton class="mt-4"
-			:native-type="ButtonNativeType.Submit"
+			type="submit"
 			:disabled="!saveable || saving">
 			{{ t(APP_ID, "Save") }}
 		</NcButton>
@@ -72,11 +72,9 @@
 <script setup lang="ts">
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import NcButton, {
-	ButtonNativeType,
-} from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { computed, ref, watch } from 'vue'
 import { APP_ID } from '../appId'
 import { putAppConfig } from '../db/config'

@@ -61,9 +61,9 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import NcActionButton from '@nextcloud/vue/dist/Components/NcActionButton.js'
-import NcActions from '@nextcloud/vue/dist/Components/NcActions.js'
-import NcUserStatusIcon from '@nextcloud/vue/dist/Components/NcUserStatusIcon.js'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
+import NcUserStatusIcon from '@nextcloud/vue/components/NcUserStatusIcon'
 import { inject, ref } from 'vue'
 // @ts-expect-error no types
 import Delete from 'vue-material-design-icons/Delete.vue'

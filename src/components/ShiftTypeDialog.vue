@@ -1,5 +1,5 @@
 <template>
-	<NcDialog :can-close="false"
+	<NcDialog :no-close="true"
 		:name="dialogName"
 		size="normal"
 		content-classes="mb-2">
@@ -189,8 +189,8 @@
 				{{ t(APP_ID, "Cancel") }}
 			</NcButton>
 			<NcButton :disabled="saving || durationBuilderMounted"
-				:native-type="ButtonNativeType.Submit"
-				:type="ButtonType.Primary"
+				type="submit"
+				variant="primary"
 				form="shift-type-form">
 				{{ t(APP_ID, "Save") }}
 			</NcButton>
@@ -201,18 +201,15 @@
 <script setup lang="ts">
 import { loadState } from '@nextcloud/initial-state'
 import { getDayNamesMin, getFirstDay, n, t } from '@nextcloud/l10n'
-import { NcPopover } from '@nextcloud/vue'
-import NcButton, {
-	ButtonNativeType,
-	ButtonType,
-} from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-import NcColorPicker from '@nextcloud/vue/dist/Components/NcColorPicker.js'
-import NcDateTimePickerNative from '@nextcloud/vue/dist/Components/NcDateTimePickerNative.js'
-import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcTextField from '@nextcloud/vue/dist/Components/NcTextField.js'
-import NcTimezonePicker from '@nextcloud/vue/dist/Components/NcTimezonePicker.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
+import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcTextField from '@nextcloud/vue/components/NcTextField'
+import NcTimezonePicker from '@nextcloud/vue/components/NcTimezonePicker'
 import { Temporal } from 'temporal-polyfill'
 import { computed, inject, ref } from 'vue'
 import { APP_ID } from '../appId'

@@ -5,7 +5,7 @@
 				<div class="h-full rounded-full bg-nc-primary transition-[width] ease-linear"
 					:style="{ transitionDuration, width }" />
 			</div>
-			<NcButton :type="ButtonType.Primary" size="small" @click.stop="onUndo">
+			<NcButton variant="primary" size="small" @click.stop="onUndo">
 				{{
 					t(APP_ID, "Undo")
 				}}
@@ -16,9 +16,7 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import NcButton, {
-	ButtonType,
-} from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import { ref } from 'vue'
 import { APP_ID } from '../appId'
 

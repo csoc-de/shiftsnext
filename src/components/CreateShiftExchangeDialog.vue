@@ -1,5 +1,5 @@
 <template>
-	<NcDialog :can-close="false"
+	<NcDialog :no-close="true"
 		:name="t(APP_ID, 'Create shift exchange')"
 		size="normal"
 		content-classes="mb-2">
@@ -30,10 +30,9 @@
 					<div class="flex flex-col gap-2">
 						<InputGroup>
 							<label for="user-a"> {{ t(APP_ID, "User") }}</label>
-							<NcSelect v-model="userAOption"
+							<NcSelectUsers v-model="userAOption"
 								input-id="user-a"
 								class="w-full"
-								:user-select="true"
 								:options="userAOptions"
 								:loading="userAOptionsLoading"
 								@update:model-value="loadShiftsA()" />
@@ -68,10 +67,9 @@
 						<template v-if="exchangeType === 'regular'">
 							<InputGroup>
 								<label for="user-b"> {{ t(APP_ID, "User") }}</label>
-								<NcSelect v-model="userBOption"
+								<NcSelectUsers v-model="userBOption"
 									input-id="user-b"
 									class="w-full"
-									:user-select="true"
 									:options="userBOptions"
 									:loading="userBOptionsLoading"
 									@update:model-value="loadShiftsB()" />
@@ -98,10 +96,9 @@
 						<template v-else>
 							<InputGroup>
 								<label for="user-b"> {{ t(APP_ID, "User") }}</label>
-								<NcSelect v-model="userBOption"
+								<NcSelectUsers v-model="userBOption"
 									input-id="user-b"
 									class="w-full"
-									:user-select="true"
 									:options="userBOptions" />
 							</InputGroup>
 						</template>
@@ -121,8 +118,8 @@
 				{{ t(APP_ID, "Cancel") }}
 			</NcButton>
 			<NcButton :disabled="!saveable || saving"
-				:native-type="ButtonNativeType.Submit"
-				:type="ButtonType.Primary"
+				type="submit"
+				variant="primary"
 				form="shift-exchange-form">
 				{{ t(APP_ID, "Save") }}
 			</NcButton>
@@ -132,15 +129,13 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import NcButton, {
-	ButtonNativeType,
-	ButtonType,
-} from '@nextcloud/vue/dist/Components/NcButton.js'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch.js'
-import NcDateTimePickerNative from '@nextcloud/vue/dist/Components/NcDateTimePickerNative.js'
-import NcDialog from '@nextcloud/vue/dist/Components/NcDialog.js'
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
-import NcTextArea from '@nextcloud/vue/dist/Components/NcTextArea.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
+import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
+import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
+import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import { computed, inject, ref, watch } from 'vue'
 import { APP_ID } from '../appId'
 import { getIsoCalendarDate } from '../date'
@@ -148,7 +143,7 @@ import { getShifts } from '../db/shift'
 import { getUsers } from '../db/user'
 import type {
 	NcSelectShiftOption,
-	NcSelectUserOption,
+	NcSelectUsersOption,
 } from '../models/nextcloudVue'
 import type { Shift } from '../models/shift'
 import {
@@ -157,7 +152,7 @@ import {
 	type ShiftExchangePostRequestBase,
 	type ShiftExchangeType,
 } from '../models/shiftExchange'
-import { getNcSelectShiftOption, getNcSelectUserOption } from '../nextcloudVue'
+import { getNcSelectShiftOption, getNcSelectUsersOption } from '../nextcloudVue'
 import { compare } from '../sort'
 import { authUser } from '../user'
 import CustomFieldset from './CustomFieldset.vue'
@@ -177,18 +172,18 @@ watch(exchangeType, async (type) => {
 	}
 })
 
-const userAOptions = ref<NcSelectUserOption[]>([])
+const userAOptions = ref<NcSelectUsersOption[]>([])
 const userAOptionsLoading = ref(true)
-const userAOption = ref<NcSelectUserOption>()
+const userAOption = ref<NcSelectUsersOption>()
 const dateA = ref<Date>()
 const shiftASelectDisabled = computed(() => !userAOption.value || !dateA.value)
 const shiftAOptions = ref<NcSelectShiftOption[]>()
 const shiftAOptionsLoading = ref(false)
 const shiftAOption = ref<NcSelectShiftOption>()
 
-const userBOptions = ref<NcSelectUserOption[]>([])
+const userBOptions = ref<NcSelectUsersOption[]>([])
 const userBOptionsLoading = ref(true)
-const userBOption = ref<NcSelectUserOption>()
+const userBOption = ref<NcSelectUsersOption>()
 const dateB = ref<Date>()
 const shiftBSelectDisabled = computed(() => !userBOption.value || !dateB.value)
 const shiftBOptions = ref<NcSelectShiftOption[]>()
@@ -247,7 +242,7 @@ async function loadUsersA(): Promise<void> {
 			users.push(authUser)
 			users.sort((a, b) => compare(a.display_name, b.display_name))
 		}
-		userAOptions.value = users.map(getNcSelectUserOption)
+		userAOptions.value = users.map(getNcSelectUsersOption)
 	} finally {
 		userAOptionsLoading.value = false
 	}
@@ -292,7 +287,7 @@ async function loadUsersB(): Promise<void> {
 		})
 		userBOptions.value = users
 			.filter(({ id }) => id !== userAOption.value?.id)
-			.map(getNcSelectUserOption)
+			.map(getNcSelectUsersOption)
 	} finally {
 		userBOptionsLoading.value = false
 	}

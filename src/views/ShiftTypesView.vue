@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import NcButton from '@nextcloud/vue/dist/Components/NcButton.js'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import { provide, ref } from 'vue'
 // @ts-expect-error no types
 import Plus from 'vue-material-design-icons/Plus.vue'

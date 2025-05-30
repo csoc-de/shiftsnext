@@ -5,7 +5,6 @@ import router from './router'
 import App from './App.vue'
 import '../css/style.scss'
 
-import FloatingVue from 'floating-vue'
 import 'floating-vue/dist/style.css'
 
 import { initializeTailwindTheme } from './theme'
@@ -24,6 +23,5 @@ const app = createApp(App)
 
 app.use(router)
 app.use(createPinia())
-app.use(FloatingVue)
 
 app.mount('#content')
