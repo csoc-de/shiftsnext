@@ -1,11 +1,8 @@
 <template>
 	<HeaderNavigation :title="t(APP_ID, 'Types')" :loading="loading">
 		<template #right>
-			<NcButton :aria-label="t(APP_ID, 'Create shift type')"
-				@click="createDialogMounted = true">
-				<template #icon>
-					<Plus :size="20" />
-				</template>
+			<NcButton @click="createDialogMounted = true">
+				{{ t(APP_ID, "New") }}
 			</NcButton>
 		</template>
 	</HeaderNavigation>
@@ -24,8 +21,6 @@
 import { t } from '@nextcloud/l10n'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import { provide, ref } from 'vue'
-// @ts-expect-error no types
-import Plus from 'vue-material-design-icons/Plus.vue'
 import { APP_ID } from '../appId'
 import HeaderNavigation from '../components/HeaderNavigation.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'

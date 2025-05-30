@@ -37,15 +37,11 @@
 						<td class="w-0 border-solid border-neutral-500 px-4 py-3">
 							<div class="flex items-center justify-center">
 								<NcButton v-if="!editedList[index]"
-									:aria-label="t(APP_ID, 'Edit')"
 									@click="toggleRow(index, true)">
-									<template #icon>
-										<Pencil :size="20" />
-									</template>
+									{{ t(APP_ID, "Edit") }}
 								</NcButton>
 								<NcButton v-else
 									:disabled="saving"
-									:aria-label="t(APP_ID, 'Save')"
 									@click="
 										save(
 											index,
@@ -53,9 +49,7 @@
 											selectedUserOptions2D[index]!.map(({ id }) => id),
 										)
 									">
-									<template #icon>
-										<Check :size="20" />
-									</template>
+									{{ t(APP_ID, "Save") }}
 								</NcButton>
 							</div>
 						</td>
@@ -82,10 +76,6 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import { computed, ref } from 'vue'
-// @ts-expect-error no types
-import Check from 'vue-material-design-icons/Check.vue'
-// @ts-expect-error no types
-import Pencil from 'vue-material-design-icons/Pencil.vue'
 import { APP_ID } from '../appId'
 import { putGroupShiftAdminRelationsGroupedByGroup } from '../db/groupShiftAdminRelation'
 import type { Group } from '../models/group'
