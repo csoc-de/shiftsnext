@@ -3,12 +3,8 @@
 		class="size-full h-full transform rounded-nc-large border-8 border-solid p-4 pt-2 text-center shadow transition duration-300 hover:-translate-y-1.5 hover:shadow-xl"
 		:class="{ 'line-through': deleting }">
 		<div class="flex justify-between items-center">
-			<NcUserStatusIcon v-if="shiftType.active"
-				class="rounded-full border-2 border-solid border-white"
-				status="online" />
-			<NcUserStatusIcon v-else
-				class="rounded-full border-2 border-solid border-white"
-				status="dnd" />
+			<NcUserStatusIcon :status="shiftType.active ? 'online' : 'dnd'"
+				class="rounded-full border-2 border-solid border-white" />
 
 			<NcActions>
 				<NcActionButton :close-after-click="true"
