@@ -111,7 +111,7 @@
 							<InputGroup>
 								<template v-if="weeklyType === 'by_day'">
 									<label for="shift-type-repetition-config-reference">
-										{{ t(APP_ID, "Reference & time") }}
+										{{ t(APP_ID, "Reference date & time") }}
 									</label>
 									<NcDateTimePickerNative id="shift-type-repetition-config-reference"
 										v-model="byDayReferenceDate"
