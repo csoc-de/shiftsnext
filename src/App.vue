@@ -12,7 +12,7 @@
 				</template>
 
 				<template #footer>
-					<span class="pl-2">ShiftsApp 2.0.0</span>
+					<span class="pl-2">Shifts Next {{ _appVersion }}</span>
 				</template>
 			</NcAppNavigation>
 
@@ -42,4 +42,7 @@ import type { Group } from './models/group'
 const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
 
 const isShiftAdmin = shiftAdminGroups.length > 0
+
+// @ts-expect-error global variable injected by the build process
+const _appVersion = appVersion
 </script>
