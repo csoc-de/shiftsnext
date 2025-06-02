@@ -154,6 +154,7 @@ const userAId = shiftExchange.user_a_approval.user?.id
 
 const userBId = shiftExchange.user_b_approval.user?.id
 
+/** Contains always shiftA's group ID, and potentially shiftB's group ID */
 const groupIds = [shiftExchange.shift_a.shift_type.group.id]
 if ('shift_b' in shiftExchange) {
 	groupIds.push(shiftExchange.shift_b.shift_type.group.id)
@@ -166,6 +167,7 @@ const participant: ExchangeParticipant | undefined
 			? 'userB'
 			: undefined
 
+/** Is `true` if the logged-in user is a shift admin for shiftA's and (if applicable) shiftB's group */
 const isGroupShiftAdmin = groupIds.every((groupId) => {
 	const relation = relations.find((relation) => relation.group.id === groupId)
 	return relation?.users.some((user) => user.id === authUser.id)
