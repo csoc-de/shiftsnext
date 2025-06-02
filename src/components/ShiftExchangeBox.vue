@@ -150,11 +150,9 @@ const delayBoxVisible = ref(false)
 const editDialogMounted = ref(false)
 const editor = ref<ExchangeEditor>()
 
-const userAId = shiftExchange.shift_a.user.id
+const userAId = shiftExchange.user_a_approval.user?.id
 
-const userBId = 'shift_b' in shiftExchange
-	? shiftExchange.shift_b.user.id
-	: shiftExchange.transfer_to_user.id
+const userBId = shiftExchange.user_b_approval.user?.id
 
 const groupIds = [shiftExchange.shift_a.shift_type.group.id]
 if ('shift_b' in shiftExchange) {
