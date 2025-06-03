@@ -89,21 +89,15 @@
 						<span class="text-lg">{{ t(APP_ID, "Weekly type") }}</span>
 					</template>
 					<div class="flex">
-						<NcCheckboxRadioSwitch v-model="weeklyType"
-							:value="'by_day'"
+						<NcCheckboxRadioSwitch v-for="(type, index) in REPETITION_WEEKLY_TYPES"
+							:key="index"
+							v-model="weeklyType"
+							:value="type"
 							:button-variant="true"
 							name="repetition-weekly-type"
 							type="radio"
 							button-variant-grouped="horizontal">
-							{{ t(APP_ID, "By day") }}
-						</NcCheckboxRadioSwitch>
-						<NcCheckboxRadioSwitch v-model="weeklyType"
-							:value="'by_week'"
-							:button-variant="true"
-							name="repetition-weekly-type"
-							type="radio"
-							button-variant-grouped="horizontal">
-							{{ t(APP_ID, "By Week") }}
+							{{ weeklyTypeTranslations[type] }}
 						</NcCheckboxRadioSwitch>
 					</div>
 				</CustomFieldset>
@@ -224,8 +218,10 @@ import type { Group } from '../models/group'
 import {
 	createInjectionKey,
 	REPETITION_FREQUENCIES,
+	REPETITION_WEEKLY_TYPES,
 	SHORT_DAYS,
 	updateInjectionKey,
+	weeklyTypeTranslations,
 	type RepetitionFrequency,
 	type RepetitionWeeklyType,
 	type ShiftType,
