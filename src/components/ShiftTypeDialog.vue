@@ -86,27 +86,32 @@
 				</div>
 				<CustomFieldset class="mt-3">
 					<template #legend>
-						<span class="text-lg">{{ t(APP_ID, "Weekly settings") }}</span>
+						<span class="text-lg">{{ t(APP_ID, "Weekly type") }}</span>
+					</template>
+					<div class="flex">
+						<NcCheckboxRadioSwitch v-model="weeklyType"
+							:value="'by_day'"
+							:button-variant="true"
+							name="repetition-weekly-type"
+							type="radio"
+							button-variant-grouped="horizontal">
+							{{ t(APP_ID, "By day") }}
+						</NcCheckboxRadioSwitch>
+						<NcCheckboxRadioSwitch v-model="weeklyType"
+							:value="'by_week'"
+							:button-variant="true"
+							name="repetition-weekly-type"
+							type="radio"
+							button-variant-grouped="horizontal">
+							{{ t(APP_ID, "By Week") }}
+						</NcCheckboxRadioSwitch>
+					</div>
+				</CustomFieldset>
+				<CustomFieldset class="mt-3">
+					<template #legend>
+						<span class="text-lg">{{ t(APP_ID, "Config") }}</span>
 					</template>
 					<div class="flex flex-col gap-3">
-						<div class="flex">
-							<NcCheckboxRadioSwitch v-model="weeklyType"
-								:value="'by_day'"
-								:button-variant="true"
-								name="repetition-weekly-type"
-								type="radio"
-								button-variant-grouped="horizontal">
-								{{ t(APP_ID, "By day") }}
-							</NcCheckboxRadioSwitch>
-							<NcCheckboxRadioSwitch v-model="weeklyType"
-								:value="'by_week'"
-								:button-variant="true"
-								name="repetition-weekly-type"
-								type="radio"
-								button-variant-grouped="horizontal">
-								{{ t(APP_ID, "By Week") }}
-							</NcCheckboxRadioSwitch>
-						</div>
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
 							<InputGroup>
 								<template v-if="weeklyType === 'by_day'">
