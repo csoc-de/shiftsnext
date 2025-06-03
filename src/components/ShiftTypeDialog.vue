@@ -88,7 +88,11 @@
 					<template #legend>
 						<span class="text-lg">{{ t(APP_ID, "Weekly type") }}</span>
 					</template>
-					<div class="flex">
+					<p v-if="shiftType"
+						class="leading-[calc(var(--default-clickable-area))]">
+						{{ weeklyTypeTranslations[weeklyType] }}
+					</p>
+					<div v-else class="flex">
 						<NcCheckboxRadioSwitch v-for="(type, index) in REPETITION_WEEKLY_TYPES"
 							:key="index"
 							v-model="weeklyType"
