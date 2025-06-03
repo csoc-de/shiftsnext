@@ -16,8 +16,9 @@
 
 <script setup lang="ts">
 import NcSelect from '@nextcloud/vue/components/NcSelect'
+import { watchPausable } from '@vueuse/core'
 import { Temporal } from 'temporal-polyfill'
-import { computed, ref, watch, watchEffect } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import {
 	buildIsoWeekDate,
 	getNumberOfWeeks,
@@ -61,15 +62,21 @@ watch(
 	{ immediate: true },
 )
 
-watchEffect(() => {
-	isoWeekDate.value = buildIsoWeekDate(year.value, week.value)
+const { pause: pauseYearWeekWatcher, resume: resumeYearWeekWatcher } = watchPausable([year, week], async ([_year, _week]) => {
+	pauseIsoWeekDateWatcher()
+	isoWeekDate.value = buildIsoWeekDate(_year, _week)
+	await nextTick()
+	resumeIsoWeekDateWatcher()
 })
 
-watchEffect(() => {
-	const zdt = parseIsoWeekDate(`${isoWeekDate.value}-1`)
+const { pause: pauseIsoWeekDateWatcher, resume: resumeIsoWeekDateWatcher } = watchPausable(isoWeekDate, async (_isoWeekDate) => {
+	const zdt = parseIsoWeekDate(`${_isoWeekDate}-1`)
+	pauseYearWeekWatcher()
 	year.value = zdt.yearOfWeek!
 	week.value = zdt.weekOfYear!
-})
+	await nextTick()
+	resumeYearWeekWatcher()
+}, { immediate: true })
 
 /**
  * Decrease the ISO week date by one week
