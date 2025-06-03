@@ -3,6 +3,8 @@ import type { IsoWeekDateWithoutDay } from '../date'
 import type { Group } from '../models/group'
 import type { SearchParams } from '../models/url'
 import type { Temporal } from 'temporal-polyfill'
+import { APP_ID } from '../appId'
+import { t } from '@nextcloud/l10n'
 
 export const REPETITION_FREQUENCIES = ['weekly'] as const
 
@@ -16,6 +18,13 @@ export interface RepetitionBase {
 export const REPETITION_WEEKLY_TYPES = ['by_day', 'by_week'] as const
 
 export type RepetitionWeeklyType = (typeof REPETITION_WEEKLY_TYPES)[number]
+
+export type WeeklyTypeTranslations = Record<RepetitionWeeklyType, string>
+
+export const weeklyTypeTranslations: WeeklyTypeTranslations = {
+	by_day: t(APP_ID, 'By day'),
+	by_week: t(APP_ID, 'By week'),
+}
 
 /**
  * It is important that the order of the elements in this array is the same as
