@@ -174,6 +174,7 @@ import { postSynchronizeByGroups } from '../db/calendarSync'
 import { deleteShift, getShifts, patchShift, postShift } from '../db/shift'
 import { getShiftTypes } from '../db/shiftType'
 import { getUsers } from '../db/user'
+import { RecoverableError } from '../models/error'
 import type { Group } from '../models/group'
 import type { Shift, ShiftRequest } from '../models/shift'
 import {
@@ -578,7 +579,7 @@ function getShiftTypeWrapper(
 		({ shiftType: { id } }) => id === shiftTypeId,
 	)
 	if (!wrapper) {
-		throw new Error(
+		throw new RecoverableError(
 			`Couldn't find shift type wrapper with shift type ID ${shiftTypeId} in column ${columnIndex}`,
 		)
 	}
