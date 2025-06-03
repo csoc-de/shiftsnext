@@ -1,12 +1,12 @@
 import axios, { type AxiosError } from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { handleError } from '../error'
+import type { ErrorResponse } from '../models/error'
 import type {
 	GroupShiftAdminRelationsByGroup,
 	GroupShiftAdminRelationsByGroupRequest,
 } from '../models/groupShiftAdminRelation'
 import { GROUP_SHIFT_ADMIN_RELATIONS_PATH } from '../url'
-import type { ErrorResponse } from '../models/error'
 
 /**
  * Get the group shift admin relations grouped by group

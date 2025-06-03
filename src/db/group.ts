@@ -1,8 +1,8 @@
 import axios, { type AxiosError } from '@nextcloud/axios'
 import { handleError } from '../error'
+import type { ErrorResponse } from '../models/error'
 import type { Group, GroupFilters } from '../models/group'
 import { generateUrlWithSearchParams, GROUPS_PATH } from '../url'
-import type { ErrorResponse } from '../models/error'
 
 /**
  * Get the groups

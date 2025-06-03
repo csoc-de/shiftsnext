@@ -2,13 +2,13 @@ import axios, { type AxiosError } from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { transformResponse } from '../axios'
 import { handleError } from '../error'
+import type { ErrorResponse } from '../models/error'
 import type {
 	ShiftExchange,
 	ShiftExchangePostRequest,
 	ShiftExchangePutRequest,
 } from '../models/shiftExchange'
 import { SHIFT_EXCHANGES_PATH } from '../url'
-import type { ErrorResponse } from '../models/error'
 
 /**
  * Get shift exchanges

@@ -2,8 +2,8 @@ import axios, { type AxiosError } from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { handleError } from '../error'
 import type { AppConfig, ConfigPayload, DefaultGroups } from '../models/config'
-import { CONFIG_PATH } from '../url'
 import type { ErrorResponse } from '../models/error'
+import { CONFIG_PATH } from '../url'
 
 /**
  * Save the default groups

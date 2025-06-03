@@ -1,4 +1,6 @@
+import { t } from '@nextcloud/l10n'
 import { upperFirst } from 'lodash-es'
+import { APP_ID } from './appId'
 import type { Calendar, ExchangeApprovalType } from './models/config'
 import type {
 	NcSelectCalendarOption,
@@ -8,8 +10,6 @@ import type {
 } from './models/nextcloudVue'
 import type { Shift } from './models/shift'
 import type { User } from './models/user'
-import { t } from '@nextcloud/l10n'
-import { APP_ID } from './appId'
 
 /**
  * Get the NcSelectUsersOption for a User

@@ -1,8 +1,8 @@
 import axios, { type AxiosError } from '@nextcloud/axios'
 import { handleError } from '../error'
+import type { ErrorResponse } from '../models/error'
 import type { User, UserFilters } from '../models/user'
 import { generateUrlWithSearchParams, USERS_PATH } from '../url'
-import type { ErrorResponse } from '../models/error'
 
 /**
  * Get users

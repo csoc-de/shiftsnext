@@ -6,8 +6,8 @@ import type {
 	SynchronizeByShiftRequest,
 	SynchronizeResponse,
 } from '../models/calendarSync'
-import { CALENDAR_PATH } from '../url'
 import type { ErrorResponse } from '../models/error'
+import { CALENDAR_PATH } from '../url'
 
 /**
  * Synchronize the calendar by groups
