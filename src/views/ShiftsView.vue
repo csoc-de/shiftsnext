@@ -513,8 +513,15 @@ function placeShifts(): void {
 			continue
 		}
 		cell.data.push(shift)
-		const shiftTypeWrapper = getShiftTypeWrapper(shiftTypeId, columnIndex)
-		shiftTypeWrapper.amount--
+		try {
+			const shiftTypeWrapper = getShiftTypeWrapper(shiftTypeId, columnIndex)
+			shiftTypeWrapper.amount--
+		} catch (error) {
+			if (!(error instanceof RecoverableError)) {
+				throw error
+			}
+			console.error(error)
+		}
 	}
 }
 
