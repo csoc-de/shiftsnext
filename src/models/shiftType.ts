@@ -13,7 +13,9 @@ export interface RepetitionBase {
 	interval: number
 }
 
-export type RepetitionWeeklyType = 'by_day' | 'by_week'
+export const REPETITION_WEEKLY_TYPES = ['by_day', 'by_week'] as const
+
+export type RepetitionWeeklyType = (typeof REPETITION_WEEKLY_TYPES)[number]
 
 /**
  * It is important that the order of the elements in this array is the same as
