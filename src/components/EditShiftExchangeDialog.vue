@@ -1,14 +1,17 @@
 <template>
-	<NcDialog :no-close="true"
+	<NcDialog
+		:no-close="true"
 		:name="t(APP_ID, 'Edit shift exchange')"
 		size="normal"
 		content-classes="mb-2">
-		<form id="shift-exchange-form"
+		<form
+			id="shift-exchange-form"
 			class="flex flex-col items-center gap-3"
 			@submit.prevent="onSubmit">
 			<span>{{ editor === 'admin' ? t(APP_ID, 'Admin approval') : t(APP_ID, 'User approval') }}</span>
 			<div class="flex -mt-3">
-				<NcCheckboxRadioSwitch v-model="approvedString"
+				<NcCheckboxRadioSwitch
+					v-model="approvedString"
 					value="true"
 					:button-variant="true"
 					button-variant-grouped="horizontal"
@@ -16,7 +19,8 @@
 					type="radio">
 					{{ t(APP_ID, "Approved") }}
 				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch v-model="approvedString"
+				<NcCheckboxRadioSwitch
+					v-model="approvedString"
 					value="null"
 					:button-variant="true"
 					button-variant-grouped="horizontal"
@@ -24,7 +28,8 @@
 					type="radio">
 					{{ t(APP_ID, "Pending") }}
 				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch v-model="approvedString"
+				<NcCheckboxRadioSwitch
+					v-model="approvedString"
 					value="false"
 					:button-variant="true"
 					button-variant-grouped="horizontal"
@@ -33,7 +38,8 @@
 					{{ t(APP_ID, "Rejected") }}
 				</NcCheckboxRadioSwitch>
 			</div>
-			<NcTextArea v-model="formValues.comment"
+			<NcTextArea
+				v-model="formValues.comment"
 				resize="vertical"
 				:label="t(APP_ID, 'Comment')"
 				placeholder="" />
@@ -42,7 +48,8 @@
 			<NcButton :disabled="saving" @click="emit('close')">
 				{{ t(APP_ID, "Cancel") }}
 			</NcButton>
-			<NcButton :disabled="saving"
+			<NcButton
+				:disabled="saving"
 				type="submit"
 				variant="primary"
 				form="shift-exchange-form">
@@ -53,21 +60,23 @@
 </template>
 
 <script setup lang="ts">
+import type { StringifiedNullableBoolean } from '../models/misc.ts'
+
 import { t } from '@nextcloud/l10n'
+import { computed, inject, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
-import { computed, inject, ref } from 'vue'
-import { APP_ID } from '../appId'
-import type { StringifiedNullableBoolean } from '../models/misc'
+import { APP_ID } from '../appId.ts'
 import {
-	updateIK,
 	type Approveds,
 	type ExchangeEditor,
 	type ShiftExchange,
 	type ShiftExchangePutRequest,
-} from '../models/shiftExchange'
+
+	updateIK,
+} from '../models/shiftExchange.ts'
 
 const update = inject(updateIK)!
 
@@ -77,12 +86,12 @@ const saving = ref(false)
 
 const { shiftExchange, editor } = defineProps<{
 	shiftExchange: ShiftExchange
-	editor: ExchangeEditor,
+	editor: ExchangeEditor
 }>()
 
 type FormValues = {
-	approved: boolean | null,
-	comment: string,
+	approved: boolean | null
+	comment: string
 }
 const formValues = ref<FormValues>({
 	approved: null,
@@ -105,15 +114,15 @@ fillForm()
  */
 function fillForm() {
 	switch (editor) {
-	case 'userA':
-		formValues.value.approved = shiftExchange.user_a_approval.approved
-		break
-	case 'userB':
-		formValues.value.approved = shiftExchange.user_b_approval.approved
-		break
-	case 'admin':
-		formValues.value.approved = shiftExchange.admin_approval.approved
-		break
+		case 'userA':
+			formValues.value.approved = shiftExchange.user_a_approval.approved
+			break
+		case 'userB':
+			formValues.value.approved = shiftExchange.user_b_approval.approved
+			break
+		case 'admin':
+			formValues.value.approved = shiftExchange.admin_approval.approved
+			break
 	}
 	formValues.value.comment = shiftExchange.comment
 }

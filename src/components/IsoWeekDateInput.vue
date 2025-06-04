@@ -1,12 +1,14 @@
 <template>
 	<div class="flex flex-wrap gap-1">
-		<NcSelect v-model="year"
+		<NcSelect
+			v-model="year"
 			class="min-w-[8.2rem]"
 			:options="years"
 			:clearable="false"
 			:input-id="inputId"
 			:label-outside="true" />
-		<NcSelect v-model="week"
+		<NcSelect
+			v-model="week"
 			class="min-w-[7.1rem]"
 			:options="weeks"
 			:clearable="false"
@@ -15,17 +17,18 @@
 </template>
 
 <script setup lang="ts">
-import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { watchPausable } from '@vueuse/core'
 import { Temporal } from 'temporal-polyfill'
 import { computed, nextTick, ref, watch } from 'vue'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import {
+	type IsoWeekDateWithoutDay,
+
 	buildIsoWeekDate,
 	getNumberOfWeeks,
 	localTimeZone,
 	parseIsoWeekDate,
-	type IsoWeekDateWithoutDay,
-} from '../date'
+} from '../date.ts'
 
 const isoWeekDate = defineModel<IsoWeekDateWithoutDay>({ required: true })
 
@@ -44,9 +47,7 @@ const numberOfWeeks = computed(() => {
 	return getNumberOfWeeks(year.value)
 })
 
-const weeks = computed(() =>
-	Array.from({ length: numberOfWeeks.value }, (_, i) => i + 1),
-)
+const weeks = computed(() => Array.from({ length: numberOfWeeks.value }, (_, i) => i + 1))
 
 const week = ref(today.weekOfYear!)
 
@@ -62,21 +63,38 @@ watch(
 	{ immediate: true },
 )
 
-const { pause: pauseYearWeekWatcher, resume: resumeYearWeekWatcher } = watchPausable([year, week], async ([_year, _week]) => {
+const { pause: pauseYearWeekWatcher, resume: resumeYearWeekWatcher } = watchPausable([year, week], yearWeekWatcherCallback)
+
+const { pause: pauseIsoWeekDateWatcher, resume: resumeIsoWeekDateWatcher } = watchPausable(isoWeekDate, isoWeekDateWatcherCallback, { immediate: true })
+
+/**
+ * Callback for the year and week watcher.
+ * Updates the isoWeekDate model when year or week changes.
+ *
+ * @param newValue - The new values of year and week as a tuple.
+ */
+async function yearWeekWatcherCallback(newValue: [number, number]): Promise<void> {
+	const [year, week] = newValue
 	pauseIsoWeekDateWatcher()
-	isoWeekDate.value = buildIsoWeekDate(_year, _week)
+	isoWeekDate.value = buildIsoWeekDate(year, week)
 	await nextTick()
 	resumeIsoWeekDateWatcher()
-})
+}
 
-const { pause: pauseIsoWeekDateWatcher, resume: resumeIsoWeekDateWatcher } = watchPausable(isoWeekDate, async (_isoWeekDate) => {
-	const zdt = parseIsoWeekDate(`${_isoWeekDate}-1`)
+/**
+ * Callback for the isoWeekDate watcher.
+ * Updates the year and week values when isoWeekDate changes.
+ *
+ * @param newValue - The new ISO week date without day.
+ */
+async function isoWeekDateWatcherCallback(newValue: IsoWeekDateWithoutDay): Promise<void> {
+	const zdt = parseIsoWeekDate(`${newValue}-1`)
 	pauseYearWeekWatcher()
 	year.value = zdt.yearOfWeek!
 	week.value = zdt.weekOfYear!
 	await nextTick()
 	resumeYearWeekWatcher()
-}, { immediate: true })
+}
 
 /**
  * Decrease the ISO week date by one week

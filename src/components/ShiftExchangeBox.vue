@@ -1,11 +1,13 @@
 <template>
-	<div class="rounded-nc-large border border-solid border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+	<div
+		class="rounded-nc-large border border-solid border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
 		:class="{ 'line-through': delayBoxVisible }">
 		<div class="flex justify-end pr-2 h-nc-default-clickable-area">
 			<NcActions>
-				<NcActionButton v-if="participant && !shiftExchange.done"
+				<NcActionButton
+					v-if="participant && !shiftExchange.done"
 					:close-after-click="true"
-					@click="() =>{
+					@click="() => {
 						editor = participant,
 						editDialogMounted = true
 					}">
@@ -14,9 +16,10 @@
 					</template>
 					{{ t(APP_ID, "Edit") }}
 				</NcActionButton>
-				<NcActionButton v-if="isGroupShiftAdmin && !shiftExchange.done"
+				<NcActionButton
+					v-if="isGroupShiftAdmin && !shiftExchange.done"
 					:close-after-click="true"
-					@click="() =>{
+					@click="() => {
 						editor = 'admin'
 						editDialogMounted = true
 					}">
@@ -25,7 +28,8 @@
 					</template>
 					{{ t(APP_ID, "Edit as admin") }}
 				</NcActionButton>
-				<NcActionButton v-if="isGroupShiftAdmin || (participant && !shiftExchange.done)"
+				<NcActionButton
+					v-if="isGroupShiftAdmin || (participant && !shiftExchange.done)"
 					:close-after-click="true"
 					@click="delayBoxVisible = true">
 					<template #icon>
@@ -40,7 +44,8 @@
 			<div class="border-r border-t border-solid border-gray-800 pt-1 px-2">
 				<div class="flex items-center justify-between gap-1">
 					<span>{{ shiftExchange.user_a_approval.user?.display_name }}</span>
-					<ShiftExchangeApprovedStatus v-if="approvalType !== 'admin'"
+					<ShiftExchangeApprovedStatus
+						v-if="approvalType !== 'admin'"
 						:approved="shiftExchange.user_a_approval.approved" />
 				</div>
 				<div>{{ shiftExchange.shift_a.shift_type.group.display_name }}</div>
@@ -50,7 +55,7 @@
 						[shiftExchange.shift_a.start, shiftExchange.shift_a.end],
 						'toZonedDateTime' in shiftExchange.shift_a.start
 							? dateOnlyFormatOptions
-							: dateTimeFormatOptions
+							: dateTimeFormatOptions,
 					) }}
 				</div>
 			</div>
@@ -59,7 +64,8 @@
 				<template v-if="'shift_b' in shiftExchange">
 					<div class="flex items-center justify-between gap-1">
 						<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>
-						<ShiftExchangeApprovedStatus v-if="approvalType !== 'admin'"
+						<ShiftExchangeApprovedStatus
+							v-if="approvalType !== 'admin'"
 							:approved="shiftExchange.user_b_approval.approved" />
 					</div>
 					<div>{{ shiftExchange.shift_b.shift_type.group.display_name }}</div>
@@ -69,14 +75,15 @@
 							[shiftExchange.shift_b.start, shiftExchange.shift_b.end],
 							'toZonedDateTime' in shiftExchange.shift_b.start
 								? dateOnlyFormatOptions
-								: dateTimeFormatOptions
+								: dateTimeFormatOptions,
 						) }}
 					</div>
 				</template>
 				<template v-if="'transfer_to_user' in shiftExchange">
 					<div class="flex items-center justify-between gap-1">
 						<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>
-						<ShiftExchangeApprovedStatus v-if="approvalType !== 'admin'"
+						<ShiftExchangeApprovedStatus
+							v-if="approvalType !== 'admin'"
 							:approved="shiftExchange.user_b_approval.approved" />
 					</div>
 				</template>
@@ -87,7 +94,8 @@
 					<span class="font-bold">{{ t(APP_ID, "Comment") }}: </span>
 					<span>{{ shiftExchange.comment }}</span>
 				</div>
-				<div v-if="approvalType !== 'users'"
+				<div
+					v-if="approvalType !== 'users'"
 					class="flex items-center justify-center gap-1">
 					<span class="font-bold">{{ t(APP_ID, "Admin approval") }}: </span>
 					<ShiftExchangeApprovedStatus :approved="shiftExchange.admin_approval.approved" />
@@ -95,11 +103,13 @@
 			</div>
 		</div>
 
-		<DelayBox v-if="delayBoxVisible"
+		<DelayBox
+			v-if="delayBoxVisible"
 			@done="_remove"
 			@undone="delayBoxVisible = false" />
 
-		<EditShiftExchangeDialog v-if="editDialogMounted"
+		<EditShiftExchangeDialog
+			v-if="editDialogMounted"
 			:shift-exchange="shiftExchange"
 			:editor="editor!"
 			@close="editDialogMounted = false" />
@@ -108,27 +118,28 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
+import { inject, ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
-import { inject, ref } from 'vue'
-// @ts-expect-error no types
+// @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
-// @ts-expect-error no types
+// @ts-expect-error package has no types
 import Pencil from 'vue-material-design-icons/Pencil.vue'
-import { APP_ID } from '../appId'
-import { formatRange } from '../date'
-import {
-	exchangeApprovalTypeIK,
-	relationsIK,
-	removeIK,
-	type ExchangeEditor,
-	type ExchangeParticipant,
-	type ShiftExchange,
-} from '../models/shiftExchange'
-import { authUser } from '../user'
 import DelayBox from './DelayBox.vue'
 import EditShiftExchangeDialog from './EditShiftExchangeDialog.vue'
 import ShiftExchangeApprovedStatus from './ShiftExchangeApprovedStatus.vue'
+import { APP_ID } from '../appId.ts'
+import { formatRange } from '../date.ts'
+import {
+	type ExchangeEditor,
+	type ExchangeParticipant,
+	type ShiftExchange,
+
+	exchangeApprovalTypeIK,
+	relationsIK,
+	removeIK,
+} from '../models/shiftExchange.ts'
+import { authUser } from '../user.ts'
 
 const { shiftExchange } = defineProps<{ shiftExchange: ShiftExchange }>()
 

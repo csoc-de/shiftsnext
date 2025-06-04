@@ -14,7 +14,8 @@
 						{{ t(APP_ID, "Open") }}
 					</h2>
 					<div class="flex flex-col gap-4">
-						<ShiftExchangeBox v-for="shiftExchange in pendingShiftExchanges"
+						<ShiftExchangeBox
+							v-for="shiftExchange in pendingShiftExchanges"
 							:key="shiftExchange.id"
 							:shift-exchange="shiftExchange" />
 					</div>
@@ -24,7 +25,8 @@
 						{{ t(APP_ID, "Done") }}
 					</h2>
 					<div class="flex flex-col gap-4">
-						<ShiftExchangeBox v-for="shiftExchange in doneShiftExchanges"
+						<ShiftExchangeBox
+							v-for="shiftExchange in doneShiftExchanges"
 							:key="shiftExchange.id"
 							:shift-exchange="shiftExchange" />
 					</div>
@@ -32,40 +34,43 @@
 			</div>
 		</div>
 
-		<CreateShiftExchangeDialog v-if="createDialogMounted"
+		<CreateShiftExchangeDialog
+			v-if="createDialogMounted"
 			@close="createDialogMounted = false" />
 	</PaddedContainer>
 </template>
 
 <script setup lang="ts">
+import type { ExchangeApprovalType } from '../models/config.ts'
+import type { GroupShiftAdminRelationsByGroup } from '../models/groupShiftAdminRelation.ts'
+
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import NcButton from '@nextcloud/vue/components/NcButton'
 import { provide, ref } from 'vue'
-import { APP_ID } from '../appId'
+import NcButton from '@nextcloud/vue/components/NcButton'
 import CreateShiftExchangeDialog from '../components/CreateShiftExchangeDialog.vue'
 import HeaderNavigation from '../components/HeaderNavigation.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftExchangeBox from '../components/ShiftExchangeBox.vue'
+import { APP_ID } from '../appId.ts'
 import {
 	deleteShiftExchange,
 	getShiftExchanges,
 	postShiftExchange,
 	putShiftExchange,
-} from '../db/shiftExchange'
-import type { ExchangeApprovalType } from '../models/config'
-import type { GroupShiftAdminRelationsByGroup } from '../models/groupShiftAdminRelation'
+} from '../db/shiftExchange.ts'
 import {
+	type ShiftExchange,
+	type ShiftExchangePostRequest,
+	type ShiftExchangePutRequest,
+
 	createIK,
 	exchangeApprovalTypeIK,
 	relationsIK,
 	removeIK,
 	updateIK,
-	type ShiftExchange,
-	type ShiftExchangePostRequest,
-	type ShiftExchangePutRequest,
-} from '../models/shiftExchange'
-import { compare } from '../sort'
+} from '../models/shiftExchange.ts'
+import { compare } from '../sort.ts'
 
 const loading = ref(true)
 
@@ -105,6 +110,7 @@ const createDialogMounted = ref(false)
 
 /**
  * Create shift exchange
+ *
  * @param payload The shift exchange
  */
 async function create(payload: ShiftExchangePostRequest): Promise<void> {
@@ -116,6 +122,7 @@ provide(createIK, create)
 
 /**
  * Update shift exchange
+ *
  * @param id The shift exchange id
  * @param payload The shift exchange
  */
@@ -125,15 +132,11 @@ async function update(
 ): Promise<void> {
 	const updatedShiftExchange = await putShiftExchange(id, payload)
 	if (updatedShiftExchange.done) {
-		pendingShiftExchanges.value = pendingShiftExchanges.value.filter(
-			({ id }) => id !== updatedShiftExchange.id,
-		)
+		pendingShiftExchanges.value = pendingShiftExchanges.value.filter(({ id }) => id !== updatedShiftExchange.id)
 		doneShiftExchanges.value.push(updatedShiftExchange)
 		doneShiftExchanges.value.sort((a, b) => compare(b.id, a.id))
 	} else {
-		const index = pendingShiftExchanges.value.findIndex(
-			({ id }) => id === updatedShiftExchange.id,
-		)
+		const index = pendingShiftExchanges.value.findIndex(({ id }) => id === updatedShiftExchange.id)
 		pendingShiftExchanges.value[index] = updatedShiftExchange
 	}
 }
@@ -141,18 +144,15 @@ provide(updateIK, update)
 
 /**
  * Remove shift exchange
+ *
  * @param id The shift exchange id
  */
 async function remove(id: number): Promise<void> {
 	const deletedShiftExchange = await deleteShiftExchange(id)
 	if (deletedShiftExchange.done) {
-		doneShiftExchanges.value = doneShiftExchanges.value.filter(
-			({ id }) => id !== deletedShiftExchange.id,
-		)
+		doneShiftExchanges.value = doneShiftExchanges.value.filter(({ id }) => id !== deletedShiftExchange.id)
 	} else {
-		pendingShiftExchanges.value = pendingShiftExchanges.value.filter(
-			({ id }) => id !== deletedShiftExchange.id,
-		)
+		pendingShiftExchanges.value = pendingShiftExchanges.value.filter(({ id }) => id !== deletedShiftExchange.id)
 	}
 }
 provide(removeIK, remove)

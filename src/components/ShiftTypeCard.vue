@@ -1,20 +1,24 @@
 <template>
-	<div :style="{ borderColor: shiftType.color }"
+	<div
+		:style="{ borderColor: shiftType.color }"
 		class="size-full h-full transform rounded-nc-large border-8 border-solid p-4 pt-2 text-center shadow transition duration-300 hover:-translate-y-1.5 hover:shadow-xl"
 		:class="{ 'line-through': deleting }">
 		<div class="flex justify-between items-center">
-			<NcUserStatusIcon :status="shiftType.active ? 'online' : 'dnd'"
+			<NcUserStatusIcon
+				:status="shiftType.active ? 'online' : 'dnd'"
 				class="rounded-full border-2 border-solid border-white" />
 
 			<NcActions>
-				<NcActionButton :close-after-click="true"
+				<NcActionButton
+					:close-after-click="true"
 					@click="editDialogMounted = true">
 					<template #icon>
 						<Pencil :size="20" />
 					</template>
 					{{ t(APP_ID, "Edit") }}
 				</NcActionButton>
-				<NcActionButton :close-after-click="true"
+				<NcActionButton
+					:close-after-click="true"
 					@click="() => {
 						deleting = true
 						delayBoxVisible = true
@@ -42,14 +46,16 @@
 			</li>
 		</ul>
 
-		<DelayBox v-if="delayBoxVisible"
+		<DelayBox
+			v-if="delayBoxVisible"
 			@done="_remove"
 			@undone="() => {
 				deleting = false
 				delayBoxVisible = false
 			}" />
 
-		<ShiftTypeDialog v-if="editDialogMounted"
+		<ShiftTypeDialog
+			v-if="editDialogMounted"
 			:shift-type="shiftType"
 			@close="editDialogMounted = false" />
 	</div>
@@ -57,18 +63,22 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
+import { inject, ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcUserStatusIcon from '@nextcloud/vue/components/NcUserStatusIcon'
-import { inject, ref } from 'vue'
-// @ts-expect-error no types
+// @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
-// @ts-expect-error no types
+// @ts-expect-error package has no types
 import Pencil from 'vue-material-design-icons/Pencil.vue'
-import { APP_ID } from '../appId'
-import { removeInjectionKey, type ShiftType } from '../models/shiftType'
 import DelayBox from './DelayBox.vue'
 import ShiftTypeDialog from './ShiftTypeDialog.vue'
+import { APP_ID } from '../appId.ts'
+import {
+	type ShiftType,
+
+	removeInjectionKey,
+} from '../models/shiftType.ts'
 
 const { shiftType } = defineProps<{ shiftType: ShiftType }>()
 

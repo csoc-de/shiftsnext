@@ -1,5 +1,6 @@
 <template>
-	<div :style="{
+	<div
+		:style="{
 			backgroundColor: shiftTypeWrapper.shiftType.color,
 			color: contrastColor,
 		}"
@@ -13,7 +14,8 @@
 			{{ shiftTypeWrapper.shiftType.group.display_name }}<br>
 			{{ shiftTypeWrapper.shiftType.name }}
 		</div>
-		<CustomBadge v-if="shiftTypeWrapper.amount > 1"
+		<CustomBadge
+			v-if="shiftTypeWrapper.amount > 1"
 			:style="{
 				backgroundColor: contrastColor,
 				color: doubledContrastColor,
@@ -25,35 +27,29 @@
 
 <script setup lang="ts">
 import { computed, inject } from 'vue'
-import { getContrastColor } from '../color'
+import CustomBadge from './CustomBadge.vue'
+import { getContrastColor } from '../color.ts'
 import {
+	type ShiftTypeWrapper,
+
 	multiStepActionIK,
 	setMultiStepActionIK,
-	type ShiftTypeWrapper,
-} from '../models/shiftsTable'
-import CustomBadge from './CustomBadge.vue'
+} from '../models/shiftsTable.ts'
 
 const { shiftTypeWrapper, columnIndex } = defineProps<{
-  shiftTypeWrapper: ShiftTypeWrapper
-  columnIndex: number
+	shiftTypeWrapper: ShiftTypeWrapper
+	columnIndex: number
 }>()
 
 const multiStepAction = inject(multiStepActionIK)!
 const setTableAction = inject(setMultiStepActionIK)!
 
-const isSelected = computed(
-	() =>
-		multiStepAction.value.type === 'creation'
-		&& multiStepAction.value.columnIndex === columnIndex
-		&& multiStepAction.value.shiftTypeWrapper === shiftTypeWrapper,
-)
+const isSelected = computed(() => multiStepAction.value.type === 'creation'
+	&& multiStepAction.value.columnIndex === columnIndex
+	&& multiStepAction.value.shiftTypeWrapper === shiftTypeWrapper)
 
-const contrastColor = computed(() =>
-	getContrastColor(shiftTypeWrapper.shiftType.color),
-)
-const doubledContrastColor = computed(() =>
-	getContrastColor(contrastColor.value),
-)
+const contrastColor = computed(() => getContrastColor(shiftTypeWrapper.shiftType.color))
+const doubledContrastColor = computed(() => getContrastColor(contrastColor.value))
 
 /**
  * Handle click event

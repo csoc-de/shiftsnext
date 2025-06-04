@@ -1,9 +1,9 @@
 import type { Temporal } from 'temporal-polyfill'
 import type { InjectionKey, Ref } from 'vue'
-import type { IsoWeekDateWithoutDay } from '../date'
-import type { Shift } from './shift'
-import type { RepetitionWeeklyType, ShiftType } from './shiftType'
-import type { User } from './user'
+import type { IsoWeekDateWithoutDay } from '../date.ts'
+import type { Shift } from './shift.ts'
+import type { RepetitionWeeklyType, ShiftType } from './shiftType.ts'
+import type { User } from './user.ts'
 
 export interface ShiftTypeWrapperBase {
 	shiftType: ShiftType

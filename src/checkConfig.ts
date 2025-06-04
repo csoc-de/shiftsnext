@@ -1,6 +1,7 @@
+import type { GroupShiftAdminRelationsByGroup } from './models/groupShiftAdminRelation.ts'
+
 import { loadState } from '@nextcloud/initial-state'
-import { APP_ID } from './appId'
-import type { GroupShiftAdminRelationsByGroup } from './models/groupShiftAdminRelation'
+import { APP_ID } from './appId.ts'
 
 /**
  * Checks if any necessary configuration is missing
@@ -19,7 +20,7 @@ export function checkConfig(): boolean {
 			throw new Error('No group shift admins configured')
 		}
 		return true
-	} catch (error: unknown) {
+	} catch {
 		return false
 	}
 }

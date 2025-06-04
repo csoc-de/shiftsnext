@@ -12,9 +12,7 @@ export function rotate<T>(
 	targetIndex: number,
 ): T[] {
 	if (
-		![sourceIndex, targetIndex].every(
-			(i) => Number.isInteger(i) && i >= 0 && i < arr.length,
-		)
+		![sourceIndex, targetIndex].every((i) => Number.isInteger(i) && i >= 0 && i < arr.length)
 	) {
 		throw new Error('Invalid indices')
 	}

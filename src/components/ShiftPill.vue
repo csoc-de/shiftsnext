@@ -1,5 +1,6 @@
 <template>
-	<div :style="{
+	<div
+		:style="{
 			backgroundColor: shift.shift_type.color,
 			color: contrastColor,
 		}"
@@ -14,7 +15,8 @@
 			{{ shift.shift_type.group.display_name }}<br>
 			{{ shift.shift_type.name }}
 		</div>
-		<NcButton :disabled="disabled"
+		<NcButton
+			:disabled="disabled"
 			:aria-label="t(APP_ID, 'Delete shift')"
 			variant="tertiary-no-background"
 			:style="{ color: contrastColor }"
@@ -23,21 +25,24 @@
 				<Delete :size="24" />
 			</template>
 		</NcButton>
-		<DelayBox v-if="delayBoxVisible"
+		<DelayBox
+			v-if="delayBoxVisible"
 			@done="continueDeletion"
 			@undone="cancelDeletion" />
 	</div>
 </template>
 
 <script setup lang="ts">
+import type { Shift } from '../models/shift.ts'
+
 import { t } from '@nextcloud/l10n'
-import NcButton from '@nextcloud/vue/components/NcButton'
 import { computed, inject, ref } from 'vue'
-// @ts-expect-error no types
+import NcButton from '@nextcloud/vue/components/NcButton'
+// @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
-import { APP_ID } from '../appId'
-import { getContrastColor } from '../color'
-import type { Shift } from '../models/shift'
+import DelayBox from './DelayBox.vue'
+import { APP_ID } from '../appId.ts'
+import { getContrastColor } from '../color.ts'
 import {
 	deletionShiftIK,
 	multiStepActionIK,
@@ -45,12 +50,11 @@ import {
 	resetDeletionShiftIK,
 	setDeletionShiftIK,
 	setMultiStepActionIK,
-} from '../models/shiftsTable'
-import DelayBox from './DelayBox.vue'
+} from '../models/shiftsTable.ts'
 
 const { shift, columnIndex } = defineProps<{
-  shift: Shift
-  columnIndex: number
+	shift: Shift
+	columnIndex: number
 }>()
 
 const multiStepAction = inject(multiStepActionIK)!
@@ -61,12 +65,9 @@ const setDeletionShift = inject(setDeletionShiftIK)!
 const resetDeletionShift = inject(resetDeletionShiftIK)!
 const onShiftDeletionAttempt = inject(onShiftDeletionAttemptIK)!
 
-const isSelected = computed(
-	() =>
-		multiStepAction.value.type === 'motion'
-		&& multiStepAction.value.columnIndex === columnIndex
-		&& multiStepAction.value.shift === shift,
-)
+const isSelected = computed(() => multiStepAction.value.type === 'motion'
+	&& multiStepAction.value.columnIndex === columnIndex
+	&& multiStepAction.value.shift === shift)
 
 const contrastColor = computed(() => getContrastColor(shift.shift_type.color))
 
@@ -81,12 +82,11 @@ const delayBoxVisible = ref(false)
 
 const deleting = computed(() => deletionShift.value?.id === shift.id)
 
-const disabled = computed(() =>
-	Boolean(multiStepAction.value.type || deleting.value),
-)
+const disabled = computed(() => Boolean(multiStepAction.value.type || deleting.value))
 
 /**
  * Toggle the undo popover
+ *
  * @param visible Whether the undo popover should be visible
  */
 function toggleUndoPopover(visible: boolean) {

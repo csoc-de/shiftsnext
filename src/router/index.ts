@@ -1,11 +1,12 @@
+import type { Group } from '../models/group.ts'
+
 import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
 import { createRouter, createWebHistory } from 'vue-router'
-import { APP_ID } from '../appId'
-import type { Group } from '../models/group'
 import ShiftExchangesView from '../views/ShiftExchangesView.vue'
 import ShiftsView from '../views/ShiftsView.vue'
 import ShiftTypesView from '../views/ShiftTypesView.vue'
+import { APP_ID } from '../appId.ts'
 
 declare module 'vue-router' {
 	interface RouteMeta {

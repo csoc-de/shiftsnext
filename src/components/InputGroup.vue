@@ -1,5 +1,6 @@
 <template>
-	<div class="flex gap-1"
+	<div
+		class="flex gap-1"
 		:class="{
 			'flex-col': !inline,
 			'items-center': inline,

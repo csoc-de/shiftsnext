@@ -1,9 +1,10 @@
 import type { AxiosError } from '@nextcloud/axios'
+import type { ErrorResponse } from './models/error.ts'
+
 import { showError } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
-import { APP_ID } from './appId'
-import type { ErrorResponse } from './models/error'
-import { TOAST_TIMEOUT } from './toast'
+import { APP_ID } from './appId.ts'
+import { TOAST_TIMEOUT } from './toast.ts'
 
 /**
  * Prints an error to the console consisting of the passed parameters
@@ -29,9 +30,8 @@ export function handleError(
 	subject: string,
 	showToast: boolean = true,
 ): void {
-	console.error(
-		`Failed to ${operation} ${subject}: ${error.response?.data.error ?? error.message}`,
-	)
+	// eslint-disable-next-line no-console
+	console.error(`Failed to ${operation} ${subject}: ${error.response?.data.error ?? error.message}`)
 	const translated = t(APP_ID, 'Failed to {operation} {subject}', {
 		operation,
 		subject,

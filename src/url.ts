@@ -1,6 +1,7 @@
+import type { SearchParams } from './models/url.ts'
+
 import { generateUrl, getBaseUrl } from '@nextcloud/router'
-import { APP_ID } from './appId'
-import type { SearchParams } from './models/url'
+import { APP_ID } from './appId.ts'
 
 // These constants should be used in calls to `generateUrl`
 
@@ -18,6 +19,7 @@ export const CONFIG_PATH = `${BASE_PATH}/config`
 
 /**
  * Generates a URL with search parameters
+ *
  * @param url The URL to generate
  * @param searchParams The search parameters to append
  */
@@ -25,9 +27,7 @@ export function generateUrlWithSearchParams(
 	url: string,
 	searchParams: SearchParams,
 ): string {
-	const urlInstance = new URL(
-		generateUrl(url, undefined, { baseURL: getBaseUrl() }),
-	)
+	const urlInstance = new URL(generateUrl(url, undefined, { baseURL: getBaseUrl() }))
 	for (let [key, value] of Object.entries(searchParams)) {
 		if (Array.isArray(value)) {
 			key = `${key}[]`

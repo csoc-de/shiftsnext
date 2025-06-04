@@ -1,8 +1,8 @@
 import type { Temporal } from 'temporal-polyfill'
-import type { IsoCalendarDate, IsoWeekDateWithoutDay } from '../date'
-import type { ShiftType } from '../models/shiftType'
-import type { SearchParams } from '../models/url'
-import type { User } from '../models/user'
+import type { IsoCalendarDate, IsoWeekDateWithoutDay } from '../date.ts'
+import type { ShiftType } from '../models/shiftType.ts'
+import type { SearchParams } from '../models/url.ts'
+import type { User } from '../models/user.ts'
 
 export interface ShiftRequestBase {
 	user_id: string
@@ -27,7 +27,7 @@ export interface Shift extends Omit<ShiftRequest, 'shift_type_id' | 'user_id'> {
 	shift_type: ShiftType
 }
 
-export interface ShiftPatchRequest extends Pick<ShiftRequest, 'user_id'> {}
+export type ShiftPatchRequest = Pick<ShiftRequest, 'user_id'>
 
 export interface ShiftFilters extends SearchParams {
 	group_ids?: string[]

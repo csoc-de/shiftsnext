@@ -1,5 +1,6 @@
 <template>
-	<NcDialog :no-close="true"
+	<NcDialog
+		:no-close="true"
 		:name="dialogName"
 		size="normal"
 		content-classes="mb-2">
@@ -9,7 +10,8 @@
 			<div class="grid grid-cols-2 gap-3 sm:grid-cols-6">
 				<InputGroup class="sm:col-span-2">
 					<label for="shift-type-group-id">{{ t(APP_ID, "Group") }}</label>
-					<NcSelect v-model="group"
+					<NcSelect
+						v-model="group"
 						input-id="shift-type-group-id"
 						:options="shiftAdminGroups"
 						label="display_name"
@@ -20,19 +22,22 @@
 				</InputGroup>
 				<InputGroup class="sm:col-span-2">
 					<label for="shift-type-name">{{ t(APP_ID, "Name") }}</label>
-					<NcTextField id="shift-type-name"
+					<NcTextField
+						id="shift-type-name"
 						v-model.trim="name"
 						:label-outside="true"
 						required />
 				</InputGroup>
 				<InputGroup>
 					<label for="shift-type-color">{{ t(APP_ID, "Color") }}</label>
-					<NcColorPicker id="shift-type-color"
+					<NcColorPicker
+						id="shift-type-color"
 						v-slot="{ attrs }"
 						v-model="color"
 						v-model:shown="showColorPicker"
 						container=".modal-mask">
-						<div v-bind="attrs"
+						<div
+							v-bind="attrs"
 							:style="{ backgroundColor: color }"
 							class="h-nc-default-clickable-area !w-full rounded-nc-large" />
 					</NcColorPicker>
@@ -45,13 +50,15 @@
 					<label for="shift-type-description">{{
 						t(APP_ID, "Description")
 					}}</label>
-					<NcTextField id="shift-type-description"
+					<NcTextField
+						id="shift-type-description"
 						v-model.trim="description"
 						:label-outside="true" />
 				</InputGroup>
 				<InputGroup class="col-span-2 sm:col-span-6">
 					<label for="shift-type-categories">{{ t(APP_ID, "Categories") }}</label>
-					<NcTextField id="shift-type-categories"
+					<NcTextField
+						id="shift-type-categories"
 						v-model.trim="categories"
 						:label-outside="true" />
 				</InputGroup>
@@ -66,7 +73,8 @@
 						<label for="shift-type-repetition-frequency">{{
 							t(APP_ID, "Frequency")
 						}}</label>
-						<NcSelect v-model="frequency"
+						<NcSelect
+							v-model="frequency"
 							input-id="shift-type-repetition-frequency"
 							:label-outside="true"
 							:options="frequencies"
@@ -76,7 +84,8 @@
 						<label for="shift-type-repetition-interval">{{
 							t(APP_ID, "Interval")
 						}}</label>
-						<NcTextField id="shift-type-repetition-interval"
+						<NcTextField
+							id="shift-type-repetition-interval"
 							v-model.trim="interval"
 							:label-outside="true"
 							type="number"
@@ -88,12 +97,14 @@
 					<template #legend>
 						<span class="text-lg">{{ t(APP_ID, "Weekly type") }}</span>
 					</template>
-					<p v-if="shiftType"
+					<p
+						v-if="shiftType"
 						class="leading-[calc(var(--default-clickable-area))]">
 						{{ weeklyTypeTranslations[weeklyType] }}
 					</p>
 					<div v-else class="flex">
-						<NcCheckboxRadioSwitch v-for="(type, index) in REPETITION_WEEKLY_TYPES"
+						<NcCheckboxRadioSwitch
+							v-for="(type, index) in REPETITION_WEEKLY_TYPES"
 							:key="index"
 							v-model="weeklyType"
 							:value="type"
@@ -116,7 +127,8 @@
 									<label for="shift-type-repetition-config-reference">
 										{{ t(APP_ID, "Reference date & time") }}
 									</label>
-									<NcDateTimePickerNative id="shift-type-repetition-config-reference"
+									<NcDateTimePickerNative
+										id="shift-type-repetition-config-reference"
 										v-model="byDayReferenceDate"
 										class="w-full"
 										type="datetime-local"
@@ -128,7 +140,8 @@
 									<label for="shift-type-repetition-config-reference">
 										{{ t(APP_ID, "Reference week") }}
 									</label>
-									<IsoWeekDateInput v-model="byWeekReference"
+									<IsoWeekDateInput
+										v-model="byWeekReference"
 										input-id="shift-type-repetition-config-reference"
 										class="w-full" />
 								</template>
@@ -136,11 +149,13 @@
 							<template v-if="weeklyType === 'by_day'">
 								<InputGroup>
 									<label for="shift-type-repetition-config-time-zone">{{ t(APP_ID, "Time zone") }}</label>
-									<p v-if="shiftType"
+									<p
+										v-if="shiftType"
 										class="leading-[calc(var(--default-clickable-area))]">
 										{{ timeZone }}
 									</p>
-									<NcTimezonePicker v-else
+									<NcTimezonePicker
+										v-else
 										v-model="timeZone"
 										input-id="shift-type-repetition-config-time-zone"
 										@update:model-value="setByDayReference()" />
@@ -149,7 +164,8 @@
 									<label for="shift-type-duration">{{ t(APP_ID, "Duration") }}</label>
 									<NcPopover @show="durationBuilderMounted = true" @after-hide="durationBuilderMounted = false">
 										<template #trigger>
-											<NcTextField id="shift-type-duration"
+											<NcTextField
+												id="shift-type-duration"
 												v-model.trim="durationString"
 												:label-outside="true"
 												readonly
@@ -160,12 +176,14 @@
 								</InputGroup>
 							</template>
 						</div>
-						<div class="mt-3"
+						<div
+							class="mt-3"
 							:class="{
 								'grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-7': weeklyType === 'by_day',
 							}">
 							<template v-if="weeklyType === 'by_day'">
-								<NcTextField v-for="(localDayMin, shortDay, index) in shortDayToLocalMinDayMap"
+								<NcTextField
+									v-for="(localDayMin, shortDay, index) in shortDayToLocalMinDayMap"
 									:key="index"
 									v-model.trim="shortDayToAmountMap[shortDay]"
 									type="number"
@@ -174,7 +192,8 @@
 									required />
 							</template>
 							<template v-else>
-								<NcTextField v-model.trim="byWeekAmount"
+								<NcTextField
+									v-model.trim="byWeekAmount"
 									class="w-28"
 									type="number"
 									:label="t(APP_ID, 'Amount')"
@@ -191,7 +210,8 @@
 			<NcButton :disabled="saving || durationBuilderMounted" @click="emit('close')">
 				{{ t(APP_ID, "Cancel") }}
 			</NcButton>
-			<NcButton :disabled="saving || durationBuilderMounted"
+			<NcButton
+				:disabled="saving || durationBuilderMounted"
 				type="submit"
 				variant="primary"
 				form="shift-type-form">
@@ -202,8 +222,12 @@
 </template>
 
 <script setup lang="ts">
+import type { Group } from '../models/group.ts'
+
 import { loadState } from '@nextcloud/initial-state'
 import { getDayNamesMin, getFirstDay, n, t } from '@nextcloud/l10n'
+import { Temporal } from 'temporal-polyfill'
+import { computed, inject, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
@@ -213,31 +237,29 @@ import NcPopover from '@nextcloud/vue/components/NcPopover'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcTimezonePicker from '@nextcloud/vue/components/NcTimezonePicker'
-import { Temporal } from 'temporal-polyfill'
-import { computed, inject, ref } from 'vue'
-import { APP_ID } from '../appId'
-import { rotate } from '../array'
-import { getIsoWeekDate, localTimeZone } from '../date'
-import type { Group } from '../models/group'
+import AutoFocusTrap from './AutoFocusTrap.vue'
+import CustomFieldset from './CustomFieldset.vue'
+import DurationBuilder from './DurationBuilder.vue'
+import InputGroup from './InputGroup.vue'
+import IsoWeekDateInput from './IsoWeekDateInput.vue'
+import { APP_ID } from '../appId.ts'
+import { rotate } from '../array.ts'
+import { getIsoWeekDate, localTimeZone } from '../date.ts'
 import {
-	createInjectionKey,
-	REPETITION_FREQUENCIES,
-	REPETITION_WEEKLY_TYPES,
-	SHORT_DAYS,
-	updateInjectionKey,
-	weeklyTypeTranslations,
 	type RepetitionFrequency,
 	type RepetitionWeeklyType,
 	type ShiftType,
 	type ShiftTypeRequest,
 	type ShortDay,
 	type ShortDayToAmountMap,
-} from '../models/shiftType'
-import AutoFocusTrap from './AutoFocusTrap.vue'
-import CustomFieldset from './CustomFieldset.vue'
-import DurationBuilder from './DurationBuilder.vue'
-import InputGroup from './InputGroup.vue'
-import IsoWeekDateInput from './IsoWeekDateInput.vue'
+
+	createInjectionKey,
+	REPETITION_FREQUENCIES,
+	REPETITION_WEEKLY_TYPES,
+	SHORT_DAYS,
+	updateInjectionKey,
+	weeklyTypeTranslations,
+} from '../models/shiftType.ts'
 
 const create = inject(createInjectionKey)!
 const update = inject(updateInjectionKey)!
@@ -246,7 +268,7 @@ const emit = defineEmits<{ close: [] }>()
 
 const saving = ref(false)
 
-const { shiftType } = defineProps<{ shiftType?: ShiftType }>()
+const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
 
 const dialogName = shiftType
 	? t(APP_ID, 'Edit shift type')
@@ -310,12 +332,10 @@ const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
 
 const group = ref(shiftAdminGroups.find(({ id }) => id === groupId.value))
 
-const byDayReferenceDate = ref(new Date(
-	byDayReference.value
-		.toPlainDateTime()
-		.toZonedDateTime(localTimeZone)
-		.epochMilliseconds,
-))
+const byDayReferenceDate = ref(new Date(byDayReference.value
+	.toPlainDateTime()
+	.toZonedDateTime(localTimeZone)
+	.epochMilliseconds))
 
 const durationString = computed(() => duration.value.toString())
 
@@ -352,20 +372,20 @@ function buildPayload(): ShiftTypeRequest {
 			interval: interval.value,
 			...weeklyType.value === 'by_day'
 				? {
-					weekly_type: 'by_day',
-					config: {
-						reference: byDayReference.value,
-						short_day_to_amount_map: shortDayToAmountMap.value,
-						duration: duration.value,
-					},
-				}
+						weekly_type: 'by_day',
+						config: {
+							reference: byDayReference.value,
+							short_day_to_amount_map: shortDayToAmountMap.value,
+							duration: duration.value,
+						},
+					}
 				: {
-					weekly_type: 'by_week',
-					config: {
-						reference: byWeekReference.value,
-						amount: byWeekAmount.value,
+						weekly_type: 'by_week',
+						config: {
+							reference: byWeekReference.value,
+							amount: byWeekAmount.value,
+						},
 					},
-				},
 		},
 		caldav: { categories: categories.value },
 	}
@@ -374,13 +394,9 @@ function buildPayload(): ShiftTypeRequest {
 const firstDay = getFirstDay()
 const reorderedlocalDaysMin = rotate(getDayNamesMin(), firstDay, 0)
 const reorderedShortDays = rotate(SHORT_DAYS, firstDay, 0)
-const shortDayLocalMinDayTuples: [ShortDay, string][] = reorderedShortDays.map(
-	(shortDay, index) => [shortDay, reorderedlocalDaysMin[index]],
-)
+const shortDayLocalMinDayTuples: [ShortDay, string][] = reorderedShortDays.map((shortDay, index) => [shortDay, reorderedlocalDaysMin[index]])
 // @ts-expect-error Object.fromEntries doesn't infer the proper return type
-const shortDayToLocalMinDayMap: Record<ShortDay, string> = Object.fromEntries(
-	shortDayLocalMinDayTuples,
-)
+const shortDayToLocalMinDayMap: Record<ShortDay, string> = Object.fromEntries(shortDayLocalMinDayTuples)
 
 const daysWithOccurences = computed(() => {
 	const entries: string[] = []
@@ -426,9 +442,7 @@ const repetitionSummary = computed(() => {
  * and time zone picker
  */
 function setByDayReference(): void {
-	byDayReference.value = Temporal.Instant.fromEpochMilliseconds(
-		byDayReferenceDate.value.valueOf(),
-	)
+	byDayReference.value = Temporal.Instant.fromEpochMilliseconds(byDayReferenceDate.value.valueOf())
 		.toZonedDateTimeISO(localTimeZone)
 		.toPlainDateTime()
 		.toZonedDateTime(timeZone.value)

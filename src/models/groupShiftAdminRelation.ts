@@ -1,5 +1,5 @@
-import type { Group } from '../models/group'
-import type { User } from '../models/user'
+import type { Group } from '../models/group.ts'
+import type { User } from '../models/user.ts'
 
 export interface GroupShiftAdminRelationsByGroupRequest {
 	group_id: string

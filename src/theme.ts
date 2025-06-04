@@ -26,6 +26,7 @@ function addDarkModeChangeEventListener() {
 /**
  * Update the `data-tw-theme` attribute on the body element to reflect the
  * current theme.
+ *
  * @param isDarkMode Whether the current theme is dark mode.
  */
 function updateTailwindThemeAttribute(isDarkMode: boolean) {

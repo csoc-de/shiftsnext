@@ -1,18 +1,20 @@
-import axios, { type AxiosError } from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { transformResponse } from '../axios'
-import { handleError } from '../error'
-import type { ErrorResponse } from '../models/error'
+import type { ErrorResponse } from '../models/error.ts'
 import type {
 	Shift,
 	ShiftFilters,
 	ShiftPatchRequest,
 	ShiftRequest,
-} from '../models/shift'
-import { generateUrlWithSearchParams, SHIFTS_PATH } from '../url'
+} from '../models/shift.ts'
+
+import axios, { type AxiosError } from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
+import { transformResponse } from '../axios.ts'
+import { handleError } from '../error.ts'
+import { generateUrlWithSearchParams, SHIFTS_PATH } from '../url.ts'
 
 /**
  * Get shifts
+ *
  * @param filters The filters
  */
 export async function getShifts(filters: ShiftFilters = {}): Promise<Shift[]> {
@@ -31,6 +33,7 @@ export async function getShifts(filters: ShiftFilters = {}): Promise<Shift[]> {
 
 /**
  * Create shift
+ *
  * @param payload The shift
  */
 export async function postShift(payload: ShiftRequest): Promise<Shift> {
@@ -48,6 +51,7 @@ export async function postShift(payload: ShiftRequest): Promise<Shift> {
 
 /**
  * Update shift
+ *
  * @param id The shift id
  * @param payload The shift
  */
@@ -71,6 +75,7 @@ export async function patchShift(
 
 /**
  * Delete shift
+ *
  * @param id The shift id
  */
 export async function deleteShift(id: number): Promise<Shift> {

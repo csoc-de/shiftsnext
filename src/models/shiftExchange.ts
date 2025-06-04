@@ -1,8 +1,8 @@
 import type { InjectionKey } from 'vue'
-import type { Shift } from '../models/shift'
-import type { User } from '../models/user'
-import type { ExchangeApprovalType } from './config'
-import type { GroupShiftAdminRelationsByGroup } from './groupShiftAdminRelation'
+import type { Shift } from '../models/shift.ts'
+import type { User } from '../models/user.ts'
+import type { ExchangeApprovalType } from './config.ts'
+import type { GroupShiftAdminRelationsByGroup } from './groupShiftAdminRelation.ts'
 
 // Requests
 
@@ -15,18 +15,18 @@ export interface ShiftExchangePostRequestBase extends ShiftExchangeBase {
 }
 
 export interface RegularShiftExchangePostRequest
-extends ShiftExchangePostRequestBase {
+	extends ShiftExchangePostRequestBase {
 	shift_b_id: number
 }
 
 export interface TransferShiftExchangePostRequest
-extends ShiftExchangePostRequestBase {
+	extends ShiftExchangePostRequestBase {
 	transfer_to_user_id: string
 }
 
 export type ShiftExchangePostRequest =
-| RegularShiftExchangePostRequest
-| TransferShiftExchangePostRequest
+	| RegularShiftExchangePostRequest
+	| TransferShiftExchangePostRequest
 
 export type Approved = boolean | null
 
@@ -67,7 +67,7 @@ export interface RegularShiftExchange extends ShiftExchangeResponseBase {
 }
 
 export interface TransferShiftExchangeResponse
-extends ShiftExchangeResponseBase {
+	extends ShiftExchangeResponseBase {
 	transfer_to_user: User
 }
 

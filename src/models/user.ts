@@ -1,5 +1,5 @@
-import type { ReadonlyDeep } from '../models/misc'
-import type { SearchParams } from '../models/url'
+import type { ReadonlyDeep } from '../models/misc.ts'
+import type { SearchParams } from '../models/url.ts'
 
 export type User = ReadonlyDeep<{
 	id: string

@@ -1,6 +1,6 @@
 import { getCanonicalLocale } from '@nextcloud/l10n'
 import { Temporal } from 'temporal-polyfill'
-import { compare } from './sort'
+import { compare } from './sort.ts'
 
 export const locale = getCanonicalLocale()
 
@@ -8,24 +8,28 @@ export const localTimeZone = Temporal.Now.timeZoneId()
 
 /**
  * ISO calendar date, e.g. `"2024-01-01"`
+ *
  * @see {@link https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates}
  */
 export type IsoCalendarDate = `${string}-${string}-${string}`
 
 /**
  * ISO week date without day, e.g. `"2024-W01"`
+ *
  * @see {@link https://en.wikipedia.org/wiki/ISO_week_date}
  */
 export type IsoWeekDateWithoutDay = `${string}-W${string}`
 
 /**
  * ISO week date with weekday, e.g. `"2024-W01-1"`
+ *
  * @see {@link https://en.wikipedia.org/wiki/ISO_week_date}
  */
 export type IsoWeekDateWithDay = `${string}-W${string}-${number}`
 
 /**
  * ISO week date with or without weekday, e.g. `"2024-W01-1"` or `"2024-W01"`
+ *
  * @see {@link https://en.wikipedia.org/wiki/ISO_week_date}
  */
 export type IsoWeekDate = IsoWeekDateWithoutDay | IsoWeekDateWithDay
@@ -75,9 +79,7 @@ export function getIsoWeekDate<T extends boolean>(
 	withDay: T,
 ): T extends true ? IsoWeekDateWithDay : IsoWeekDateWithoutDay {
 	if ('toISOString' in date) {
-		date = Temporal.Instant.fromEpochMilliseconds(
-			date.valueOf(),
-		).toZonedDateTimeISO(localTimeZone)
+		date = Temporal.Instant.fromEpochMilliseconds(date.valueOf()).toZonedDateTimeISO(localTimeZone)
 	}
 	return buildIsoWeekDate(
 		date.yearOfWeek!,
@@ -108,6 +110,7 @@ const dateTimeFormatters: Record<string, Intl.DateTimeFormat> = {}
 
 /**
  * Formats `date` using the specified `options`
+ *
  * @param date The date to format
  * @param options The options to use when formatting `date`
  */
@@ -126,6 +129,7 @@ export function formatDate(
 
 /**
  * Formats `dates` as range using the specified `options`
+ *
  * @param dates The dates to format as range
  * @param options The options to use when formatting `dates`
  */
@@ -152,11 +156,10 @@ export function formatRange(
 /**
  * Returns a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat | Intl.DateTimeFormat}
  * instance with the specified `options`
+ *
  * @param options The options to use when creating the formatter
  */
-export function getDateTimeFormatter(
-	options: Intl.DateTimeFormatOptions,
-): Intl.DateTimeFormat {
+export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
 	options.timeZone ??= localTimeZone
 	const optionsAsArray = Object.entries(options)
 	optionsAsArray.sort(([key1], [key2]) => compare(key1, key2))
@@ -179,13 +182,9 @@ export function getDateTimeFormatter(
  *
  * @param date Defaults to the current date
  */
-export function getIsoCalendarDate(
-	date: Date | Temporal.ZonedDateTime = new Date(),
-): IsoCalendarDate {
+export function getIsoCalendarDate(date: Date | Temporal.ZonedDateTime = new Date()): IsoCalendarDate {
 	if ('toISOString' in date) {
-		date = Temporal.Instant.fromEpochMilliseconds(
-			date.valueOf(),
-		).toZonedDateTimeISO(localTimeZone)
+		date = Temporal.Instant.fromEpochMilliseconds(date.valueOf()).toZonedDateTimeISO(localTimeZone)
 	}
 	const year = String(date.year).padStart(4, '0')
 	const month = String(date.month).padStart(2, '0')
@@ -198,12 +197,8 @@ export function getIsoCalendarDate(
  *
  * @param isoWeekDate The ISO week date to parse
  */
-export function parseIsoWeekDate(
-	isoWeekDate: IsoWeekDateWithDay,
-): Temporal.ZonedDateTime {
-	const error = new Error(
-		`The value "${isoWeekDate}" is not a valid ISO week date`,
-	)
+export function parseIsoWeekDate(isoWeekDate: IsoWeekDateWithDay): Temporal.ZonedDateTime {
+	const error = new Error(`The value "${isoWeekDate}" is not a valid ISO week date`)
 	const match = isoWeekDate.match(/^(\d{4})-W(\d{2})-(\d)$/)
 	if (!match) {
 		throw error
@@ -262,15 +257,21 @@ export function reviver(key: string, value: unknown): unknown {
 		if (['start', 'end'].includes(key)) {
 			try {
 				return Temporal.Instant.from(value).toZonedDateTimeISO(localTimeZone)
-			} catch {}
+			} catch {
+				// Failing is expected
+			}
 			try {
 				return Temporal.PlainDate.from(value)
-			} catch {}
+			} catch {
+				// Failing is expected
+			}
 		}
 		if (key === 'reference') {
 			try {
 				return Temporal.ZonedDateTime.from(value)
-			} catch {}
+			} catch {
+				// Failing is expected
+			}
 		}
 	}
 	return value

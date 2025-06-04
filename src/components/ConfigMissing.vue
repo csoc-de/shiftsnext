@@ -8,5 +8,5 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import { APP_ID } from '../appId'
+import { APP_ID } from '../appId.ts'
 </script>

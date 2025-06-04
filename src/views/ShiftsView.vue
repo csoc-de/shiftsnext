@@ -3,18 +3,21 @@
 		<div class="flex flex-wrap gap-2">
 			<HeaderNavigationInputGroup>
 				<label for="iso-week-date">{{ t(APP_ID, "Year and week") }}</label>
-				<IsoWeekDateInput ref="isoWeekDateInput"
+				<IsoWeekDateInput
+					ref="isoWeekDateInput"
 					v-model="isoWeekDate"
 					input-id="iso-week-date" />
 			</HeaderNavigationInputGroup>
 			<HeaderNavigationInputGroup>
-				<NcButton :aria-label="t(APP_ID, 'Previous week')"
+				<NcButton
+					:aria-label="t(APP_ID, 'Previous week')"
 					@click="isoWeekDateInput?.decrease()">
 					<template #icon>
 						<ChevronLeft :size="20" />
 					</template>
 				</NcButton>
-				<NcButton :aria-label="t(APP_ID, 'Next week')"
+				<NcButton
+					:aria-label="t(APP_ID, 'Next week')"
 					@click="isoWeekDateInput?.increase()">
 					<template #icon>
 						<ChevronRight :size="20" />
@@ -26,7 +29,8 @@
 			</HeaderNavigationInputGroup>
 			<HeaderNavigationInputGroup>
 				<label for="groups">{{ t(APP_ID, "Groups") }}</label>
-				<NcSelect v-model="selectedGroups"
+				<NcSelect
+					v-model="selectedGroups"
 					input-id="groups"
 					:options="groups"
 					label="display_name"
@@ -38,13 +42,15 @@
 		</div>
 		<template #right>
 			<div class="flex flex-wrap gap-2">
-				<NcButton v-if="shiftAdminGroups.length"
+				<NcButton
+					v-if="shiftAdminGroups.length"
 					:disabled="synchronizing"
 					variant="primary"
 					@click="synchronizeByGroups()">
 					{{ t(APP_ID, "Synchronize") }}
 				</NcButton>
-				<NcButton v-if="multiStepAction.type"
+				<NcButton
+					v-if="multiStepAction.type"
 					variant="error"
 					@click="resetMultiStepAction()">
 					{{ t(APP_ID, "Cancel") }}
@@ -59,13 +65,14 @@
 			</caption>
 			<thead>
 				<tr class="h-12">
-					<th v-for="({ type, data }, columnIndex) in headerRow"
+					<th
+						v-for="({ type, data }, columnIndex) in headerRow"
 						:key="columnIndex"
 						class="border border-solid border-neutral-500 p-2 text-center"
 						:class="{
 							[cellBgColor]:
-								multiStepAction.type &&
-								multiStepAction.columnIndex === columnIndex,
+								multiStepAction.type
+								&& multiStepAction.columnIndex === columnIndex,
 						}">
 						<template v-if="type === 'string'">
 							{{ data }}
@@ -83,13 +90,14 @@
 			</thead>
 			<tbody class="h-full">
 				<tr class="h-12">
-					<td v-for="({ type, data }, columnIndex) in shiftTypesRow"
+					<td
+						v-for="({ type, data }, columnIndex) in shiftTypesRow"
 						:key="columnIndex"
 						class="border border-solid border-neutral-500 h-full"
 						:class="{
 							[cellBgColor]:
-								multiStepAction.type &&
-								multiStepAction.columnIndex === columnIndex,
+								multiStepAction.type
+								&& multiStepAction.columnIndex === columnIndex,
 							'p-2 text-center': type === 'string',
 						}">
 						<template v-if="type === 'string'">
@@ -97,7 +105,8 @@
 						</template>
 						<div v-else class="flex size-full flex-col gap-1 p-2">
 							<template v-for="(shiftTypeWrapper, i) in data" :key="i">
-								<ShiftTypePill v-if="
+								<ShiftTypePill
+									v-if="
 										shiftTypeWrapper.amount && shiftTypeWrapper.shiftType.active
 									"
 									:shift-type-wrapper="shiftTypeWrapper"
@@ -106,30 +115,34 @@
 						</div>
 					</td>
 				</tr>
-				<tr v-for="(shiftsRow, rowIndex) in shiftsRows"
+				<tr
+					v-for="(shiftsRow, rowIndex) in shiftsRows"
 					:key="rowIndex"
 					class="h-12">
-					<td v-for="({ type, data }, columnIndex) in shiftsRow"
+					<td
+						v-for="({ type, data }, columnIndex) in shiftsRow"
 						:key="columnIndex"
 						class="border border-solid border-neutral-500 h-full"
 						:class="{
 							[cellBgColor]:
-								multiStepAction.type &&
-								multiStepAction.columnIndex === columnIndex,
+								multiStepAction.type
+								&& multiStepAction.columnIndex === columnIndex,
 							'p-2 text-center': type === 'user',
 						}">
 						<template v-if="type === 'user'">
 							{{ data.display_name }}
 						</template>
-						<div v-else
+						<div
+							v-else
 							class="flex size-full flex-col gap-1 p-2"
 							:class="{
 								'pointer-events-none':
-									multiStepAction.type &&
-									multiStepAction.columnIndex !== columnIndex,
+									multiStepAction.type
+									&& multiStepAction.columnIndex !== columnIndex,
 							}"
 							@click="onShiftCellClick(shiftsRow[0].data.id)">
-							<ShiftPill v-for="(shift, i) in data"
+							<ShiftPill
+								v-for="(shift, i) in data"
 								:key="i"
 								:shift="shift"
 								:column-index="columnIndex" />
@@ -142,56 +155,45 @@
 </template>
 
 <script setup lang="ts">
+import type { Group } from '../models/group.ts'
+import type { Shift, ShiftRequest } from '../models/shift.ts'
+import type { User } from '../models/user.ts'
+
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import NcButton from '@nextcloud/vue/components/NcButton'
-import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { onKeyStroke } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { Temporal } from 'temporal-polyfill'
 import { provide, ref, useTemplateRef, watch } from 'vue'
-// @ts-expect-error no types
+import NcButton from '@nextcloud/vue/components/NcButton'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
+// @ts-expect-error package has no types
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
-// @ts-expect-error no types
+// @ts-expect-error package has no types
 import ChevronRight from 'vue-material-design-icons/ChevronRight.vue'
-import { APP_ID } from '../appId'
-import { rotate } from '../array'
 import HeaderNavigation from '../components/HeaderNavigation.vue'
 import HeaderNavigationInputGroup from '../components/HeaderNavigationInputGroup.vue'
 import IsoWeekDateInput from '../components/IsoWeekDateInput.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftPill from '../components/ShiftPill.vue'
 import ShiftTypePill from '../components/ShiftTypePill.vue'
+import { APP_ID } from '../appId.ts'
+import { rotate } from '../array.ts'
 import {
+	type IsoWeekDate,
+
 	formatDate,
 	getIsoWeekDate,
 	getZonedDateTimeForDayOfWeek,
 	localTimeZone,
 	parseIsoWeekDate,
-	type IsoWeekDate,
-} from '../date'
-import { postSynchronizeByGroups } from '../db/calendarSync'
-import { deleteShift, getShifts, patchShift, postShift } from '../db/shift'
-import { getShiftTypes } from '../db/shiftType'
-import { getUsers } from '../db/user'
-import { RecoverableError } from '../models/error'
-import type { Group } from '../models/group'
-import type { Shift, ShiftRequest } from '../models/shift'
+} from '../date.ts'
+import { postSynchronizeByGroups } from '../db/calendarSync.ts'
+import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
+import { getShiftTypes } from '../db/shiftType.ts'
+import { getUsers } from '../db/user.ts'
+import { RecoverableError } from '../models/error.ts'
 import {
-	SHORT_DAYS,
-	shortDayToIsoDayNumberMap,
-	type ShiftType,
-	type ShortDay,
-	type ShortDayToAmountMap,
-} from '../models/shiftType'
-import {
-	deletionShiftIK,
-	multiStepActionIK,
-	onShiftDeletionAttemptIK,
-	resetDeletionShiftIK,
-	resetMultiStepActionIK,
-	setDeletionShiftIK,
-	setMultiStepActionIK,
 	type HeaderRow,
 	type MultiStepAction,
 	type ShiftsDataCell,
@@ -204,10 +206,25 @@ import {
 	type UserCell,
 	type WeekCell,
 	type ZonedDateTimeDataCell,
-} from '../models/shiftsTable'
-import type { User } from '../models/user'
-import { compareShifts, compareShiftTypes } from '../sort'
-import { useSelectedGroups } from '../stores/selectedGroups'
+
+	deletionShiftIK,
+	multiStepActionIK,
+	onShiftDeletionAttemptIK,
+	resetDeletionShiftIK,
+	resetMultiStepActionIK,
+	setDeletionShiftIK,
+	setMultiStepActionIK,
+} from '../models/shiftsTable.ts'
+import {
+	type ShiftType,
+	type ShortDay,
+	type ShortDayToAmountMap,
+
+	SHORT_DAYS,
+	shortDayToIsoDayNumberMap,
+} from '../models/shiftType.ts'
+import { compareShifts, compareShiftTypes } from '../sort.ts'
+import { useSelectedGroups } from '../stores/selectedGroups.ts'
 
 const isoWeekDateInput = useTemplateRef('isoWeekDateInput')
 
@@ -253,9 +270,7 @@ function initialize(): void {
 	const groupIds = selectedGroupIds.value
 
 	const shiftTypesPromise = getShiftTypes({ group_ids: groupIds })
-	shiftTypesPromise.then(
-		(_shiftTypes) => (shiftTypes = _shiftTypes.sort(compareShiftTypes)),
-	)
+	shiftTypesPromise.then((_shiftTypes) => (shiftTypes = _shiftTypes.sort(compareShiftTypes)))
 	promises.push(shiftTypesPromise)
 
 	const usersPromise = getUsers({ group_ids: groupIds })
@@ -302,9 +317,7 @@ function setupHeaderRow(): void {
 		type: 'week',
 		data: isoWeekDate.value,
 	}
-	const dayCells: ZonedDateTimeDataCell[] = zdtsOfWeek.map(
-		(zdt): ZonedDateTimeDataCell => ({ type: 'zoned-date-time', data: zdt }),
-	)
+	const dayCells: ZonedDateTimeDataCell[] = zdtsOfWeek.map((zdt): ZonedDateTimeDataCell => ({ type: 'zoned-date-time', data: zdt }))
 	headerRow.value = [analystCell, weekCell, ...dayCells]
 }
 
@@ -380,9 +393,7 @@ function placeWeeklyByWeekShiftTypes() {
 		let intervalIsoWeekDate = getIsoWeekDate(intervalZdt, false)
 		while (intervalIsoWeekDate <= isoWeekDate.value) {
 			if (intervalIsoWeekDate !== isoWeekDate.value) {
-				intervalZdt = intervalZdt.add(
-					Temporal.Duration.from({ weeks: interval }),
-				)
+				intervalZdt = intervalZdt.add(Temporal.Duration.from({ weeks: interval }))
 				intervalIsoWeekDate = getIsoWeekDate(intervalZdt, false)
 				continue
 			}
@@ -429,20 +440,14 @@ function placeWeeklyByDayShiftTypes() {
 		let intervalIsoWeekDate = getIsoWeekDate(intervalZdt, false)
 		while (intervalIsoWeekDate <= isoWeekDate.value) {
 			if (intervalIsoWeekDate !== isoWeekDate.value) {
-				intervalZdt = intervalZdt.add(
-					Temporal.Duration.from({ weeks: interval }),
-				)
+				intervalZdt = intervalZdt.add(Temporal.Duration.from({ weeks: interval }))
 				intervalIsoWeekDate = getIsoWeekDate(intervalZdt, false)
 				continue
 			}
 			/** Monday on array index 0, sunday on 6 */
 			const orderedShortDays = rotate(SHORT_DAYS, 1, 0)
 			/** Monday data first, Sunday data last */
-			const orderedShortDayToAmountMap = Object.fromEntries(
-				orderedShortDays.map(
-					(shortDay) => [shortDay, shortDayToAmountMap[shortDay]],
-				),
-			) as ShortDayToAmountMap
+			const orderedShortDayToAmountMap = Object.fromEntries(orderedShortDays.map((shortDay) => [shortDay, shortDayToAmountMap[shortDay]])) as ShortDayToAmountMap
 
 			for (const SD of Object.keys(orderedShortDayToAmountMap)) {
 				const shortDay = SD as ShortDay
@@ -492,7 +497,6 @@ function placeWeeklyByDayShiftTypes() {
 			}
 			break
 		}
-
 	}
 }
 
@@ -520,6 +524,7 @@ function placeShifts(): void {
 			if (!(error instanceof RecoverableError)) {
 				throw error
 			}
+			// eslint-disable-next-line no-console
 			console.error(error)
 		}
 	}
@@ -527,6 +532,7 @@ function placeShifts(): void {
 
 /**
  * Returns the column index for the given `isoWeekDate`
+ *
  * @param isoWeekDate The ISO week date
  */
 function getColumnIndex(isoWeekDate: IsoWeekDate): number {
@@ -546,6 +552,7 @@ function getColumnIndex(isoWeekDate: IsoWeekDate): number {
 
 /**
  * Returns the shifts row for the given `userId`
+ *
  * @param userId The user ID
  */
 function getShiftsRow(userId: string): ShiftsRow {
@@ -567,6 +574,7 @@ const dayCellFormatOptions: Intl.DateTimeFormatOptions = {
 
 /**
  * Returns the shift type wrapper for the given `shiftTypeId` and `columnIndex`
+ *
  * @param shiftTypeId The shift type ID
  * @param columnIndex The column index
  */
@@ -578,38 +586,34 @@ function getShiftTypeWrapper(
 		throw new Error('setupShiftTypesRow needs to be called before')
 	}
 	if (shiftTypesRow.value[columnIndex]?.type !== 'shift-types') {
-		throw new Error(
-			`Column ${columnIndex} does not contain a shift types data cell`,
-		)
+		throw new Error(`Column ${columnIndex} does not contain a shift types data cell`)
 	}
-	const wrapper = shiftTypesRow.value[columnIndex].data.find(
-		({ shiftType: { id } }) => id === shiftTypeId,
-	)
+	const wrapper = shiftTypesRow.value[columnIndex].data.find(({ shiftType: { id } }) => id === shiftTypeId)
 	if (!wrapper) {
-		throw new RecoverableError(
-			`Couldn't find shift type wrapper with shift type ID ${shiftTypeId} in column ${columnIndex}`,
-		)
+		throw new RecoverableError(`Couldn't find shift type wrapper with shift type ID ${shiftTypeId} in column ${columnIndex}`)
 	}
 	return wrapper
 }
 
 /**
  * Handler for click on a shift cell
+ *
  * @param userId The user ID
  */
 function onShiftCellClick(userId: string): void {
 	switch (multiStepAction.value.type) {
-	case 'creation':
-		onShiftCreationAttempt(userId)
-		break
-	case 'motion':
-		onShiftMotionAttempt(userId)
-		break
+		case 'creation':
+			onShiftCreationAttempt(userId)
+			break
+		case 'motion':
+			onShiftMotionAttempt(userId)
+			break
 	}
 }
 
 /**
  * Handler for shift creation attempt
+ *
  * @param userId The user ID
  */
 async function onShiftCreationAttempt(userId: string): Promise<void> {
@@ -628,13 +632,13 @@ async function onShiftCreationAttempt(userId: string): Promise<void> {
 		shift_type_id: shiftTypeWrapper.shiftType.id,
 		...shiftTypeWrapper.weeklyType === 'by_day'
 			? {
-				start: shiftTypeWrapper.shiftStart,
-				end: shiftTypeWrapper.shiftEnd,
-			}
+					start: shiftTypeWrapper.shiftStart,
+					end: shiftTypeWrapper.shiftEnd,
+				}
 			: {
-				start: shiftTypeWrapper.shiftStart,
-				end: shiftTypeWrapper.shiftEnd,
-			},
+					start: shiftTypeWrapper.shiftStart,
+					end: shiftTypeWrapper.shiftEnd,
+				},
 	}
 
 	const createdShift = await postShift(payload)
@@ -645,6 +649,7 @@ async function onShiftCreationAttempt(userId: string): Promise<void> {
 
 /**
  * Handler for shift motion attempt
+ *
  * @param userId The user ID
  */
 async function onShiftMotionAttempt(userId: string): Promise<void> {
@@ -666,6 +671,7 @@ provide(deletionShiftIK, deletionShift)
 
 /**
  * Sets the deletion shift
+ *
  * @param shift The shift to delete
  */
 function setDeletionShift(shift: Shift) {
@@ -683,6 +689,7 @@ provide(resetDeletionShiftIK, resetDeletionShift)
 
 /**
  * Handler for shift deletion attempt
+ *
  * @param shift The shift to delete
  * @param columnIndex The column index
  */
@@ -703,6 +710,7 @@ provide(onShiftDeletionAttemptIK, onShiftDeletionAttempt)
 
 /**
  * Returns the shifts data cell for the given `userId` and `columnIndex`
+ *
  * @param userId The user ID
  * @param columnIndex The column index
  */
@@ -714,15 +722,14 @@ function getShiftsDataCell(
 	columnIndex ??= multiStepAction.value.columnIndex
 	const cell = row[columnIndex]
 	if (cell?.type !== 'shifts') {
-		throw new Error(
-			`Column ${columnIndex} does not contain a shifts data cell`,
-		)
+		throw new Error(`Column ${columnIndex} does not contain a shifts data cell`)
 	}
 	return cell
 }
 
 /**
  * Extracts the shift from the shifts data cell
+ *
  * @param shift The shift to extract
  * @param columnIndex The column index
  */
@@ -733,6 +740,7 @@ function extractShift(shift: Shift, columnIndex?: number): void {
 
 /**
  * Places the shift
+ *
  * @param shift The shift to place
  * @param columnIndex The column index
  */
@@ -752,6 +760,7 @@ onKeyStroke(
 
 /**
  * Sets the multi-step action
+ *
  * @param newAction The new multi-step action
  */
 function setMultiStepAction(newAction: MultiStepAction): void {

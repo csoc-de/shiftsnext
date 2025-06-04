@@ -1,18 +1,20 @@
-import { t } from '@nextcloud/l10n'
-import { upperFirst } from 'lodash-es'
-import { APP_ID } from './appId'
-import type { Calendar, ExchangeApprovalType } from './models/config'
+import type { Calendar, ExchangeApprovalType } from './models/config.ts'
 import type {
 	NcSelectCalendarOption,
 	NcSelectExchangeApprovalTypeOption,
 	NcSelectShiftOption,
 	NcSelectUsersOption,
-} from './models/nextcloudVue'
-import type { Shift } from './models/shift'
-import type { User } from './models/user'
+} from './models/nextcloudVue.ts'
+import type { Shift } from './models/shift.ts'
+import type { User } from './models/user.ts'
+
+import { t } from '@nextcloud/l10n'
+import { upperFirst } from 'lodash-es'
+import { APP_ID } from './appId.ts'
 
 /**
  * Get the NcSelectUsersOption for a User
+ *
  * @param user User
  */
 export function getNcSelectUsersOption(user: User): NcSelectUsersOption {
@@ -24,6 +26,7 @@ export function getNcSelectUsersOption(user: User): NcSelectUsersOption {
 
 /**
  * Get the NcSelectShiftOption for a Shift
+ *
  * @param shift Shift
  */
 export function getNcSelectShiftOption(shift: Shift): NcSelectShiftOption {
@@ -35,11 +38,10 @@ export function getNcSelectShiftOption(shift: Shift): NcSelectShiftOption {
 
 /**
  * Get the NcSelectCalendarOption for a Calendar
+ *
  * @param calendar Calendar
  */
-export function getNcSelectCalendarOption(
-	calendar: Calendar,
-): NcSelectCalendarOption {
+export function getNcSelectCalendarOption(calendar: Calendar): NcSelectCalendarOption {
 	return {
 		...calendar,
 		label: `${calendar.ownerDisplayName} - ${calendar.displayName}`,
@@ -48,11 +50,10 @@ export function getNcSelectCalendarOption(
 
 /**
  * Get the NcSelectExchangeApprovalTypeOption for a ExchangeApprovalType
+ *
  * @param exchangeApprovalType ExchangeApprovalType
  */
-export function getNcSelectExchangeApprovalTypeOption(
-	exchangeApprovalType: ExchangeApprovalType,
-): NcSelectExchangeApprovalTypeOption {
+export function getNcSelectExchangeApprovalTypeOption(exchangeApprovalType: ExchangeApprovalType): NcSelectExchangeApprovalTypeOption {
 	return {
 		id: exchangeApprovalType,
 		label: t(APP_ID, upperFirst(exchangeApprovalType)),

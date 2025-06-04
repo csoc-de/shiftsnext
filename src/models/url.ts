@@ -1,4 +1,4 @@
-import type { Primitive } from '../models/native'
+import type { Primitive } from '../models/native.ts'
 
 export type SearchParamValue = Primitive | Date
 

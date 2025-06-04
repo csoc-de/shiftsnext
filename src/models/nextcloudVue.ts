@@ -1,5 +1,5 @@
-import type { Calendar, ExchangeApprovalType } from '../models/config'
-import type { Shift } from '../models/shift'
+import type { Calendar, ExchangeApprovalType } from '../models/config.ts'
+import type { Shift } from '../models/shift.ts'
 
 export interface NcSelectShiftOption extends Shift {
 	label: string

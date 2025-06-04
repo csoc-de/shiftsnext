@@ -1,26 +1,23 @@
-import axios, { type AxiosError } from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { handleError } from '../error'
-import type { ErrorResponse } from '../models/error'
+import type { ErrorResponse } from '../models/error.ts'
 import type {
 	GroupShiftAdminRelationsByGroup,
 	GroupShiftAdminRelationsByGroupRequest,
-} from '../models/groupShiftAdminRelation'
-import { GROUP_SHIFT_ADMIN_RELATIONS_PATH } from '../url'
+} from '../models/groupShiftAdminRelation.ts'
+
+import axios, { type AxiosError } from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
+import { handleError } from '../error.ts'
+import { GROUP_SHIFT_ADMIN_RELATIONS_PATH } from '../url.ts'
 
 /**
  * Get the group shift admin relations grouped by group
  */
 export async function getGroupShiftAdminRelationsGroupedByGroup(): Promise<
-  GroupShiftAdminRelationsByGroup[]
-  > {
+	GroupShiftAdminRelationsByGroup[]
+> {
 	try {
 		return (
-			await axios.get<GroupShiftAdminRelationsByGroup[]>(
-				generateUrl(
-					`${GROUP_SHIFT_ADMIN_RELATIONS_PATH}/grouped-by-group`,
-				),
-			)
+			await axios.get<GroupShiftAdminRelationsByGroup[]>(generateUrl(`${GROUP_SHIFT_ADMIN_RELATIONS_PATH}/grouped-by-group`))
 		).data
 	} catch (error: unknown) {
 		handleError(
@@ -34,17 +31,14 @@ export async function getGroupShiftAdminRelationsGroupedByGroup(): Promise<
 
 /**
  * Put the group shift admin relations grouped by group
+ *
  * @param payload The group shift admin relations grouped by group
  */
-export async function putGroupShiftAdminRelationsGroupedByGroup(
-	payload: GroupShiftAdminRelationsByGroupRequest,
-): Promise<GroupShiftAdminRelationsByGroup> {
+export async function putGroupShiftAdminRelationsGroupedByGroup(payload: GroupShiftAdminRelationsByGroupRequest): Promise<GroupShiftAdminRelationsByGroup> {
 	try {
 		return (
 			await axios.put<GroupShiftAdminRelationsByGroup>(
-				generateUrl(
-					`${GROUP_SHIFT_ADMIN_RELATIONS_PATH}/grouped-by-group`,
-				),
+				generateUrl(`${GROUP_SHIFT_ADMIN_RELATIONS_PATH}/grouped-by-group`),
 				payload,
 			)
 		).data

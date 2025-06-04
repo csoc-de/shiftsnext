@@ -1,11 +1,13 @@
 <template>
-	<NcDialog :no-close="true"
+	<NcDialog
+		:no-close="true"
 		:name="t(APP_ID, 'Create shift exchange')"
 		size="normal"
 		content-classes="mb-2">
 		<form id="shift-exchange-form" @submit.prevent="onSubmit">
 			<div class="flex justify-center">
-				<NcCheckboxRadioSwitch v-model="exchangeType"
+				<NcCheckboxRadioSwitch
+					v-model="exchangeType"
 					:button-variant="true"
 					value="regular"
 					name="exchange-type"
@@ -13,7 +15,8 @@
 					button-variant-grouped="horizontal">
 					{{ t(APP_ID, "Regular") }}
 				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch v-model="exchangeType"
+				<NcCheckboxRadioSwitch
+					v-model="exchangeType"
 					:button-variant="true"
 					value="transfer"
 					name="exchange-type"
@@ -30,7 +33,8 @@
 					<div class="flex flex-col gap-2">
 						<InputGroup>
 							<label for="user-a"> {{ t(APP_ID, "User") }}</label>
-							<NcSelectUsers v-model="userAOption"
+							<NcSelectUsers
+								v-model="userAOption"
 								input-id="user-a"
 								class="w-full"
 								:options="userAOptions"
@@ -39,7 +43,8 @@
 						</InputGroup>
 						<InputGroup>
 							<label for="date-a">{{ t(APP_ID, "Date") }}</label>
-							<NcDateTimePickerNative id="date-a"
+							<NcDateTimePickerNative
+								id="date-a"
 								v-model="dateA"
 								class="w-full"
 								type="date"
@@ -48,7 +53,8 @@
 						</InputGroup>
 						<InputGroup>
 							<label for="shift-a"> {{ t(APP_ID, "Shift") }}</label>
-							<NcSelect v-model="shiftAOption"
+							<NcSelect
+								v-model="shiftAOption"
 								input-id="shift-a"
 								:disabled="shiftASelectDisabled"
 								class="w-full"
@@ -67,7 +73,8 @@
 						<template v-if="exchangeType === 'regular'">
 							<InputGroup>
 								<label for="user-b"> {{ t(APP_ID, "User") }}</label>
-								<NcSelectUsers v-model="userBOption"
+								<NcSelectUsers
+									v-model="userBOption"
 									input-id="user-b"
 									class="w-full"
 									:options="userBOptions"
@@ -76,7 +83,8 @@
 							</InputGroup>
 							<InputGroup>
 								<label for="date-b">{{ t(APP_ID, "Date") }}</label>
-								<NcDateTimePickerNative id="date-b"
+								<NcDateTimePickerNative
+									id="date-b"
 									v-model="dateB"
 									class="w-full"
 									type="date"
@@ -85,7 +93,8 @@
 							</InputGroup>
 							<InputGroup>
 								<label for="shift-b"> {{ t(APP_ID, "Shift") }}</label>
-								<NcSelect v-model="shiftBOption"
+								<NcSelect
+									v-model="shiftBOption"
 									input-id="shift-b"
 									:disabled="shiftBSelectDisabled"
 									class="w-full"
@@ -96,7 +105,8 @@
 						<template v-else>
 							<InputGroup>
 								<label for="user-b"> {{ t(APP_ID, "User") }}</label>
-								<NcSelectUsers v-model="userBOption"
+								<NcSelectUsers
+									v-model="userBOption"
 									input-id="user-b"
 									class="w-full"
 									:options="userBOptions" />
@@ -105,7 +115,8 @@
 					</div>
 				</CustomFieldset>
 				<div class="col-span-2 mt-2">
-					<NcTextArea v-model="comment"
+					<NcTextArea
+						v-model="comment"
 						resize="vertical"
 						:label="t(APP_ID, 'Comment')"
 						placeholder="" />
@@ -117,7 +128,8 @@
 			<NcButton :disabled="saving" @click="emit('close')">
 				{{ t(APP_ID, "Cancel") }}
 			</NcButton>
-			<NcButton :disabled="!saveable || saving"
+			<NcButton
+				:disabled="!saveable || saving"
 				type="submit"
 				variant="primary"
 				form="shift-exchange-form">
@@ -128,7 +140,14 @@
 </template>
 
 <script setup lang="ts">
+import type {
+	NcSelectShiftOption,
+	NcSelectUsersOption,
+} from '../models/nextcloudVue.ts'
+import type { Shift } from '../models/shift.ts'
+
 import { t } from '@nextcloud/l10n'
+import { computed, inject, ref, watch } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
@@ -136,27 +155,22 @@ import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
-import { computed, inject, ref, watch } from 'vue'
-import { APP_ID } from '../appId'
-import { getIsoCalendarDate } from '../date'
-import { getShifts } from '../db/shift'
-import { getUsers } from '../db/user'
-import type {
-	NcSelectShiftOption,
-	NcSelectUsersOption,
-} from '../models/nextcloudVue'
-import type { Shift } from '../models/shift'
+import CustomFieldset from './CustomFieldset.vue'
+import InputGroup from './InputGroup.vue'
+import { APP_ID } from '../appId.ts'
+import { getIsoCalendarDate } from '../date.ts'
+import { getShifts } from '../db/shift.ts'
+import { getUsers } from '../db/user.ts'
 import {
-	createIK,
 	type ShiftExchangePostRequest,
 	type ShiftExchangePostRequestBase,
 	type ShiftExchangeType,
-} from '../models/shiftExchange'
-import { getNcSelectShiftOption, getNcSelectUsersOption } from '../nextcloudVue'
-import { compare } from '../sort'
-import { authUser } from '../user'
-import CustomFieldset from './CustomFieldset.vue'
-import InputGroup from './InputGroup.vue'
+
+	createIK,
+} from '../models/shiftExchange.ts'
+import { getNcSelectShiftOption, getNcSelectUsersOption } from '../nextcloudVue.ts'
+import { compare } from '../sort.ts'
+import { authUser } from '../user.ts'
 
 const create = inject(createIK)!
 
@@ -321,16 +335,16 @@ const saveable = computed(() => {
 		return false
 	}
 	switch (exchangeType.value) {
-	case 'regular':
-		if (!shiftBOption.value) {
-			return false
-		}
-		break
-	case 'transfer':
-		if (!userBOption.value) {
-			return false
-		}
-		break
+		case 'regular':
+			if (!shiftBOption.value) {
+				return false
+			}
+			break
+		case 'transfer':
+			if (!userBOption.value) {
+				return false
+			}
+			break
 	}
 	return true
 })

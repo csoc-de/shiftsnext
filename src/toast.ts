@@ -1,6 +1,6 @@
 import { showSuccess } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
-import { APP_ID } from './appId'
+import { APP_ID } from './appId.ts'
 
 export const TOAST_TIMEOUT = 3000
 

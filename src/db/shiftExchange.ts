@@ -1,14 +1,15 @@
-import axios, { type AxiosError } from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { transformResponse } from '../axios'
-import { handleError } from '../error'
-import type { ErrorResponse } from '../models/error'
+import type { ErrorResponse } from '../models/error.ts'
 import type {
 	ShiftExchange,
 	ShiftExchangePostRequest,
 	ShiftExchangePutRequest,
-} from '../models/shiftExchange'
-import { SHIFT_EXCHANGES_PATH } from '../url'
+} from '../models/shiftExchange.ts'
+
+import axios, { type AxiosError } from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
+import { transformResponse } from '../axios.ts'
+import { handleError } from '../error.ts'
+import { SHIFT_EXCHANGES_PATH } from '../url.ts'
 
 /**
  * Get shift exchanges
@@ -33,11 +34,10 @@ export async function getShiftExchanges(): Promise<ShiftExchange[]> {
 
 /**
  * Create shift exchange
+ *
  * @param payload The shift exchange
  */
-export async function postShiftExchange(
-	payload: ShiftExchangePostRequest,
-): Promise<ShiftExchange> {
+export async function postShiftExchange(payload: ShiftExchangePostRequest): Promise<ShiftExchange> {
 	try {
 		return (
 			await axios.post<ShiftExchange>(
@@ -58,6 +58,7 @@ export async function postShiftExchange(
 
 /**
  * Update shift exchange
+ *
  * @param id The shift exchange id
  * @param payload The shift exchange
  */
@@ -85,6 +86,7 @@ export async function putShiftExchange(
 
 /**
  * Delete shift exchange
+ *
  * @param id The shift exchange id
  */
 export async function deleteShiftExchange(id: number): Promise<ShiftExchange> {

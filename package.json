@@ -1,20 +1,17 @@
 {
   "name": "shiftsnext",
   "version": "1.1.4",
-  "author": "CSOC <dev@csoc.de>",
-  "license": "AGPL-3.0-or-later",
   "private": true,
+  "license": "AGPL-3.0-or-later",
+  "author": "CSOC <dev@csoc.de>",
   "type": "module",
-  "engines": {
-    "node": "^20.0.0",
-    "npm": "^10.0.0"
-  },
   "scripts": {
     "build": "vite --mode production build",
     "dev": "vite --mode development build",
-    "watch": "vite --mode development build --watch",
     "lint": "eslint --ext .js,.ts,.vue src",
-    "stylelint": "stylelint src/**/*.vue src/**/*.scss src/**/*.css"
+    "lint:fix": "eslint --ext .js,.ts,.vue src --fix",
+    "stylelint": "stylelint src/**/*.vue src/**/*.scss src/**/*.css",
+    "watch": "vite --mode development build --watch"
   },
   "browserslist": [
     "extends @nextcloud/browserslist-config"
@@ -49,5 +46,9 @@
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
+  },
+  "engines": {
+    "node": "^20.0.0",
+    "npm": "^10.0.0"
   }
 }

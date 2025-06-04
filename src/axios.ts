@@ -1,4 +1,4 @@
-import { reviver } from './date'
+import { reviver } from './date.ts'
 
 /**
  * See {@link reviver} for when to use this function

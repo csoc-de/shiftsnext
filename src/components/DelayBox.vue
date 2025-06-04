@@ -2,7 +2,8 @@
 	<Teleport to="#delay-boxes-wrapper">
 		<div class="flex items-center gap-2 rounded-nc-large bg-nc-primary-light p-2 shadow-lg">
 			<div class="h-[4px] flex-1 bg-nc-main-background">
-				<div class="h-full rounded-full bg-nc-primary transition-[width] ease-linear"
+				<div
+					class="h-full rounded-full bg-nc-primary transition-[width] ease-linear"
 					:style="{ transitionDuration, width }" />
 			</div>
 			<NcButton variant="primary" size="small" @click.stop="onUndo">
@@ -16,9 +17,9 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import NcButton from '@nextcloud/vue/components/NcButton'
 import { ref } from 'vue'
-import { APP_ID } from '../appId'
+import NcButton from '@nextcloud/vue/components/NcButton'
+import { APP_ID } from '../appId.ts'
 
 const { delay = 2000 } = defineProps<{ delay?: number }>()
 

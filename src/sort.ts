@@ -1,5 +1,11 @@
-import type { Shift } from './models/shift'
-import type { ShiftType } from './models/shiftType'
+import type { Shift } from './models/shift.ts'
+import type { ShiftType } from './models/shiftType.ts'
+
+// We are using "en-US" here to be consistent with the
+// `Util::naturalSortCompare` method provided by Nextcloud (backend).
+// Furthermore, some initial tests revealed switching to another locale
+// apparently makes no difference
+const collator = new Intl.Collator('en-US', { numeric: true })
 
 export type CompareResult = -1 | 0 | 1
 
@@ -9,7 +15,7 @@ export type CompareResult = -1 | 0 | 1
  * @param a The first value to compare
  * @param b The second value to compare
  *
- * @return {CompareResult} Either
+ * @return Either
  * - `-1` if `a < b` or
  * - `1` if `a > b` or
  * - `0` if `a === b`
@@ -20,12 +26,6 @@ export function compare<T extends number | string>(a: T, b: T): CompareResult {
 	}
 	return a === b ? 0 : a < b ? -1 : 1
 }
-
-// We are using "en-US" here to be consistent with the
-// `Util::naturalSortCompare` method provided by Nextcloud (backend).
-// Furthermore, some initial tests revealed switching to another locale
-// apparently makes no difference
-const collator = new Intl.Collator('en-US', { numeric: true })
 
 /**
  * Compares two shifts by their `start` property

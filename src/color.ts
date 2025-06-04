@@ -4,13 +4,11 @@
  *
  * @param referenceColor Color in HEX format
  *
- * @return {string} Either `"#EBEBEB"` if `referenceColor` is dark, or `"#222222"` if `referenceColor` is light
+ * @return Either `"#EBEBEB"` if `referenceColor` is dark, or `"#222222"` if `referenceColor` is light
  *
  * @author ChatGPT
  */
-export function getContrastColor(
-	referenceColor: string,
-): '#EBEBEB' | '#222222' {
+export function getContrastColor(referenceColor: string): '#EBEBEB' | '#222222' {
 	// Remove the '#' if it exists
 	if (referenceColor.startsWith('#')) {
 		referenceColor = referenceColor.slice(1)

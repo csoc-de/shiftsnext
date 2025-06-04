@@ -1,22 +1,22 @@
-import axios, { type AxiosError } from '@nextcloud/axios'
-import { generateUrl } from '@nextcloud/router'
-import { transformResponse } from '../axios'
-import { handleError } from '../error'
-import type { ErrorResponse } from '../models/error'
+import type { ErrorResponse } from '../models/error.ts'
 import type {
 	ShiftType,
 	ShiftTypeFilters,
 	ShiftTypeRequest,
-} from '../models/shiftType'
-import { generateUrlWithSearchParams, SHIFT_TYPES_PATH } from '../url'
+} from '../models/shiftType.ts'
+
+import axios, { type AxiosError } from '@nextcloud/axios'
+import { generateUrl } from '@nextcloud/router'
+import { transformResponse } from '../axios.ts'
+import { handleError } from '../error.ts'
+import { generateUrlWithSearchParams, SHIFT_TYPES_PATH } from '../url.ts'
 
 /**
  * Get shift types
+ *
  * @param filters The filters
  */
-export async function getShiftTypes(
-	filters: ShiftTypeFilters = {},
-): Promise<ShiftType[]> {
+export async function getShiftTypes(filters: ShiftTypeFilters = {}): Promise<ShiftType[]> {
 	try {
 		return (
 			await axios.get<ShiftType[]>(
@@ -32,11 +32,10 @@ export async function getShiftTypes(
 
 /**
  * Create shift type
+ *
  * @param payload The shift type
  */
-export async function postShiftType(
-	payload: ShiftTypeRequest,
-): Promise<ShiftType> {
+export async function postShiftType(payload: ShiftTypeRequest): Promise<ShiftType> {
 	try {
 		return (
 			await axios.post<ShiftType>(
@@ -53,6 +52,7 @@ export async function postShiftType(
 
 /**
  * Update shift type
+ *
  * @param id The shift type id
  * @param payload The shift type
  */
@@ -76,6 +76,7 @@ export async function putShiftType(
 
 /**
  * Delete shift type
+ *
  * @param id The shift type id
  */
 export async function deleteShiftType(id: number): Promise<ShiftType> {
