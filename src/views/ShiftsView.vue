@@ -192,6 +192,7 @@ import { postSynchronizeByGroups } from '../db/calendarSync.ts'
 import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
 import { getShiftTypes } from '../db/shiftType.ts'
 import { getUsers } from '../db/user.ts'
+import { logger } from '../logger.ts'
 import { RecoverableError } from '../models/error.ts'
 import {
 	type HeaderRow,
@@ -524,8 +525,7 @@ function placeShifts(): void {
 			if (!(error instanceof RecoverableError)) {
 				throw error
 			}
-			// eslint-disable-next-line no-console
-			console.error(error)
+			logger.warn(error)
 		}
 	}
 }

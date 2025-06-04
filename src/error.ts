@@ -4,6 +4,7 @@ import type { ErrorResponse } from './models/error.ts'
 import { showError } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
 import { APP_ID } from './appId.ts'
+import { logger } from './logger.ts'
 import { TOAST_TIMEOUT } from './toast.ts'
 
 /**
@@ -30,8 +31,7 @@ export function handleError(
 	subject: string,
 	showToast: boolean = true,
 ): void {
-	// eslint-disable-next-line no-console
-	console.error(`Failed to ${operation} ${subject}: ${error.response?.data.error ?? error.message}`)
+	logger.error(`Failed to ${operation} ${subject}: ${error.response?.data.error ?? error.message}`)
 	const translated = t(APP_ID, 'Failed to {operation} {subject}', {
 		operation,
 		subject,
