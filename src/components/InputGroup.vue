@@ -1,10 +1,7 @@
 <template>
 	<div
 		class="flex gap-1"
-		:class="{
-			'flex-col': !inline,
-			'items-center': inline,
-		}">
+		:class="[inline ? 'items-center' : 'flex-col']">
 		<slot />
 	</div>
 </template>
