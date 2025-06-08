@@ -78,16 +78,16 @@ import {
 	updateIK,
 } from '../models/shiftExchange.ts'
 
-const update = inject(updateIK)!
-
-const emit = defineEmits<{ close: [] }>()
-
-const saving = ref(false)
-
 const { shiftExchange, editor } = defineProps<{
 	shiftExchange: ShiftExchange
 	editor: ExchangeEditor
 }>()
+
+const emit = defineEmits<{ close: [] }>()
+
+const update = inject(updateIK)!
+
+const saving = ref(false)
 
 type FormValues = {
 	approved: boolean | null

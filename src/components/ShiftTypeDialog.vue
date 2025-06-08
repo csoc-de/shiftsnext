@@ -261,14 +261,14 @@ import {
 	weeklyTypeTranslations,
 } from '../models/shiftType.ts'
 
-const create = inject(createInjectionKey)!
-const update = inject(updateInjectionKey)!
+const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
 
 const emit = defineEmits<{ close: [] }>()
 
-const saving = ref(false)
+const create = inject(createInjectionKey)!
+const update = inject(updateInjectionKey)!
 
-const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
+const saving = ref(false)
 
 const dialogName = shiftType
 	? t(APP_ID, 'Edit shift type')

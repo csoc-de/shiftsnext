@@ -23,16 +23,16 @@ import { APP_ID } from '../appId.ts'
 
 const { delay = 2000 } = defineProps<{ delay?: number }>()
 
+const emit = defineEmits<{
+	done: []
+	undone: []
+}>()
+
 const transitionDuration = `${delay}ms`
 
 const width = ref('0%')
 
 setTimeout(() => (width.value = '100%'), 10)
-
-const emit = defineEmits<{
-	done: []
-	undone: []
-}>()
 
 const timeout = setTimeout(() => emit('done'), delay)
 

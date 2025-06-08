@@ -172,9 +172,9 @@ import { getNcSelectShiftOption, getNcSelectUsersOption } from '../nextcloudVue.
 import { compare } from '../sort.ts'
 import { authUser } from '../user.ts'
 
-const create = inject(createIK)!
-
 const emit = defineEmits<{ close: [] }>()
+
+const create = inject(createIK)!
 
 const saving = ref(false)
 
