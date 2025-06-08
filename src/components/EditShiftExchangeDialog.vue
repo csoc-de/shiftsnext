@@ -1,6 +1,6 @@
 <template>
 	<NcDialog
-		:no-close="true"
+		no-close
 		:name="t(APP_ID, 'Edit shift exchange')"
 		size="normal"
 		content-classes="mb-2">
@@ -13,7 +13,7 @@
 				<NcCheckboxRadioSwitch
 					v-model="approvedString"
 					value="true"
-					:button-variant="true"
+					button-variant
 					button-variant-grouped="horizontal"
 					name="approved_by_user"
 					type="radio">
@@ -22,7 +22,7 @@
 				<NcCheckboxRadioSwitch
 					v-model="approvedString"
 					value="null"
-					:button-variant="true"
+					button-variant
 					button-variant-grouped="horizontal"
 					name="approved_by_user"
 					type="radio">
@@ -31,7 +31,7 @@
 				<NcCheckboxRadioSwitch
 					v-model="approvedString"
 					value="false"
-					:button-variant="true"
+					button-variant
 					button-variant-grouped="horizontal"
 					name="approved_by_user"
 					type="radio">

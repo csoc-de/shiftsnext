@@ -34,8 +34,8 @@
 					input-id="groups"
 					:options="groups"
 					label="display_name"
-					:label-outside="true"
-					:keep-open="true"
+					label-outside
+					keep-open
 					multiple
 					class="min-w-48" />
 			</HeaderNavigationInputGroup>

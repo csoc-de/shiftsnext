@@ -10,7 +10,7 @@
 
 			<NcActions>
 				<NcActionButton
-					:close-after-click="true"
+					close-after-click
 					@click="editDialogMounted = true">
 					<template #icon>
 						<Pencil :size="20" />
@@ -18,7 +18,7 @@
 					{{ t(APP_ID, "Edit") }}
 				</NcActionButton>
 				<NcActionButton
-					:close-after-click="true"
+					close-after-click
 					@click="() => {
 						deleting = true
 						delayBoxVisible = true

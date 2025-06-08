@@ -34,7 +34,7 @@
 									v-model="selectedUserOptions2D[index]"
 									class="min-w-56"
 									multiple
-									:keep-open="true"
+									keep-open
 									:options="userOptions" />
 							</td>
 							<td class="w-0 border-solid border-neutral-500 px-4 py-3">
@@ -70,7 +70,7 @@
 				input-id="selected-group"
 				:options="groups"
 				label="display_name"
-				:label-outside="true"
+				label-outside
 				class="min-w-44" />
 		</InputGroup>
 	</NcSettingsSection>

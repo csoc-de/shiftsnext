@@ -1,6 +1,6 @@
 <template>
 	<NcDialog
-		:no-close="true"
+		no-close
 		:name="t(APP_ID, 'Create shift exchange')"
 		size="normal"
 		content-classes="mb-2">
@@ -8,7 +8,7 @@
 			<div class="flex justify-center">
 				<NcCheckboxRadioSwitch
 					v-model="exchangeType"
-					:button-variant="true"
+					button-variant
 					value="regular"
 					name="exchange-type"
 					type="radio"
@@ -17,7 +17,7 @@
 				</NcCheckboxRadioSwitch>
 				<NcCheckboxRadioSwitch
 					v-model="exchangeType"
-					:button-variant="true"
+					button-variant
 					value="transfer"
 					name="exchange-type"
 					type="radio"
@@ -48,7 +48,7 @@
 								v-model="dateA"
 								class="w-full"
 								type="date"
-								:hide-label="true"
+								hide-label
 								@change="loadShiftsA()" />
 						</InputGroup>
 						<InputGroup>
@@ -88,7 +88,7 @@
 									v-model="dateB"
 									class="w-full"
 									type="date"
-									:hide-label="true"
+									hide-label
 									@change="loadShiftsB()" />
 							</InputGroup>
 							<InputGroup>

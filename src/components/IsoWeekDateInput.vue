@@ -6,13 +6,13 @@
 			:options="years"
 			:clearable="false"
 			:input-id="inputId"
-			:label-outside="true" />
+			label-outside />
 		<NcSelect
 			v-model="week"
 			class="min-w-[7.1rem]"
 			:options="weeks"
 			:clearable="false"
-			:label-outside="true" />
+			label-outside />
 	</div>
 </template>
 

@@ -6,7 +6,7 @@
 			<NcActions>
 				<NcActionButton
 					v-if="participant && !shiftExchange.done"
-					:close-after-click="true"
+					close-after-click
 					@click="() => {
 						editor = participant,
 						editDialogMounted = true
@@ -18,7 +18,7 @@
 				</NcActionButton>
 				<NcActionButton
 					v-if="isGroupShiftAdmin && !shiftExchange.done"
-					:close-after-click="true"
+					close-after-click
 					@click="() => {
 						editor = 'admin'
 						editDialogMounted = true
@@ -30,7 +30,7 @@
 				</NcActionButton>
 				<NcActionButton
 					v-if="isGroupShiftAdmin || (participant && !shiftExchange.done)"
-					:close-after-click="true"
+					close-after-click
 					@click="delayBoxVisible = true">
 					<template #icon>
 						<Delete :size="20" />

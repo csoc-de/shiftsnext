@@ -1,6 +1,6 @@
 <template>
 	<NcDialog
-		:no-close="true"
+		no-close
 		:name="dialogName"
 		size="normal"
 		content-classes="mb-2">
@@ -15,7 +15,7 @@
 						input-id="shift-type-group-id"
 						:options="shiftAdminGroups"
 						label="display_name"
-						:label-outside="true"
+						label-outside
 						:clearable="false"
 						class="w-full !min-w-0"
 						@update:model-value="groupId = group?.id ?? ''" />
@@ -25,7 +25,7 @@
 					<NcTextField
 						id="shift-type-name"
 						v-model.trim="name"
-						:label-outside="true"
+						label-outside
 						required />
 				</InputGroup>
 				<InputGroup>
@@ -53,14 +53,14 @@
 					<NcTextField
 						id="shift-type-description"
 						v-model.trim="description"
-						:label-outside="true" />
+						label-outside />
 				</InputGroup>
 				<InputGroup class="col-span-2 sm:col-span-6">
 					<label for="shift-type-categories">{{ t(APP_ID, "Categories") }}</label>
 					<NcTextField
 						id="shift-type-categories"
 						v-model.trim="categories"
-						:label-outside="true" />
+						label-outside />
 				</InputGroup>
 			</div>
 
@@ -76,7 +76,7 @@
 						<NcSelect
 							v-model="frequency"
 							input-id="shift-type-repetition-frequency"
-							:label-outside="true"
+							label-outside
 							:options="frequencies"
 							:clearable="false" />
 					</InputGroup>
@@ -87,7 +87,7 @@
 						<NcTextField
 							id="shift-type-repetition-interval"
 							v-model.trim="interval"
-							:label-outside="true"
+							label-outside
 							type="number"
 							min="1"
 							required />
@@ -108,7 +108,7 @@
 							:key="index"
 							v-model="weeklyType"
 							:value="type"
-							:button-variant="true"
+							button-variant
 							name="repetition-weekly-type"
 							type="radio"
 							button-variant-grouped="horizontal">
@@ -132,7 +132,7 @@
 										v-model="byDayReferenceDate"
 										class="w-full"
 										type="datetime-local"
-										:hide-label="true"
+										hide-label
 										required
 										@update:model-value="setByDayReference()" />
 								</template>
@@ -167,7 +167,7 @@
 											<NcTextField
 												id="shift-type-duration"
 												v-model.trim="durationString"
-												:label-outside="true"
+												label-outside
 												readonly
 												minlength="3" />
 										</template>
