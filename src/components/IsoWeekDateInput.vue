@@ -2,6 +2,7 @@
 	<div class="flex flex-wrap gap-1">
 		<NcSelect
 			v-model="year"
+			:disabled="disabled"
 			class="min-w-[8.2rem]"
 			:options="years"
 			:clearable="false"
@@ -9,6 +10,7 @@
 			label-outside />
 		<NcSelect
 			v-model="week"
+			:disabled="disabled"
 			class="min-w-[7.1rem]"
 			:options="weeks"
 			:clearable="false"
@@ -32,7 +34,10 @@ import {
 
 const isoWeekDate = defineModel<IsoWeekDateWithoutDay>({ required: true })
 
-defineProps<{ inputId?: string }>()
+defineProps<{
+	inputId?: string
+	disabled?: unknown
+}>()
 
 defineExpose({ decrease, increase })
 
