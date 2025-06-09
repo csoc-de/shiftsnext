@@ -2,7 +2,8 @@ import type { ErrorResponse } from '../models/error.ts'
 import type {
 	ShiftType,
 	ShiftTypeFilters,
-	ShiftTypeRequest,
+	ShiftTypePostPayload,
+	ShiftTypePutPayload,
 } from '../models/shiftType.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
@@ -35,7 +36,7 @@ export async function getShiftTypes(filters: ShiftTypeFilters = {}): Promise<Shi
  *
  * @param payload The shift type
  */
-export async function postShiftType(payload: ShiftTypeRequest): Promise<ShiftType> {
+export async function postShiftType(payload: ShiftTypePostPayload): Promise<ShiftType> {
 	try {
 		return (
 			await axios.post<ShiftType>(
@@ -58,7 +59,7 @@ export async function postShiftType(payload: ShiftTypeRequest): Promise<ShiftTyp
  */
 export async function putShiftType(
 	id: number,
-	payload: ShiftTypeRequest,
+	payload: ShiftTypePutPayload,
 ): Promise<ShiftType> {
 	try {
 		return (

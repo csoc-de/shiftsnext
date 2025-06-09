@@ -128,12 +128,10 @@ class ShiftTypeController extends Controller {
 	#[FrontpageRoute(verb: 'PUT', url: '/api/shift-types/{id}')]
 	public function update(
 		int $id,
-		string $group_id,
 		string $name,
 		string $description,
 		string $color,
 		bool $active,
-		array $repetition,
 		array $caldav,
 	): DataResponse {
 		try {
@@ -142,20 +140,14 @@ class ShiftTypeController extends Controller {
 			} catch (ShiftTypeNotFoundException $e) {
 				throw new HttpException(Http::STATUS_NOT_FOUND, null, $e);
 			}
-			if (!$this->groupShiftAdminRelationService->isShiftAdmin($group_id)) {
-				throw new HttpException(
-					Http::STATUS_FORBIDDEN,
-					"You are not a group shift admin for group_id $group_id",
-				);
-			}
 			$shiftType = $this->shiftTypeMapper->updateById(
 				$shiftType,
-				$group_id,
+				null,
 				$name,
 				$description,
 				$color,
 				$active,
-				$repetition,
+				null,
 				$caldav,
 			);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);

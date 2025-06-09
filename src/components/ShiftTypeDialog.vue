@@ -12,6 +12,7 @@
 					<label for="shift-type-group-id">{{ t(APP_ID, "Group") }}</label>
 					<NcSelect
 						v-model="group"
+						:disabled="shiftType"
 						input-id="shift-type-group-id"
 						:options="shiftAdminGroups"
 						label="display_name"
@@ -75,6 +76,7 @@
 						}}</label>
 						<NcSelect
 							v-model="frequency"
+							:disabled="shiftType"
 							input-id="shift-type-repetition-frequency"
 							label-outside
 							:options="frequencies"
@@ -87,6 +89,7 @@
 						<NcTextField
 							id="shift-type-repetition-interval"
 							v-model.trim="interval"
+							:disabled="shiftType"
 							label-outside
 							type="number"
 							min="1"
@@ -97,16 +100,12 @@
 					<template #legend>
 						<span class="text-lg">{{ t(APP_ID, "Weekly type") }}</span>
 					</template>
-					<p
-						v-if="shiftType"
-						class="leading-[calc(var(--default-clickable-area))]">
-						{{ weeklyTypeTranslations[weeklyType] }}
-					</p>
-					<div v-else class="flex">
+					<div class="flex">
 						<NcCheckboxRadioSwitch
 							v-for="(type, index) in REPETITION_WEEKLY_TYPES"
 							:key="index"
 							v-model="weeklyType"
+							:disabled="shiftType"
 							:value="type"
 							button-variant
 							name="repetition-weekly-type"
@@ -130,6 +129,7 @@
 									<NcDateTimePickerNative
 										id="shift-type-repetition-config-reference"
 										v-model="byDayReferenceDate"
+										:disabled="shiftType"
 										class="w-full"
 										type="datetime-local"
 										hide-label
@@ -142,6 +142,7 @@
 									</label>
 									<IsoWeekDateInput
 										v-model="byWeekReference"
+										:disabled="shiftType"
 										input-id="shift-type-repetition-config-reference"
 										class="w-full" />
 								</template>
@@ -149,14 +150,9 @@
 							<template v-if="weeklyType === 'by_day'">
 								<InputGroup>
 									<label for="shift-type-repetition-config-time-zone">{{ t(APP_ID, "Time zone") }}</label>
-									<p
-										v-if="shiftType"
-										class="leading-[calc(var(--default-clickable-area))]">
-										{{ timeZone }}
-									</p>
 									<NcTimezonePicker
-										v-else
 										v-model="timeZone"
+										:disabled="shiftType"
 										input-id="shift-type-repetition-config-time-zone"
 										@update:model-value="setByDayReference()" />
 								</InputGroup>
@@ -167,6 +163,7 @@
 											<NcTextField
 												id="shift-type-duration"
 												v-model.trim="durationString"
+												:disabled="shiftType"
 												label-outside
 												readonly
 												minlength="3" />
@@ -186,6 +183,7 @@
 									v-for="(localDayMin, shortDay, index) in shortDayToLocalMinDayMap"
 									:key="index"
 									v-model.trim="shortDayToAmountMap[shortDay]"
+									:disabled="shiftType"
 									type="number"
 									:label="localDayMin"
 									min="0"
@@ -194,6 +192,7 @@
 							<template v-else>
 								<NcTextField
 									v-model.trim="byWeekAmount"
+									:disabled="shiftType"
 									class="w-28"
 									type="number"
 									:label="t(APP_ID, 'Amount')"
@@ -249,7 +248,10 @@ import {
 	type RepetitionFrequency,
 	type RepetitionWeeklyType,
 	type ShiftType,
-	type ShiftTypeRequest,
+	type ShiftTypePayload,
+	type ShiftTypePayloadType,
+	type ShiftTypePostPayload,
+	type ShiftTypePutPayload,
 	type ShortDay,
 	type ShortDayToAmountMap,
 
@@ -343,13 +345,12 @@ const durationString = computed(() => duration.value.toString())
  * Handle the form submission
  */
 async function onSubmit() {
-	const payload = buildPayload()
 	try {
 		saving.value = true
 		if (shiftType) {
-			await update(shiftType.id, payload)
+			await update(shiftType.id, buildPayload('put'))
 		} else {
-			await create(payload)
+			await create(buildPayload('post'))
 		}
 		emit('close')
 	} finally {
@@ -359,35 +360,47 @@ async function onSubmit() {
 
 /**
  * Builds the request payload
+ *
+ * @param type The type of the payload, either 'post' for creating a new shift type or 'put' for updating an existing one
  */
-function buildPayload(): ShiftTypeRequest {
-	return {
-		group_id: groupId.value,
+function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload<T> {
+	const common = {
 		name: name.value,
 		description: description.value,
 		color: color.value,
 		active: active.value,
-		repetition: {
-			frequency: frequency.value,
-			interval: interval.value,
-			...weeklyType.value === 'by_day'
-				? {
-						weekly_type: 'by_day',
-						config: {
-							reference: byDayReference.value,
-							short_day_to_amount_map: shortDayToAmountMap.value,
-							duration: duration.value,
-						},
-					}
-				: {
-						weekly_type: 'by_week',
-						config: {
-							reference: byWeekReference.value,
-							amount: byWeekAmount.value,
-						},
-					},
-		},
 		caldav: { categories: categories.value },
+	}
+
+	if (type === 'post') {
+		const payload: ShiftTypePostPayload = {
+			...common,
+			group_id: groupId.value,
+			repetition: {
+				frequency: frequency.value,
+				interval: interval.value,
+				...weeklyType.value === 'by_day'
+					? {
+							weekly_type: 'by_day',
+							config: {
+								reference: byDayReference.value,
+								short_day_to_amount_map: shortDayToAmountMap.value,
+								duration: duration.value,
+							},
+						}
+					: {
+							weekly_type: 'by_week',
+							config: {
+								reference: byWeekReference.value,
+								amount: byWeekAmount.value,
+							},
+						},
+			},
+		}
+		return payload as ShiftTypePayload<T>
+	} else {
+		const payload: ShiftTypePutPayload = common
+		return payload as ShiftTypePayload<T>
 	}
 }
 

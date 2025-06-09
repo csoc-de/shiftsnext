@@ -94,19 +94,25 @@ export interface Caldav {
 	categories: string
 }
 
-export interface ShiftTypeRequest {
+export interface ShiftTypePostPayload extends Omit<ShiftType, 'id' | 'group'> {
 	group_id: string
+}
+
+export type ShiftTypePutPayload = Omit<ShiftTypePostPayload, 'group_id' | 'repetition'>
+
+export type ShiftTypePayloadType = 'post' | 'put'
+
+export type ShiftTypePayload<T extends ShiftTypePayloadType> = T extends 'post' ? ShiftTypePostPayload : ShiftTypePutPayload
+
+export interface ShiftType {
+	id: number
+	group: Group
 	name: string
 	description: string
 	color: string
 	active: boolean
 	repetition: Repetition
 	caldav: Caldav
-}
-
-export interface ShiftType extends Omit<ShiftTypeRequest, 'group_id'> {
-	id: number
-	group: Group
 }
 
 export interface ShiftTypeFilters extends SearchParams {
@@ -128,12 +134,12 @@ export const shortDayToIsoDayNumberMap = {
 } as const satisfies ShortDayToIsoDayNumberMap
 
 export type CreateShiftType = (
-	payload: ShiftTypeRequest,
+	payload: ShiftTypePostPayload,
 ) => Promise<void>
 
 export type UpdateShiftType = (
 	id: number,
-	payload: ShiftTypeRequest,
+	payload: ShiftTypePutPayload,
 ) => Promise<void>
 
 export type RemoveShiftType = (id: number) => Promise<void>

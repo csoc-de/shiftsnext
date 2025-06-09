@@ -36,7 +36,8 @@ import {
 } from '../db/shiftType.ts'
 import {
 	type ShiftType,
-	type ShiftTypeRequest,
+	type ShiftTypePostPayload,
+	type ShiftTypePutPayload,
 
 	createInjectionKey,
 	removeInjectionKey,
@@ -62,7 +63,7 @@ const createDialogMounted = ref(false)
  *
  * @param payload The shift type
  */
-async function create(payload: ShiftTypeRequest): Promise<void> {
+async function create(payload: ShiftTypePostPayload): Promise<void> {
 	const createdShiftType = await postShiftType(payload)
 	shiftTypes.value.unshift(createdShiftType)
 	createDialogMounted.value = false
@@ -75,7 +76,7 @@ provide(createInjectionKey, create)
  * @param id The shift type id
  * @param payload The shift type
  */
-async function update(id: number, payload: ShiftTypeRequest): Promise<void> {
+async function update(id: number, payload: ShiftTypePutPayload): Promise<void> {
 	const updatedShiftType = await putShiftType(id, payload)
 	const index = shiftTypes.value.findIndex(({ id }) => id === updatedShiftType.id)
 	shiftTypes.value[index] = updatedShiftType
