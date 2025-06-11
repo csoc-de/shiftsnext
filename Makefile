@@ -52,9 +52,6 @@ xdebug:
 
 app_name:=$(notdir $(CURDIR))
 build_tools_directory:=$(CURDIR)/build/tools
-source_build_directory:=$(CURDIR)/build/source/$(app_name)
-source_artifact_directory:=$(CURDIR)/build/artifacts/source
-source_package_name:=$(source_artifact_directory)/$(app_name)
 appstore_build_directory:=$(CURDIR)/build/appstore/$(app_name)
 appstore_artifact_directory:=$(CURDIR)/build/artifacts/appstore
 appstore_package_name:=$(appstore_artifact_directory)/$(app_name)
@@ -99,55 +96,6 @@ else
 	@echo "npm command not available, please install nodejs first"
 	@exit 1
 endif
-
-# Removes the appstore build and compiled js files
-.PHONY: clean
-clean:
-	rm -rf ./build ./js/*
-
-# Reports PHP codestyle violations
-.PHONY: phpcs
-phpcs:
-	./vendor/bin/phpcs --standard=PSR2 --ignore=lib/Migration/Version*.php lib
-
-# Reports PHP static violations
-.PHONY: phpstan
-phpstan:
-	./vendor/bin/phpstan analyse --level=1 lib
-
-# Same as clean but also removes dependencies installed by composer and
-# npm
-.PHONY: distclean
-distclean: clean
-	rm -rf vendor
-	rm -rf node_modules
-	rm -rf js/node_modules
-
-# Builds the source and appstore package
-.PHONY: dist
-dist:
-	make distclean
-	make build
-	make source
-	make appstore
-
-# Builds the source package
-.PHONY: source
-source:
-	rm -rf "$(source_build_directory)" "$(source_artifact_directory)"
-	mkdir -p "$(source_build_directory)" "$(source_artifact_directory)"
-	rsync -rv . "$(source_build_directory)" \
-	--exclude=/.git/ \
-	--exclude=/.idea/ \
-	--exclude=/build/ \
-	--exclude=/js/node_modules/ \
-	--exclude=*.log
-ifdef CAN_SIGN
-	$(sign) --path "$(source_build_directory)"
-else
-	@echo $(sign_skip_msg)
-endif
-	tar -cvzf "$(source_package_name).tar.gz" -C "$(source_build_directory)/../" $(app_name)
 
 # Builds the source package for the app store, ignores php and js tests
 .PHONY: appstore
@@ -197,47 +145,3 @@ appstore:
 	fi
 	mkdir -p "$(appstore_artifact_directory)"
 	tar -czf "$(appstore_package_name).tar.gz" -C "$(appstore_sign_dir)" $(app_name)
-
-
-.PHONY: js-test
-js-test:
-	$(npm) run test
-
-.PHONY: php-test-dependencies
-php-test-dependencies:
-	$(composer) update --prefer-dist
-
-.PHONY: unit-test
-unit-test:
-	./vendor/phpunit/phpunit/phpunit -c phpunit.xml --coverage-clover build/php-unit.clover
-
-# Command for running JS and PHP tests. Works for package.json files in the js/
-# and root directory. If phpunit is not installed systemwide, a copy is fetched
-# from the internet
-.PHONY: test
-test: php-test-dependencies
-	$(MAKE) unit-test
-	$(MAKE) phpcs
-	$(MAKE) phpstan
-	$(MAKE) js-test
-	./bin/tools/generate_authors.php
-
-.PHONY: feed-test
-feed-test:
-	./bin/tools/check_feeds.sh
-
-.PHONY: feed-server
-feed-server:
-	php -S 127.0.0.1:8090 -t "$(CURDIR)/tests/test_helper/feeds"
-
-.PHONY: nextcloud-server
-nextcloud-server:
-	php -S 127.0.0.1:8080 -t "$(CURDIR)/../../."
-
-.PHONY: term
-term:
-	zellij --layout term.kdl attach nextcloud-shiftsnext -cf
-
-.PHONY: term-kill
-term-kill:
-	zellij delete-session nextcloud-shiftsnext -f
