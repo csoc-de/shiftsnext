@@ -2,8 +2,7 @@
 	<NcDialog
 		no-close
 		:name="dialogName"
-		size="normal"
-		content-classes="mb-2">
+		size="normal">
 		<form id="shift-type-form" @submit.prevent="onSubmit">
 			<!-- Trap autofocus to this invisible input to prevent NcSelect getting focused -->
 			<AutoFocusTrap />

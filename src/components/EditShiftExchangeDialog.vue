@@ -1,8 +1,7 @@
 <template>
 	<NcDialog
 		no-close
-		:name="t(APP_ID, 'Edit shift exchange')"
-		content-classes="mb-2">
+		:name="t(APP_ID, 'Edit shift exchange')">
 		<form
 			id="shift-exchange-form"
 			class="flex flex-col gap-2"

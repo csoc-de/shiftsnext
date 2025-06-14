@@ -2,8 +2,7 @@
 	<NcDialog
 		no-close
 		:name="t(APP_ID, 'Create shift exchange')"
-		size="normal"
-		content-classes="mb-2">
+		size="normal">
 		<form id="shift-exchange-form" @submit.prevent="onSubmit">
 			<div class="flex justify-center">
 				<NcCheckboxRadioSwitch
