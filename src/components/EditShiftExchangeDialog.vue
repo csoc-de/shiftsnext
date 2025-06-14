@@ -41,11 +41,14 @@
 					</NcCheckboxRadioSwitch>
 				</div>
 			</CustomFieldset>
-			<NcTextArea
-				v-model="formValues.comment"
-				resize="vertical"
-				:label="t(APP_ID, 'Comment')"
-				placeholder="" />
+			<InputGroup>
+				<label for="comment">{{ t(APP_ID, "Comment") }}</label>
+				<NcTextArea
+					id="comment"
+					v-model="formValues.comment"
+					resize="vertical"
+					label-outside />
+			</InputGroup>
 		</form>
 		<template #actions>
 			<NcButton :disabled="saving" @click="emit('close')">
@@ -72,6 +75,7 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwit
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import CustomFieldset from './CustomFieldset.vue'
+import InputGroup from './InputGroup.vue'
 import { APP_ID } from '../appId.ts'
 import {
 	type Approveds,

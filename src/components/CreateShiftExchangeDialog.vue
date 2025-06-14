@@ -114,13 +114,14 @@
 						</template>
 					</div>
 				</CustomFieldset>
-				<div class="col-span-2 mt-2">
+				<InputGroup class="col-span-2">
+					<label for="comment">{{ t(APP_ID, "Comment") }}</label>
 					<NcTextArea
+						id="comment"
 						v-model="comment"
 						resize="vertical"
-						:label="t(APP_ID, 'Comment')"
-						placeholder="" />
-				</div>
+						label-outside />
+				</InputGroup>
 			</div>
 		</form>
 
