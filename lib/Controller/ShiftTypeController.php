@@ -121,7 +121,6 @@ class ShiftTypeController extends Controller {
 	}
 
 	/**
-	 * @param Repetition $repetition
 	 * @param Caldav $caldav
 	 */
 	#[NoAdminRequired]
