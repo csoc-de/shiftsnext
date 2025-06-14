@@ -193,7 +193,7 @@ import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
 import { getShiftTypes } from '../db/shiftType.ts'
 import { getUsers } from '../db/user.ts'
 import { logger } from '../logger.ts'
-import { RecoverableError } from '../models/error.ts'
+import { ShiftTypeWrapperNotFoundError } from '../models/error.ts'
 import {
 	type HeaderRow,
 	type MultiStepAction,
@@ -522,7 +522,7 @@ function placeShifts(): void {
 			const shiftTypeWrapper = getShiftTypeWrapper(shiftTypeId, columnIndex)
 			shiftTypeWrapper.amount--
 		} catch (error) {
-			if (!(error instanceof RecoverableError)) {
+			if (!(error instanceof ShiftTypeWrapperNotFoundError)) {
 				throw error
 			}
 			logger.warn(error)
@@ -590,7 +590,7 @@ function getShiftTypeWrapper(
 	}
 	const wrapper = shiftTypesRow.value[columnIndex].data.find(({ shiftType: { id } }) => id === shiftTypeId)
 	if (!wrapper) {
-		throw new RecoverableError(`Couldn't find shift type wrapper with shift type ID ${shiftTypeId} in column ${columnIndex}`)
+		throw new ShiftTypeWrapperNotFoundError(`Couldn't find shift type wrapper with shift type ID ${shiftTypeId} in column ${columnIndex}`)
 	}
 	return wrapper
 }
