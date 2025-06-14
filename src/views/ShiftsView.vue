@@ -712,14 +712,13 @@ provide(onShiftDeletionAttemptIK, onShiftDeletionAttempt)
  * Returns the shifts data cell for the given `userId` and `columnIndex`
  *
  * @param userId The user ID
- * @param columnIndex The column index
+ * @param columnIndex Defaults to the column index of the multi-step action.
  */
 function getShiftsDataCell(
 	userId: string,
-	columnIndex?: number,
+	columnIndex: number = multiStepAction.value.columnIndex,
 ): ShiftsDataCell {
 	const row = getShiftsRow(userId)
-	columnIndex ??= multiStepAction.value.columnIndex
 	const cell = row[columnIndex]
 	if (cell?.type !== 'shifts') {
 		throw new Error(`Column ${columnIndex} does not contain a shifts data cell`)
