@@ -193,7 +193,7 @@ import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
 import { getShiftTypes } from '../db/shiftType.ts'
 import { getUsers } from '../db/user.ts'
 import { logger } from '../logger.ts'
-import { ShiftTypeWrapperNotFoundError } from '../models/error.ts'
+import { ShiftsRowNotFoundError, ShiftTypeWrapperNotFoundError } from '../models/error.ts'
 import {
 	type HeaderRow,
 	type MultiStepAction,
@@ -561,7 +561,7 @@ function getShiftsRow(userId: string): ShiftsRow {
 	}
 	const row = shiftsRows.value.find(([{ data }]) => data.id === userId)
 	if (!row) {
-		throw new Error(`Couldn't find shifts row for userId "${userId}"`)
+		throw new ShiftsRowNotFoundError(`Couldn't find shifts row for userId "${userId}"`)
 	}
 	return row
 }
