@@ -22,7 +22,7 @@
     "@nextcloud/axios": "^2.5.1",
     "@nextcloud/dialogs": "^7.0.0-rc.1",
     "@nextcloud/initial-state": "^2.2.0",
-    "@nextcloud/l10n": "^3.2.0",
+    "@nextcloud/l10n": "^3.3.0",
     "@nextcloud/logger": "^3.0.2",
     "@nextcloud/router": "^3.0.1",
     "@nextcloud/vue": "^9.0.0-rc.2",
@@ -43,7 +43,7 @@
     "@types/lodash-es": "^4.17.12",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.4",
+    "postcss": "^8.5.5",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
