@@ -32,6 +32,10 @@ body#body-user[id] {
 	.checkbox-content--button-variant {
 		min-height: auto !important;
 	}
+
+	textarea {
+		display: block;
+	}
 }
 
 /* Tailwind */
