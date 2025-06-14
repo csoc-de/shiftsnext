@@ -511,13 +511,20 @@ function placeShifts(): void {
 			start,
 			shift.shift_type.repetition.weekly_type === 'by_day',
 		)
-		const row = getShiftsRow(user.id)
 		const columnIndex = getColumnIndex(isoWeekDate)
-		const cell = row[columnIndex]
-		if (cell?.type !== 'shifts') {
-			continue
+		try {
+			const row = getShiftsRow(user.id)
+			const cell = row[columnIndex]
+			if (cell?.type !== 'shifts') {
+				continue
+			}
+			cell.data.push(shift)
+		} catch (error) {
+			if (!(error instanceof ShiftsRowNotFoundError)) {
+				continue
+			}
+			logger.warn(error)
 		}
-		cell.data.push(shift)
 		try {
 			const shiftTypeWrapper = getShiftTypeWrapper(shiftTypeId, columnIndex)
 			shiftTypeWrapper.amount--
