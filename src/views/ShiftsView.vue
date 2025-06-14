@@ -740,11 +740,14 @@ function extractShift(shift: Shift, columnIndex: number): void {
  *
  * @param shift The shift to place
  * @param columnIndex The column index
+ * @param sort Whether to sort the shifts in the cell after placing the shift. Defaults to `true`.
  */
-function placeShift(shift: Shift, columnIndex: number): void {
+function placeShift(shift: Shift, columnIndex: number, sort: boolean = true): void {
 	const cell = getShiftsDataCell(shift.user.id, columnIndex)
 	cell.data.push(shift)
-	cell.data.sort(compareShifts)
+	if (sort) {
+		cell.data.sort(compareShifts)
+	}
 }
 
 onKeyStroke(
