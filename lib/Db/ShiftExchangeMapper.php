@@ -25,7 +25,7 @@ class ShiftExchangeMapper extends QBMapper {
 
 	/**
 	 * @param null|int $shiftAId Adds `WHERE shift_a_id = $shiftAId`
-	 * @param null|NullColumnParam|int $shiftBId Adds `WHERE shift_b_id = $shiftAId`
+	 * @param null|NullColumnParam|int $shiftBId Adds `WHERE shift_b_id = $shiftBId`
 	 * @param null|NullColumnParam|string $transferToUserId Adds `WHERE transfer_to_user_id = $transferToUserId`
 	 * @param null|bool $done Adds `WHERE done = $done`
 	 *
