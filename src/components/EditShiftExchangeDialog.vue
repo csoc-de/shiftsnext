@@ -2,7 +2,6 @@
 	<NcDialog
 		no-close
 		:name="t(APP_ID, 'Edit shift exchange')"
-		size="normal"
 		content-classes="mb-2">
 		<form
 			id="shift-exchange-form"
