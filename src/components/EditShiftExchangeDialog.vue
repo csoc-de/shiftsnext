@@ -5,7 +5,7 @@
 		content-classes="mb-2">
 		<form
 			id="shift-exchange-form"
-			class="flex flex-col items-center gap-3"
+			class="flex flex-col gap-2"
 			@submit.prevent="onSubmit">
 			<CustomFieldset>
 				<template #legend>
