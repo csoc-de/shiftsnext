@@ -173,7 +173,7 @@
 							</template>
 						</div>
 						<div
-							class="mt-3"
+							class="mt-1"
 							:class="{
 								'grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-7': weeklyType === 'by_day',
 							}">
