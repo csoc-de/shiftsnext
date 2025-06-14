@@ -642,7 +642,7 @@ async function onShiftCreationAttempt(userId: string): Promise<void> {
 	}
 
 	const createdShift = await postShift(payload)
-	placeShift(createdShift)
+	placeShift(createdShift, columnIndex)
 	shiftTypeWrapper.amount--
 	resetMultiStepAction()
 }
@@ -661,8 +661,9 @@ async function onShiftMotionAttempt(userId: string): Promise<void> {
 		return
 	}
 	const updatedShift = await patchShift(movedShift.id, { user_id: userId })
-	extractShift(movedShift)
-	placeShift(updatedShift)
+	const columnIndex = multiStepAction.value.columnIndex
+	extractShift(movedShift, columnIndex)
+	placeShift(updatedShift, columnIndex)
 	resetMultiStepAction()
 }
 
@@ -712,12 +713,9 @@ provide(onShiftDeletionAttemptIK, onShiftDeletionAttempt)
  * Returns the shifts data cell for the given `userId` and `columnIndex`
  *
  * @param userId The user ID
- * @param columnIndex Defaults to the column index of the multi-step action.
+ * @param columnIndex The column index
  */
-function getShiftsDataCell(
-	userId: string,
-	columnIndex: number = multiStepAction.value.columnIndex,
-): ShiftsDataCell {
+function getShiftsDataCell(userId: string, columnIndex: number): ShiftsDataCell {
 	const row = getShiftsRow(userId)
 	const cell = row[columnIndex]
 	if (cell?.type !== 'shifts') {
@@ -732,7 +730,7 @@ function getShiftsDataCell(
  * @param shift The shift to extract
  * @param columnIndex The column index
  */
-function extractShift(shift: Shift, columnIndex?: number): void {
+function extractShift(shift: Shift, columnIndex: number): void {
 	const cell = getShiftsDataCell(shift.user.id, columnIndex)
 	cell.data = cell.data.filter(({ id }) => id !== shift.id)
 }
@@ -743,7 +741,7 @@ function extractShift(shift: Shift, columnIndex?: number): void {
  * @param shift The shift to place
  * @param columnIndex The column index
  */
-function placeShift(shift: Shift, columnIndex?: number): void {
+function placeShift(shift: Shift, columnIndex: number): void {
 	const cell = getShiftsDataCell(shift.user.id, columnIndex)
 	cell.data.push(shift)
 	cell.data.sort(compareShifts)
