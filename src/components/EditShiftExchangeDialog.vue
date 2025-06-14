@@ -8,36 +8,40 @@
 			id="shift-exchange-form"
 			class="flex flex-col items-center gap-3"
 			@submit.prevent="onSubmit">
-			<span>{{ editor === 'admin' ? t(APP_ID, 'Admin approval') : t(APP_ID, 'User approval') }}</span>
-			<div class="flex -mt-3">
-				<NcCheckboxRadioSwitch
-					v-model="approvedString"
-					value="true"
-					button-variant
-					button-variant-grouped="horizontal"
-					name="approved_by_user"
-					type="radio">
-					{{ t(APP_ID, "Approved") }}
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch
-					v-model="approvedString"
-					value="null"
-					button-variant
-					button-variant-grouped="horizontal"
-					name="approved_by_user"
-					type="radio">
-					{{ t(APP_ID, "Pending") }}
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch
-					v-model="approvedString"
-					value="false"
-					button-variant
-					button-variant-grouped="horizontal"
-					name="approved_by_user"
-					type="radio">
-					{{ t(APP_ID, "Rejected") }}
-				</NcCheckboxRadioSwitch>
-			</div>
+			<CustomFieldset>
+				<template #legend>
+					{{ editor === 'admin' ? t(APP_ID, 'Admin approval') : t(APP_ID, 'User approval') }}
+				</template>
+				<div class="flex">
+					<NcCheckboxRadioSwitch
+						v-model="approvedString"
+						value="true"
+						button-variant
+						button-variant-grouped="horizontal"
+						name="approved_by_user"
+						type="radio">
+						{{ t(APP_ID, "Approved") }}
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch
+						v-model="approvedString"
+						value="null"
+						button-variant
+						button-variant-grouped="horizontal"
+						name="approved_by_user"
+						type="radio">
+						{{ t(APP_ID, "Pending") }}
+					</NcCheckboxRadioSwitch>
+					<NcCheckboxRadioSwitch
+						v-model="approvedString"
+						value="false"
+						button-variant
+						button-variant-grouped="horizontal"
+						name="approved_by_user"
+						type="radio">
+						{{ t(APP_ID, "Rejected") }}
+					</NcCheckboxRadioSwitch>
+				</div>
+			</CustomFieldset>
 			<NcTextArea
 				v-model="formValues.comment"
 				resize="vertical"
@@ -68,6 +72,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
+import CustomFieldset from './CustomFieldset.vue'
 import { APP_ID } from '../appId.ts'
 import {
 	type Approveds,
