@@ -727,7 +727,7 @@ function getShiftsDataCell(
 }
 
 /**
- * Extracts the shift from the shifts data cell
+ * Extracts the shift from the shifts data cell identified by `shift.user_id` and `columnIndex`
  *
  * @param shift The shift to extract
  * @param columnIndex The column index
@@ -738,7 +738,7 @@ function extractShift(shift: Shift, columnIndex?: number): void {
 }
 
 /**
- * Places the shift
+ * Places the shift into the shifts data cell identified by `shift.user_id` and `columnIndex`
  *
  * @param shift The shift to place
  * @param columnIndex The column index
