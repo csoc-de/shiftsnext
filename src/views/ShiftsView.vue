@@ -506,19 +506,14 @@ function placeWeeklyByDayShiftTypes() {
  */
 function placeShifts(): void {
 	for (const shift of shifts) {
-		const { start, user, shift_type: { id: shiftTypeId } } = shift
+		const { start, shift_type: { id: shiftTypeId } } = shift
 		const isoWeekDate = getIsoWeekDate(
 			start,
 			shift.shift_type.repetition.weekly_type === 'by_day',
 		)
 		const columnIndex = getColumnIndex(isoWeekDate)
 		try {
-			const row = getShiftsRow(user.id)
-			const cell = row[columnIndex]
-			if (cell?.type !== 'shifts') {
-				continue
-			}
-			cell.data.push(shift)
+			placeShift(shift, columnIndex, false)
 		} catch (error) {
 			if (!(error instanceof ShiftsRowNotFoundError)) {
 				continue
