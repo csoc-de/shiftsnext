@@ -1,10 +1,14 @@
-body {
+body#body-user[id] {
 	.vs__dropdown-menu {
 		min-width: 0;
 	}
 
 	.v-select.select {
 		min-width: 100px;
+	}
+
+	.dialog__actions {
+		margin-block-start: 12px;
 	}
 
 	input:not(
@@ -21,8 +25,7 @@ body {
 	select,
 	.v-select.select,
 	div[contenteditable="true"],
-	textarea,
-	.input-field:has(.input-field__main-wrapper) {
+	.textarea:has(.textarea__input--label-outside) {
 		margin: 0;
 	}
 
