@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Controller;
 
+use OCA\ShiftsNext\Db\ShiftExchangeMapper;
 use OCA\ShiftsNext\Db\ShiftMapper;
 use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
@@ -30,6 +31,7 @@ class ShiftController extends Controller {
 		string $appName,
 		IRequest $request,
 		private ShiftMapper $shiftMapper,
+		private ShiftExchangeMapper $shiftExchangeMapper,
 		private ShiftService $shiftService,
 		private ShiftTypeService $shiftTypeService,
 		private GroupUserRelationService $groupUserService,
@@ -222,6 +224,24 @@ class ShiftController extends Controller {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
 					"Cannot move shift to absent user_id `\"$user_id\"`",
+				);
+			}
+			$shiftId = $shift->getId();
+			// Check for pending exchanges
+			$pendingExchanges = [
+				...$this->shiftExchangeMapper->findAll(
+					shiftAId: $shiftId,
+					done: false
+				),
+				...$this->shiftExchangeMapper->findAll(
+					shiftBId: $shiftId,
+					done: false
+				),
+			];
+			if ($pendingExchanges) {
+				throw new HttpException(
+					Http::STATUS_UNPROCESSABLE_ENTITY,
+					"Cannot move shift as there is a pending shift exchange for shift `$shiftId`",
 				);
 			}
 			// This queues a removal of the shift from the previous user's calendar
