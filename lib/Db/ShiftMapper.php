@@ -32,6 +32,7 @@ class ShiftMapper extends QBMapper {
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
 	 * @param null|string $userId Adds `WHERE user_id = $userId`
 	 * @param null|TemporalColumnQueryOptions $start
+	 * @param null|int $shiftTypeId Adds `WHERE shift_type_id = $shiftTypeId`
 	 *
 	 * @return Shift[]
 	 */
@@ -39,6 +40,7 @@ class ShiftMapper extends QBMapper {
 		?array $groupIds = null,
 		?string $userId = null,
 		?array $start = null,
+		?int $shiftTypeId = null,
 	): array {
 		$qb = $this->db->getQueryBuilder();
 
@@ -93,6 +95,11 @@ class ShiftMapper extends QBMapper {
 						...$dateOnlyArgs,
 					),
 				)
+			);
+		}
+		if ($shiftTypeId !== null) {
+			$qb->andWhere(
+				$qb->expr()->eq('shift_type_id', $qb->createNamedParameter($shiftTypeId, IQueryBuilder::PARAM_INT)),
 			);
 		}
 
