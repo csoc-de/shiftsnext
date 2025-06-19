@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Controller;
 
+use OCA\ShiftsNext\Db\ShiftMapper;
 use OCA\ShiftsNext\Db\ShiftTypeMapper;
 use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Psalm\ShiftTypeAlias;
+use OCA\ShiftsNext\Service\CalendarChangeService;
 use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\ShiftTypeService;
@@ -20,6 +22,7 @@ use OCP\IRequest;
 use Throwable;
 
 use function array_intersect;
+use function array_walk;
 
 /**
  * @psalm-import-type Repetition from ShiftTypeAlias
@@ -30,9 +33,11 @@ class ShiftTypeController extends Controller {
 		string $appName,
 		IRequest $request,
 		private ShiftTypeMapper $shiftTypeMapper,
+		private ShiftMapper $shiftMapper,
 		private ShiftTypeService $shiftTypeService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
 		private GroupService $groupService,
+		private CalendarChangeService $calendarChangeService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -166,6 +171,8 @@ class ShiftTypeController extends Controller {
 			} catch (ShiftTypeNotFoundException $e) {
 				throw new HttpException(Http::STATUS_NOT_FOUND, null, $e);
 			}
+			$shifts = $this->shiftMapper->findAll(shiftTypeId: $shiftType->getId());
+			array_walk($shifts, $this->calendarChangeService->safeCreate(...));
 			$shiftType = $this->shiftTypeMapper->deleteById($shiftType);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new DataResponse($shiftTypeExtended);
