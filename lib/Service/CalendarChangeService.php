@@ -18,8 +18,6 @@ class CalendarChangeService {
 
 	/**
 	 * @return CalendarChange|false `false` if creation fails
-	 *
-	 * @psalm-suppress PossiblyUnusedReturnValue
 	 */
 	public function safeCreate(Shift|ShiftExtended $shift): CalendarChange|false {
 		try {
