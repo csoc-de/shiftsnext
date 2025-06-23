@@ -241,12 +241,17 @@ const { selectedGroups, selectedGroupIds } = storeToRefs(useSelectedGroups())
 
 const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
 
-const undefinedMultiStepAction: UndefinedMultiStepAction = {
-	type: undefined,
-	columnIndex: -1,
+/**
+ * Returns a new {@link UndefinedMultiStepAction}
+ */
+function getUndefinedMultiStepAction(): UndefinedMultiStepAction {
+	return {
+		type: undefined,
+		columnIndex: -1,
+	}
 }
 
-const multiStepAction = ref<MultiStepAction>(undefinedMultiStepAction)
+const multiStepAction = ref<MultiStepAction>(getUndefinedMultiStepAction())
 
 // These are non-reactive because the reactive data is stored inside
 // `headerRow`, `shiftTypesRow` and `shiftsRows`
@@ -773,7 +778,7 @@ function setMultiStepAction(newAction: MultiStepAction): void {
  * Resets the multi-step action
  */
 function resetMultiStepAction(): void {
-	multiStepAction.value = undefinedMultiStepAction
+	multiStepAction.value = getUndefinedMultiStepAction()
 }
 
 provide(multiStepActionIK, multiStepAction)
