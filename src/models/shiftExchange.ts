@@ -4,6 +4,9 @@ import type { User } from '../models/user.ts'
 import type { ExchangeApprovalType } from './config.ts'
 import type { GroupShiftAdminRelationsByGroup } from './groupShiftAdminRelation.ts'
 
+import { t } from '@nextcloud/l10n'
+import { APP_ID } from '../appId.ts'
+
 // Requests
 
 export interface ShiftExchangeBase {
@@ -44,6 +47,13 @@ export interface ShiftExchangePutRequest extends Partial<ShiftExchangeBase> {
 }
 
 export type ShiftExchangeType = 'regular' | 'transfer'
+
+export type ExchangeTypeTranslations = Record<ShiftExchangeType, string>
+
+export const exchangeTypeTranslations: ExchangeTypeTranslations = {
+	regular: t(APP_ID, 'Regular'),
+	transfer: t(APP_ID, 'Transfer'),
+}
 
 // Responses
 
