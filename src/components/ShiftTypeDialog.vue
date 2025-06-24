@@ -17,6 +17,7 @@
 						label="display_name"
 						label-outside
 						:clearable="false"
+						required
 						class="w-full !min-w-0"
 						@update:model-value="groupId = group?.id ?? ''" />
 				</InputGroup>
