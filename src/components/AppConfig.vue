@@ -14,6 +14,7 @@
 								v-model="commonCalendarOption"
 								input-id="common-calendar"
 								:options="commonCalendarOptions"
+								required
 								class="min-w-64"
 								@update:model-value="formValues.common_calendar_id = commonCalendarOption?.id" />
 						</InputGroup>
@@ -24,6 +25,7 @@
 								v-model="absenceCalendarOption"
 								input-id="absence-calendar"
 								:options="absenceCalendarOptions"
+								required
 								class="min-w-64"
 								@update:model-value="formValues.absence_calendar_id = absenceCalendarOption?.id" />
 						</InputGroup>
@@ -70,7 +72,7 @@
 			<NcButton
 				class="mt-4"
 				type="submit"
-				:disabled="!saveable || saving">
+				:disabled="saving">
 				{{ t(APP_ID, "Save") }}
 			</NcButton>
 		</form>
@@ -149,15 +151,13 @@ const formValues = ref({
 	exchange_approval_type: approvalTypeOption.value?.id,
 })
 
-const saveable = computed(() => !!(commonCalendarOption.value && absenceCalendarOption.value))
-
 /**
  * Save app config
  */
 async function save() {
 	try {
 		saving.value = true
-		// @ts-expect-error checked by computed property saveable
+		// @ts-expect-error checked by required attributes
 		await putAppConfig({ values: formValues.value })
 		showSavedToast()
 	} finally {
