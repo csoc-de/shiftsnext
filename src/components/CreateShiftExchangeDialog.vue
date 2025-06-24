@@ -6,22 +6,15 @@
 		<form id="shift-exchange-form" @submit.prevent="onSubmit">
 			<div class="flex justify-center">
 				<NcCheckboxRadioSwitch
+					v-for="(type, index) in EXCHANGE_TYPES"
+					:key="index"
 					v-model="exchangeType"
+					:value="type"
 					button-variant
-					value="regular"
 					name="exchange-type"
 					type="radio"
 					button-variant-grouped="horizontal">
-					{{ t(APP_ID, "Regular") }}
-				</NcCheckboxRadioSwitch>
-				<NcCheckboxRadioSwitch
-					v-model="exchangeType"
-					button-variant
-					value="transfer"
-					name="exchange-type"
-					type="radio"
-					button-variant-grouped="horizontal">
-					{{ t(APP_ID, "Transfer") }}
+					{{ exchangeTypeTranslations[type] }}
 				</NcCheckboxRadioSwitch>
 			</div>
 			<div class="grid grid-cols-2 gap-4">
@@ -167,6 +160,8 @@ import {
 	type ShiftExchangeType,
 
 	createIK,
+	EXCHANGE_TYPES,
+	exchangeTypeTranslations,
 } from '../models/shiftExchange.ts'
 import { getNcSelectShiftOption, getNcSelectUsersOption } from '../nextcloudVue.ts'
 import { compare } from '../sort.ts'
