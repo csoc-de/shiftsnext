@@ -18,7 +18,7 @@
 	<screenshot>https://raw.githubusercontent.com/csoc-de/shiftsnext/master/screenshots/shifts.png</screenshot>
 	<dependencies>
 		<php min-version="8.3" />
-		<nextcloud min-version="29" max-version="31" />
+		<nextcloud min-version="29" max-version="32" />
 	</dependencies>
 	<settings>
 		<admin>OCA\ShiftsNext\Settings\AdminSettings</admin>
