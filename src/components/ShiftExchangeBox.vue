@@ -2,7 +2,9 @@
 	<div
 		class="rounded-nc-large border border-solid border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
 		:class="{ 'line-through': delayBoxVisible }">
-		<div class="flex justify-end pr-2 h-nc-default-clickable-area">
+		<div class="flex items-center justify-between px-2 h-nc-default-clickable-area">
+			<div class="size-nc-default-clickable-area" />
+			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
 			<NcActions>
 				<NcActionButton
 					v-if="participant && !shiftExchange.done"
@@ -134,14 +136,18 @@ import {
 	type ExchangeEditor,
 	type ExchangeParticipant,
 	type ShiftExchange,
+	type ShiftExchangeType,
 
 	exchangeApprovalTypeIK,
+	exchangeTypeTranslations,
 	relationsIK,
 	removeIK,
 } from '../models/shiftExchange.ts'
 import { authUser } from '../user.ts'
 
 const { shiftExchange } = defineProps<{ shiftExchange: ShiftExchange }>()
+
+const exchangeType: ShiftExchangeType = 'shift_b' in shiftExchange ? 'regular' : 'transfer'
 
 const approvalType = inject(exchangeApprovalTypeIK)!
 const relations = inject(relationsIK)!
