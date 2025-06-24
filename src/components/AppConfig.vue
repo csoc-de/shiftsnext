@@ -145,7 +145,7 @@ const form = ref({
 	absence_calendar_id: absenceCalendarOption.value?.id,
 	sync_to_personal_calendar: syncToPersonalCalendar.value,
 	ignore_absence_for_by_week_shifts: ignoreAbsenceForByWeekShifts.value,
-	exchange_approval_type: 'all',
+	exchange_approval_type: approvalTypeOption.value?.id,
 })
 
 const saveable = computed(() => !!(commonCalendarOption.value && absenceCalendarOption.value))
