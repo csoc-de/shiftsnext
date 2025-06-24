@@ -101,7 +101,8 @@
 									v-model="userBOption"
 									input-id="user-b"
 									class="w-full"
-									:options="userBOptions" />
+									:options="userBOptions"
+									:loading="userBOptionsLoading" />
 							</InputGroup>
 						</template>
 					</div>
