@@ -92,7 +92,7 @@
 			</div>
 
 			<div class="mt-2 text-center col-span-2">
-				<div>
+				<div v-if="shiftExchange.comment">
 					<span>{{ t(APP_ID, "Comment") }}: </span>
 					<span>{{ shiftExchange.comment }}</span>
 				</div>
