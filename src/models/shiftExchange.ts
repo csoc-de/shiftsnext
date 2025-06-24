@@ -46,7 +46,9 @@ export interface ShiftExchangePutRequest extends Partial<ShiftExchangeBase> {
 	approveds: Approveds
 }
 
-export type ShiftExchangeType = 'regular' | 'transfer'
+export const EXCHANGE_TYPES = ['regular', 'transfer'] as const
+
+export type ShiftExchangeType = (typeof EXCHANGE_TYPES)[number]
 
 export type ExchangeTypeTranslations = Record<ShiftExchangeType, string>
 
