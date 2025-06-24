@@ -27,6 +27,7 @@
 							<label for="user-a"> {{ t(APP_ID, "User") }}</label>
 							<NcSelectUsers
 								v-model="userAOption"
+								required
 								input-id="user-a"
 								class="w-full"
 								:options="userAOptions"
@@ -38,6 +39,7 @@
 							<NcDateTimePickerNative
 								id="date-a"
 								v-model="dateA"
+								required
 								class="w-full"
 								type="date"
 								hide-label
@@ -47,6 +49,7 @@
 							<label for="shift-a"> {{ t(APP_ID, "Shift") }}</label>
 							<NcSelect
 								v-model="shiftAOption"
+								required
 								input-id="shift-a"
 								:disabled="shiftASelectDisabled"
 								class="w-full"
@@ -67,6 +70,7 @@
 								<label for="user-b"> {{ t(APP_ID, "User") }}</label>
 								<NcSelectUsers
 									v-model="userBOption"
+									required
 									input-id="user-b"
 									class="w-full"
 									:options="userBOptions"
@@ -78,6 +82,7 @@
 								<NcDateTimePickerNative
 									id="date-b"
 									v-model="dateB"
+									required
 									class="w-full"
 									type="date"
 									hide-label
@@ -87,6 +92,7 @@
 								<label for="shift-b"> {{ t(APP_ID, "Shift") }}</label>
 								<NcSelect
 									v-model="shiftBOption"
+									required
 									input-id="shift-b"
 									:disabled="shiftBSelectDisabled"
 									class="w-full"
@@ -99,6 +105,7 @@
 								<label for="user-b"> {{ t(APP_ID, "User") }}</label>
 								<NcSelectUsers
 									v-model="userBOption"
+									required
 									input-id="user-b"
 									class="w-full"
 									:options="userBOptions"
@@ -123,7 +130,7 @@
 				{{ t(APP_ID, "Cancel") }}
 			</NcButton>
 			<NcButton
-				:disabled="!saveable || saving"
+				:disabled="saving"
 				type="submit"
 				variant="primary"
 				form="shift-exchange-form">
@@ -325,25 +332,6 @@ async function loadShiftsB(): Promise<void> {
 		shiftBOptionsLoading.value = false
 	}
 }
-
-const saveable = computed(() => {
-	if (!shiftAOption.value) {
-		return false
-	}
-	switch (exchangeType.value) {
-		case 'regular':
-			if (!shiftBOption.value) {
-				return false
-			}
-			break
-		case 'transfer':
-			if (!userBOption.value) {
-				return false
-			}
-			break
-	}
-	return true
-})
 
 /**
  * Handle the form submission
