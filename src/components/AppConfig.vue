@@ -61,6 +61,7 @@
 							v-model="approvalTypeOption"
 							input-id="exchange-approval-type"
 							:options="approvalTypeOptions"
+							:clearable="false"
 							class="min-w-64"
 							@update:model-value="form.exchange_approval_type = approvalTypeOption?.id" />
 					</InputGroup>
