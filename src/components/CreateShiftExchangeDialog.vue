@@ -118,7 +118,7 @@
 					<label for="comment">{{ t(APP_ID, "Comment") }}</label>
 					<NcTextArea
 						id="comment"
-						v-model="comment"
+						v-model.trim="comment"
 						resize="vertical"
 						label-outside />
 				</InputGroup>
