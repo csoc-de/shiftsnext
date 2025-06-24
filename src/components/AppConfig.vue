@@ -15,7 +15,7 @@
 								input-id="common-calendar"
 								:options="commonCalendarOptions"
 								class="min-w-64"
-								@update:model-value="form.common_calendar_id = commonCalendarOption?.id" />
+								@update:model-value="formValues.common_calendar_id = commonCalendarOption?.id" />
 						</InputGroup>
 						<InputGroup>
 							<label for="absence-calendar">
@@ -25,14 +25,14 @@
 								input-id="absence-calendar"
 								:options="absenceCalendarOptions"
 								class="min-w-64"
-								@update:model-value="form.absence_calendar_id = absenceCalendarOption?.id" />
+								@update:model-value="formValues.absence_calendar_id = absenceCalendarOption?.id" />
 						</InputGroup>
 						<InputGroup>
 							<label for="sync-to-personal-calendar">
 								{{ t(APP_ID, "Personal calendar") }}</label>
 							<NcCheckboxRadioSwitch
 								id="sync-to-personal-calendar"
-								v-model="form.sync_to_personal_calendar"
+								v-model="formValues.sync_to_personal_calendar"
 								type="checkbox">
 								{{ t(APP_ID, "Synchronize") }}
 							</NcCheckboxRadioSwitch>
@@ -42,7 +42,7 @@
 								{{ t(APP_ID, "Absence check") }}</label>
 							<NcCheckboxRadioSwitch
 								id="ignore-absence-for-by-week-shifts"
-								v-model="form.ignore_absence_for_by_week_shifts"
+								v-model="formValues.ignore_absence_for_by_week_shifts"
 								type="checkbox">
 								{{ t(APP_ID, "Ignore for weekly shifts") }}
 							</NcCheckboxRadioSwitch>
@@ -63,7 +63,7 @@
 							:options="approvalTypeOptions"
 							:clearable="false"
 							class="min-w-64"
-							@update:model-value="form.exchange_approval_type = approvalTypeOption?.id" />
+							@update:model-value="formValues.exchange_approval_type = approvalTypeOption?.id" />
 					</InputGroup>
 				</CustomFieldset>
 			</div>
@@ -141,7 +141,7 @@ watch(commonCalendarOption, () => {
 	}
 })
 
-const form = ref({
+const formValues = ref({
 	common_calendar_id: commonCalendarOption.value?.id,
 	absence_calendar_id: absenceCalendarOption.value?.id,
 	sync_to_personal_calendar: syncToPersonalCalendar.value,
@@ -158,7 +158,7 @@ async function save() {
 	try {
 		saving.value = true
 		// @ts-expect-error checked by computed property saveable
-		await putAppConfig({ values: form.value })
+		await putAppConfig({ values: formValues.value })
 		showSavedToast()
 	} finally {
 		saving.value = false
