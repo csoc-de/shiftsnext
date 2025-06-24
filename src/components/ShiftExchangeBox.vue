@@ -93,13 +93,13 @@
 
 			<div class="mt-2 text-center col-span-2">
 				<div>
-					<span class="font-bold">{{ t(APP_ID, "Comment") }}: </span>
+					<span>{{ t(APP_ID, "Comment") }}: </span>
 					<span>{{ shiftExchange.comment }}</span>
 				</div>
 				<div
 					v-if="approvalType !== 'users'"
 					class="flex items-center justify-center gap-1">
-					<span class="font-bold">{{ t(APP_ID, "Admin approval") }}: </span>
+					<span>{{ t(APP_ID, "Admin approval") }}: </span>
 					<ShiftExchangeApprovedStatus :approved="shiftExchange.admin_approval.approved" />
 				</div>
 			</div>
