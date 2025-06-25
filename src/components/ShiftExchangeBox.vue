@@ -5,9 +5,9 @@
 		<div class="flex items-center justify-between px-2 h-nc-default-clickable-area">
 			<div class="size-nc-default-clickable-area" />
 			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
-			<NcActions>
+			<NcActions v-if="renderActions">
 				<NcActionButton
-					v-if="participant && !shiftExchange.done"
+					v-if="renderEditButton"
 					close-after-click
 					@click="() => {
 						editor = participant,
@@ -19,7 +19,7 @@
 					{{ t(APP_ID, "Edit") }}
 				</NcActionButton>
 				<NcActionButton
-					v-if="isGroupShiftAdmin && !shiftExchange.done"
+					v-if="renderEditAsAdminButton"
 					close-after-click
 					@click="() => {
 						editor = 'admin'
@@ -31,7 +31,7 @@
 					{{ t(APP_ID, "Edit as admin") }}
 				</NcActionButton>
 				<NcActionButton
-					v-if="isGroupShiftAdmin || (participant && !shiftExchange.done)"
+					v-if="renderDeleteButton"
 					close-after-click
 					@click="delayBoxVisible = true">
 					<template #icon>
@@ -189,6 +189,14 @@ const isGroupShiftAdmin = groupIds.every((groupId) => {
 	const relation = relations.find((relation) => relation.group.id === groupId)
 	return relation?.users.some((user) => user.id === authUser.id)
 })
+
+const renderEditButton = !!(participant && !shiftExchange.done)
+
+const renderEditAsAdminButton = isGroupShiftAdmin && !shiftExchange.done
+
+const renderDeleteButton = !!(isGroupShiftAdmin || (participant && !shiftExchange.done))
+
+const renderActions = renderEditButton || renderEditAsAdminButton || renderDeleteButton
 
 /**
  * Remove shift exchange
