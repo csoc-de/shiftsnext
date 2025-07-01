@@ -315,16 +315,16 @@ function setupHeaderRow(): void {
 	for (let dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
 		zdtsOfWeek.push(parseIsoWeekDate(`${isoWeekDate.value}-${dayOfWeek}`))
 	}
-	const analystCell: StringCell = {
+	const userHeaderCell: StringCell = {
 		type: 'string',
 		data: t(APP_ID, 'Analyst'),
 	}
-	const weekCell: WeekCell = {
+	const weekHeaderCell: WeekCell = {
 		type: 'week',
 		data: isoWeekDate.value,
 	}
-	const dayCells: ZonedDateTimeDataCell[] = zdtsOfWeek.map((zdt): ZonedDateTimeDataCell => ({ type: 'zoned-date-time', data: zdt }))
-	headerRow.value = [analystCell, weekCell, ...dayCells]
+	const dayHeaderCells: ZonedDateTimeDataCell[] = zdtsOfWeek.map((zdt): ZonedDateTimeDataCell => ({ type: 'zoned-date-time', data: zdt }))
+	headerRow.value = [userHeaderCell, weekHeaderCell, ...dayHeaderCells]
 }
 
 /**
