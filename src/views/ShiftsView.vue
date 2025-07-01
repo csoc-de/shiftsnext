@@ -317,7 +317,7 @@ function setupHeaderRow(): void {
 	}
 	const userHeaderCell: StringCell = {
 		type: 'string',
-		data: t(APP_ID, 'Analyst'),
+		data: t(APP_ID, 'User'),
 	}
 	const weekHeaderCell: WeekCell = {
 		type: 'week',
