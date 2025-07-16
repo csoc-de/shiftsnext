@@ -43,7 +43,7 @@ final class Util {
 	 *
 	 * @return string
 	 *
-	 * @throws EcmaMalformedStringException {@see OCA\ShiftsNext\Util\Util::parseTemporal()}
+	 * @throws EcmaMalformedStringException {@see OCA\ShiftsNext\Util\Util::parseEcma()}
 	 *
 	 * @psalm-assert !null $dateTime
 	 */
