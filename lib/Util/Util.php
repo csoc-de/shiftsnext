@@ -25,15 +25,17 @@ final class Util {
 	];
 
 	/**
-	 * Removes any localized information from `$value`
+	 * Removes any localized information from `$value` by converting it to UTC
 	 *
-	 * If `$value` is a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/ZonedDateTime Temporal.ZonedDateTime} compatible string,
-	 * or a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format Date Time String},
+	 * This method tries to unlocalize `$value` in the following order:
+	 *
+	 * 1. If `$value` is a full {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format Date Time String},
 	 * the returned value will be a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format Date Time String}
-	 * in UTC time.
-	 *
-	 * If `$value` is a
-	 * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/PlainDate Temporal.PlainDate}
+	 * with the `Z` timezone suffix.
+	 * 2. If `$value` is a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/ZonedDateTime Temporal.ZonedDateTime}
+	 * compatible string (without calendar), the returned value will be a {@link https://www.rfc-editor.org/rfc/rfc9557.html RFC 9557}
+	 * string (without calendar), with `+00:00[UTC]` as its timezone offset + name.
+	 * 3. If `$value` is a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/PlainDate Temporal.PlainDate}
 	 * compatible string, it is simply returned as is.
 	 *
 	 * @param string $value
