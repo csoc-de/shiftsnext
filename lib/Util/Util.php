@@ -57,7 +57,7 @@ final class Util {
 		/** @var key-of<self::DATE_ECMA_FORMAT_TO_TYPE_MAP> */
 		$format = array_search($type, self::DATE_ECMA_FORMAT_TO_TYPE_MAP);
 		/**
-		 * @disregard P1006 Intelephense failes to infer
+		 * @disregard P1006 Intelephense fails to infer
 		 * key-of<self::DATE_ECMA_FORMAT_TO_TYPE_MAP>, maybe due to
 		 * self::DATE_ECMA_FORMAT_TO_TYPE_MAP referencing other class constants
 		 */
