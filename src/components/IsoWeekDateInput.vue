@@ -36,7 +36,7 @@ const isoWeekDate = defineModel<IsoWeekDateWithoutDay>({ required: true })
 
 defineProps<{
 	inputId?: string
-	disabled?: unknown
+	disabled?: boolean
 }>()
 
 defineExpose({ decrease, increase })
