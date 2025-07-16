@@ -11,7 +11,7 @@
 					<label for="shift-type-group-id">{{ t(APP_ID, "Group") }}</label>
 					<NcSelect
 						v-model="group"
-						:disabled="shiftType"
+						:disabled="!!shiftType"
 						input-id="shift-type-group-id"
 						:options="shiftAdminGroups"
 						label="display_name"
@@ -76,7 +76,7 @@
 						}}</label>
 						<NcSelect
 							v-model="frequency"
-							:disabled="shiftType"
+							:disabled="!!shiftType"
 							input-id="shift-type-repetition-frequency"
 							label-outside
 							:options="frequencies"
@@ -89,7 +89,7 @@
 						<NcTextField
 							id="shift-type-repetition-interval"
 							v-model.trim="interval"
-							:disabled="shiftType"
+							:disabled="!!shiftType"
 							label-outside
 							type="number"
 							min="1"
@@ -105,7 +105,7 @@
 							v-for="(type, index) in REPETITION_WEEKLY_TYPES"
 							:key="index"
 							v-model="weeklyType"
-							:disabled="shiftType"
+							:disabled="!!shiftType"
 							:value="type"
 							button-variant
 							name="repetition-weekly-type"
@@ -129,7 +129,7 @@
 									<NcDateTimePickerNative
 										id="shift-type-repetition-config-reference"
 										v-model="byDayReferenceDate"
-										:disabled="shiftType"
+										:disabled="!!shiftType"
 										class="w-full"
 										type="datetime-local"
 										hide-label
@@ -142,7 +142,7 @@
 									</label>
 									<IsoWeekDateInput
 										v-model="byWeekReference"
-										:disabled="shiftType"
+										:disabled="!!shiftType"
 										input-id="shift-type-repetition-config-reference"
 										class="w-full" />
 								</template>
@@ -152,7 +152,7 @@
 									<label for="shift-type-repetition-config-time-zone">{{ t(APP_ID, "Time zone") }}</label>
 									<NcTimezonePicker
 										v-model="timeZone"
-										:disabled="shiftType"
+										:disabled="!!shiftType"
 										input-id="shift-type-repetition-config-time-zone"
 										@update:model-value="setByDayReference()" />
 								</InputGroup>
@@ -163,7 +163,7 @@
 											<NcTextField
 												id="shift-type-duration"
 												v-model.trim="durationString"
-												:disabled="shiftType"
+												:disabled="!!shiftType"
 												label-outside
 												readonly
 												minlength="3" />
@@ -183,7 +183,7 @@
 									v-for="(localDayMin, shortDay, index) in shortDayToLocalMinDayMap"
 									:key="index"
 									v-model.trim="shortDayToAmountMap[shortDay]"
-									:disabled="shiftType"
+									:disabled="!!shiftType"
 									type="number"
 									:label="localDayMin"
 									min="0"
@@ -192,7 +192,7 @@
 							<template v-else>
 								<NcTextField
 									v-model.trim="byWeekAmount"
-									:disabled="shiftType"
+									:disabled="!!shiftType"
 									class="w-28"
 									type="number"
 									:label="t(APP_ID, 'Amount')"
