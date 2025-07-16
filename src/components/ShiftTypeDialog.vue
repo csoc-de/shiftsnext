@@ -334,7 +334,7 @@ const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
 
 const group = ref(shiftAdminGroups.find(({ id }) => id === groupId.value))
 
-const byDayReferenceDate = ref(new Date(byDayReference.value
+const byDayReferenceDate = ref<Date | null>(new Date(byDayReference.value
 	.toPlainDateTime()
 	.toZonedDateTime(localTimeZone)
 	.epochMilliseconds))
@@ -455,6 +455,9 @@ const repetitionSummary = computed(() => {
  * and time zone picker
  */
 function setByDayReference(): void {
+	if (!byDayReferenceDate.value) {
+		return
+	}
 	byDayReference.value = Temporal.Instant.fromEpochMilliseconds(byDayReferenceDate.value.valueOf())
 		.toZonedDateTimeISO(localTimeZone)
 		.toPlainDateTime()
