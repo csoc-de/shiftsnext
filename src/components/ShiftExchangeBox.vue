@@ -44,65 +44,70 @@
 			</NcActions>
 		</div>
 
-		<div class="grid grid-cols-2 gap-2 px-3 pb-3">
-			<div class="border-r border-t border-solid border-gray-800 pt-1 px-2">
-				<div class="flex items-center justify-between gap-1">
-					<span>{{ shiftExchange.user_a_approval.user?.display_name }}</span>
-					<ShiftExchangeApprovedStatus
-						v-if="approvalType !== 'admin'"
-						:approved="shiftExchange.user_a_approval.approved" />
-				</div>
-				<div>{{ shiftExchange.shift_a.shift_type.group.display_name }}</div>
-				<div>{{ shiftExchange.shift_a.shift_type.name }}</div>
-				<div>
-					{{ formatRange(
-						[shiftExchange.shift_a.start, shiftExchange.shift_a.end],
-						'toZonedDateTime' in shiftExchange.shift_a.start
-							? dateOnlyFormatOptions
-							: dateTimeFormatOptions,
-					) }}
-				</div>
-			</div>
-
-			<div class="border-l border-t border-solid border-gray-800 pt-1 px-2">
-				<template v-if="'shift_b' in shiftExchange">
+		<div class="flex flex-col gap-2 px-3 pb-3">
+			<div class="grid grid-cols-2 gap-2">
+				<div class="border-r border-y border-solid border-gray-800 py-1 px-2">
 					<div class="flex items-center justify-between gap-1">
-						<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>
+						<span>{{ shiftExchange.user_a_approval.user?.display_name }}</span>
 						<ShiftExchangeApprovedStatus
 							v-if="approvalType !== 'admin'"
-							:approved="shiftExchange.user_b_approval.approved" />
+							:approved="shiftExchange.user_a_approval.approved" />
 					</div>
-					<div>{{ shiftExchange.shift_b.shift_type.group.display_name }}</div>
-					<div>{{ shiftExchange.shift_b.shift_type.name }}</div>
+					<div>{{ shiftExchange.shift_a.shift_type.group.display_name }}</div>
+					<div>{{ shiftExchange.shift_a.shift_type.name }}</div>
 					<div>
 						{{ formatRange(
-							[shiftExchange.shift_b.start, shiftExchange.shift_b.end],
-							'toZonedDateTime' in shiftExchange.shift_b.start
+							[shiftExchange.shift_a.start, shiftExchange.shift_a.end],
+							'toZonedDateTime' in shiftExchange.shift_a.start
 								? dateOnlyFormatOptions
 								: dateTimeFormatOptions,
 						) }}
 					</div>
-				</template>
-				<template v-if="'transfer_to_user' in shiftExchange">
-					<div class="flex items-center justify-between gap-1">
-						<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>
-						<ShiftExchangeApprovedStatus
-							v-if="approvalType !== 'admin'"
-							:approved="shiftExchange.user_b_approval.approved" />
-					</div>
-				</template>
+				</div>
+
+				<div class="border-l border-y border-solid border-gray-800 py-1 px-2">
+					<template v-if="'shift_b' in shiftExchange">
+						<div class="flex items-center justify-between gap-1">
+							<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>
+							<ShiftExchangeApprovedStatus
+								v-if="approvalType !== 'admin'"
+								:approved="shiftExchange.user_b_approval.approved" />
+						</div>
+						<div>{{ shiftExchange.shift_b.shift_type.group.display_name }}</div>
+						<div>{{ shiftExchange.shift_b.shift_type.name }}</div>
+						<div>
+							{{ formatRange(
+								[shiftExchange.shift_b.start, shiftExchange.shift_b.end],
+								'toZonedDateTime' in shiftExchange.shift_b.start
+									? dateOnlyFormatOptions
+									: dateTimeFormatOptions,
+							) }}
+						</div>
+					</template>
+					<template v-if="'transfer_to_user' in shiftExchange">
+						<div class="flex items-center justify-between gap-1">
+							<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>
+							<ShiftExchangeApprovedStatus
+								v-if="approvalType !== 'admin'"
+								:approved="shiftExchange.user_b_approval.approved" />
+						</div>
+					</template>
+				</div>
 			</div>
 
-			<div class="mt-2 text-center col-span-2">
-				<div v-if="shiftExchange.comment">
-					<span>{{ t(APP_ID, "Comment") }}: </span>
-					<span>{{ shiftExchange.comment }}</span>
-				</div>
+			<div class="flex flex-col items-center">
 				<div
 					v-if="approvalType !== 'users'"
-					class="flex items-center justify-center gap-1">
-					<span>{{ t(APP_ID, "Admin approval") }}: </span>
+					class="flex items-center gap-1">
+					<span>{{ t(APP_ID, "Admin approval") }}:</span>
 					<ShiftExchangeApprovedStatus :approved="shiftExchange.admin_approval.approved" />
+				</div>
+
+				<div
+					v-if="shiftExchange.comment"
+					class="flex items-start gap-1 max-w-full">
+					<span>{{ t(APP_ID, "Comment") }}:</span>
+					<pre class="overflow-auto">{{ shiftExchange.comment }}</pre>
 				</div>
 			</div>
 		</div>
