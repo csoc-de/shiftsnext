@@ -6,7 +6,7 @@ import { computed, ref, watch } from 'vue'
 import { APP_ID } from '../appId.ts'
 import { putDefaultGroups } from '../db/config.ts'
 
-export const useSelectedGroups = defineStore('selectedGroups', () => {
+export const useUserSettings = defineStore('user-settings', () => {
 	const selectedGroups = ref(loadState<Group[]>(APP_ID, 'default_groups', []))
 
 	const selectedGroupIds = computed(() => selectedGroups.value.map(({ id }) => id))

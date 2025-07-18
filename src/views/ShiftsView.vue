@@ -225,7 +225,7 @@ import {
 	shortDayToIsoDayNumberMap,
 } from '../models/shiftType.ts'
 import { compareShifts, compareShiftTypes } from '../sort.ts'
-import { useSelectedGroups } from '../stores/selectedGroups.ts'
+import { useUserSettings } from '../stores/userSettings.ts'
 
 const isoWeekDateInput = useTemplateRef('isoWeekDateInput')
 
@@ -237,7 +237,7 @@ const loading = ref(true)
 const synchronizing = ref(false)
 
 const groups = ref(loadState<Group[]>(APP_ID, 'groups', []))
-const { selectedGroups, selectedGroupIds } = storeToRefs(useSelectedGroups())
+const { selectedGroups, selectedGroupIds } = storeToRefs(useUserSettings())
 
 const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
 
