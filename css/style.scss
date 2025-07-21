@@ -33,6 +33,10 @@ body[dir][id] {
 		min-height: auto !important;
 	}
 
+	.app-navigation__body {
+		overflow-y: unset !important;
+	}
+
 	textarea {
 		display: block;
 	}
