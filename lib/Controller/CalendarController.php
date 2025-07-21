@@ -39,8 +39,8 @@ class CalendarController extends Controller {
 	#[FrontpageRoute(verb: 'POST', url: '/api/calendars/synchronize-by-groups')]
 	public function synchronizeByGroups(array $group_ids): DataResponse {
 		try {
-			$adminGroupIds =
-				$this->groupShiftAdminRelationService->getShiftAdminGroupIds();
+			$adminGroupIds
+				= $this->groupShiftAdminRelationService->getShiftAdminGroupIds();
 
 			$groupIds = array_intersect($group_ids, $adminGroupIds);
 

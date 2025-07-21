@@ -91,8 +91,8 @@ class ShiftExchangeApprovalMapper extends QBMapper {
 
 		$provider = $this->db->getDatabaseProvider();
 		if (
-			$provider === IDBConnection::PLATFORM_POSTGRES &&
-			array_all(func_get_args(), fn (mixed $arg) => $arg === null)
+			$provider === IDBConnection::PLATFORM_POSTGRES
+			&& array_all(func_get_args(), fn (mixed $arg) => $arg === null)
 		) {
 			$table = $this->db->getQueryBuilder()->getTableName($this->getTableName());
 			$result = $this->db->executeQuery("INSERT INTO $table DEFAULT VALUES RETURNING id");

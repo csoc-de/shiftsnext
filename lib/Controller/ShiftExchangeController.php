@@ -432,8 +432,8 @@ class ShiftExchangeController extends Controller {
 				// This queues a removal of shift A from user A's calendar
 				$this->calendarChangeService->safeCreate($shiftA);
 
-				$updatedShiftA =
-					$this->shiftMapper->updateById($shiftA->id, $userBId);
+				$updatedShiftA
+					= $this->shiftMapper->updateById($shiftA->id, $userBId);
 
 				// This queues a creation of shift A in user B's calendar
 				$this->calendarChangeService->safeCreate($updatedShiftA);
@@ -441,8 +441,8 @@ class ShiftExchangeController extends Controller {
 					// This queues a removal of shift B from user B's calendar
 					$this->calendarChangeService->safeCreate($shiftB);
 
-					$updatedShiftB =
-						$this->shiftMapper->updateById($shiftB->id, $userAId);
+					$updatedShiftB
+						= $this->shiftMapper->updateById($shiftB->id, $userAId);
 
 					// This queues a creation of shift B in user A's calendar
 					$this->calendarChangeService->safeCreate($updatedShiftB);

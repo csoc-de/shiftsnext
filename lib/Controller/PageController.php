@@ -46,18 +46,18 @@ class PageController extends Controller {
 	): TemplateResponse {
 		$groups = $groupService->getAllSerializable();
 
-		$adminGroupIds =
-			$groupShiftAdminRelationService->getShiftAdminGroupIds();
-		$shiftAdminGroups =
-			$groupService->getAllSerializable($adminGroupIds);
+		$adminGroupIds
+			= $groupShiftAdminRelationService->getShiftAdminGroupIds();
+		$shiftAdminGroups
+			= $groupService->getAllSerializable($adminGroupIds);
 
 		$defaultGroupIds = $configService->getDefaultGroupIds();
 		$defaultGroups = $groupService->getAllSerializable(
 			$defaultGroupIds,
 		);
 
-		$exchangeApprovalType =
-			$configService->getExchangeApprovalType()->value;
+		$exchangeApprovalType
+			= $configService->getExchangeApprovalType()->value;
 
 		$initialState->provideInitialState(
 			'groups',

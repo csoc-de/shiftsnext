@@ -86,8 +86,8 @@ class CalendarService {
 			$calendars = $this->applyChange($change);
 
 			foreach ($calendars as $calendar) {
-				$errors[] =
-					'Failed to apply change to calendar '
+				$errors[]
+					= 'Failed to apply change to calendar '
 					. "'{$calendar['displayName']}' of user"
 					. "'{$calendar['ownerDisplayName']}'";
 			}
@@ -128,8 +128,8 @@ class CalendarService {
 			$shift = null;
 		}
 
-		['normal' => $objectUri, 'deleted' => $objectUriDeleted] =
-			self::getCalendarObjectUri($shiftId);
+		['normal' => $objectUri, 'deleted' => $objectUriDeleted]
+			= self::getCalendarObjectUri($shiftId);
 
 		$calendars = [];
 
@@ -168,8 +168,8 @@ class CalendarService {
 
 			try {
 				if ($shift && $shift->user->getUID() === $userId) {
-					$isPersonal =
-						$calendar['uri']
+					$isPersonal
+						= $calendar['uri']
 							=== CalDavBackend::PERSONAL_CALENDAR_URI;
 					$stream = $this->createICalendarStream($shift, $isPersonal);
 
@@ -409,8 +409,8 @@ class CalendarService {
 			'uri' => $calendar['uri'],
 			'principalUri' => $calendar['principaluri'],
 			'displayName' => $calendar['{DAV:}displayname'],
-			'ownerDisplayName' =>
-				$calendar['{http://nextcloud.com/ns}owner-displayname'],
+			'ownerDisplayName'
+				=> $calendar['{http://nextcloud.com/ns}owner-displayname'],
 		];
 	}
 }
