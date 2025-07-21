@@ -58,7 +58,7 @@
 			</div>
 		</template>
 	</HeaderNavigation>
-	<PaddedContainer v-if="!loading" class="overflow-auto">
+	<PaddedContainer v-if="!loading">
 		<table class="h-fit w-full border-collapse border border-solid border-neutral-500">
 			<caption class="text-xl">
 				{{ isoWeekDate }}
