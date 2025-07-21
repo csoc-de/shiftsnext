@@ -235,6 +235,7 @@ class CalendarService {
 			'VEVENT' => array_merge(
 				[
 					'SUMMARY' => $summary,
+					'TRANSP' => 'TRANSPARENT',
 					'DTSTART' => $dtStart,
 					'DTEND' => $dtEnd,
 				],
