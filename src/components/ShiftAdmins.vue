@@ -1,16 +1,16 @@
 <template>
 	<NcSettingsSection :name="t(APP_ID, 'Shift admins')">
 		<div class="overflow-auto">
-			<table class="w-full table-auto border-collapse border-x border-solid border-neutral-200 text-left dark:border-neutral-500">
+			<table class="w-full table-auto border-collapse border border-solid border-nc-border-maxcontrast text-left">
 				<thead>
-					<tr>
-						<th class="border-b bg-neutral-200 px-4 py-3 font-bold dark:bg-neutral-500">
+					<tr class="bg-nc-background-plain">
+						<th class="px-4 py-3 font-bold">
 							{{ t(APP_ID, "Group") }}
 						</th>
-						<th class="border-b bg-neutral-200 px-4 py-3 font-bold dark:bg-neutral-500">
+						<th class="px-4 py-3 font-bold">
 							{{ t(APP_ID, "Admins") }}
 						</th>
-						<th class="border-b bg-neutral-200 px-4 py-3 text-center font-bold dark:bg-neutral-500">
+						<th class="px-4 py-3 text-center font-bold">
 							{{ t(APP_ID, "Actions") }}
 						</th>
 					</tr>
@@ -21,7 +21,7 @@
 						:key="id">
 						<tr
 							v-if="relationUsers.length || group?.display_name === display_name"
-							class="border-b border-solid border-neutral-200 dark:border-neutral-500">
+							class="border border-solid border-nc-border-maxcontrast">
 							<td class="w-0 px-4 py-3">
 								{{ display_name }}
 							</td>
@@ -37,7 +37,7 @@
 									keep-open
 									:options="userOptions" />
 							</td>
-							<td class="w-0 border-solid border-neutral-500 px-4 py-3">
+							<td class="w-0 px-4 py-3">
 								<div class="flex items-center justify-center">
 									<NcButton
 										v-if="!editedList[index]"
