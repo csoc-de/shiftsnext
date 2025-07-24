@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="rounded-nc-large border border-solid border-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
+		class="rounded-nc-large border border-solid border-neutral-500 hover:bg-nc-primary-element-light-hover"
 		:class="{ 'line-through': delayBoxVisible }">
 		<div
 			class="flex items-center px-2 h-nc-default-clickable-area"
