@@ -23,7 +23,7 @@
 						<ChevronRight :size="20" />
 					</template>
 				</NcButton>
-				<NcButton @click="isoWeekDate = getIsoWeekDate(today, false)">
+				<NcButton @click="isoWeekDate = currentIsoWeekDateWithoutDay">
 					{{ t(APP_ID, "Today") }}
 				</NcButton>
 			</HeaderNavigationInputGroup>
@@ -70,7 +70,8 @@
 						:key="columnIndex"
 						class="border border-solid border-neutral-500 p-2 text-center"
 						:class="{
-							[cellBgColor]:
+							[todayCellBgColor]: columnIndexOfToday === columnIndex,
+							[actionCellBgColor]:
 								multiStepAction.type
 								&& multiStepAction.columnIndex === columnIndex,
 						}">
@@ -95,7 +96,8 @@
 						:key="columnIndex"
 						class="border border-solid border-neutral-500 h-full"
 						:class="{
-							[cellBgColor]:
+							[todayCellBgColor]: columnIndexOfToday === columnIndex,
+							[actionCellBgColor]:
 								multiStepAction.type
 								&& multiStepAction.columnIndex === columnIndex,
 							'p-2 text-center': type === 'string',
@@ -124,7 +126,8 @@
 						:key="columnIndex"
 						class="border border-solid border-neutral-500 h-full"
 						:class="{
-							[cellBgColor]:
+							[todayCellBgColor]: columnIndexOfToday === columnIndex,
+							[actionCellBgColor]:
 								multiStepAction.type
 								&& multiStepAction.columnIndex === columnIndex,
 							'p-2 text-center': type === 'user',
@@ -181,6 +184,7 @@ import { APP_ID } from '../appId.ts'
 import { rotate } from '../array.ts'
 import {
 	type IsoWeekDate,
+	type IsoWeekDateWithDay,
 
 	formatDate,
 	getIsoWeekDate,
@@ -231,7 +235,11 @@ const isoWeekDateInput = useTemplateRef('isoWeekDateInput')
 
 const today = Temporal.Now.zonedDateTimeISO(localTimeZone)
 
-const isoWeekDate = ref(getIsoWeekDate(today, false))
+const currentIsoWeekDateWithDay = getIsoWeekDate(today, true)
+
+const currentIsoWeekDateWithoutDay = getIsoWeekDate(today, false)
+
+const isoWeekDate = ref(currentIsoWeekDateWithoutDay)
 
 const loading = ref(true)
 const synchronizing = ref(false)
@@ -240,6 +248,8 @@ const groups = ref(loadState<Group[]>(APP_ID, 'groups', []))
 const { selectedGroups, selectedGroupIds } = storeToRefs(useUserSettings())
 
 const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
+
+let columnIndexOfToday = -1
 
 /**
  * Returns a new {@link UndefinedMultiStepAction}
@@ -311,9 +321,14 @@ function buildTable(): void {
  * Sets up the header row
  */
 function setupHeaderRow(): void {
+	columnIndexOfToday = -1
 	const zdtsOfWeek: Temporal.ZonedDateTime[] = []
 	for (let dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
-		zdtsOfWeek.push(parseIsoWeekDate(`${isoWeekDate.value}-${dayOfWeek}`))
+		const isoWeekDateForDayOfWeek: IsoWeekDateWithDay = `${isoWeekDate.value}-${dayOfWeek}`
+		if (isoWeekDateForDayOfWeek === currentIsoWeekDateWithDay) {
+			columnIndexOfToday = dayOfWeek + 1
+		}
+		zdtsOfWeek.push(parseIsoWeekDate(isoWeekDateForDayOfWeek))
 	}
 	const userHeaderCell: StringCell = {
 		type: 'string',
@@ -785,7 +800,8 @@ provide(multiStepActionIK, multiStepAction)
 provide(setMultiStepActionIK, setMultiStepAction)
 provide(resetMultiStepActionIK, resetMultiStepAction)
 
-const cellBgColor = 'bg-neutral-200 dark:bg-neutral-800'
+const todayCellBgColor = 'bg-neutral-200 dark:bg-neutral-800'
+const actionCellBgColor = '!bg-neutral-300 dark:!bg-neutral-700'
 
 /**
  * Syncs the calendar by groups
