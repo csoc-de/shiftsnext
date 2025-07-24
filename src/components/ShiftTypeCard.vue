@@ -4,9 +4,7 @@
 		class="rounded-nc-large border-8 border-solid p-4 pt-2 text-center"
 		:class="{ 'line-through': deleting }">
 		<div class="flex justify-between items-center">
-			<NcUserStatusIcon
-				:status="shiftType.active ? 'online' : 'dnd'"
-				class="rounded-full border-2 border-solid border-white" />
+			<NcUserStatusIcon :status="shiftType.active ? 'online' : 'dnd'" />
 
 			<NcActions>
 				<NcActionButton
