@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="rounded-nc-large border border-solid border-neutral-500 hover:bg-nc-primary-element-light-hover"
+		class="rounded-nc-large border border-solid border-nc-border-maxcontrast hover:bg-nc-primary-element-light-hover"
 		:class="{ 'line-through': delayBoxVisible }">
 		<div
 			class="flex items-center px-2 h-nc-default-clickable-area"
@@ -46,7 +46,7 @@
 
 		<div class="flex flex-col gap-2 px-3 pb-3">
 			<div class="grid grid-cols-2 gap-2">
-				<div class="border-r border-y border-solid border-gray-800 py-1 px-2">
+				<div class="border-r border-y border-solid border-nc-border-maxcontrast py-1 px-2">
 					<div class="flex items-center justify-between gap-1">
 						<span>{{ shiftExchange.user_a_approval.user?.display_name }}</span>
 						<ShiftExchangeApprovedStatus
@@ -65,7 +65,7 @@
 					</div>
 				</div>
 
-				<div class="border-l border-y border-solid border-gray-800 py-1 px-2">
+				<div class="border-l border-y border-solid border-nc-border-maxcontrast py-1 px-2">
 					<template v-if="'shift_b' in shiftExchange">
 						<div class="flex items-center justify-between gap-1">
 							<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>
