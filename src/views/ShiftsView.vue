@@ -800,8 +800,8 @@ provide(multiStepActionIK, multiStepAction)
 provide(setMultiStepActionIK, setMultiStepAction)
 provide(resetMultiStepActionIK, resetMultiStepAction)
 
-const todayCellBgColor = 'bg-neutral-200 dark:bg-neutral-800'
-const actionCellBgColor = '!bg-neutral-300 dark:!bg-neutral-700'
+const todayCellBgColor = 'bg-nc-primary-element-light'
+const actionCellBgColor = '!bg-nc-primary-element'
 
 /**
  * Syncs the calendar by groups
