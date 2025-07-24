@@ -59,7 +59,7 @@
 		</template>
 	</HeaderNavigation>
 	<PaddedContainer v-if="!loading">
-		<table class="h-fit w-full border-collapse border border-solid border-neutral-500">
+		<table class="h-fit w-full border-collapse border border-solid border-nc-border-maxcontrast">
 			<caption class="text-xl">
 				{{ isoWeekDate }}
 			</caption>
@@ -68,7 +68,7 @@
 					<th
 						v-for="({ type, data }, columnIndex) in headerRow"
 						:key="columnIndex"
-						class="border border-solid border-neutral-500 p-2 text-center"
+						class="border border-solid border-nc-border-maxcontrast p-2 text-center"
 						:class="{
 							[todayCellBgColor]: columnIndexOfToday === columnIndex,
 							[actionCellBgColor]:
@@ -94,7 +94,7 @@
 					<td
 						v-for="({ type, data }, columnIndex) in shiftTypesRow"
 						:key="columnIndex"
-						class="border border-solid border-neutral-500 h-full"
+						class="border border-solid border-nc-border-maxcontrast h-full"
 						:class="{
 							[todayCellBgColor]: columnIndexOfToday === columnIndex,
 							[actionCellBgColor]:
@@ -124,7 +124,7 @@
 					<td
 						v-for="({ type, data }, columnIndex) in shiftsRow"
 						:key="columnIndex"
-						class="border border-solid border-neutral-500 h-full"
+						class="border border-solid border-nc-border-maxcontrast h-full"
 						:class="{
 							[todayCellBgColor]: columnIndexOfToday === columnIndex,
 							[actionCellBgColor]:
