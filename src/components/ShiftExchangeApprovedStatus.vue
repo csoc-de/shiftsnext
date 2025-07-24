@@ -3,17 +3,17 @@
 		v-if="approved === null"
 		:title="t(APP_ID, 'Approval pending')"
 		:size="18"
-		class="text-yellow-500" />
+		class="text-nc-warning" />
 	<CheckCircleOutline
 		v-else-if="approved"
 		:title="t(APP_ID, 'Approved')"
 		:size="18"
-		class="text-green-500" />
+		class="text-nc-success" />
 	<CloseCircleOutline
 		v-else
 		:title="t(APP_ID, 'Rejected')"
 		:size="18"
-		class="text-red-500" />
+		class="text-nc-error" />
 </template>
 
 <script setup lang="ts">
