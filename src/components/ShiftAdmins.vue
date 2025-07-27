@@ -3,7 +3,7 @@
 		<div class="overflow-auto">
 			<table class="w-full table-auto border-collapse border border-solid border-nc-border-maxcontrast text-left">
 				<thead>
-					<tr class="bg-nc-background-plain">
+					<tr class="bg-nc-background-plain text-nc-background-plain-text">
 						<th class="px-4 py-3 font-bold">
 							{{ t(APP_ID, "Group") }}
 						</th>
