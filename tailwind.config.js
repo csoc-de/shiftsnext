@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
 	darkMode: ['selector', '[data-tw-theme="dark"]'],
-	important: 'body[data-themes][id][data-tw-theme]',
+	important: 'body[id][id][data-tw-theme]',
 	content: ['./src/**/*.{vue,js,ts,jsx,tsx}'],
 	plugins: [],
 	theme: {
