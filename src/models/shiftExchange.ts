@@ -27,9 +27,8 @@ export interface TransferShiftExchangePostRequest
 	transfer_to_user_id: string
 }
 
-export type ShiftExchangePostRequest =
-	| RegularShiftExchangePostRequest
-	| TransferShiftExchangePostRequest
+export type ShiftExchangePostRequest
+	= RegularShiftExchangePostRequest | TransferShiftExchangePostRequest
 
 export type Approved = boolean | null
 
@@ -83,9 +82,9 @@ export interface TransferShiftExchangeResponse
 	transfer_to_user: User
 }
 
-export type ShiftExchange =
-	| RegularShiftExchange
-	| TransferShiftExchangeResponse
+export type ShiftExchange
+	= | RegularShiftExchange
+		| TransferShiftExchangeResponse
 
 // Injection keys
 

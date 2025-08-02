@@ -113,9 +113,8 @@ export interface MotionMultiStepAction extends DefinedMultiStepActionBase {
 	shift: Shift
 }
 
-export type DefinedMultiStepAction =
-	| CreationMultiStepAction
-	| MotionMultiStepAction
+export type DefinedMultiStepAction
+	= CreationMultiStepAction | MotionMultiStepAction
 
 export type MultiStepAction = UndefinedMultiStepAction | DefinedMultiStepAction
 
