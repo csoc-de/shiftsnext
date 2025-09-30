@@ -171,7 +171,7 @@ async function save(
  */
 async function update(payload: GroupShiftAdminRelationsByGroupRequest): Promise<void> {
 	const updatedRelation
-    = await putGroupShiftAdminRelationsGroupedByGroup(payload)
+		= await putGroupShiftAdminRelationsGroupedByGroup(payload)
 
 	const index = relations.value.findIndex(({ group }) => group.id === updatedRelation.group.id)
 	if (relations.value[index]) {

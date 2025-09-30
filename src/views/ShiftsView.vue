@@ -359,7 +359,7 @@ function setupShiftTypesRow(): void {
 
 	const shiftTypesDataCells: ShiftTypesDataCell[] = []
 	const numberOfShiftTypesDataCells
-    = headerRow.value.length - numberOfFixedShiftTypesCells
+		= headerRow.value.length - numberOfFixedShiftTypesCells
 
 	for (let i = 0; i < numberOfShiftTypesDataCells; i++) {
 		shiftTypesDataCells.push({ type: 'shift-types', data: [] })
@@ -384,7 +384,7 @@ function setupShiftsRows(): void {
 
 		const shiftsDataCells: ShiftsDataCell[] = []
 		const numberOfShiftsDataCells
-      = headerRow.value.length - numberOfFixedShiftsCells
+			= headerRow.value.length - numberOfFixedShiftsCells
 
 		for (let i = 0; i < numberOfShiftsDataCells; i++) {
 			shiftsDataCells.push({ type: 'shifts', data: [] })
@@ -405,7 +405,7 @@ function placeWeeklyByWeekShiftTypes() {
 	}
 	for (const shiftType of shiftTypes) {
 		const { repetition: { interval, weekly_type: weeklyType, config } }
-				= shiftType
+			= shiftType
 		if (weeklyType === 'by_day') {
 			continue
 		}
