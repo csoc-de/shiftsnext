@@ -244,6 +244,7 @@ import IsoWeekDateInput from './IsoWeekDateInput.vue'
 import { APP_ID } from '../appId.ts'
 import { rotate } from '../array.ts'
 import { getIsoWeekDate, localTimeZone } from '../date.ts'
+import { logger } from '../logger.ts'
 import {
 	type RepetitionFrequency,
 	type RepetitionWeeklyType,
@@ -407,7 +408,23 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 const firstDay = getFirstDay()
 const reorderedlocalDaysMin = rotate(getDayNamesMin(), firstDay, 0)
 const reorderedShortDays = rotate(SHORT_DAYS, firstDay, 0)
-const shortDayLocalMinDayTuples: [ShortDay, string][] = reorderedShortDays.map((shortDay, index) => [shortDay, reorderedlocalDaysMin[index]])
+const shortDayLocalMinDayTuples: [ShortDay, string][] = reorderedShortDays.map((shortDay, index) => {
+	let localDayMin = reorderedlocalDaysMin[index]
+	if (localDayMin === undefined) {
+		logger.fatal(
+			'reorderedlocalDaysMin accessed with invalid index',
+			{
+				reorderedlocalDaysMin,
+				reorderedShortDays,
+				shortDay,
+				index,
+				localDayMin,
+			},
+		)
+		localDayMin = 'undefined'
+	}
+	return [shortDay, localDayMin]
+})
 // @ts-expect-error Object.fromEntries doesn't infer the proper return type
 const shortDayToLocalMinDayMap: Record<ShortDay, string> = Object.fromEntries(shortDayLocalMinDayTuples)
 

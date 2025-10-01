@@ -204,7 +204,7 @@ export function parseIsoWeekDate(isoWeekDate: IsoWeekDateWithDay): Temporal.Zone
 		throw error
 	}
 
-	const [, year, week, day] = match.map(Number)
+	const [, year = 0, week = 0, day = 0] = match.map(Number)
 	if (
 		week < 1
 		|| week > 53

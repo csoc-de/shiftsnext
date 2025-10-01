@@ -498,6 +498,25 @@ function placeWeeklyByDayShiftTypes() {
 					= dayOfWeekInReferenceTimeZone - 1
 				const shortDayInReferenceTimeZone
 					= orderedShortDays[shortDayIndexInReferenceTimeZone]
+				if (shortDayInReferenceTimeZone === undefined) {
+					logger.fatal(
+						'orderedShortDays accessed with invalid index',
+						{
+							shiftType,
+							intervalZdt,
+							orderedShortDays,
+							orderedShortDayToAmountMap,
+							shortDay,
+							isoDayNumber,
+							zdtOfLocalWeekDay,
+							zdtOfLocalWeekDayInReferenceTimeZone,
+							dayOfWeekInReferenceTimeZone,
+							shortDayIndexInReferenceTimeZone,
+							shortDayInReferenceTimeZone,
+						},
+					)
+					continue
+				}
 				const amountInReferenceTimeZone
 					= orderedShortDayToAmountMap[shortDayInReferenceTimeZone]
 
