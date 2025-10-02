@@ -64,6 +64,7 @@ final class UserService {
 			}
 			$users = array_unique($users, SORT_REGULAR);
 		} else {
+			/** @psalm-suppress DeprecatedMethod */
 			$users = $this->userManager->search('');
 		}
 		if ($userIds !== null) {
