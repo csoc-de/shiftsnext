@@ -38,7 +38,6 @@ export async function putAppConfig(payload: ConfigPayload<AppConfig>): Promise<v
 			error as AxiosError<ErrorResponse>,
 			'save',
 			'app config',
-			false,
 		)
 		throw error
 	}
