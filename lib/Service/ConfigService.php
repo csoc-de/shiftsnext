@@ -7,30 +7,15 @@ namespace OCA\ShiftsNext\Service;
 use InvalidArgumentException;
 use Jawira\CaseConverter\Convert;
 use OCA\ShiftsNext\AppInfo\Application;
+use OCA\ShiftsNext\Enum\AppConfigKey;
+use OCA\ShiftsNext\Enum\ExchangeApprovalType;
+use OCA\ShiftsNext\Enum\UserConfigKey;
 use OCP\IAppConfig;
 use OCP\IConfig;
 
 use function is_string;
 use function json_decode;
 use function json_encode;
-
-enum AppConfigKey: string {
-	case CommonCalendarId = 'common_calendar_id';
-	case AbsenceCalendarId = 'absence_calendar_id';
-	case SyncToPersonalCalendar = 'sync_to_personal_calendar';
-	case IgnoreAbsenceForByWeekShifts = 'ignore_absence_for_by_week_shifts';
-	case ExchangeApprovalType = 'exchange_approval_type';
-}
-
-enum UserConfigKey: string {
-	case DefaultGroupIds = 'defaultGroupIds';
-}
-
-enum ExchangeApprovalType: string {
-	case Users = 'users';
-	case Admin = 'admin';
-	case All = 'all';
-}
 
 // Redeclaring these aliases is somehow required because Psalm's value-of
 // utility type does not work with imported aliases

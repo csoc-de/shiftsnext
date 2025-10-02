@@ -3,9 +3,9 @@
 namespace OCA\ShiftsNext\Settings;
 
 use OCA\ShiftsNext\AppInfo\Application;
+use OCA\ShiftsNext\Enum\ExchangeApprovalType;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\ConfigService;
-use OCA\ShiftsNext\Service\ExchangeApprovalType;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\UserService;
 use OCP\AppFramework\Http\TemplateResponse;
