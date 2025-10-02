@@ -12,6 +12,8 @@ use OCA\ShiftsNext\Exception\GroupNotFoundException;
 use OCA\ShiftsNext\Exception\GroupShiftAdminRelationNotFoundException;
 use OCA\ShiftsNext\Exception\UserNotFoundException;
 use OCA\ShiftsNext\Psalm\GroupShiftAdminRelationAlias;
+use OCA\ShiftsNext\Serializable\SerializableGroup;
+use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IGroup;
 use OCP\IUser;
 

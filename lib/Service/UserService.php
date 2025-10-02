@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Service;
 
-use JsonSerializable;
 use OCA\ShiftsNext\Exception\UserNotFoundException;
+use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserManager;
@@ -108,22 +108,5 @@ class UserService {
 			fn ($user) => new SerializableUser($user),
 			$this->getAll($userIds, $groupIds),
 		);
-	}
-}
-
-final class SerializableUser implements JsonSerializable {
-	public string $id;
-	public string $displayName;
-
-	public function __construct(IUser $user) {
-		$this->id = $user->getUID();
-		$this->displayName = $user->getDisplayName();
-	}
-
-	public function jsonSerialize(): array {
-		return [
-			'id' => $this->id,
-			'display_name' => $this->displayName,
-		];
 	}
 }

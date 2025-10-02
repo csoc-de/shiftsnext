@@ -9,6 +9,7 @@ use OCA\ShiftsNext\Db\ShiftExchangeApproval;
 use OCA\ShiftsNext\Db\ShiftExchangeApprovalMapper;
 use OCA\ShiftsNext\Exception\ShiftExchangeApprovalNotFoundException;
 use OCA\ShiftsNext\Exception\UserNotFoundException;
+use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IUser;
 
 class ShiftExchangeApprovalService {

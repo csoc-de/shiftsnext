@@ -15,6 +15,7 @@ use OCA\ShiftsNext\Exception\ShiftExchangeNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Exception\UserNotFoundException;
+use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IUser;
 
 use function array_map;

@@ -12,6 +12,7 @@ use OCA\ShiftsNext\Exception\GroupNotFoundException;
 use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Psalm\ShiftTypeAlias;
+use OCA\ShiftsNext\Serializable\SerializableGroup;
 use OCP\AppFramework\Http;
 use OCP\IGroup;
 
