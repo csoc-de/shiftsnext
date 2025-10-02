@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Psalm;
 
-use OCA\ShiftsNext\Service\SerializableGroup;
-use OCA\ShiftsNext\Service\SerializableUser;
+use OCA\ShiftsNext\Serializable\SerializableGroup;
+use OCA\ShiftsNext\Serializable\SerializableUser;
 
 /**
  * @psalm-type GroupShiftAdminRelationsByGroup = array{

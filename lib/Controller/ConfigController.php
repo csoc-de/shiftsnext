@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Controller;
 
+use OCA\ShiftsNext\Enum\AppConfigKey;
+use OCA\ShiftsNext\Enum\UserConfigKey;
 use OCA\ShiftsNext\Psalm\ConfigAlias;
-use OCA\ShiftsNext\Service\AppConfigKey;
 use OCA\ShiftsNext\Service\ConfigService;
-use OCA\ShiftsNext\Service\UserConfigKey;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;

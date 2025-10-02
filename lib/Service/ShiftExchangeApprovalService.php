@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Service;
 
-use JsonSerializable;
 use OCA\ShiftsNext\Db\ShiftExchangeApproval;
 use OCA\ShiftsNext\Db\ShiftExchangeApprovalMapper;
 use OCA\ShiftsNext\Exception\ShiftExchangeApprovalNotFoundException;
 use OCA\ShiftsNext\Exception\UserNotFoundException;
+use OCA\ShiftsNext\Extended\ShiftExchangeApprovalExtended;
 use OCP\IUser;
 
 class ShiftExchangeApprovalService {
@@ -40,31 +40,5 @@ class ShiftExchangeApprovalService {
 			$shiftExchangeApproval,
 			$user,
 		);
-	}
-}
-
-/**
- * This class is used to create objects representing a shift exchange approval
- * with all its foreign keys resolved to full objects
- */
-final class ShiftExchangeApprovalExtended implements JsonSerializable {
-	public int $id;
-	public ?bool $approved;
-
-	public function __construct(
-		ShiftExchangeApproval $shiftExchangeApproval,
-		public ?IUser $user,
-	) {
-		$this->id = $shiftExchangeApproval->getId();
-		$this->approved = $shiftExchangeApproval->getApproved();
-	}
-
-	public function jsonSerialize(): array {
-		$data = [
-			'id' => $this->id,
-			'user' => $this->user ? new SerializableUser($this->user) : $this->user,
-			'approved' => $this->approved,
-		];
-		return $data;
 	}
 }

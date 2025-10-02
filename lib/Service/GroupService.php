@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Service;
 
-use JsonSerializable;
 use OCA\ShiftsNext\Exception\GroupNotFoundException;
+use OCA\ShiftsNext\Serializable\SerializableGroup;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\Util;
@@ -80,22 +80,5 @@ class GroupService {
 			fn ($group) => new SerializableGroup($group),
 			$this->getAll($groupIds),
 		);
-	}
-}
-
-final class SerializableGroup implements JsonSerializable {
-	public string $id;
-	public string $displayName;
-
-	public function __construct(IGroup $group) {
-		$this->id = $group->getGID();
-		$this->displayName = $group->getDisplayName();
-	}
-
-	public function jsonSerialize(): array {
-		return [
-			'id' => $this->id,
-			'display_name' => $this->displayName,
-		];
 	}
 }

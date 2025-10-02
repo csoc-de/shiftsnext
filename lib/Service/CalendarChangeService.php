@@ -7,6 +7,7 @@ namespace OCA\ShiftsNext\Service;
 use OCA\ShiftsNext\Db\CalendarChange;
 use OCA\ShiftsNext\Db\CalendarChangeMapper;
 use OCA\ShiftsNext\Db\Shift;
+use OCA\ShiftsNext\Extended\ShiftExtended;
 use Throwable;
 
 class CalendarChangeService {
