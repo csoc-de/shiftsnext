@@ -12,6 +12,7 @@ use OCA\ShiftsNext\Db\CalendarChange;
 use OCA\ShiftsNext\Db\CalendarChangeMapper;
 use OCA\ShiftsNext\Exception\CalendarNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
+use OCA\ShiftsNext\Extended\ShiftExtended;
 use OCA\ShiftsNext\Psalm\CalendarAlias;
 use OCA\ShiftsNext\Util\DateTimeInterface;
 use OCA\ShiftsNext\Util\Util;

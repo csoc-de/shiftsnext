@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace OCA\ShiftsNext\Service;
 
 use Exception;
-use JsonSerializable;
 use OCA\ShiftsNext\Db\GroupShiftAdminRelation;
 use OCA\ShiftsNext\Db\GroupShiftAdminRelationMapper;
 use OCA\ShiftsNext\Exception\GroupNotFoundException;
 use OCA\ShiftsNext\Exception\GroupShiftAdminRelationNotFoundException;
 use OCA\ShiftsNext\Exception\UserNotFoundException;
+use OCA\ShiftsNext\Extended\GroupShiftAdminRelationExtended;
 use OCA\ShiftsNext\Psalm\GroupShiftAdminRelationAlias;
 use OCA\ShiftsNext\Serializable\SerializableGroup;
 use OCA\ShiftsNext\Serializable\SerializableUser;
@@ -203,29 +203,5 @@ class GroupShiftAdminRelationService {
 	): array {
 		$groupShiftAdminRelations = $this->groupShiftAdminRelationMapper->findAll($groupIds, $userIds);
 		return array_map($this->getExtended(...), $groupShiftAdminRelations);
-	}
-}
-
-/**
- * This class is used to create objects representing a group shift admin relation
- * with all its foreign keys resolved to full objects
- */
-final class GroupShiftAdminRelationExtended implements JsonSerializable {
-	public int $id;
-
-	public function __construct(
-		GroupShiftAdminRelation $groupShiftAdminRelation,
-		public IGroup $group,
-		public IUser $user,
-	) {
-		$this->id = $groupShiftAdminRelation->getId();
-	}
-
-	public function jsonSerialize(): array {
-		return [
-			'id' => $this->id,
-			'group' => new SerializableGroup($this->group),
-			'user' => new SerializableUser($this->user),
-		];
 	}
 }
