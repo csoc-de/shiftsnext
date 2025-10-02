@@ -16,6 +16,7 @@ final class SerializableUser implements JsonSerializable {
 		$this->displayName = $user->getDisplayName();
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,

@@ -26,6 +26,7 @@ final class GroupShiftAdminRelationExtended implements JsonSerializable {
 		$this->id = $groupShiftAdminRelation->getId();
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,

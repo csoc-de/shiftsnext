@@ -28,6 +28,7 @@ final class ShiftExtended implements JsonSerializable {
 		$this->end = $shift->getEnd();
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
