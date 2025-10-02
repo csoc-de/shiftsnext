@@ -14,7 +14,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Group\Events\GroupDeletedEvent;
 use OCP\User\Events\UserDeletedEvent;
 
-class Application extends App implements IBootstrap {
+final class Application extends App implements IBootstrap {
 	public const string APP_ID = 'shiftsnext';
 
 	public function __construct(array $urlParams = []) {
@@ -30,10 +30,12 @@ class Application extends App implements IBootstrap {
 		$dispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedListener::class);
 	}
 
+	#[\Override]
 	public function register(IRegistrationContext $context): void {
 		include_once __DIR__ . '/../../vendor/autoload.php';
 	}
 
+	#[\Override]
 	public function boot(IBootContext $context): void {
 	}
 }

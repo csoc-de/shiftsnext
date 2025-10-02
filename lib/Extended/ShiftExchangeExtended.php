@@ -34,6 +34,7 @@ final class ShiftExchangeExtended implements JsonSerializable {
 		$this->approved = $shiftExchange->getApproved();
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		$data = [
 			'id' => $this->id,

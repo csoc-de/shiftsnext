@@ -20,7 +20,7 @@ use Throwable;
 use function array_map;
 use function explode;
 
-class ShiftService {
+final class ShiftService {
 	public function __construct(
 		private ShiftMapper $shiftMapper,
 		private ShiftTypeService $shiftTypeService,

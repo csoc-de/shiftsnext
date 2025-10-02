@@ -26,7 +26,7 @@ use OCP\AppFramework\Db\Entity;
  * @method Caldav getCaldav()
  * @method void setCaldav(array $caldav)
  */
-class ShiftType extends Entity {
+final class ShiftType extends Entity {
 	/** @var string */
 	protected $groupId;
 	/** @var string */

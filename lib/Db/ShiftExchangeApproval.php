@@ -12,7 +12,7 @@ use OCP\AppFramework\Db\Entity;
  * @method ?bool getApproved()
  * @method void setApproved(?bool $approved)
  */
-class ShiftExchangeApproval extends Entity {
+final class ShiftExchangeApproval extends Entity {
 	/** @var ?string */
 	protected $userId;
 	/** @var ?bool */

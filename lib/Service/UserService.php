@@ -20,7 +20,7 @@ use function usort;
 
 use const SORT_REGULAR;
 
-class UserService {
+final class UserService {
 	public function __construct(
 		private IUserManager $userManager,
 		private IGroupManager $groupManager,
@@ -64,6 +64,7 @@ class UserService {
 			}
 			$users = array_unique($users, SORT_REGULAR);
 		} else {
+			/** @psalm-suppress DeprecatedMethod */
 			$users = $this->userManager->search('');
 		}
 		if ($userIds !== null) {

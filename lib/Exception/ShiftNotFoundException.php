@@ -6,7 +6,7 @@ namespace OCA\ShiftsNext\Exception;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 
-class ShiftNotFoundException extends DoesNotExistException {
+final class ShiftNotFoundException extends DoesNotExistException {
 	public function __construct(string $message = 'Shift not found') {
 		parent::__construct($message);
 	}

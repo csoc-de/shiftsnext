@@ -16,7 +16,7 @@ use OCP\IGroup;
 
 use function array_map;
 
-class ShiftTypeService {
+final class ShiftTypeService {
 	public function __construct(
 		private ShiftTypeMapper $shiftTypeMapper,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,

@@ -29,7 +29,7 @@ use function in_array;
 /**
  * @psalm-import-type GroupShiftAdminRelationsByGroup from GroupShiftAdminRelationAlias
  */
-class GroupShiftAdminRelationService {
+final class GroupShiftAdminRelationService {
 	public function __construct(
 		private string $userId,
 		private GroupShiftAdminRelationMapper $groupShiftAdminRelationMapper,

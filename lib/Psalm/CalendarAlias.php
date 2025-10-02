@@ -58,5 +58,5 @@ use DateTimeImmutable;
  *     timezones: array,
  * }
  */
-class CalendarAlias {
+final class CalendarAlias {
 }

@@ -15,13 +15,14 @@ use function array_walk;
 /**
  * @implements IEventListener<GroupDeletedEvent>
  */
-class GroupDeletedListener implements IEventListener {
+final class GroupDeletedListener implements IEventListener {
 	public function __construct(
 		private ShiftTypeMapper $typeMapper,
 		private GroupShiftAdminRelationMapper $relationMapper,
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof GroupDeletedEvent)) {
 			return;

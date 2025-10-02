@@ -17,5 +17,5 @@ namespace OCA\ShiftsNext\Psalm;
  *     defaultGroupIds: string[],
  * }
  */
-class ConfigAlias {
+final class ConfigAlias {
 }

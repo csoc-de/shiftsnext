@@ -21,7 +21,7 @@ use OCP\IUser;
 
 use function array_map;
 
-class ShiftExchangeService {
+final class ShiftExchangeService {
 	public function __construct(
 		private ShiftExchangeMapper $shiftExchangeMapper,
 		private ShiftExchangeApprovalService $shiftExchangeApprovalService,

@@ -17,7 +17,7 @@ use function array_walk;
 /**
  * @implements IEventListener<UserDeletedEvent>
  */
-class UserDeletedListener implements IEventListener {
+final class UserDeletedListener implements IEventListener {
 	public function __construct(
 		private ShiftMapper $shiftMapper,
 		private ShiftExchangeMapper $exchangeMapper,
@@ -26,6 +26,7 @@ class UserDeletedListener implements IEventListener {
 	) {
 	}
 
+	#[\Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof UserDeletedEvent)) {
 			return;

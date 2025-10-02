@@ -16,6 +16,7 @@ final class SerializableGroup implements JsonSerializable {
 		$this->displayName = $group->getDisplayName();
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,

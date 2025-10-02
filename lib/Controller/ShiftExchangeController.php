@@ -35,7 +35,7 @@ use function array_key_exists;
 use function array_walk;
 use function in_array;
 
-class ShiftExchangeController extends Controller {
+final class ShiftExchangeController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,

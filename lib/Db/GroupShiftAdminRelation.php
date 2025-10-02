@@ -12,7 +12,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string getUserId()
  * @method void setUserId(string $userId)
  */
-class GroupShiftAdminRelation extends Entity {
+final class GroupShiftAdminRelation extends Entity {
 	/** @var string */
 	protected $groupId;
 	/** @var string */

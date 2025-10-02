@@ -25,6 +25,7 @@ final class ShiftExchangeApprovalExtended implements JsonSerializable {
 		$this->approved = $shiftExchangeApproval->getApproved();
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		$data = [
 			'id' => $this->id,

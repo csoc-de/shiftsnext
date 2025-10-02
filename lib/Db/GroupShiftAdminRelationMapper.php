@@ -14,7 +14,7 @@ use OCP\IDBConnection;
 /**
  * @extends QBMapper<GroupShiftAdminRelation>
  */
-class GroupShiftAdminRelationMapper extends QBMapper {
+final class GroupShiftAdminRelationMapper extends QBMapper {
 	public const string TABLE_NAME = 'shnext_group_sh_admin';
 
 	public function __construct(IDBConnection $db) {

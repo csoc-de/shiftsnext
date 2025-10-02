@@ -41,6 +41,7 @@ final class ShiftTypeExtended implements JsonSerializable {
 		$this->caldav = $shiftType->getCaldav();
 	}
 
+	#[\Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,

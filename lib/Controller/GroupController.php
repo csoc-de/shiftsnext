@@ -14,7 +14,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use Throwable;
 
-class GroupController extends Controller {
+final class GroupController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,

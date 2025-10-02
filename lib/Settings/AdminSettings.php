@@ -16,7 +16,7 @@ use OCP\Settings\ISettings;
 
 use function array_map;
 
-class AdminSettings implements ISettings {
+final class AdminSettings implements ISettings {
 	public function __construct(
 		private IL10N $l10n,
 		private IConfig $config,
@@ -28,6 +28,7 @@ class AdminSettings implements ISettings {
 	) {
 	}
 
+	#[\Override]
 	public function getForm(): TemplateResponse {
 		$this->initialState->provideInitialState(
 			'users',
@@ -77,10 +78,12 @@ class AdminSettings implements ISettings {
 		return new TemplateResponse(Application::APP_ID, 'mainAdminSettings');
 	}
 
+	#[\Override]
 	public function getSection(): string {
 		return Application::APP_ID;
 	}
 
+	#[\Override]
 	public function getPriority(): int {
 		return 98;
 	}

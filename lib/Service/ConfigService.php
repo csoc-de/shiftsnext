@@ -32,7 +32,7 @@ use function json_encode;
  *     defaultGroupIds: string[],
  * }
  */
-class ConfigService {
+final class ConfigService {
 	public function __construct(
 		private string $userId,
 		private IAppConfig $appConfig,
@@ -153,11 +153,15 @@ class ConfigService {
 	 * @return static
 	 */
 	public function setDefaultGroupIds(array $groupIds): static {
+		$json = json_encode($groupIds);
+		if ($json === false) {
+			$json = '[]';
+		}
 		$this->config->setUserValue(
 			$this->userId,
 			Application::APP_ID,
 			UserConfigKey::DefaultGroupIds->value,
-			json_encode($groupIds),
+			$json,
 		);
 		return $this;
 	}

@@ -28,7 +28,7 @@ use function array_walk;
  * @psalm-import-type Repetition from ShiftTypeAlias
  * @psalm-import-type Caldav from ShiftTypeAlias
  */
-class ShiftTypeController extends Controller {
+final class ShiftTypeController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,

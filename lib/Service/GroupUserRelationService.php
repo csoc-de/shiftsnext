@@ -6,7 +6,7 @@ namespace OCA\ShiftsNext\Service;
 
 use OCP\IGroupManager;
 
-class GroupUserRelationService {
+final class GroupUserRelationService {
 	public function __construct(
 		private string $userId,
 		private IGroupManager $groupManager,
