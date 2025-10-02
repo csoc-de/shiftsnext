@@ -17,7 +17,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use Throwable;
 
-class GroupShiftAdminRelationController extends Controller {
+final class GroupShiftAdminRelationController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,

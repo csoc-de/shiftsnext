@@ -16,7 +16,7 @@ use OCP\Settings\ISettings;
 
 use function array_map;
 
-class AdminSettings implements ISettings {
+final class AdminSettings implements ISettings {
 	public function __construct(
 		private IL10N $l10n,
 		private IConfig $config,

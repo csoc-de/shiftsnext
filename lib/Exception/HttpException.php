@@ -11,7 +11,7 @@ use Throwable;
 /**
  * @template S of Http::STATUS_*
  */
-class HttpException extends Exception {
+final class HttpException extends Exception {
 	/**
 	 * An array mapping HTTP status codes to their reason phrase
 	 *

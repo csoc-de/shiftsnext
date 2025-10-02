@@ -7,5 +7,5 @@ namespace OCA\ShiftsNext\Psalm;
 /**
  * @psalm-type NullColumnParam = 'IS_NULL'|'IS_NOT_NULL'
  */
-class MiscAlias {
+final class MiscAlias {
 }

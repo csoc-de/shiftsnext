@@ -17,7 +17,7 @@ use OCP\IDBConnection;
  *
  * @extends QBMapper<ShiftType>
  */
-class ShiftTypeMapper extends QBMapper {
+final class ShiftTypeMapper extends QBMapper {
 	public const string TABLE_NAME = 'shnext_types';
 
 	public function __construct(IDBConnection $db) {

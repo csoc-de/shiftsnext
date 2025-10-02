@@ -16,7 +16,7 @@ use OCP\AppFramework\Db\Entity;
  * @method string getEnd()
  * @method void setEnd(string $end)
  */
-class Shift extends Entity {
+final class Shift extends Entity {
 	/** @var string */
 	protected $userId;
 	/** @var int */

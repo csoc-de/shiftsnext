@@ -61,5 +61,5 @@ namespace OCA\ShiftsNext\Psalm;
  *     categories: string,
  * }
  */
-class ShiftTypeAlias {
+final class ShiftTypeAlias {
 }

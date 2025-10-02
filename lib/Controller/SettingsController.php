@@ -12,7 +12,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
-class SettingsController extends Controller {
+final class SettingsController extends Controller {
 	private LoggerInterface $logger;
 
 	public function __construct(LoggerInterface $logger, IRequest $request) {

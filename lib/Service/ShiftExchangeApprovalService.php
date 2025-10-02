@@ -11,7 +11,7 @@ use OCA\ShiftsNext\Exception\UserNotFoundException;
 use OCA\ShiftsNext\Extended\ShiftExchangeApprovalExtended;
 use OCP\IUser;
 
-class ShiftExchangeApprovalService {
+final class ShiftExchangeApprovalService {
 	public function __construct(
 		private ShiftExchangeApprovalMapper $shiftExchangeApprovalMapper,
 		private UserService $userService,

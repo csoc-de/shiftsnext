@@ -13,5 +13,5 @@ use OCA\ShiftsNext\Serializable\SerializableUser;
  *     users: SerializableUser[],
  * }
  */
-class GroupShiftAdminRelationAlias {
+final class GroupShiftAdminRelationAlias {
 }

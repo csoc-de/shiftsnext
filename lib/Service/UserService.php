@@ -20,7 +20,7 @@ use function usort;
 
 use const SORT_REGULAR;
 
-class UserService {
+final class UserService {
 	public function __construct(
 		private IUserManager $userManager,
 		private IGroupManager $groupManager,

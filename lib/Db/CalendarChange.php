@@ -14,7 +14,7 @@ use OCP\AppFramework\Db\Entity;
  * @method int getShiftId()
  * @method void setShiftId(int $shiftId)
  */
-class CalendarChange extends Entity {
+final class CalendarChange extends Entity {
 	/** @var string */
 	protected $groupId;
 	/** @var string */

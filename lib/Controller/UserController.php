@@ -16,7 +16,7 @@ use Throwable;
 
 use function array_intersect;
 
-class UserController extends Controller {
+final class UserController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,

@@ -19,7 +19,7 @@ use Throwable;
 
 use function array_intersect;
 
-class CalendarController extends Controller {
+final class CalendarController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,

@@ -16,7 +16,7 @@ use OCP\IDBConnection;
  * @psalm-import-type Row from GroupUserRelationAlias
  * @psalm-import-type Relation from GroupUserRelationAlias
  */
-class GroupUserRelationMapper extends QBMapper {
+final class GroupUserRelationMapper extends QBMapper {
 	public const string TABLE_NAME = 'group_user';
 
 	public function __construct(IDBConnection $db) {

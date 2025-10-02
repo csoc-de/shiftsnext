@@ -19,7 +19,7 @@ use function func_get_args;
  *
  * @psalm-import-type NullColumnParam from MiscAlias
  */
-class ShiftExchangeApprovalMapper extends QBMapper {
+final class ShiftExchangeApprovalMapper extends QBMapper {
 	public const string TABLE_NAME = 'shnext_ex_approvals';
 
 	public function __construct(IDBConnection $db) {

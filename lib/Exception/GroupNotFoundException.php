@@ -6,7 +6,7 @@ namespace OCA\ShiftsNext\Exception;
 
 use Exception;
 
-class GroupNotFoundException extends Exception {
+final class GroupNotFoundException extends Exception {
 	public function __construct(string $message = 'Group not found') {
 		parent::__construct($message);
 	}

@@ -19,7 +19,7 @@ use OCP\IRequest;
  * @psalm-import-type AppConfig from ConfigAlias
  * @psalm-import-type UserConfig from ConfigAlias
  */
-class ConfigController extends Controller {
+final class ConfigController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,

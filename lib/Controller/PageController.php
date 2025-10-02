@@ -19,7 +19,7 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 
-class PageController extends Controller {
+final class PageController extends Controller {
 	public function __construct(IRequest $request) {
 		parent::__construct(Application::APP_ID, $request);
 	}

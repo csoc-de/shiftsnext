@@ -35,7 +35,7 @@ use function trim;
  * @psalm-import-type SearchResultObject from CalendarAlias
  * @psalm-import-type SearchResult from CalendarAlias
  */
-class CalendarService {
+final class CalendarService {
 	/** DON'T EVER CHANGE THIS VALUE */
 	private const string NAMESPACE_UUID = 'd3a8945c-b6ce-4d49-915f-9f7be87c866b';
 

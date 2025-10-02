@@ -14,7 +14,7 @@ use function array_filter;
 use function in_array;
 use function usort;
 
-class GroupService {
+final class GroupService {
 	public function __construct(
 		private IGroupManager $groupManager,
 	) {

@@ -10,5 +10,5 @@ namespace OCA\ShiftsNext\Psalm;
  *     timeZone: non-empty-string,
  * }
  */
-class ShiftAlias {
+final class ShiftAlias {
 }

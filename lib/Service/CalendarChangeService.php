@@ -10,7 +10,7 @@ use OCA\ShiftsNext\Db\Shift;
 use OCA\ShiftsNext\Extended\ShiftExtended;
 use Throwable;
 
-class CalendarChangeService {
+final class CalendarChangeService {
 	public function __construct(
 		private CalendarChangeMapper $calendarChangeMapper,
 		private ShiftService $shiftService,

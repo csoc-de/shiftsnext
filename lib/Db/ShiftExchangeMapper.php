@@ -16,7 +16,7 @@ use OCP\IDBConnection;
  *
  * @psalm-import-type NullColumnParam from MiscAlias
  */
-class ShiftExchangeMapper extends QBMapper {
+final class ShiftExchangeMapper extends QBMapper {
 	public const string TABLE_NAME = 'shnext_exchanges';
 
 	public function __construct(IDBConnection $db) {

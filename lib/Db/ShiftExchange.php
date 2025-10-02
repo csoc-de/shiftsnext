@@ -26,7 +26,7 @@ use OCP\AppFramework\Db\Entity;
  * @method int getAdminApprovalId()
  * @method void setAdminApprovalId(int $adminApprovalId)
  */
-class ShiftExchange extends Entity {
+final class ShiftExchange extends Entity {
 	/** @var int */
 	protected $shiftAId;
 	/** @var ?int */

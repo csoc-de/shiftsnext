@@ -32,7 +32,7 @@ use function json_encode;
  *     defaultGroupIds: string[],
  * }
  */
-class ConfigService {
+final class ConfigService {
 	public function __construct(
 		private string $userId,
 		private IAppConfig $appConfig,

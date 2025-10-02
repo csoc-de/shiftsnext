@@ -26,7 +26,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use Throwable;
 
-class ShiftController extends Controller {
+final class ShiftController extends Controller {
 	public function __construct(
 		string $appName,
 		IRequest $request,
