@@ -42,6 +42,28 @@ body[id][id] {
 	}
 }
 
+/* Backport new Nextcloud variables introduced in version 32 */
+:root {
+	--color-element-error: #c90000;
+	--color-element-info: #0077C7;
+	--color-element-success: #099f05;
+	--color-element-warning: #BF7900;
+
+	--color-border-error: var(--color-element-error);
+	--color-border-info: var(--color-element-info);
+	--color-border-success: var(--color-element-success);
+	--color-border-warning: var(--color-element-warning);
+}
+
+[data-tw-theme="dark"] {
+	--color-element-error: #FF5050;
+	--color-element-info: #0099E0;
+	--color-element-success: #40A330;
+	--color-element-warning: #FFCC00;
+}
+
+
+
 /* Tailwind */
 
 /*
