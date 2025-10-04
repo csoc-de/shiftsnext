@@ -107,7 +107,9 @@
 					v-if="shiftExchange.comment"
 					class="flex items-start gap-1 max-w-full">
 					<span>{{ t(APP_ID, "Comment") }}:</span>
-					<pre class="overflow-auto">{{ shiftExchange.comment }}</pre>
+					<div class="whitespace-pre-wrap break-words">
+						{{ shiftExchange.comment }}
+					</div>
 				</div>
 			</div>
 		</div>
