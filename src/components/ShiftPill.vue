@@ -11,7 +11,7 @@
 			'pointer-events-none': disabled,
 		}"
 		@click.stop="onClick">
-		<div class="overflow-hidden text-ellipsis whitespace-nowrap leading-[1.1]">
+		<div class="truncate leading-[1.1]">
 			{{ shift.shift_type.group.display_name }}<br>
 			{{ shift.shift_type.name }}
 		</div>

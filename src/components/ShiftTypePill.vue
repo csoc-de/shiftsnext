@@ -10,7 +10,7 @@
 			'pointer-events-none': multiStepAction.type,
 		}"
 		@click.stop="onClick">
-		<div class="overflow-hidden text-ellipsis whitespace-nowrap leading-[1.1]">
+		<div class="truncate leading-[1.1]">
 			{{ shiftTypeWrapper.shiftType.group.display_name }}<br>
 			{{ shiftTypeWrapper.shiftType.name }}
 		</div>
