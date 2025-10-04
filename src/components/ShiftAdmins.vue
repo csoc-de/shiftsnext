@@ -26,7 +26,7 @@
 								{{ display_name }}
 							</td>
 							<td>
-								<template v-if="disabledList[index]">
+								<template v-if="!editedList[index]">
 									{{ relationUsers.map(({ display_name }) => display_name).join(', ') }}
 								</template>
 								<NcSelectUsers
@@ -112,7 +112,6 @@ const userOptions = computed<NcSelectUsersOption[]>(() => users.map(getNcSelectU
 const selectedUserOptions2D = ref<NcSelectUsersOption[][]>(relations.value.map(({ users }) => users.map(getNcSelectUsersOption)))
 
 const length = relations.value.length
-const disabledList = ref<boolean[]>(Array(length).fill(true))
 const editedList = ref<boolean[]>(Array(length).fill(false))
 
 /**
@@ -138,7 +137,6 @@ const group = ref<Group>()
  * @param enable Whether to enable edit mode
  */
 function toggleRow(index: number, enable: boolean): void {
-	disabledList.value[index] = !enable
 	editedList.value[index] = enable
 }
 
