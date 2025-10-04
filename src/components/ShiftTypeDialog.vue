@@ -40,7 +40,7 @@
 						<div
 							v-bind="attrs"
 							:style="{ backgroundColor: color }"
-							class="h-nc-default-clickable-area !w-full rounded-nc-large" />
+							class="h-nc-clickable-area !w-full rounded-nc-element" />
 					</NcColorPicker>
 				</InputGroup>
 				<InputGroup>
@@ -67,7 +67,7 @@
 
 			<CustomFieldset class="mt-3">
 				<template #legend>
-					<span class="text-xl">{{ t(APP_ID, "Repetition") }}</span>
+					{{ t(APP_ID, "Repetition") }}
 				</template>
 				<div class="grid grid-cols-3 sm:grid-cols-5 gap-3">
 					<InputGroup class="col-span-2">
@@ -98,7 +98,7 @@
 				</div>
 				<CustomFieldset class="mt-3">
 					<template #legend>
-						<span class="text-lg">{{ t(APP_ID, "Weekly type") }}</span>
+						{{ t(APP_ID, "Weekly type") }}
 					</template>
 					<div class="flex">
 						<NcCheckboxRadioSwitch
@@ -117,7 +117,7 @@
 				</CustomFieldset>
 				<CustomFieldset class="mt-3">
 					<template #legend>
-						<span class="text-lg">{{ t(APP_ID, "Config") }}</span>
+						{{ t(APP_ID, "Config") }}
 					</template>
 					<div class="flex flex-col gap-3">
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -244,6 +244,7 @@ import IsoWeekDateInput from './IsoWeekDateInput.vue'
 import { APP_ID } from '../appId.ts'
 import { rotate } from '../array.ts'
 import { getIsoWeekDate, localTimeZone } from '../date.ts'
+import { logger } from '../logger.ts'
 import {
 	type RepetitionFrequency,
 	type RepetitionWeeklyType,
@@ -407,7 +408,23 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 const firstDay = getFirstDay()
 const reorderedlocalDaysMin = rotate(getDayNamesMin(), firstDay, 0)
 const reorderedShortDays = rotate(SHORT_DAYS, firstDay, 0)
-const shortDayLocalMinDayTuples: [ShortDay, string][] = reorderedShortDays.map((shortDay, index) => [shortDay, reorderedlocalDaysMin[index]])
+const shortDayLocalMinDayTuples: [ShortDay, string][] = reorderedShortDays.map((shortDay, index) => {
+	let localDayMin = reorderedlocalDaysMin[index]
+	if (localDayMin === undefined) {
+		logger.fatal(
+			'reorderedlocalDaysMin accessed with invalid index',
+			{
+				reorderedlocalDaysMin,
+				reorderedShortDays,
+				shortDay,
+				index,
+				localDayMin,
+			},
+		)
+		localDayMin = 'undefined'
+	}
+	return [shortDay, localDayMin]
+})
 // @ts-expect-error Object.fromEntries doesn't infer the proper return type
 const shortDayToLocalMinDayMap: Record<ShortDay, string> = Object.fromEntries(shortDayLocalMinDayTuples)
 

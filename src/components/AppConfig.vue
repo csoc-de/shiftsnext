@@ -4,7 +4,7 @@
 			<div class="flex flex-wrap gap-4">
 				<CustomFieldset>
 					<template #legend>
-						<span class="text-lg">{{ t(APP_ID, "Calendar") }}</span>
+						{{ t(APP_ID, "Calendar") }}
 					</template>
 					<div class="flex flex-wrap gap-4">
 						<InputGroup>
@@ -54,7 +54,7 @@
 
 				<CustomFieldset>
 					<template #legend>
-						<span class="text-lg">{{ t(APP_ID, "Shift exchanges") }}</span>
+						{{ t(APP_ID, "Shift exchanges") }}
 					</template>
 					<InputGroup>
 						<label for="exchange-approval-type">

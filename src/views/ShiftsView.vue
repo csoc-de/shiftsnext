@@ -59,19 +59,22 @@
 		</template>
 	</HeaderNavigation>
 	<PaddedContainer v-if="!loading">
-		<table class="h-fit w-full border-collapse border border-solid border-nc-border-maxcontrast">
-			<caption class="text-xl">
-				{{ isoWeekDate }}
+		<table class="h-fit w-full border-collapse">
+			<caption>
+				<h3 class="m-0">
+					{{ isoWeekDate }}
+				</h3>
 			</caption>
 			<thead>
 				<tr class="h-12">
 					<th
 						v-for="({ type, data }, columnIndex) in headerRow"
 						:key="columnIndex"
-						class="border border-solid border-nc-border-maxcontrast p-2 text-center"
+						class="border border-solid border-nc-maxcontrast p-2 text-center"
 						:class="{
-							[todayCellBgColor]: columnIndexOfToday === columnIndex,
-							[actionCellBgColor]:
+							[weekCellClasses]: columnIndexOfWeek === columnIndex,
+							[todayCellClasses]: columnIndexOfToday === columnIndex,
+							[actionCellClasses]:
 								multiStepAction.type
 								&& multiStepAction.columnIndex === columnIndex,
 						}">
@@ -94,10 +97,11 @@
 					<td
 						v-for="({ type, data }, columnIndex) in shiftTypesRow"
 						:key="columnIndex"
-						class="border border-solid border-nc-border-maxcontrast h-full"
+						class="border border-solid border-nc-maxcontrast h-full"
 						:class="{
-							[todayCellBgColor]: columnIndexOfToday === columnIndex,
-							[actionCellBgColor]:
+							[weekCellClasses]: columnIndexOfWeek === columnIndex,
+							[todayCellClasses]: columnIndexOfToday === columnIndex,
+							[actionCellClasses]:
 								multiStepAction.type
 								&& multiStepAction.columnIndex === columnIndex,
 							'p-2 text-center': type === 'string',
@@ -124,10 +128,11 @@
 					<td
 						v-for="({ type, data }, columnIndex) in shiftsRow"
 						:key="columnIndex"
-						class="border border-solid border-nc-border-maxcontrast h-full"
+						class="border border-solid border-nc-maxcontrast h-full"
 						:class="{
-							[todayCellBgColor]: columnIndexOfToday === columnIndex,
-							[actionCellBgColor]:
+							[weekCellClasses]: columnIndexOfWeek === columnIndex,
+							[todayCellClasses]: columnIndexOfToday === columnIndex,
+							[actionCellClasses]:
 								multiStepAction.type
 								&& multiStepAction.columnIndex === columnIndex,
 							'p-2 text-center': type === 'user',
@@ -249,6 +254,7 @@ const { selectedGroups, selectedGroupIds } = storeToRefs(useUserSettings())
 
 const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
 
+const columnIndexOfWeek = 1
 let columnIndexOfToday = -1
 
 /**
@@ -359,7 +365,7 @@ function setupShiftTypesRow(): void {
 
 	const shiftTypesDataCells: ShiftTypesDataCell[] = []
 	const numberOfShiftTypesDataCells
-    = headerRow.value.length - numberOfFixedShiftTypesCells
+		= headerRow.value.length - numberOfFixedShiftTypesCells
 
 	for (let i = 0; i < numberOfShiftTypesDataCells; i++) {
 		shiftTypesDataCells.push({ type: 'shift-types', data: [] })
@@ -384,7 +390,7 @@ function setupShiftsRows(): void {
 
 		const shiftsDataCells: ShiftsDataCell[] = []
 		const numberOfShiftsDataCells
-      = headerRow.value.length - numberOfFixedShiftsCells
+			= headerRow.value.length - numberOfFixedShiftsCells
 
 		for (let i = 0; i < numberOfShiftsDataCells; i++) {
 			shiftsDataCells.push({ type: 'shifts', data: [] })
@@ -405,7 +411,7 @@ function placeWeeklyByWeekShiftTypes() {
 	}
 	for (const shiftType of shiftTypes) {
 		const { repetition: { interval, weekly_type: weeklyType, config } }
-				= shiftType
+			= shiftType
 		if (weeklyType === 'by_day') {
 			continue
 		}
@@ -498,6 +504,25 @@ function placeWeeklyByDayShiftTypes() {
 					= dayOfWeekInReferenceTimeZone - 1
 				const shortDayInReferenceTimeZone
 					= orderedShortDays[shortDayIndexInReferenceTimeZone]
+				if (shortDayInReferenceTimeZone === undefined) {
+					logger.fatal(
+						'orderedShortDays accessed with invalid index',
+						{
+							shiftType,
+							intervalZdt,
+							orderedShortDays,
+							orderedShortDayToAmountMap,
+							shortDay,
+							isoDayNumber,
+							zdtOfLocalWeekDay,
+							zdtOfLocalWeekDayInReferenceTimeZone,
+							dayOfWeekInReferenceTimeZone,
+							shortDayIndexInReferenceTimeZone,
+							shortDayInReferenceTimeZone,
+						},
+					)
+					continue
+				}
 				const amountInReferenceTimeZone
 					= orderedShortDayToAmountMap[shortDayInReferenceTimeZone]
 
@@ -800,8 +825,9 @@ provide(multiStepActionIK, multiStepAction)
 provide(setMultiStepActionIK, setMultiStepAction)
 provide(resetMultiStepActionIK, resetMultiStepAction)
 
-const todayCellBgColor = 'bg-nc-primary-element-light'
-const actionCellBgColor = '!bg-nc-primary-element'
+const weekCellClasses = 'bg-nc-dark'
+const todayCellClasses = 'bg-nc-primary-element-light text-nc-primary-element-light'
+const actionCellClasses = '!bg-nc-primary-element-hover !text-nc-primary-element'
 
 /**
  * Syncs the calendar by groups
@@ -819,11 +845,3 @@ async function synchronizeByGroups() {
 	}
 }
 </script>
-
-<style scoped lang="scss">
-tbody tr:not(.group-header):hover,
-tbody tr:not(.group-header):focus,
-tbody tr:not(.group-header):active {
-  background-color: initial;
-}
-</style>

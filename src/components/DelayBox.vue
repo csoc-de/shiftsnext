@@ -1,14 +1,14 @@
 <template>
 	<Teleport to="#delay-boxes-wrapper">
-		<div class="flex items-center gap-2 rounded-nc-large bg-nc-primary-light p-2 shadow-lg">
-			<div class="h-[4px] flex-1 bg-nc-main-background">
+		<div class="flex items-center gap-2 rounded-nc-container bg-nc-dark p-2 shadow-lg">
+			<div class="h-[4px] flex-1 bg-nc-loading-light">
 				<div
-					class="h-full rounded-full bg-nc-primary transition-[width] ease-linear"
+					class="h-full rounded-nc-pill bg-nc-loading-dark transition-[width] ease-linear"
 					:style="{ transitionDuration, width }" />
 			</div>
-			<NcButton variant="primary" size="small" @click.stop="onUndo">
+			<NcButton variant="primary" size="small" @click.stop="onCancel">
 				{{
-					t(APP_ID, "Undo")
+					t(APP_ID, "Cancel")
 				}}
 			</NcButton>
 		</div>
@@ -24,8 +24,8 @@ import { APP_ID } from '../appId.ts'
 const { delay = 2000 } = defineProps<{ delay?: number }>()
 
 const emit = defineEmits<{
-	done: []
-	undone: []
+	finished: []
+	canceled: []
 }>()
 
 const transitionDuration = `${delay}ms`
@@ -34,13 +34,13 @@ const width = ref('0%')
 
 setTimeout(() => (width.value = '100%'), 10)
 
-const timeout = setTimeout(() => emit('done'), delay)
+const timeout = setTimeout(() => emit('finished'), delay)
 
 /**
- * Undo the action
+ * Cancel the action
  */
-function onUndo() {
+function onCancel() {
 	clearTimeout(timeout)
-	emit('undone')
+	emit('canceled')
 }
 </script>

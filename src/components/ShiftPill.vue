@@ -4,14 +4,14 @@
 			backgroundColor: shift.shift_type.color,
 			color: contrastColor,
 		}"
-		class="flex items-center justify-between gap-2 rounded-2xl p-2"
+		class="flex items-center justify-between gap-2 rounded-nc-container p-2"
 		:class="{
 			underline: isSelected,
 			'line-through': deleting,
 			'pointer-events-none': disabled,
 		}"
 		@click.stop="onClick">
-		<div class="overflow-hidden text-ellipsis whitespace-nowrap leading-[1.1]">
+		<div class="truncate leading-[1.1]">
 			{{ shift.shift_type.group.display_name }}<br>
 			{{ shift.shift_type.name }}
 		</div>
@@ -27,8 +27,8 @@
 		</NcButton>
 		<DelayBox
 			v-if="delayBoxVisible"
-			@done="continueDeletion"
-			@undone="cancelDeletion" />
+			@finished="continueDeletion"
+			@canceled="cancelDeletion" />
 	</div>
 </template>
 
@@ -85,11 +85,11 @@ const deleting = computed(() => deletionShift.value?.id === shift.id)
 const disabled = computed(() => Boolean(multiStepAction.value.type || deleting.value))
 
 /**
- * Toggle the undo popover
+ * Toggle the delay box
  *
- * @param visible Whether the undo popover should be visible
+ * @param visible Whether the delay box should be mounted
  */
-function toggleUndoPopover(visible: boolean) {
+function toggleDelayBox(visible: boolean) {
 	delayBoxVisible.value = visible
 }
 
@@ -98,14 +98,14 @@ function toggleUndoPopover(visible: boolean) {
  */
 function startDeletion() {
 	setDeletionShift(shift)
-	toggleUndoPopover(true)
+	toggleDelayBox(true)
 }
 
 /**
  * Continue the deletion of the shift
  */
 function continueDeletion() {
-	toggleUndoPopover(false)
+	toggleDelayBox(false)
 	onShiftDeletionAttempt(shift, columnIndex)
 }
 
@@ -114,6 +114,6 @@ function continueDeletion() {
  */
 function cancelDeletion() {
 	resetDeletionShift()
-	toggleUndoPopover(false)
+	toggleDelayBox(false)
 }
 </script>

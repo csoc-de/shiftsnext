@@ -10,22 +10,22 @@
 		<div class="flex justify-center">
 			<div class="grid w-full max-w-[1000px] grid-cols-1 gap-9 md:grid-cols-2">
 				<div>
-					<h2 class="mb-5 border-b-4 border-solid border-nc-warning pb-4 text-center text-xl font-bold">
+					<h3 class="mt-0 mb-5 border-b-4 border-solid border-nc-warning pb-4 text-center">
 						{{ t(APP_ID, "Open") }}
-					</h2>
+					</h3>
 					<div class="flex flex-col gap-4">
-						<ShiftExchangeBox
+						<ShiftExchangeCard
 							v-for="shiftExchange in pendingShiftExchanges"
 							:key="shiftExchange.id"
 							:shift-exchange="shiftExchange" />
 					</div>
 				</div>
 				<div>
-					<h2 class="mb-5 border-b-4 border-solid border-nc-success pb-4 text-center text-xl font-bold">
+					<h3 class="mt-0 mb-5 border-b-4 border-solid border-nc-success pb-4 text-center">
 						{{ t(APP_ID, "Done") }}
-					</h2>
+					</h3>
 					<div class="flex flex-col gap-4">
-						<ShiftExchangeBox
+						<ShiftExchangeCard
 							v-for="shiftExchange in doneShiftExchanges"
 							:key="shiftExchange.id"
 							:shift-exchange="shiftExchange" />
@@ -51,7 +51,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import CreateShiftExchangeDialog from '../components/CreateShiftExchangeDialog.vue'
 import HeaderNavigation from '../components/HeaderNavigation.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
-import ShiftExchangeBox from '../components/ShiftExchangeBox.vue'
+import ShiftExchangeCard from '../components/ShiftExchangeCard.vue'
 import { APP_ID } from '../appId.ts'
 import {
 	deleteShiftExchange,
