@@ -1,10 +1,10 @@
 <template>
 	<div
-		class="sticky top-0 z-[20] flex w-full flex-wrap items-center justify-start gap-[calc(2*var(--app-navigation-padding))] py-nc-app-navigation-padding pe-nc-app-navigation-padding ps-[calc(var(--default-clickable-area)+2*var(--app-navigation-padding))]"
+		class="sticky top-0 z-[20] flex w-full flex-wrap items-center justify-start gap-[calc(2*var(--app-navigation-padding))] py-[var(--app-navigation-padding)] pe-[var(--app-navigation-padding)] ps-[calc(var(--default-clickable-area)+2*var(--app-navigation-padding))]"
 		role="toolbar">
-		<h1 class="h-nc-default-clickable-area max-w-64 overflow-hidden text-ellipsis whitespace-nowrap text-2xl font-bold">
+		<h2 class="max-w-64 overflow-hidden text-ellipsis whitespace-nowrap m-0 leading-[var(--default-clickable-area)]">
 			{{ title }}
-		</h1>
+		</h2>
 
 		<div>
 			<slot />

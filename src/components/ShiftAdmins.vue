@@ -1,16 +1,16 @@
 <template>
 	<NcSettingsSection :name="t(APP_ID, 'Shift admins')">
 		<div class="overflow-auto">
-			<table class="w-full table-auto border-collapse border border-solid border-nc-border-maxcontrast text-left">
+			<table class="w-full table-auto border-collapse border border-solid border-nc-maxcontrast text-left">
 				<thead>
-					<tr class="bg-nc-background-plain text-nc-background-plain-text">
-						<th class="px-4 py-3 font-bold">
+					<tr class="bg-nc-primary-element text-nc-primary-element *:px-4 *:py-3">
+						<th>
 							{{ t(APP_ID, "Group") }}
 						</th>
-						<th class="px-4 py-3 font-bold">
+						<th>
 							{{ t(APP_ID, "Admins") }}
 						</th>
-						<th class="px-4 py-3 text-center font-bold">
+						<th class="text-center">
 							{{ t(APP_ID, "Actions") }}
 						</th>
 					</tr>
@@ -21,11 +21,11 @@
 						:key="id">
 						<tr
 							v-if="relationUsers.length || group?.display_name === display_name"
-							class="border border-solid border-nc-border-maxcontrast">
-							<td class="w-0 px-4 py-3">
+							class="border border-solid border-nc-maxcontrast  *:px-4 *:py-3">
+							<td class="w-0">
 								{{ display_name }}
 							</td>
-							<td class="px-4 py-3">
+							<td>
 								<template v-if="disabledList[index]">
 									{{ relationUsers.map(({ display_name }) => display_name).join(', ') }}
 								</template>
@@ -37,7 +37,7 @@
 									keep-open
 									:options="userOptions" />
 							</td>
-							<td class="w-0 px-4 py-3">
+							<td class="w-0">
 								<div class="flex items-center justify-center">
 									<NcButton
 										v-if="!editedList[index]"

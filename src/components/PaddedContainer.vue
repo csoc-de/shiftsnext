@@ -1,5 +1,5 @@
 <template>
-	<div class="px-nc-app-navigation-padding overflow-auto">
+	<div class="px-[var(--app-navigation-padding)] overflow-auto">
 		<slot />
 	</div>
 </template>

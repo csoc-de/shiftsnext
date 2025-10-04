@@ -4,7 +4,7 @@
 			backgroundColor: shiftTypeWrapper.shiftType.color,
 			color: contrastColor,
 		}"
-		class="flex items-center justify-between gap-2 rounded-2xl p-2"
+		class="flex items-center justify-between gap-2 rounded-nc-container p-2"
 		:class="{
 			underline: isSelected,
 			'pointer-events-none': multiStepAction.type,
@@ -14,20 +14,19 @@
 			{{ shiftTypeWrapper.shiftType.group.display_name }}<br>
 			{{ shiftTypeWrapper.shiftType.name }}
 		</div>
-		<CustomBadge
+		<NcCounterBubble
 			v-if="shiftTypeWrapper.amount > 1"
 			:style="{
 				backgroundColor: contrastColor,
 				color: doubledContrastColor,
-			}">
-			{{ shiftTypeWrapper.amount }}
-		</CustomBadge>
+			}"
+			:count="shiftTypeWrapper.amount" />
 	</div>
 </template>
 
 <script setup lang="ts">
 import { computed, inject } from 'vue'
-import CustomBadge from './CustomBadge.vue'
+import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import { getContrastColor } from '../color.ts'
 import {
 	type ShiftTypeWrapper,

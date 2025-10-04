@@ -1,12 +1,12 @@
 <template>
 	<div
 		:style="{ borderColor: shiftType.color }"
-		class="rounded-nc-large border-8 border-solid p-4 pt-2 text-center"
+		class="rounded-nc-container border-8 border-solid p-4 pt-2 text-center hover:bg-nc-hover"
 		:class="{ 'line-through': deleting }">
 		<div class="flex justify-between items-center">
 			<NcUserStatusIcon :status="shiftType.active ? 'online' : 'dnd'" />
 
-			<NcActions>
+			<NcActions :inline="2">
 				<NcActionButton
 					close-after-click
 					@click="editDialogMounted = true">

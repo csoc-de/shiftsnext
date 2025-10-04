@@ -40,7 +40,7 @@
 						<div
 							v-bind="attrs"
 							:style="{ backgroundColor: color }"
-							class="h-nc-default-clickable-area !w-full rounded-nc-large" />
+							class="h-nc-clickable-area !w-full rounded-nc-element" />
 					</NcColorPicker>
 				</InputGroup>
 				<InputGroup>
@@ -67,7 +67,7 @@
 
 			<CustomFieldset class="mt-3">
 				<template #legend>
-					<span class="text-xl">{{ t(APP_ID, "Repetition") }}</span>
+					{{ t(APP_ID, "Repetition") }}
 				</template>
 				<div class="grid grid-cols-3 sm:grid-cols-5 gap-3">
 					<InputGroup class="col-span-2">
@@ -98,7 +98,7 @@
 				</div>
 				<CustomFieldset class="mt-3">
 					<template #legend>
-						<span class="text-lg">{{ t(APP_ID, "Weekly type") }}</span>
+						{{ t(APP_ID, "Weekly type") }}
 					</template>
 					<div class="flex">
 						<NcCheckboxRadioSwitch
@@ -117,7 +117,7 @@
 				</CustomFieldset>
 				<CustomFieldset class="mt-3">
 					<template #legend>
-						<span class="text-lg">{{ t(APP_ID, "Config") }}</span>
+						{{ t(APP_ID, "Config") }}
 					</template>
 					<div class="flex flex-col gap-3">
 						<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">

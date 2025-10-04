@@ -1,13 +1,13 @@
 <template>
 	<div
-		class="rounded-nc-large border border-solid border-nc-border-maxcontrast hover:bg-nc-primary-element-light-hover"
+		class="rounded-nc-container border border-solid border-nc-maxcontrast hover:bg-nc-hover"
 		:class="{ 'line-through': delayBoxVisible }">
 		<div
-			class="flex items-center px-2 h-nc-default-clickable-area"
+			class="flex items-center px-2 h-nc-clickable-area"
 			:class="[renderActions ? 'justify-between' : 'justify-center']">
-			<div v-if="renderActions" class="size-nc-default-clickable-area" />
+			<div v-if="renderActions" class="size-nc-clickable-area" />
 			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
-			<NcActions v-if="renderActions">
+			<NcActions v-if="renderActions" :inline="3">
 				<NcActionButton
 					v-if="renderEditButton"
 					close-after-click
@@ -46,7 +46,7 @@
 
 		<div class="flex flex-col gap-2 px-3 pb-3">
 			<div class="grid grid-cols-2 gap-2">
-				<div class="border-r border-y border-solid border-nc-border-maxcontrast py-1 px-2">
+				<div class="border-r border-y border-solid border-nc-maxcontrast py-1 px-2">
 					<div class="flex items-center justify-between gap-1">
 						<span>{{ shiftExchange.user_a_approval.user?.display_name }}</span>
 						<ShiftExchangeApprovedStatus
@@ -65,7 +65,7 @@
 					</div>
 				</div>
 
-				<div class="border-l border-y border-solid border-nc-border-maxcontrast py-1 px-2">
+				<div class="border-l border-y border-solid border-nc-maxcontrast py-1 px-2">
 					<template v-if="'shift_b' in shiftExchange">
 						<div class="flex items-center justify-between gap-1">
 							<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>

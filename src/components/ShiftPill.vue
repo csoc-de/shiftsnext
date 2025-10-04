@@ -4,7 +4,7 @@
 			backgroundColor: shift.shift_type.color,
 			color: contrastColor,
 		}"
-		class="flex items-center justify-between gap-2 rounded-2xl p-2"
+		class="flex items-center justify-between gap-2 rounded-nc-container p-2"
 		:class="{
 			underline: isSelected,
 			'line-through': deleting,
