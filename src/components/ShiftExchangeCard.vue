@@ -3,11 +3,9 @@
 		class="rounded-nc-container border border-solid border-nc-maxcontrast hover:bg-nc-hover"
 		:class="{ 'line-through': delayBoxVisible }">
 		<div
-			class="flex items-center px-2 h-nc-clickable-area"
-			:class="[renderActions ? 'justify-between' : 'justify-center']">
-			<div v-if="renderActions" class="size-nc-clickable-area" />
+			class="flex items-center justify-center mx-2 h-nc-clickable-area relative">
 			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
-			<NcActions v-if="renderActions" :inline="3">
+			<NcActions v-if="renderActions" class="absolute right-0" :inline="2">
 				<NcActionButton
 					v-if="renderEditButton"
 					close-after-click
