@@ -114,8 +114,8 @@
 
 		<DelayBox
 			v-if="delayBoxVisible"
-			@done="_remove"
-			@undone="delayBoxVisible = false" />
+			@finished="_remove"
+			@canceled="delayBoxVisible = false" />
 
 		<EditShiftExchangeDialog
 			v-if="editDialogMounted"

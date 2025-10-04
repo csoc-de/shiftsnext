@@ -46,8 +46,8 @@
 
 		<DelayBox
 			v-if="delayBoxVisible"
-			@done="_remove"
-			@undone="() => {
+			@finished="_remove"
+			@canceled="() => {
 				deleting = false
 				delayBoxVisible = false
 			}" />
