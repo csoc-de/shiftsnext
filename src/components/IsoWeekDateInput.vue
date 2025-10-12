@@ -19,9 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { watchPausable } from '@vueuse/core'
+import { watchImmediate, watchPausable } from '@vueuse/core'
 import { Temporal } from 'temporal-polyfill'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, ref } from 'vue'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import {
 	type IsoWeekDateWithoutDay,
@@ -58,14 +58,13 @@ const week = ref(today.weekOfYear!)
 
 // It is necessary to use watch because watchEffect leads to an error if `week`
 // is 53 and `year` is changed to a year with 52 weeks using the `year` NcSelect
-watch(
+watchImmediate(
 	numberOfWeeks,
 	(numberOfWeeks) => {
 		if (week.value === 53 && numberOfWeeks === 52) {
 			week.value = 52
 		}
 	},
-	{ immediate: true },
 )
 
 const { pause: pauseYearWeekWatcher, resume: resumeYearWeekWatcher } = watchPausable([year, week], yearWeekWatcherCallback)

@@ -169,10 +169,10 @@ import type { User } from '../models/user.ts'
 
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import { onKeyStroke } from '@vueuse/core'
+import { onKeyStroke, watchImmediate } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { Temporal } from 'temporal-polyfill'
-import { provide, ref, useTemplateRef, watch } from 'vue'
+import { provide, ref, useTemplateRef } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 // @ts-expect-error package has no types
@@ -279,7 +279,7 @@ const headerRow = ref<HeaderRow>()
 const shiftTypesRow = ref<ShiftTypesRow>()
 const shiftsRows = ref<ShiftsRow[]>([])
 
-watch([isoWeekDate, selectedGroups], initialize, { immediate: true })
+watchImmediate([isoWeekDate, selectedGroups], initialize)
 
 /**
  * Initializes the view
