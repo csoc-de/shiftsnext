@@ -154,10 +154,8 @@ final class ShiftExchangeController extends Controller {
 						'Either shift_b_id or transfer_to_user_id need to be set',
 					);
 				}
-				if (
-					$userAId !== $this->userId
-					&& !$this->groupShiftAdminRelationService->isShiftAdminAll($groupIds)
-				) {
+				$isGroupShiftAdmin = $this->groupShiftAdminRelationService->isShiftAdminAll($groupIds);
+				if ($userAId !== $this->userId && !$isGroupShiftAdmin) {
 					throw new HttpException(
 						Http::STATUS_FORBIDDEN,
 						'You can create a shift exchange for other users only if you have the appropriate shift admin privileges',
@@ -272,21 +270,72 @@ final class ShiftExchangeController extends Controller {
 				);
 			}
 
-			$userAApproval = $this->shiftExchangeApprovalMapper->create($userAId);
-			$userBApproval = $this->shiftExchangeApprovalMapper->create($userBId);
-			$adminApproval = $this->shiftExchangeApprovalMapper->create();
+			$userAApproval = $this->shiftExchangeApprovalMapper->create(
+				$userAId,
+				$this->userId === $userAId ? true : null,
+			);
+			$userBApproval = $this->shiftExchangeApprovalMapper->create(
+				$userBId,
+				$this->userId === $userBId ? true : null,
+			);
+			$adminApproval = $this->shiftExchangeApprovalMapper->create(
+				$isGroupShiftAdmin ? $this->userId : null,
+				$isGroupShiftAdmin ? true : null,
+			);
+
+			$approvalType = $this->configService->getExchangeApprovalType();
+
+			$requiredApprovedList = match ($approvalType) {
+				ExchangeApprovalType::All => [
+					$userAApproval->getApproved(),
+					$userBApproval->getApproved(),
+					$adminApproval->getApproved(),
+				],
+				ExchangeApprovalType::Users => [
+					$userAApproval->getApproved(),
+					$userBApproval->getApproved(),
+				],
+				ExchangeApprovalType::Admin => [
+					$adminApproval->getApproved(),
+				],
+			};
+
+			$done = !in_array(null, $requiredApprovedList, true);
+
+			$approved = !$done ? null : !in_array(false, $requiredApprovedList, true);
 
 			$shiftExchange = $this->shiftExchangeMapper->create(
 				$shift_a_id,
 				$shift_b_id,
 				$transfer_to_user_id,
 				$comment,
-				false,
-				null,
+				$done,
+				$approved,
 				$userAApproval->getId(),
 				$userBApproval->getId(),
 				$adminApproval->getId(),
 			);
+
+			if ($approved) {
+				// This queues a removal of shift A from user A's calendar
+				$this->calendarChangeService->safeCreate($shiftA);
+
+				$updatedShiftA
+					= $this->shiftMapper->updateById($shiftA->id, $userBId);
+
+				// This queues a creation of shift A in user B's calendar
+				$this->calendarChangeService->safeCreate($updatedShiftA);
+				if ($shiftB !== null) {
+					// This queues a removal of shift B from user B's calendar
+					$this->calendarChangeService->safeCreate($shiftB);
+
+					$updatedShiftB
+						= $this->shiftMapper->updateById($shiftB->id, $userAId);
+
+					// This queues a creation of shift B in user A's calendar
+					$this->calendarChangeService->safeCreate($updatedShiftB);
+				}
+			}
 
 			$shiftExchangeExtended = $this->shiftExchangeService->getExtended($shiftExchange);
 			return new DataResponse($shiftExchangeExtended);
