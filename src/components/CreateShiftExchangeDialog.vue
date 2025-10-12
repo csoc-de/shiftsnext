@@ -145,7 +145,6 @@ import type {
 	NcSelectShiftOption,
 	NcSelectUsersOption,
 } from '../models/nextcloudVue.ts'
-import type { Shift } from '../models/shift.ts'
 
 import { t } from '@nextcloud/l10n'
 import { computed, inject, ref, watch } from 'vue'
@@ -265,8 +264,6 @@ async function loadUsersA(): Promise<void> {
 	}
 }
 
-let shiftsA: Shift[] = []
-
 /**
  * Load shifts for user A
  */
@@ -280,11 +277,11 @@ async function loadShiftsA(): Promise<void> {
 	}
 	shiftAOptionsLoading.value = true
 	try {
-		shiftsA = await getShifts({
+		const shifts = await getShifts({
 			calendar_date: getIsoCalendarDate(dateA.value),
 			user_id: userAOption.value.id,
 		})
-		shiftAOptions.value = shiftsA.map(getNcSelectShiftOption)
+		shiftAOptions.value = shifts.map(getNcSelectShiftOption)
 	} finally {
 		shiftAOptionsLoading.value = false
 	}
