@@ -11,8 +11,8 @@ export const useUserSettings = defineStore('user-settings', () => {
 
 	const selectedGroupIds = computed(() => selectedGroups.value.map(({ id }) => id))
 
-	watch(selectedGroups, async (groups) => {
-		await putDefaultGroups({ group_ids: groups.map(({ id }) => id) })
+	watch(selectedGroupIds, async (groupIds) => {
+		await putDefaultGroups({ group_ids: groupIds })
 	})
 
 	return { selectedGroups, selectedGroupIds }
