@@ -29,6 +29,7 @@
 								v-model="userAOption"
 								required
 								input-id="user-a"
+								:disabled="!isShiftAdmin"
 								class="w-full"
 								:options="userAOptions"
 								:loading="userAOptionsLoading"
@@ -141,11 +142,13 @@
 </template>
 
 <script setup lang="ts">
+import type { Group } from '../models/group.ts'
 import type {
 	NcSelectShiftOption,
 	NcSelectUsersOption,
 } from '../models/nextcloudVue.ts'
 
+import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
 import { computed, inject, ref, watch } from 'vue'
@@ -179,15 +182,19 @@ const emit = defineEmits<{ close: [] }>()
 
 const create = inject(createIK)!
 
+const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
+
+const isShiftAdmin = shiftAdminGroups.length > 0
+
 const saving = ref(false)
 
 const exchangeType = ref<ShiftExchangeType>('regular')
 
 whenever(() => exchangeType.value === 'regular', loadShiftsB)
 
-const userAOptions = ref<NcSelectUsersOption[]>([])
-const userAOptionsLoading = ref(true)
-const userAOption = ref<NcSelectUsersOption>()
+const userAOptions = ref([getNcSelectUsersOption(authUser)])
+const userAOptionsLoading = ref(false)
+const userAOption = ref<NcSelectUsersOption>(userAOptions.value[0]!)
 const dateA = ref<Date>()
 const shiftASelectDisabled = computed(() => !userAOption.value || !dateA.value)
 const shiftAOptions = ref<NcSelectShiftOption[]>()
@@ -231,7 +238,7 @@ watch(shiftAOption, () => {
 
 const comment = ref('')
 
-loadUsersA()
+void (isShiftAdmin && loadUsersA())
 
 /**
  * Load users for A
