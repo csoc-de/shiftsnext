@@ -1,8 +1,6 @@
 import type { InjectionKey } from 'vue'
 import type { Shift } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
-import type { ExchangeApprovalType } from './config.ts'
-import type { GroupShiftAdminRelationsByGroup } from './groupShiftAdminRelation.ts'
 
 import { t } from '@nextcloud/l10n'
 import { APP_ID } from '../appId.ts'
@@ -107,12 +105,6 @@ export const updateIK
 
 export const removeIK
 	= Symbol('removeIK') as InjectionKey<RemoveShiftExchange>
-
-export const exchangeApprovalTypeIK
-	= Symbol('exchangeApprovalTypeIK') as InjectionKey<ExchangeApprovalType>
-
-export const relationsIK
-	= Symbol('relationsIK') as InjectionKey<GroupShiftAdminRelationsByGroup[]>
 
 // Misc
 

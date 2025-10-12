@@ -126,6 +126,10 @@
 </template>
 
 <script setup lang="ts">
+import type { ExchangeApprovalType } from '../models/config.ts'
+import type { GroupShiftAdminRelationsByGroup } from '../models/groupShiftAdminRelation.ts'
+
+import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
 import { inject, ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
@@ -145,9 +149,7 @@ import {
 	type ShiftExchange,
 	type ShiftExchangeType,
 
-	exchangeApprovalTypeIK,
 	exchangeTypeTranslations,
-	relationsIK,
 	removeIK,
 } from '../models/shiftExchange.ts'
 import { authUser } from '../user.ts'
@@ -156,8 +158,16 @@ const { shiftExchange } = defineProps<{ shiftExchange: ShiftExchange }>()
 
 const exchangeType: ShiftExchangeType = 'shift_b' in shiftExchange ? 'regular' : 'transfer'
 
-const approvalType = inject(exchangeApprovalTypeIK)!
-const relations = inject(relationsIK)!
+const approvalType = loadState<ExchangeApprovalType>(
+	APP_ID,
+	'exchange_approval_type',
+	'all',
+)
+const relations = loadState<GroupShiftAdminRelationsByGroup[]>(
+	APP_ID,
+	'group_shift_admin_relations_by_group',
+	[],
+)
 
 const dateOnlyFormatOptions: Intl.DateTimeFormatOptions = {
 	dateStyle: 'short',

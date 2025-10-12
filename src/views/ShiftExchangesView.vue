@@ -41,10 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import type { ExchangeApprovalType } from '../models/config.ts'
-import type { GroupShiftAdminRelationsByGroup } from '../models/groupShiftAdminRelation.ts'
-
-import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
 import { provide, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -65,28 +61,12 @@ import {
 	type ShiftExchangePutRequest,
 
 	createIK,
-	exchangeApprovalTypeIK,
-	relationsIK,
 	removeIK,
 	updateIK,
 } from '../models/shiftExchange.ts'
 import { compare } from '../sort.ts'
 
 const loading = ref(true)
-
-const exchangeApprovalType = loadState<ExchangeApprovalType>(
-	APP_ID,
-	'exchange_approval_type',
-	'all',
-)
-provide(exchangeApprovalTypeIK, exchangeApprovalType)
-
-const relations = loadState<GroupShiftAdminRelationsByGroup[]>(
-	APP_ID,
-	'group_shift_admin_relations_by_group',
-	[],
-)
-provide(relationsIK, relations)
 
 const pendingShiftExchanges = ref<ShiftExchange[]>([])
 const doneShiftExchanges = ref<ShiftExchange[]>([])
