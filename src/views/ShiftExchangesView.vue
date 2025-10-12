@@ -115,7 +115,11 @@ const createDialogMounted = ref(false)
  */
 async function create(payload: ShiftExchangePostRequest): Promise<void> {
 	const createdShiftExchange = await postShiftExchange(payload)
-	pendingShiftExchanges.value.unshift(createdShiftExchange)
+	if (createdShiftExchange.done) {
+		doneShiftExchanges.value.unshift(createdShiftExchange)
+	} else {
+		pendingShiftExchanges.value.unshift(createdShiftExchange)
+	}
 	createDialogMounted.value = false
 }
 provide(createIK, create)
