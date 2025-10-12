@@ -84,7 +84,8 @@ import type { Calendar, ExchangeApprovalType } from '../models/config.ts'
 
 import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
-import { computed, ref, watch } from 'vue'
+import { whenever } from '@vueuse/core'
+import { computed, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
@@ -137,11 +138,12 @@ const initialApprovalType = loadState<ExchangeApprovalType>(
 const approvalTypeOption
 	= ref(getNcSelectExchangeApprovalTypeOption(initialApprovalType))
 
-watch(commonCalendarOption, () => {
-	if (commonCalendarOption.value?.id === absenceCalendarOption.value?.id) {
+whenever(
+	() => commonCalendarOption.value?.id === absenceCalendarOption.value?.id,
+	() => {
 		absenceCalendarOption.value = undefined
-	}
-})
+	},
+)
 
 const formValues = ref({
 	common_calendar_id: commonCalendarOption.value?.id,

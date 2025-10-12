@@ -147,6 +147,7 @@ import type {
 } from '../models/nextcloudVue.ts'
 
 import { t } from '@nextcloud/l10n'
+import { whenever } from '@vueuse/core'
 import { computed, inject, ref, watch } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
@@ -182,11 +183,7 @@ const saving = ref(false)
 
 const exchangeType = ref<ShiftExchangeType>('regular')
 
-watch(exchangeType, async (type) => {
-	if (type === 'regular') {
-		loadShiftsB()
-	}
-})
+whenever(() => exchangeType.value === 'regular', loadShiftsB)
 
 const userAOptions = ref<NcSelectUsersOption[]>([])
 const userAOptionsLoading = ref(true)
@@ -221,17 +218,9 @@ function clearShiftSelect(target: 'A' | 'B') {
 	}
 }
 
-watch(shiftASelectDisabled, (disabled) => {
-	if (disabled) {
-		clearShiftSelect('A')
-	}
-})
+whenever(shiftASelectDisabled, () => clearShiftSelect('A'))
 
-watch(shiftBSelectDisabled, (disabled) => {
-	if (disabled) {
-		clearShiftSelect('B')
-	}
-})
+whenever(shiftBSelectDisabled, () => clearShiftSelect('B'))
 
 watch(shiftAOption, () => {
 	userBOptions.value = []
