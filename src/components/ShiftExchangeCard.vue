@@ -16,7 +16,7 @@
 					<template #icon>
 						<Pencil :size="20" />
 					</template>
-					{{ t(APP_ID, "Edit") }}
+					{{ t(APP_ID, "Edit approval") }}
 				</NcActionButton>
 				<NcActionButton
 					v-if="renderEditAsAdminButton"
@@ -28,7 +28,7 @@
 					<template #icon>
 						<Pencil :size="20" />
 					</template>
-					{{ t(APP_ID, "Edit as admin") }}
+					{{ t(APP_ID, "Edit admin approval") }}
 				</NcActionButton>
 				<NcActionButton
 					v-if="renderDeleteButton"
