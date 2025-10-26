@@ -4,7 +4,7 @@
 			v-for="property in PROPERTIES"
 			:key="property"
 			v-model.trim="properties[property]"
-			:label="t(APP_ID, capitalize(property))"
+			:label="t(APP_ID, upperFirst(property))"
 			type="number"
 			min="0"
 			required />
@@ -13,11 +13,11 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import { capitalize } from 'lodash-es'
 import { Temporal } from 'temporal-polyfill'
 import { ref, watchEffect } from 'vue'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import { APP_ID } from '../appId.ts'
+import { upperFirst } from '../string.ts'
 
 const model = defineModel<Temporal.Duration>({ required: true })
 

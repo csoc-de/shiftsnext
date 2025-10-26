@@ -9,8 +9,8 @@ import type { Shift } from './models/shift.ts'
 import type { User } from './models/user.ts'
 
 import { t } from '@nextcloud/l10n'
-import { upperFirst } from 'lodash-es'
 import { APP_ID } from './appId.ts'
+import { upperFirst } from './string.ts'
 
 /**
  * Get the NcSelectUsersOption for a User
