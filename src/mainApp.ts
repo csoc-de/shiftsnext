@@ -7,7 +7,6 @@ import { initializeTailwindTheme } from './theme.ts'
 
 import './date.ts' // Import for side effects: initializes localTimeZone
 import '../css/style.scss'
-import 'floating-vue/dist/style.css'
 
 initializeTailwindTheme()
 
