@@ -19,9 +19,9 @@
 </template>
 
 <script setup lang="ts">
-import { watchImmediate, watchPausable } from '@vueuse/core'
+import { watchImmediate } from '@vueuse/core'
 import { Temporal } from 'temporal-polyfill'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import {
 	type IsoWeekDateWithoutDay,
@@ -67,9 +67,9 @@ watchImmediate(
 	},
 )
 
-const { pause: pauseYearWeekWatcher, resume: resumeYearWeekWatcher } = watchPausable([year, week], yearWeekWatcherCallback)
+const { pause: pauseYearWeekWatcher, resume: resumeYearWeekWatcher } = watch([year, week], yearWeekWatcherCallback)
 
-const { pause: pauseIsoWeekDateWatcher, resume: resumeIsoWeekDateWatcher } = watchPausable(isoWeekDate, isoWeekDateWatcherCallback, { immediate: true })
+const { pause: pauseIsoWeekDateWatcher, resume: resumeIsoWeekDateWatcher } = watch(isoWeekDate, isoWeekDateWatcherCallback, { immediate: true })
 
 /**
  * Callback for the year and week watcher.
