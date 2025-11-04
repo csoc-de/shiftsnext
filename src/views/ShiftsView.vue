@@ -197,7 +197,7 @@ import {
 	localTimeZone,
 	parseIsoWeekDate,
 } from '../date.ts'
-import { postSynchronizeByGroups } from '../db/calendarSync.ts'
+import { postSynchronizeByGroups, postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
 import { getShiftTypes } from '../db/shiftType.ts'
 import { getUsers } from '../db/user.ts'
@@ -647,23 +647,31 @@ function getShiftTypeWrapper(
  *
  * @param userId The user ID
  */
-function onShiftCellClick(userId: string): void {
+async function onShiftCellClick(userId: string): Promise<void> {
+	let affectedShift: Shift | void = undefined
 	switch (multiStepAction.value.type) {
 		case 'creation':
-			onShiftCreationAttempt(userId)
+			affectedShift = await onShiftCreationAttempt(userId)
 			break
 		case 'motion':
-			onShiftMotionAttempt(userId)
+			affectedShift = await onShiftMotionAttempt(userId)
 			break
 	}
+	if (!affectedShift) {
+		return
+	}
+	postSynchronizeByShifts({ shift_ids: [affectedShift.id] })
 }
 
 /**
  * Handler for shift creation attempt
  *
  * @param userId The user ID
+ *
+ * @return The created shift on success or `void` if the shift was not created
+ * due to certain conditions not met
  */
-async function onShiftCreationAttempt(userId: string): Promise<void> {
+async function onShiftCreationAttempt(userId: string): Promise<void | Shift> {
 	if (multiStepAction.value.type !== 'creation') {
 		return
 	}
@@ -692,14 +700,18 @@ async function onShiftCreationAttempt(userId: string): Promise<void> {
 	placeShift(createdShift, columnIndex)
 	shiftTypeWrapper.amount--
 	resetMultiStepAction()
+	return createdShift
 }
 
 /**
  * Handler for shift motion attempt
  *
  * @param userId The user ID
+ *
+ * @return The updated shift on success or `void` if the shift was not updated
+ * due to certain conditions not met
  */
-async function onShiftMotionAttempt(userId: string): Promise<void> {
+async function onShiftMotionAttempt(userId: string): Promise<void | Shift> {
 	if (multiStepAction.value.type !== 'motion') {
 		return
 	}
@@ -712,6 +724,7 @@ async function onShiftMotionAttempt(userId: string): Promise<void> {
 	extractShift(movedShift, columnIndex)
 	placeShift(updatedShift, columnIndex)
 	resetMultiStepAction()
+	return updatedShift
 }
 
 const deletionShift = ref<Shift>()
@@ -740,16 +753,19 @@ provide(resetDeletionShiftIK, resetDeletionShift)
  *
  * @param shift The shift to delete
  * @param columnIndex The column index
+ *
+ * @return The deleted shift on success
  */
-async function onShiftDeletionAttempt(shift: Shift, columnIndex: number) {
+async function onShiftDeletionAttempt(shift: Shift, columnIndex: number): Promise<Shift> {
 	const shiftTypeWrapper = getShiftTypeWrapper(
 		shift.shift_type.id,
 		columnIndex,
 	)
 	try {
-		await deleteShift(shift.id)
+		const deletedShift = await deleteShift(shift.id)
 		extractShift(shift, columnIndex)
 		shiftTypeWrapper.amount++
+		return deletedShift
 	} finally {
 		resetDeletionShift()
 	}

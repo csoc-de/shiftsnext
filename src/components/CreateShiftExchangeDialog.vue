@@ -163,6 +163,7 @@ import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
 import { APP_ID } from '../appId.ts'
 import { getIsoCalendarDate } from '../date.ts'
+import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { getShifts } from '../db/shift.ts'
 import { getUsers } from '../db/user.ts'
 import {
@@ -348,8 +349,16 @@ async function onSubmit() {
 				transfer_to_user_id: userBOption.value!.id,
 			}
 		}
-		await create(payload)
+		const createdShiftExchange = await create(payload)
 		emit('close')
+		if (!createdShiftExchange.approved) {
+			return
+		}
+		const shiftIds = [createdShiftExchange.shift_a.id]
+		if ('shift_b' in createdShiftExchange) {
+			shiftIds.push(createdShiftExchange.shift_b.id)
+		}
+		postSynchronizeByShifts({ shift_ids: shiftIds })
 	} finally {
 		saving.value = false
 	}

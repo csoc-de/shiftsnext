@@ -43,6 +43,7 @@ import Delete from 'vue-material-design-icons/Delete.vue'
 import DelayBox from './DelayBox.vue'
 import { APP_ID } from '../appId.ts'
 import { getContrastColor } from '../color.ts'
+import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
 	deletionShiftIK,
 	multiStepActionIK,
@@ -104,9 +105,10 @@ function startDeletion() {
 /**
  * Continue the deletion of the shift
  */
-function continueDeletion() {
+async function continueDeletion() {
 	toggleDelayBox(false)
-	onShiftDeletionAttempt(shift, columnIndex)
+	const { id } = await onShiftDeletionAttempt(shift, columnIndex)
+	postSynchronizeByShifts({ shift_ids: [id] })
 }
 
 /**

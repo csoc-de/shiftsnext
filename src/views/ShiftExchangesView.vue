@@ -92,8 +92,10 @@ const createDialogMounted = ref(false)
  * Create shift exchange
  *
  * @param payload The shift exchange
+ *
+ * @return The created shift exchange on success
  */
-async function create(payload: ShiftExchangePostRequest): Promise<void> {
+async function create(payload: ShiftExchangePostRequest): Promise<ShiftExchange> {
 	const createdShiftExchange = await postShiftExchange(payload)
 	if (createdShiftExchange.done) {
 		doneShiftExchanges.value.unshift(createdShiftExchange)
@@ -101,6 +103,7 @@ async function create(payload: ShiftExchangePostRequest): Promise<void> {
 		pendingShiftExchanges.value.unshift(createdShiftExchange)
 	}
 	createDialogMounted.value = false
+	return createdShiftExchange
 }
 provide(createIK, create)
 
@@ -109,11 +112,13 @@ provide(createIK, create)
  *
  * @param id The shift exchange id
  * @param payload The shift exchange
+ *
+ * @return The updated shift exchange on success
  */
 async function update(
 	id: number,
 	payload: ShiftExchangePutRequest,
-): Promise<void> {
+): Promise<ShiftExchange> {
 	const updatedShiftExchange = await putShiftExchange(id, payload)
 	if (updatedShiftExchange.done) {
 		pendingShiftExchanges.value = pendingShiftExchanges.value.filter(({ id }) => id !== updatedShiftExchange.id)
@@ -123,6 +128,7 @@ async function update(
 		const index = pendingShiftExchanges.value.findIndex(({ id }) => id === updatedShiftExchange.id)
 		pendingShiftExchanges.value[index] = updatedShiftExchange
 	}
+	return updatedShiftExchange
 }
 provide(updateIK, update)
 
@@ -130,14 +136,17 @@ provide(updateIK, update)
  * Remove shift exchange
  *
  * @param id The shift exchange id
+ *
+ * @return The deleted shift exchange on success
  */
-async function remove(id: number): Promise<void> {
+async function remove(id: number): Promise<ShiftExchange> {
 	const deletedShiftExchange = await deleteShiftExchange(id)
 	if (deletedShiftExchange.done) {
 		doneShiftExchanges.value = doneShiftExchanges.value.filter(({ id }) => id !== deletedShiftExchange.id)
 	} else {
 		pendingShiftExchanges.value = pendingShiftExchanges.value.filter(({ id }) => id !== deletedShiftExchange.id)
 	}
+	return deletedShiftExchange
 }
 provide(removeIK, remove)
 </script>

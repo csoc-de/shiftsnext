@@ -76,6 +76,7 @@ import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
 import { APP_ID } from '../appId.ts'
+import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
 	type Approveds,
 	type ExchangeEditor,
@@ -148,8 +149,16 @@ async function onSubmit() {
 	}
 	try {
 		saving.value = true
-		await update(shiftExchange.id, payload)
+		const updatedShiftExchange = await update(shiftExchange.id, payload)
 		emit('close')
+		if (!updatedShiftExchange.approved) {
+			return
+		}
+		const shiftIds = [updatedShiftExchange.shift_a.id]
+		if ('shift_b' in updatedShiftExchange) {
+			shiftIds.push(updatedShiftExchange.shift_b.id)
+		}
+		postSynchronizeByShifts({ shift_ids: shiftIds })
 	} finally {
 		saving.value = false
 	}

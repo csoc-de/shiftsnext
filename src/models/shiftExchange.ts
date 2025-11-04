@@ -88,14 +88,14 @@ export type ShiftExchange
 
 export type CreateShiftExchange = (
 	payload: ShiftExchangePostRequest,
-) => Promise<void>
+) => Promise<ShiftExchange>
 
 export type UpdateShiftExchange = (
 	id: number,
 	payload: ShiftExchangePutRequest,
-) => Promise<void>
+) => Promise<ShiftExchange>
 
-export type RemoveShiftExchange = (id: number) => Promise<void>
+export type RemoveShiftExchange = (id: number) => Promise<ShiftExchange>
 
 export const createIK
 	= Symbol('createIK') as InjectionKey<CreateShiftExchange>

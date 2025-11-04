@@ -135,7 +135,7 @@ export const multiStepActionIK
 
 export const onShiftDeletionAttemptIK
 	= Symbol('onShiftDeletionAttemptIK') as InjectionKey<
-		(shift: Shift, columnIndex: number) => void
+		(shift: Shift, columnIndex: number) => Promise<Shift>
 	>
 
 export const deletionShiftIK
