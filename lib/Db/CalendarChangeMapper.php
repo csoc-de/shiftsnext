@@ -22,13 +22,13 @@ final class CalendarChangeMapper extends QBMapper {
 
 	/**
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
-	 * @param null|int $shiftId Adds `WHERE shift_id = $shiftId`
+	 * @param null|int[] $shiftIds Adds `WHERE shift_id IN($shiftIds)`
 	 *
 	 * @return CalendarChange[]
 	 */
 	public function findAll(
 		?array $groupIds = null,
-		?int $shiftId = null,
+		?array $shiftIds = null,
 	): array {
 		$qb = $this->db->getQueryBuilder();
 
@@ -47,13 +47,13 @@ final class CalendarChangeMapper extends QBMapper {
 			);
 		}
 
-		if ($shiftId !== null) {
+		if ($shiftIds !== null) {
 			$qb->andWhere(
-				$qb->expr()->eq(
+				$qb->expr()->in(
 					'shift_id',
 					$qb->createNamedParameter(
-						$shiftId,
-						IQueryBuilder::PARAM_INT,
+						$shiftIds,
+						IQueryBuilder::PARAM_INT_ARRAY,
 					),
 				),
 			);
