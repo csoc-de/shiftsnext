@@ -667,7 +667,7 @@ paths:
     post:
       tags:
         - calendar
-      summary: Synchronize shifts identified by `group_id` with calendars
+      summary: Synchronize shifts identified by `group_ids` with calendars
       description: When calling this endpoint, the backend only applies
         previously created pending calendar changes. Those changes are created
         automatically on certain actions, namely creating, updating or deleting
