@@ -443,7 +443,7 @@ final class ShiftExchangeController extends Controller {
 				} else {
 					throw new HttpException(
 						Http::STATUS_FORBIDDEN,
-						'The admin approval can only be updated by a appropriate group shift admin',
+						'The admin approval can only be updated by an appropriate group shift admin',
 					);
 				}
 			}
