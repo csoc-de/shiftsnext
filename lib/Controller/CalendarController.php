@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace OCA\ShiftsNext\Controller;
 
 use OCA\ShiftsNext\Db\CalendarChangeMapper;
-use OCA\ShiftsNext\Db\ShiftMapper;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
-use OCA\ShiftsNext\Service\ShiftTypeService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
@@ -26,8 +24,6 @@ final class CalendarController extends Controller {
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
 		private CalendarService $calendarService,
 		private CalendarChangeMapper $calendarChangeMapper,
-		private ShiftMapper $shiftMapper,
-		private ShiftTypeService $shiftTypeService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -57,22 +53,14 @@ final class CalendarController extends Controller {
 		}
 	}
 
+	/**
+	 * @param int[] $shift_ids
+	 */
 	#[NoAdminRequired]
-	#[FrontpageRoute(verb: 'POST', url: '/api/calendars/synchronize-by-shift')]
-	public function synchronizeByShift(int $shift_id): DataResponse {
+	#[FrontpageRoute(verb: 'POST', url: '/api/calendars/synchronize-by-shifts')]
+	public function synchronizeByShifts(array $shift_ids): DataResponse {
 		try {
-			$shift = $this->shiftMapper->findById($shift_id);
-			$shiftType = $this->shiftTypeService->getRestricted(
-				$shift->getShiftTypeId(),
-			);
-
-			$this->calendarChangeMapper->create(
-				$shiftType->getGroupId(),
-				$shift->getUserId(),
-				$shift->getId(),
-			);
-
-			$changes = $this->calendarChangeMapper->findAll(shiftId: $shift_id);
+			$changes = $this->calendarChangeMapper->findAll(shiftIds: $shift_ids);
 
 			$errors = $this->calendarService->applyChanges($changes);
 

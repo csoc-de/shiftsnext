@@ -1,6 +1,6 @@
 import type {
 	SynchronizeByGroupsRequest,
-	SynchronizeByShiftRequest,
+	SynchronizeByShiftsRequest,
 	SynchronizeResponse,
 } from '../models/calendarSync.ts'
 import type { ErrorResponse } from '../models/error.ts'
@@ -34,15 +34,15 @@ export async function postSynchronizeByGroups(payload: SynchronizeByGroupsReques
 }
 
 /**
- * Synchronize the calendar by shift
+ * Synchronize the calendar by shifts
  *
  * @param payload The request payload
  */
-export async function postSynchronizeByShift(payload: SynchronizeByShiftRequest): Promise<SynchronizeResponse> {
+export async function postSynchronizeByShifts(payload: SynchronizeByShiftsRequest): Promise<SynchronizeResponse> {
 	try {
 		return (
 			await axios.post<SynchronizeResponse>(
-				generateUrl(`${CALENDAR_PATH}/synchronize-by-shift`),
+				generateUrl(`${CALENDAR_PATH}/synchronize-by-shifts`),
 				payload,
 			)
 		).data
@@ -50,7 +50,7 @@ export async function postSynchronizeByShift(payload: SynchronizeByShiftRequest)
 		handleError(
 			error as AxiosError<ErrorResponse>,
 			'synchronize',
-			'calendar by shift',
+			'calendar by shifts',
 		)
 		throw error
 	}

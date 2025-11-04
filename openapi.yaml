@@ -693,17 +693,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-  /calendars/synchronize-by-shift:
+  /calendars/synchronize-by-shifts:
     post:
       tags:
         - calendar
-      summary: Synchronize a single shift with calendars
-      description: In contrast to `synchronize-by-groups`, this endpoint first
-        creates a new calendar change for the given `shift_id`. Afterwards, all
-        still pending changes for this `shift_id` as well as the newly created
-        change are applied sequentially.
+      summary: Synchronize shifts identified by `shift_ids` with calendars
+      description: When calling this endpoint, the backend only applies
+        previously created pending calendar changes. Those changes are created
+        automatically on certain actions, namely creating, updating or deleting
+        a shift (which includes updating a shift due to a shift exchange).
       requestBody:
-        $ref: '#/components/requestBodies/SynchronizeCalendarByShift'
+        $ref: '#/components/requestBodies/SynchronizeCalendarByShifts'
       responses:
         '200':
           description: It's possible that errors occur during synchronization.
@@ -1201,13 +1201,19 @@ components:
           writeOnly: true
           items:
             $ref: '#/components/schemas/WriteOnlyGroupId'
-    SynchronizeCalendarByShiftPost:
+    SynchronizeCalendarByShiftsPost:
       required:
-        - shift_id
+        - shift_ids
       type: object
       properties:
-        shift_id:
-          $ref: '#/components/schemas/WriteOnlyId'
+        shift_ids:
+          description: Limits the synchronization to shifts identified by
+            the specified shift IDs. The caller does not need shift admin
+            privileges to synchronize those shifts.
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/WriteOnlyId'
     AppConfigEnvelope:
       required:
         - values
@@ -1303,11 +1309,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/SynchronizeCalendarByGroupsPost'
-    SynchronizeCalendarByShift:
+    SynchronizeCalendarByShifts:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/SynchronizeCalendarByShiftPost'
+            $ref: '#/components/schemas/SynchronizeCalendarByShiftsPost'
     AppConfig:
       content:
         application/json:
