@@ -1,23 +1,26 @@
 import { getInitialAbsenceCalendar, getInitialCommonCalendar, getInitialGroupShiftAdminRelationsByGroup } from './initialState.ts'
+import { logger } from './logger.ts'
 
 /**
  * Checks if any necessary configuration is missing
+ *
+ * @return An array indicating which configuration settings are missing
  */
-export function checkConfig(): boolean {
-	try {
-		if (!getInitialCommonCalendar()) {
-			throw new Error('No common calendar configured')
-		}
-		if (!getInitialAbsenceCalendar()) {
-			throw new Error('No absence calendar configured')
-		}
-		const relations = getInitialGroupShiftAdminRelationsByGroup()
-		const hasAdmins = relations.some(({ users }) => users.length)
-		if (!hasAdmins) {
-			throw new Error('No group shift admins configured')
-		}
-		return true
-	} catch {
-		return false
+export function checkConfig(): string[] {
+	const missingConfigs: string[] = []
+	if (!getInitialCommonCalendar()) {
+		logger.error('No common calendar configured')
+		missingConfigs.push('Common calendar')
 	}
+	if (!getInitialAbsenceCalendar()) {
+		logger.error('No absence calendar configured')
+		missingConfigs.push('Absence calendar')
+	}
+	const relations = getInitialGroupShiftAdminRelationsByGroup()
+	const hasAdmins = relations.some(({ users }) => users.length)
+	if (!hasAdmins) {
+		logger.error('No shift admins configured')
+		missingConfigs.push('Shift admins')
+	}
+	return missingConfigs
 }

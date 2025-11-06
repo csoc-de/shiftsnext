@@ -1,6 +1,6 @@
 <template>
 	<NcContent app-name="shiftsnext">
-		<template v-if="checkConfig()">
+		<template v-if="missingConfigs.length === 0">
 			<NcAppNavigation>
 				<template #list>
 					<NcAppNavigationItem :name="t(APP_ID, 'Shifts')" to="/shifts" />
@@ -24,7 +24,7 @@
 
 			<DelayBoxesWrapper />
 		</template>
-		<ConfigMissing v-else />
+		<ConfigMissing v-else :missing-configs="missingConfigs" />
 	</NcContent>
 </template>
 
@@ -39,6 +39,8 @@ import DelayBoxesWrapper from './components/DelayBoxesWrapper.vue'
 import { APP_ID } from './appId.ts'
 import { checkConfig } from './checkConfig.ts'
 import { getInitialIsShiftAdmin } from './initialState.ts'
+
+const missingConfigs = checkConfig()
 
 const isShiftAdmin = getInitialIsShiftAdmin()
 
