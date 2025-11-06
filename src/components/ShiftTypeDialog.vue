@@ -221,9 +221,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Group } from '../models/group.ts'
-
-import { loadState } from '@nextcloud/initial-state'
 import { getDayNamesMin, getFirstDay, n, t } from '@nextcloud/l10n'
 import { Temporal } from 'temporal-polyfill'
 import { computed, inject, ref } from 'vue'
@@ -244,6 +241,7 @@ import IsoWeekDateInput from './IsoWeekDateInput.vue'
 import { APP_ID } from '../appId.ts'
 import { rotate } from '../array.ts'
 import { getIsoWeekDate, localTimeZone } from '../date.ts'
+import { getInitialShiftAdminGroups } from '../initialState.ts'
 import { logger } from '../logger.ts'
 import {
 	type RepetitionFrequency,
@@ -331,7 +329,7 @@ if (shiftType) {
 
 const durationBuilderMounted = ref(false)
 
-const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
+const shiftAdminGroups = getInitialShiftAdminGroups()
 
 const group = ref(shiftAdminGroups.find(({ id }) => id === groupId.value))
 

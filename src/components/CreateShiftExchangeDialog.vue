@@ -142,13 +142,11 @@
 </template>
 
 <script setup lang="ts">
-import type { Group } from '../models/group.ts'
 import type {
 	NcSelectShiftOption,
 	NcSelectUsersOption,
 } from '../models/nextcloudVue.ts'
 
-import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
 import { computed, inject, ref, watch } from 'vue'
@@ -166,6 +164,7 @@ import { getIsoCalendarDate } from '../date.ts'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { getShifts } from '../db/shift.ts'
 import { getUsers } from '../db/user.ts'
+import { getInitialIsShiftAdmin } from '../initialState.ts'
 import {
 	type ShiftExchangePostRequest,
 	type ShiftExchangePostRequestBase,
@@ -183,9 +182,7 @@ const emit = defineEmits<{ close: [] }>()
 
 const create = inject(createIK)!
 
-const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
-
-const isShiftAdmin = shiftAdminGroups.length > 0
+const isShiftAdmin = getInitialIsShiftAdmin()
 
 const saving = ref(false)
 

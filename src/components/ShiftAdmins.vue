@@ -79,13 +79,10 @@
 <script setup lang="ts">
 import type { Group } from '../models/group.ts'
 import type {
-	GroupShiftAdminRelationsByGroup,
 	GroupShiftAdminRelationsByGroupRequest,
 } from '../models/groupShiftAdminRelation.ts'
 import type { NcSelectUsersOption } from '../models/nextcloudVue.ts'
-import type { User } from '../models/user.ts'
 
-import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
 import { computed, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -95,18 +92,15 @@ import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import InputGroup from './InputGroup.vue'
 import { APP_ID } from '../appId.ts'
 import { putGroupShiftAdminRelationsGroupedByGroup } from '../db/groupShiftAdminRelation.ts'
+import { getInitialGroupShiftAdminRelationsByGroup, getInitialUsers } from '../initialState.ts'
 import { getNcSelectUsersOption } from '../nextcloudVue.ts'
 import { showSavedToast } from '../toast.ts'
 
 const saving = ref(false)
 
-const relations = ref(loadState<GroupShiftAdminRelationsByGroup[]>(
-	APP_ID,
-	'group_shift_admin_relations_by_group',
-	[],
-))
+const relations = ref(getInitialGroupShiftAdminRelationsByGroup())
 
-const users = loadState<User[]>(APP_ID, 'users', [])
+const users = getInitialUsers()
 const userOptions = computed<NcSelectUsersOption[]>(() => users.map(getNcSelectUsersOption))
 
 const selectedUserOptions2D = ref<NcSelectUsersOption[][]>(relations.value.map(({ users }) => users.map(getNcSelectUsersOption)))

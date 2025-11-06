@@ -43,7 +43,7 @@
 		<template #right>
 			<div class="flex flex-wrap gap-2">
 				<NcButton
-					v-if="shiftAdminGroups.length"
+					v-if="isShiftAdmin"
 					:disabled="synchronizing"
 					variant="primary"
 					@click="synchronizeByGroups()">
@@ -163,11 +163,9 @@
 </template>
 
 <script setup lang="ts">
-import type { Group } from '../models/group.ts'
 import type { Shift, ShiftRequest } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
 
-import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
 import { onKeyStroke, watchImmediate } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
@@ -201,6 +199,7 @@ import { postSynchronizeByGroups, postSynchronizeByShifts } from '../db/calendar
 import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
 import { getShiftTypes } from '../db/shiftType.ts'
 import { getUsers } from '../db/user.ts'
+import { getInitialGroups, getInitialIsShiftAdmin } from '../initialState.ts'
 import { logger } from '../logger.ts'
 import { ShiftsRowNotFoundError, ShiftTypeWrapperNotFoundError } from '../models/error.ts'
 import {
@@ -249,10 +248,10 @@ const isoWeekDate = ref(currentIsoWeekDateWithoutDay)
 const loading = ref(true)
 const synchronizing = ref(false)
 
-const groups = ref(loadState<Group[]>(APP_ID, 'groups', []))
+const groups = ref(getInitialGroups())
 const { selectedGroups, selectedGroupIds } = storeToRefs(useUserSettings())
 
-const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
+const isShiftAdmin = getInitialIsShiftAdmin()
 
 const columnIndexOfWeek = 1
 let columnIndexOfToday = -1

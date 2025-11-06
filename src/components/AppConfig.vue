@@ -80,9 +80,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Calendar, ExchangeApprovalType } from '../models/config.ts'
-
-import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
 import { computed, ref } from 'vue'
@@ -94,47 +91,32 @@ import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
 import { APP_ID } from '../appId.ts'
 import { putAppConfig } from '../db/config.ts'
+import { getInitialAbsenceCalendar, getInitialApprovalType, getInitialApprovalTypes, getInitialCalendars, getInitialCommonCalendar, getInitialIgnoreAbsenceForByWeekShifts, getInitialSyncToPersonalCalendar } from '../initialState.ts'
 import { getNcSelectCalendarOption, getNcSelectExchangeApprovalTypeOption } from '../nextcloudVue.ts'
 import { showSavedToast } from '../toast.ts'
 
 const saving = ref(false)
 
-const calendars = loadState<Calendar[]>(APP_ID, 'calendars', [])
+const calendars = getInitialCalendars()
 const commonCalendarOptions = calendars.map(getNcSelectCalendarOption)
 
-const approvalTypes = loadState<ExchangeApprovalType[]>(
-	APP_ID,
-	'exchange_approval_types',
-	[],
-)
+const approvalTypes = getInitialApprovalTypes()
 const approvalTypeOptions
 	= approvalTypes.map(getNcSelectExchangeApprovalTypeOption)
 
-const initialCommonCalendar = loadState<Calendar | null>(
-	APP_ID,
-	'common_calendar',
-	null,
-)
+const initialCommonCalendar = getInitialCommonCalendar()
 const commonCalendarOption = ref(initialCommonCalendar ? getNcSelectCalendarOption(initialCommonCalendar) : undefined)
 
 const absenceCalendarOptions = computed(() => commonCalendarOptions.filter(({ id }) => id !== commonCalendarOption.value?.id))
 
-const initialAbsenceCalendar = loadState<Calendar | null>(
-	APP_ID,
-	'absence_calendar',
-	null,
-)
+const initialAbsenceCalendar = getInitialAbsenceCalendar()
 const absenceCalendarOption = ref(initialAbsenceCalendar ? getNcSelectCalendarOption(initialAbsenceCalendar) : undefined)
 
-const syncToPersonalCalendar = ref(loadState<boolean>(APP_ID, 'sync_to_personal_calendar', true))
+const syncToPersonalCalendar = ref(getInitialSyncToPersonalCalendar())
 
-const ignoreAbsenceForByWeekShifts = ref(loadState<boolean>(APP_ID, 'ignore_absence_for_by_week_shifts', true))
+const ignoreAbsenceForByWeekShifts = ref(getInitialIgnoreAbsenceForByWeekShifts())
 
-const initialApprovalType = loadState<ExchangeApprovalType>(
-	APP_ID,
-	'exchange_approval_type',
-	'all',
-)
+const initialApprovalType = getInitialApprovalType()
 const approvalTypeOption
 	= ref(getNcSelectExchangeApprovalTypeOption(initialApprovalType))
 

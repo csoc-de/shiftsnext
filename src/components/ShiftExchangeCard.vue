@@ -126,10 +126,6 @@
 </template>
 
 <script setup lang="ts">
-import type { ExchangeApprovalType } from '../models/config.ts'
-import type { GroupShiftAdminRelationsByGroup } from '../models/groupShiftAdminRelation.ts'
-
-import { loadState } from '@nextcloud/initial-state'
 import { t } from '@nextcloud/l10n'
 import { inject, ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
@@ -143,6 +139,7 @@ import EditShiftExchangeDialog from './EditShiftExchangeDialog.vue'
 import ShiftExchangeApprovedStatus from './ShiftExchangeApprovedStatus.vue'
 import { APP_ID } from '../appId.ts'
 import { formatRange } from '../date.ts'
+import { getInitialApprovalType, getInitialGroupShiftAdminRelationsByGroup } from '../initialState.ts'
 import {
 	type ExchangeEditor,
 	type ExchangeParticipant,
@@ -158,16 +155,8 @@ const { shiftExchange } = defineProps<{ shiftExchange: ShiftExchange }>()
 
 const exchangeType: ShiftExchangeType = 'shift_b' in shiftExchange ? 'regular' : 'transfer'
 
-const approvalType = loadState<ExchangeApprovalType>(
-	APP_ID,
-	'exchange_approval_type',
-	'all',
-)
-const relations = loadState<GroupShiftAdminRelationsByGroup[]>(
-	APP_ID,
-	'group_shift_admin_relations_by_group',
-	[],
-)
+const approvalType = getInitialApprovalType()
+const relations = getInitialGroupShiftAdminRelationsByGroup()
 
 const dateOnlyFormatOptions: Intl.DateTimeFormatOptions = {
 	dateStyle: 'short',

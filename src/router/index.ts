@@ -1,12 +1,10 @@
-import type { Group } from '../models/group.ts'
-
-import { loadState } from '@nextcloud/initial-state'
 import { generateUrl } from '@nextcloud/router'
 import { createRouter, createWebHistory } from 'vue-router'
 import ShiftExchangesView from '../views/ShiftExchangesView.vue'
 import ShiftsView from '../views/ShiftsView.vue'
 import ShiftTypesView from '../views/ShiftTypesView.vue'
 import { APP_ID } from '../appId.ts'
+import { getInitialIsShiftAdmin } from '../initialState.ts'
 
 declare module 'vue-router' {
 	interface RouteMeta {
@@ -14,9 +12,7 @@ declare module 'vue-router' {
 	}
 }
 
-const shiftAdminGroups = loadState<Group[]>(APP_ID, 'shift_admin_groups', [])
-
-const isShiftAdmin = shiftAdminGroups.length > 0
+const isShiftAdmin = getInitialIsShiftAdmin()
 
 const router = createRouter({
 	history: createWebHistory(generateUrl(`/apps/${APP_ID}`)),

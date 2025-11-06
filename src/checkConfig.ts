@@ -1,20 +1,17 @@
-import type { GroupShiftAdminRelationsByGroup } from './models/groupShiftAdminRelation.ts'
-
-import { loadState } from '@nextcloud/initial-state'
-import { APP_ID } from './appId.ts'
+import { getInitialAbsenceCalendar, getInitialCommonCalendar, getInitialGroupShiftAdminRelationsByGroup } from './initialState.ts'
 
 /**
  * Checks if any necessary configuration is missing
  */
 export function checkConfig(): boolean {
 	try {
-		loadState(APP_ID, 'common_calendar')
-		loadState(APP_ID, 'absence_calendar')
-		const relations = loadState<GroupShiftAdminRelationsByGroup[]>(
-			APP_ID,
-			'group_shift_admin_relations_by_group',
-			[],
-		)
+		if (!getInitialCommonCalendar()) {
+			throw new Error('No common calendar configured')
+		}
+		if (!getInitialAbsenceCalendar()) {
+			throw new Error('No absence calendar configured')
+		}
+		const relations = getInitialGroupShiftAdminRelationsByGroup()
 		const hasAdmins = relations.some(({ users }) => users.length)
 		if (!hasAdmins) {
 			throw new Error('No group shift admins configured')
