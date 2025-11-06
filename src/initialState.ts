@@ -11,7 +11,7 @@ import { APP_ID } from './appId.ts'
  * when the browser page was initially loaded
  */
 export function getInitialShiftAdminGroups(): Group[] {
-	return structuredClone(loadState<Group[]>(APP_ID, 'shift_admin_groups', []))
+	return structuredClone(loadState<Group[]>(APP_ID, 'shift_admin_groups'))
 }
 
 /**
@@ -22,7 +22,6 @@ export function getInitialIsShiftAdmin(): boolean {
 	return structuredClone(loadState<Group[]>(
 		APP_ID,
 		'shift_admin_groups',
-		[],
 	).length > 0)
 }
 
@@ -34,7 +33,6 @@ export function getInitialApprovalTypes(): ExchangeApprovalType[] {
 	return structuredClone(loadState<ExchangeApprovalType[]>(
 		APP_ID,
 		'exchange_approval_types',
-		[],
 	))
 }
 
@@ -46,7 +44,6 @@ export function getInitialApprovalType(): ExchangeApprovalType {
 	return structuredClone(loadState<ExchangeApprovalType>(
 		APP_ID,
 		'exchange_approval_type',
-		'all',
 	))
 }
 
@@ -58,7 +55,6 @@ export function getInitialGroupShiftAdminRelationsByGroup(): GroupShiftAdminRela
 	return structuredClone(loadState<GroupShiftAdminRelationsByGroup[]>(
 		APP_ID,
 		'group_shift_admin_relations_by_group',
-		[],
 	))
 }
 
@@ -66,7 +62,7 @@ export function getInitialGroupShiftAdminRelationsByGroup(): GroupShiftAdminRela
  * Returns all groups that existed when the browser page was initially loaded
  */
 export function getInitialGroups(): Group[] {
-	return structuredClone(loadState<Group[]>(APP_ID, 'groups', []))
+	return structuredClone(loadState<Group[]>(APP_ID, 'groups'))
 }
 
 /**
@@ -74,21 +70,21 @@ export function getInitialGroups(): Group[] {
  * page was initially loaded
  */
 export function getInitialDefaultGroups(): Group[] {
-	return structuredClone(loadState<Group[]>(APP_ID, 'default_groups', []))
+	return structuredClone(loadState<Group[]>(APP_ID, 'default_groups'))
 }
 
 /**
  * Returns all users that existed when the browser page was initially loaded
  */
 export function getInitialUsers(): User[] {
-	return structuredClone(loadState<User[]>(APP_ID, 'users', []))
+	return structuredClone(loadState<User[]>(APP_ID, 'users'))
 }
 
 /**
  * Returns all calendars that existed when the browser page was initially loaded
  */
 export function getInitialCalendars(): Calendar[] {
-	return structuredClone(loadState<Calendar[]>(APP_ID, 'calendars', []))
+	return structuredClone(loadState<Calendar[]>(APP_ID, 'calendars'))
 }
 
 /**
@@ -123,7 +119,6 @@ export function getInitialSyncToPersonalCalendar(): boolean {
 	return structuredClone(loadState<boolean>(
 		APP_ID,
 		'sync_to_personal_calendar',
-		true,
 	))
 }
 
@@ -135,6 +130,5 @@ export function getInitialIgnoreAbsenceForByWeekShifts(): boolean {
 	return structuredClone(loadState<boolean>(
 		APP_ID,
 		'ignore_absence_for_by_week_shifts',
-		true,
 	))
 }
