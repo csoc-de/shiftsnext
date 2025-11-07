@@ -192,10 +192,16 @@ final class ShiftExchangeController extends Controller {
 				}
 
 				// Check for pending exchanges for shiftB
-				$shiftBPendingExchanges = $this->shiftExchangeMapper->findAll(
-					shiftBId: $shift_b_id,
-					done: false,
-				);
+				$shiftBPendingExchanges = [
+					...$this->shiftExchangeMapper->findAll(
+						shiftAId: $shift_b_id,
+						done: false,
+					),
+					...$this->shiftExchangeMapper->findAll(
+						shiftBId: $shift_b_id,
+						done: false,
+					),
+				];
 				if ($shiftBPendingExchanges) {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
@@ -241,10 +247,16 @@ final class ShiftExchangeController extends Controller {
 			}
 
 			// Check for pending exchanges for shiftA
-			$shiftAPendingExchanges = $this->shiftExchangeMapper->findAll(
-				shiftAId: $shift_a_id,
-				done: false,
-			);
+			$shiftAPendingExchanges = [
+				...$this->shiftExchangeMapper->findAll(
+					shiftAId: $shift_a_id,
+					done: false,
+				),
+				...$this->shiftExchangeMapper->findAll(
+					shiftBId: $shift_a_id,
+					done: false,
+				)
+			];
 			if ($shiftAPendingExchanges) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
