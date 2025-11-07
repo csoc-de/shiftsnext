@@ -33,7 +33,7 @@ class ShiftTypeMapperTest extends TestCase {
 	/** @var list<ShiftTypeShape> */
 	private array $testTypes = [
 		[
-			'groupId' => 'Black Team',
+			'groupId' => 'Black_Team',
 			'name' => 'Early shift',
 			'description' => 'Lorem ipsum',
 			'color' => '#1F1F1F',
@@ -58,7 +58,7 @@ class ShiftTypeMapperTest extends TestCase {
 			],
 			'caldav' => ['categories' => 'Control center'],
 		], [
-			'groupId' => 'Black Team',
+			'groupId' => 'Black_Team',
 			'name' => 'Late shift',
 			'description' => 'Lorem ipsum',
 			'color' => '#3F3F3F',
@@ -83,7 +83,7 @@ class ShiftTypeMapperTest extends TestCase {
 			],
 			'caldav' => ['categories' => 'Control center'],
 		], [
-			'groupId' => 'Blue Team',
+			'groupId' => 'Blue_Team',
 			'name' => 'Early shift',
 			'description' => 'Lorem ipsum',
 			'color' => '#00001F',
@@ -108,7 +108,7 @@ class ShiftTypeMapperTest extends TestCase {
 			],
 			'caldav' => ['categories' => 'Control center'],
 		], [
-			'groupId' => 'Blue Team',
+			'groupId' => 'Blue_Team',
 			'name' => 'Late shift',
 			'description' => 'Lorem ipsum',
 			'color' => '#00003F',
@@ -133,7 +133,7 @@ class ShiftTypeMapperTest extends TestCase {
 			],
 			'caldav' => ['categories' => 'Control center'],
 		], [
-			'groupId' => 'Blue Team',
+			'groupId' => 'Blue_Team',
 			'name' => 'Night shift',
 			'description' => 'Lorem ipsum',
 			'color' => '#00007F',
@@ -158,7 +158,7 @@ class ShiftTypeMapperTest extends TestCase {
 			],
 			'caldav' => ['categories' => 'Control center'],
 		], [
-			'groupId' => 'Black Team',
+			'groupId' => 'Black_Team',
 			'name' => 'Office duty',
 			'description' => 'Lorem ipsum',
 			'color' => '#00FF00',

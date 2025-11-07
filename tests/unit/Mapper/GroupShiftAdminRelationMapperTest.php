@@ -17,12 +17,12 @@ class GroupShiftAdminRelationMapperTest extends TestCase {
 
 	/** @var array<int,array{groupId:string,userId:string}> */
 	private array $testRelations = [
-		['groupId' => 'Black Team', 'userId' => 'admin'],
-		['groupId' => 'Black Team', 'userId' => 'alice'],
-		['groupId' => 'Blue Team', 'userId' => 'admin'],
-		['groupId' => 'Blue Team', 'userId' => 'bob'],
-		['groupId' => 'Dev Team', 'userId' => 'admin'],
-		['groupId' => 'Dev Team', 'userId' => 'jane'],
+		['groupId' => 'Black_Team', 'userId' => 'admin'],
+		['groupId' => 'Black_Team', 'userId' => 'alice'],
+		['groupId' => 'Blue_Team', 'userId' => 'admin'],
+		['groupId' => 'Blue_Team', 'userId' => 'bob'],
+		['groupId' => 'Dev_Team', 'userId' => 'admin'],
+		['groupId' => 'Dev_Team', 'userId' => 'jane'],
 	];
 
 	public function setUp(): void {
