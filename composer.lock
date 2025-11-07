@@ -431,12 +431,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nextcloud-deps/ocp.git",
-                "reference": "64f0f74510b9c241b2aa930f9620eb8988d72c96"
+                "reference": "6096dced51d997d0e9bedefb6b428c09e6aeae09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud-deps/ocp/zipball/64f0f74510b9c241b2aa930f9620eb8988d72c96",
-                "reference": "64f0f74510b9c241b2aa930f9620eb8988d72c96",
+                "url": "https://api.github.com/repos/nextcloud-deps/ocp/zipball/6096dced51d997d0e9bedefb6b428c09e6aeae09",
+                "reference": "6096dced51d997d0e9bedefb6b428c09e6aeae09",
                 "shasum": ""
             },
             "require": {
@@ -472,7 +472,7 @@
                 "issues": "https://github.com/nextcloud-deps/ocp/issues",
                 "source": "https://github.com/nextcloud-deps/ocp/tree/master"
             },
-            "time": "2025-10-17T00:49:00+00:00"
+            "time": "2025-11-05T00:53:12+00:00"
         },
         {
             "name": "psr/clock",
@@ -681,18 +681,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "b8a07f2b49070920a65c1e5089a21509d0358345"
+                "reference": "19966d2f97bbc444bb176432754e33256a7d45bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/b8a07f2b49070920a65c1e5089a21509d0358345",
-                "reference": "b8a07f2b49070920a65c1e5089a21509d0358345",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/19966d2f97bbc444bb176432754e33256a7d45bf",
+                "reference": "19966d2f97bbc444bb176432754e33256a7d45bf",
                 "shasum": ""
             },
             "conflict": {
                 "3f/pygmentize": "<1.2",
                 "adaptcms/adaptcms": "<=1.3",
-                "admidio/admidio": "<4.3.12",
+                "admidio/admidio": "<=4.3.16",
                 "adodb/adodb-php": "<=5.22.9",
                 "aheinze/cockpit": "<2.2",
                 "aimeos/ai-admin-graphql": ">=2022.04.1,<2022.10.10|>=2023.04.1,<2023.10.6|>=2024.04.1,<2024.07.2",
@@ -795,6 +795,7 @@
                 "clickstorm/cs-seo": ">=6,<6.8|>=7,<7.5|>=8,<8.4|>=9,<9.3",
                 "co-stack/fal_sftp": "<0.2.6",
                 "cockpit-hq/cockpit": "<2.11.4",
+                "code16/sharp": "<9.11.1",
                 "codeception/codeception": "<3.1.3|>=4,<4.1.22",
                 "codeigniter/framework": "<3.1.10",
                 "codeigniter4/framework": "<4.6.2",
@@ -853,30 +854,39 @@
                 "dompdf/dompdf": "<2.0.4",
                 "doublethreedigital/guest-entries": "<3.1.2",
                 "drupal-pattern-lab/unified-twig-extensions": "<=0.1",
+                "drupal/access_code": "<2.0.5",
+                "drupal/acquia_dam": "<1.1.5",
                 "drupal/admin_audit_trail": "<1.0.5",
                 "drupal/ai": "<1.0.5",
                 "drupal/alogin": "<2.0.6",
                 "drupal/cache_utility": "<1.2.1",
+                "drupal/civictheme": "<1.12",
                 "drupal/commerce_alphabank_redirect": "<1.0.3",
                 "drupal/commerce_eurobank_redirect": "<2.1.1",
                 "drupal/config_split": "<1.10|>=2,<2.0.2",
                 "drupal/core": ">=6,<6.38|>=7,<7.102|>=8,<10.3.14|>=10.4,<10.4.5|>=11,<11.0.13|>=11.1,<11.1.5",
                 "drupal/core-recommended": ">=7,<7.102|>=8,<10.2.11|>=10.3,<10.3.9|>=11,<11.0.8",
+                "drupal/currency": "<3.5",
                 "drupal/drupal": ">=5,<5.11|>=6,<6.38|>=7,<7.102|>=8,<10.2.11|>=10.3,<10.3.9|>=11,<11.0.8",
                 "drupal/formatter_suite": "<2.1",
                 "drupal/gdpr": "<3.0.1|>=3.1,<3.1.2",
                 "drupal/google_tag": "<1.8|>=2,<2.0.8",
                 "drupal/ignition": "<1.0.4",
+                "drupal/json_field": "<1.5",
                 "drupal/lightgallery": "<1.6",
                 "drupal/link_field_display_mode_formatter": "<1.6",
                 "drupal/matomo": "<1.24",
                 "drupal/oauth2_client": "<4.1.3",
                 "drupal/oauth2_server": "<2.1",
                 "drupal/obfuscate": "<2.0.1",
+                "drupal/plausible_tracking": "<1.0.2",
                 "drupal/quick_node_block": "<2",
                 "drupal/rapidoc_elements_field_formatter": "<1.0.1",
+                "drupal/reverse_proxy_header": "<1.1.2",
+                "drupal/simple_oauth": ">=6,<6.0.7",
                 "drupal/spamspan": "<3.2.1",
                 "drupal/tfa": "<1.10",
+                "drupal/umami_analytics": "<1.0.1",
                 "duncanmcclean/guest-entries": "<3.1.2",
                 "dweeves/magmi": "<=0.7.24",
                 "ec-cube/ec-cube": "<2.4.4|>=2.11,<=2.17.1|>=3,<=3.0.18.0-patch4|>=4,<=4.1.2",
@@ -1111,7 +1121,7 @@
                 "maikuolan/phpmussel": ">=1,<1.6",
                 "mainwp/mainwp": "<=4.4.3.3",
                 "manogi/nova-tiptap": "<=3.2.6",
-                "mantisbt/mantisbt": "<=2.26.3",
+                "mantisbt/mantisbt": "<2.27.2",
                 "marcwillmann/turn": "<0.3.3",
                 "marshmallow/nova-tiptap": "<5.7",
                 "matomo/matomo": "<1.11",
@@ -1146,7 +1156,7 @@
                 "mojo42/jirafeau": "<4.4",
                 "mongodb/mongodb": ">=1,<1.9.2",
                 "monolog/monolog": ">=1.8,<1.12",
-                "moodle/moodle": "<4.3.12|>=4.4,<4.4.8|>=4.5.0.0-beta,<4.5.4",
+                "moodle/moodle": "<4.4.11|>=4.5.0.0-beta,<4.5.7|>=5.0.0.0-beta,<5.0.3",
                 "moonshine/moonshine": "<=3.12.5",
                 "mos/cimage": "<0.7.19",
                 "movim/moxl": ">=0.8,<=0.10",
@@ -1199,7 +1209,7 @@
                 "open-web-analytics/open-web-analytics": "<1.8.1",
                 "opencart/opencart": ">=0",
                 "openid/php-openid": "<2.3",
-                "openmage/magento-lts": "<20.12.3",
+                "openmage/magento-lts": "<20.16",
                 "opensolutions/vimbadmin": "<=3.0.15",
                 "opensource-workshop/connect-cms": "<1.8.7|>=2,<2.4.7",
                 "orchid/platform": ">=8,<14.43",
@@ -1280,8 +1290,8 @@
                 "prestashop/ps_emailsubscription": "<2.6.1",
                 "prestashop/ps_facetedsearch": "<3.4.1",
                 "prestashop/ps_linklist": "<3.1",
-                "privatebin/privatebin": "<1.4|>=1.5,<1.7.4",
-                "processwire/processwire": "<=3.0.229",
+                "privatebin/privatebin": "<1.4|>=1.5,<1.7.4|>=1.7.7,<2.0.2",
+                "processwire/processwire": "<=3.0.246",
                 "propel/propel": ">=2.0.0.0-alpha1,<=2.0.0.0-alpha7",
                 "propel/propel1": ">=1,<=1.7.1",
                 "pterodactyl/panel": "<=1.11.10",
@@ -1324,8 +1334,8 @@
                 "setasign/fpdi": "<2.6.4",
                 "sfroemken/url_redirect": "<=1.2.1",
                 "sheng/yiicms": "<1.2.1",
-                "shopware/core": "<6.5.8.18-dev|>=6.6,<6.6.10.3-dev|>=6.7,<6.7.2.1-dev",
-                "shopware/platform": "<=6.6.10.4|>=6.7.0.0-RC1-dev,<6.7.0.0-RC2-dev",
+                "shopware/core": "<6.6.10.7-dev|>=6.7,<6.7.3.1-dev",
+                "shopware/platform": "<6.6.10.7-dev|>=6.7,<6.7.3.1-dev",
                 "shopware/production": "<=6.3.5.2",
                 "shopware/shopware": "<=5.7.17|>=6.7,<6.7.2.1-dev",
                 "shopware/storefront": "<=6.4.8.1|>=6.5.8,<6.5.8.7-dev",
@@ -1378,6 +1388,7 @@
                 "spatie/image-optimizer": "<1.7.3",
                 "spencer14420/sp-php-email-handler": "<1",
                 "spipu/html2pdf": "<5.2.8",
+                "spiral/roadrunner": "<2025.1",
                 "spoon/library": "<1.4.1",
                 "spoonity/tcpdf": "<6.2.22",
                 "squizlabs/php_codesniffer": ">=1,<2.8.1|>=3,<3.0.1",
@@ -1386,7 +1397,7 @@
                 "starcitizentools/short-description": ">=4,<4.0.1",
                 "starcitizentools/tabber-neue": ">=1.9.1,<2.7.2|>=3,<3.1.1",
                 "starcitizenwiki/embedvideo": "<=4",
-                "statamic/cms": "<=5.16",
+                "statamic/cms": "<=5.22",
                 "stormpath/sdk": "<9.9.99",
                 "studio-42/elfinder": "<=2.1.64",
                 "studiomitte/friendlycaptcha": "<0.1.4",
@@ -1653,7 +1664,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-20T22:05:40+00:00"
+            "time": "2025-11-03T21:05:38+00:00"
         }
     ],
     "aliases": [],
