@@ -156,23 +156,12 @@
 										input-id="shift-type-repetition-config-time-zone"
 										@update:model-value="setByDayReference()" />
 								</InputGroup>
-								<InputGroup>
-									<label for="shift-type-duration">{{ t(APP_ID, "Duration") }}</label>
-									<NcPopover @show="durationBuilderMounted = true" @after-hide="durationBuilderMounted = false">
-										<template #trigger>
-											<NcTextField
-												id="shift-type-duration"
-												v-model.trim="durationString"
-												:disabled="!!shiftType"
-												label-outside
-												readonly
-												minlength="3" />
-										</template>
-										<DurationBuilder v-if="durationBuilderMounted" v-model="duration" />
-									</NcPopover>
-								</InputGroup>
 							</template>
 						</div>
+						<InputGroup>
+							<div>{{ t(APP_ID, "Duration") }} ({{ durationString }})</div>
+							<DurationBuilder v-model="duration" :disabled="!!shiftType" class="grid grid-cols-2 sm:grid-cols-4 gap-1" />
+						</InputGroup>
 						<div
 							class="mt-1"
 							:class="{
@@ -206,11 +195,11 @@
 			</CustomFieldset>
 		</form>
 		<template #actions>
-			<NcButton :disabled="saving || durationBuilderMounted" @click="emit('close')">
+			<NcButton :disabled="saving" @click="emit('close')">
 				{{ t(APP_ID, "Cancel") }}
 			</NcButton>
 			<NcButton
-				:disabled="saving || durationBuilderMounted"
+				:disabled="saving"
 				type="submit"
 				variant="primary"
 				form="shift-type-form">
@@ -229,7 +218,6 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwit
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
-import NcPopover from '@nextcloud/vue/components/NcPopover'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcTimezonePicker from '@nextcloud/vue/components/NcTimezonePicker'
@@ -326,8 +314,6 @@ if (shiftType) {
 		byWeekAmount.value = shiftType.repetition.config.amount
 	}
 }
-
-const durationBuilderMounted = ref(false)
 
 const shiftAdminGroups = getInitialShiftAdminGroups()
 

@@ -1,5 +1,5 @@
 <template>
-	<div class="p-4 w-full max-w-xs sm:max-w-md grid grid-cols-2 gap-x-2 gap-y-3 sm:grid-cols-4">
+	<div>
 		<NcTextField
 			v-for="property in PROPERTIES"
 			:key="property"
@@ -7,7 +7,8 @@
 			:label="t(APP_ID, upperFirst(property))"
 			type="number"
 			min="0"
-			required />
+			required
+			:disabled />
 	</div>
 </template>
 
@@ -21,9 +22,9 @@ import { upperFirst } from '../string.ts'
 
 const model = defineModel<Temporal.Duration>({ required: true })
 
-if (model.value.sign === -1) {
-	model.value = model.value.negated()
-}
+defineProps<{
+	disabled?: boolean
+}>()
 
 const properties = ref<Temporal.DurationLike>({
 	days: model.value.days,
