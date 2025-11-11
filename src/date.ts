@@ -273,6 +273,9 @@ export function reviver(key: string, value: unknown): unknown {
 				// Failing is expected
 			}
 		}
+		if (key === 'duration') {
+			return Temporal.Duration.from(value)
+		}
 	}
 	return value
 }
