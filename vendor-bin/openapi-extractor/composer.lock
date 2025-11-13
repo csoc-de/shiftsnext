@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cc4604e4c3d0f17f3feec0fe94971ff6",
+    "content-hash": "f854d667ebf53a194ba66c04cd3b409c",
     "packages": [],
     "packages-dev": [
         {
@@ -82,16 +82,16 @@
         },
         {
             "name": "nextcloud/openapi-extractor",
-            "version": "dev-main",
+            "version": "v1.8.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/nextcloud/openapi-extractor.git",
-                "reference": "5efa3411fa9fb188e36fb26890c5fd7c62e47381"
+                "url": "https://github.com/nextcloud-releases/openapi-extractor.git",
+                "reference": "3874ffb6817ab5b616a5e909c48c7cd13889cafa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nextcloud/openapi-extractor/zipball/5efa3411fa9fb188e36fb26890c5fd7c62e47381",
-                "reference": "5efa3411fa9fb188e36fb26890c5fd7c62e47381",
+                "url": "https://api.github.com/repos/nextcloud-releases/openapi-extractor/zipball/3874ffb6817ab5b616a5e909c48c7cd13889cafa",
+                "reference": "3874ffb6817ab5b616a5e909c48c7cd13889cafa",
                 "shasum": ""
             },
             "require": {
@@ -106,7 +106,6 @@
                 "nextcloud/ocp": "dev-master",
                 "rector/rector": "^2.0"
             },
-            "default-branch": true,
             "bin": [
                 "bin/generate-spec",
                 "bin/merge-specs"
@@ -117,32 +116,16 @@
                     "OpenAPIExtractor\\": "src"
                 }
             },
-            "scripts": {
-                "lint": [
-                    "find . -name \\*.php -not -path './tests/*' -not -path './vendor/*' -not -path './build/*' -print0 | xargs -0 -n1 php -l"
-                ],
-                "cs:check": [
-                    "php-cs-fixer fix --dry-run --diff"
-                ],
-                "cs:fix": [
-                    "php-cs-fixer fix"
-                ],
-                "test:unit": [
-                    "cd tests && ../bin/generate-spec"
-                ],
-                "rector": [
-                    "rector && composer cs:fix"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AGPL-3.0-or-later"
             ],
             "description": "A tool for extracting OpenAPI specifications from Nextcloud source code",
             "support": {
-                "source": "https://github.com/nextcloud/openapi-extractor/tree/main",
-                "issues": "https://github.com/nextcloud/openapi-extractor/issues"
+                "issues": "https://github.com/nextcloud-releases/openapi-extractor/issues",
+                "source": "https://github.com/nextcloud-releases/openapi-extractor/tree/v1.8.6"
             },
-            "time": "2025-11-06T08:28:30+00:00"
+            "time": "2025-10-01T13:53:28+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -252,9 +235,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "nextcloud/openapi-extractor": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {},
