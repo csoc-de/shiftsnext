@@ -8,6 +8,7 @@
 				{{ t(APP_ID, missingConfig) }}
 			</li>
 		</ul>
+		<div><strong>Note: </strong>This app is work in progress.</div>
 	</div>
 </template>
 
