@@ -7,7 +7,8 @@
 				{{ t(APP_ID, missingConfig) }}
 			</li>
 		</ul>
-		<div><strong>Note: </strong>This app is work in progress.</div>
+		<!-- eslint-disable-next-line vue/no-v-html -->
+		<div v-html="wipMessage" />
 		<div>Click <a href="https://github.com/csoc-de/shiftsnext/blob/main/README.md" target="_blank" class="underline">here</a> to make yourself familiar with the app.</div>
 	</div>
 </template>
@@ -28,6 +29,13 @@ const configMessage = t(
 	APP_ID,
 	'The following configuration settings need to be set in the {linkStart}administration settings{linkEnd} before you can start using the app:',
 	{ linkStart: `<a href="${settingsUrl}" class="underline">`, linkEnd: '</a>' },
+	{ escape: false },
+)
+
+const wipMessage = t(
+	APP_ID,
+	'{strongStart}Note:{strongEnd} This app is work in progress.',
+	{ strongStart: '<strong>', strongEnd: '</strong>' },
 	{ escape: false },
 )
 </script>
