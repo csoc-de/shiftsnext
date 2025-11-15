@@ -9,6 +9,7 @@
 			</li>
 		</ul>
 		<div><strong>Note: </strong>This app is work in progress.</div>
+		<div>Click <a href="https://github.com/csoc-de/shiftsnext/blob/main/README.md" target="_blank" class="underline">here</a> to make yourself familiar with the app.</div>
 	</div>
 </template>
 
