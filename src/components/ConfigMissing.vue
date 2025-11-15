@@ -9,7 +9,8 @@
 		</ul>
 		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-html="wipMessage" />
-		<div>Click <a href="https://github.com/csoc-de/shiftsnext/blob/main/README.md" target="_blank" class="underline">here</a> to make yourself familiar with the app.</div>
+		<!-- eslint-disable-next-line vue/no-v-html -->
+		<div v-html="howToMessage" />
 	</div>
 </template>
 
@@ -37,5 +38,12 @@ const wipMessage = t(
 	'{strongStart}Note:{strongEnd} This app is work in progress.',
 	{ strongStart: '<strong>', strongEnd: '</strong>' },
 	{ escape: false },
+)
+
+const howToMessage = t(
+	APP_ID,
+	'{linkStart}Click here{linkEnd} to make yourself familiar with the app.',
+	{ linkStart: '<a href="https://github.com/csoc-de/shiftsnext/blob/main/README.md" target="_blank" class="underline">', linkEnd: '</a>' },
+	{ escape: false, sanitize: false },
 )
 </script>
