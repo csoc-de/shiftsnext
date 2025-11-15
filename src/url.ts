@@ -17,6 +17,8 @@ export const USERS_PATH = `${BASE_PATH}/users`
 export const CALENDAR_PATH = `${BASE_PATH}/calendars`
 export const CONFIG_PATH = `${BASE_PATH}/config`
 
+export const ADMIN_SETTINGS_PATH = `/settings/admin/${APP_ID}`
+
 /**
  * Generates a URL with search parameters
  *
