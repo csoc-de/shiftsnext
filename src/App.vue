@@ -1,5 +1,5 @@
 <template>
-	<NcContent app-name="shiftsnext">
+	<NcContent :app-name="APP_ID">
 		<template v-if="missingConfigs.length === 0">
 			<NcAppNavigation>
 				<template #list>
