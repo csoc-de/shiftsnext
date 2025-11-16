@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import { putDefaultGroups } from '../db/config.ts'
-import { getInitialDefaultGroups } from '../initialState.ts'
+import { getInitialDefaultGroups } from '../utils/initialState.ts'
 
 export const useUserSettings = defineStore('user-settings', () => {
 	const selectedGroups = ref(getInitialDefaultGroups())

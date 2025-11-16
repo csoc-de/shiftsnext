@@ -17,8 +17,8 @@ import { t } from '@nextcloud/l10n'
 import { Temporal } from 'temporal-polyfill'
 import { nextTick, ref, watch } from 'vue'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
-import { APP_ID } from '../appId.ts'
-import { upperFirst } from '../string.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { upperFirst } from '../utils/string.ts'
 
 const duration = defineModel<Temporal.Duration>({ required: true })
 

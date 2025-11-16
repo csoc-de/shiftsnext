@@ -1,4 +1,4 @@
-import type { User } from './models/user.ts'
+import type { User } from '../models/user.ts'
 
 import { getCurrentUser } from '@nextcloud/auth'
 

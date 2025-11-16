@@ -19,7 +19,7 @@
 import { t } from '@nextcloud/l10n'
 import { ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import { APP_ID } from '../appId.ts'
+import { APP_ID } from '../utils/appId.ts'
 
 const { delay = 2000 } = defineProps<{ delay?: number }>()
 

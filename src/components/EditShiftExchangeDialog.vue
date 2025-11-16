@@ -75,7 +75,6 @@ import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
-import { APP_ID } from '../appId.ts'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
 	type Approveds,
@@ -85,6 +84,7 @@ import {
 
 	updateIK,
 } from '../models/shiftExchange.ts'
+import { APP_ID } from '../utils/appId.ts'
 
 const { shiftExchange, editor } = defineProps<{
 	shiftExchange: ShiftExchange

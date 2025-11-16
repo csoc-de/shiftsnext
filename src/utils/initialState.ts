@@ -1,7 +1,7 @@
-import type { Calendar, ExchangeApprovalType } from './models/config.ts'
-import type { Group } from './models/group.ts'
-import type { GroupShiftAdminRelationsByGroup } from './models/groupShiftAdminRelation.ts'
-import type { User } from './models/user.ts'
+import type { Calendar, ExchangeApprovalType } from '../models/config.ts'
+import type { Group } from '../models/group.ts'
+import type { GroupShiftAdminRelationsByGroup } from '../models/groupShiftAdminRelation.ts'
+import type { User } from '../models/user.ts'
 
 import { loadState } from '@nextcloud/initial-state'
 import { APP_ID } from './appId.ts'

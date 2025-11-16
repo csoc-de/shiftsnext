@@ -225,11 +225,6 @@ import CustomFieldset from './CustomFieldset.vue'
 import DurationBuilder from './DurationBuilder.vue'
 import InputGroup from './InputGroup.vue'
 import IsoWeekDateInput from './IsoWeekDateInput.vue'
-import { APP_ID } from '../appId.ts'
-import { rotate } from '../array.ts'
-import { getIsoWeekDate, localTimeZone } from '../date.ts'
-import { getInitialShiftAdminGroups } from '../initialState.ts'
-import { logger } from '../logger.ts'
 import {
 	type RepetitionFrequency,
 	type RepetitionWeeklyType,
@@ -248,6 +243,11 @@ import {
 	updateInjectionKey,
 	weeklyTypeTranslations,
 } from '../models/shiftType.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { rotate } from '../utils/array.ts'
+import { getIsoWeekDate, localTimeZone } from '../utils/date.ts'
+import { getInitialShiftAdminGroups } from '../utils/initialState.ts'
+import { logger } from '../utils/logger.ts'
 
 const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
 

@@ -1,5 +1,5 @@
-import type { Shift } from './models/shift.ts'
-import type { ShiftType } from './models/shiftType.ts'
+import type { Shift } from '../models/shift.ts'
+import type { ShiftType } from '../models/shiftType.ts'
 
 // We are using "en-US" here to be consistent with the
 // `Util::naturalSortCompare` method provided by Nextcloud (backend).

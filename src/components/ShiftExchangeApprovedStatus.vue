@@ -24,7 +24,7 @@ import CheckCircleOutline from 'vue-material-design-icons/CheckCircleOutline.vue
 import ClockOutline from 'vue-material-design-icons/ClockOutline.vue'
 // @ts-expect-error package has no types
 import CloseCircleOutline from 'vue-material-design-icons/CloseCircleOutline.vue'
-import { APP_ID } from '../appId.ts'
+import { APP_ID } from '../utils/appId.ts'
 
 defineProps<{ approved: boolean | null }>()
 </script>

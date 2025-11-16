@@ -1,11 +1,11 @@
 import type { Temporal } from 'temporal-polyfill'
 import type { InjectionKey } from 'vue'
-import type { IsoWeekDateWithoutDay } from '../date.ts'
 import type { Group } from '../models/group.ts'
 import type { SearchParams } from '../models/url.ts'
+import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
 
 import { t } from '@nextcloud/l10n'
-import { APP_ID } from '../appId.ts'
+import { APP_ID } from '../utils/appId.ts'
 
 export const REPETITION_FREQUENCIES = ['weekly'] as const
 

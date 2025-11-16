@@ -3,8 +3,8 @@ import type { ErrorResponse } from '../models/error.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { handleError } from '../error.ts'
-import { CONFIG_PATH } from '../url.ts'
+import { handleError } from '../utils/error.ts'
+import { CONFIG_PATH } from '../utils/url.ts'
 
 /**
  * Save the default groups

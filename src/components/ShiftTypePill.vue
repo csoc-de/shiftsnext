@@ -27,13 +27,13 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
-import { getContrastColor } from '../color.ts'
 import {
 	type ShiftTypeWrapper,
 
 	multiStepActionIK,
 	setMultiStepActionIK,
 } from '../models/shiftsTable.ts'
+import { getContrastColor } from '../utils/color.ts'
 
 const { shiftTypeWrapper, columnIndex } = defineProps<{
 	shiftTypeWrapper: ShiftTypeWrapper

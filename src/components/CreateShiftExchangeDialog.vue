@@ -159,12 +159,9 @@ import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
-import { APP_ID } from '../appId.ts'
-import { getIsoCalendarDate } from '../date.ts'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { getShifts } from '../db/shift.ts'
 import { getUsers } from '../db/user.ts'
-import { getInitialIsShiftAdmin } from '../initialState.ts'
 import {
 	type ShiftExchangePostRequest,
 	type ShiftExchangePostRequestBase,
@@ -174,9 +171,12 @@ import {
 	EXCHANGE_TYPES,
 	exchangeTypeTranslations,
 } from '../models/shiftExchange.ts'
-import { getNcSelectShiftOption, getNcSelectUsersOption } from '../nextcloudVue.ts'
-import { compare } from '../sort.ts'
-import { authUser } from '../user.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { getIsoCalendarDate } from '../utils/date.ts'
+import { getInitialIsShiftAdmin } from '../utils/initialState.ts'
+import { getNcSelectShiftOption, getNcSelectUsersOption } from '../utils/nextcloudVue.ts'
+import { compare } from '../utils/sort.ts'
+import { authUser } from '../utils/user.ts'
 
 const emit = defineEmits<{ close: [] }>()
 

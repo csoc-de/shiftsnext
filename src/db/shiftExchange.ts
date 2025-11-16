@@ -7,9 +7,9 @@ import type {
 
 import axios, { type AxiosError } from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { transformResponse } from '../axios.ts'
-import { handleError } from '../error.ts'
-import { SHIFT_EXCHANGES_PATH } from '../url.ts'
+import { transformResponse } from '../utils/axios.ts'
+import { handleError } from '../utils/error.ts'
+import { SHIFT_EXCHANGES_PATH } from '../utils/url.ts'
 
 /**
  * Get shift exchanges

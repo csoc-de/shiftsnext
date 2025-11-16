@@ -3,8 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ShiftExchangesView from '../views/ShiftExchangesView.vue'
 import ShiftsView from '../views/ShiftsView.vue'
 import ShiftTypesView from '../views/ShiftTypesView.vue'
-import { APP_ID } from '../appId.ts'
-import { getInitialIsShiftAdmin } from '../initialState.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { getInitialIsShiftAdmin } from '../utils/initialState.ts'
 
 declare module 'vue-router' {
 	interface RouteMeta {

@@ -1,6 +1,6 @@
 import type { Temporal } from 'temporal-polyfill'
 import type { InjectionKey, Ref } from 'vue'
-import type { IsoWeekDateWithoutDay } from '../date.ts'
+import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
 import type { Shift } from './shift.ts'
 import type { RepetitionWeeklyType, ShiftType } from './shiftType.ts'
 import type { User } from './user.ts'

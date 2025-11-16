@@ -1,5 +1,5 @@
 import type { AxiosError } from '@nextcloud/axios'
-import type { ErrorResponse } from './models/error.ts'
+import type { ErrorResponse } from '../models/error.ts'
 
 import { showError } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'

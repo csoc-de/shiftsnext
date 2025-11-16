@@ -41,8 +41,6 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 // @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
 import DelayBox from './DelayBox.vue'
-import { APP_ID } from '../appId.ts'
-import { getContrastColor } from '../color.ts'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
 	deletionShiftIK,
@@ -52,6 +50,8 @@ import {
 	setDeletionShiftIK,
 	setMultiStepActionIK,
 } from '../models/shiftsTable.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { getContrastColor } from '../utils/color.ts'
 
 const { shift, columnIndex } = defineProps<{
 	shift: Shift

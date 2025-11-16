@@ -137,9 +137,6 @@ import Pencil from 'vue-material-design-icons/Pencil.vue'
 import DelayBox from './DelayBox.vue'
 import EditShiftExchangeDialog from './EditShiftExchangeDialog.vue'
 import ShiftExchangeApprovedStatus from './ShiftExchangeApprovedStatus.vue'
-import { APP_ID } from '../appId.ts'
-import { formatRange } from '../date.ts'
-import { getInitialApprovalType, getInitialGroupShiftAdminRelationsByGroup } from '../initialState.ts'
 import {
 	type ExchangeEditor,
 	type ExchangeParticipant,
@@ -149,7 +146,10 @@ import {
 	exchangeTypeTranslations,
 	removeIK,
 } from '../models/shiftExchange.ts'
-import { authUser } from '../user.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { formatRange } from '../utils/date.ts'
+import { getInitialApprovalType, getInitialGroupShiftAdminRelationsByGroup } from '../utils/initialState.ts'
+import { authUser } from '../utils/user.ts'
 
 const { shiftExchange } = defineProps<{ shiftExchange: ShiftExchange }>()
 

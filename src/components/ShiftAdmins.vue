@@ -90,11 +90,11 @@ import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import InputGroup from './InputGroup.vue'
-import { APP_ID } from '../appId.ts'
 import { putGroupShiftAdminRelationsGroupedByGroup } from '../db/groupShiftAdminRelation.ts'
-import { getInitialGroupShiftAdminRelationsByGroup, getInitialUsers } from '../initialState.ts'
-import { getNcSelectUsersOption } from '../nextcloudVue.ts'
-import { showSavedToast } from '../toast.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { getInitialGroupShiftAdminRelationsByGroup, getInitialUsers } from '../utils/initialState.ts'
+import { getNcSelectUsersOption } from '../utils/nextcloudVue.ts'
+import { showSavedToast } from '../utils/toast.ts'
 
 const saving = ref(false)
 

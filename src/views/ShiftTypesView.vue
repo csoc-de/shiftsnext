@@ -27,7 +27,6 @@ import HeaderNavigation from '../components/HeaderNavigation.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftTypeCard from '../components/ShiftTypeCard.vue'
 import ShiftTypeDialog from '../components/ShiftTypeDialog.vue'
-import { APP_ID } from '../appId.ts'
 import {
 	deleteShiftType,
 	getShiftTypes,
@@ -43,6 +42,7 @@ import {
 	removeInjectionKey,
 	updateInjectionKey,
 } from '../models/shiftType.ts'
+import { APP_ID } from '../utils/appId.ts'
 
 const loading = ref(true)
 

@@ -30,7 +30,7 @@ import {
 	getNumberOfWeeks,
 	localTimeZone,
 	parseIsoWeekDate,
-} from '../date.ts'
+} from '../utils/date.ts'
 
 const isoWeekDate = defineModel<IsoWeekDateWithoutDay>({ required: true })
 

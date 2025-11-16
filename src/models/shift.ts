@@ -1,8 +1,8 @@
 import type { Temporal } from 'temporal-polyfill'
-import type { IsoCalendarDate, IsoWeekDateWithoutDay } from '../date.ts'
 import type { ShiftType } from '../models/shiftType.ts'
 import type { SearchParams } from '../models/url.ts'
 import type { User } from '../models/user.ts'
+import type { IsoCalendarDate, IsoWeekDateWithoutDay } from '../utils/date.ts'
 
 export interface ShiftRequestBase {
 	user_id: string

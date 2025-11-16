@@ -71,12 +71,12 @@ import Delete from 'vue-material-design-icons/Delete.vue'
 import Pencil from 'vue-material-design-icons/Pencil.vue'
 import DelayBox from './DelayBox.vue'
 import ShiftTypeDialog from './ShiftTypeDialog.vue'
-import { APP_ID } from '../appId.ts'
 import {
 	type ShiftType,
 
 	removeInjectionKey,
 } from '../models/shiftType.ts'
+import { APP_ID } from '../utils/appId.ts'
 
 const { shiftType } = defineProps<{ shiftType: ShiftType }>()
 

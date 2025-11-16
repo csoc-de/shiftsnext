@@ -183,24 +183,10 @@ import IsoWeekDateInput from '../components/IsoWeekDateInput.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftPill from '../components/ShiftPill.vue'
 import ShiftTypePill from '../components/ShiftTypePill.vue'
-import { APP_ID } from '../appId.ts'
-import { rotate } from '../array.ts'
-import {
-	type IsoWeekDate,
-	type IsoWeekDateWithDay,
-
-	formatDate,
-	getIsoWeekDate,
-	getZonedDateTimeForDayOfWeek,
-	localTimeZone,
-	parseIsoWeekDate,
-} from '../date.ts'
 import { postSynchronizeByGroups, postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
 import { getShiftTypes } from '../db/shiftType.ts'
 import { getUsers } from '../db/user.ts'
-import { getInitialGroups, getInitialIsShiftAdmin } from '../initialState.ts'
-import { logger } from '../logger.ts'
 import { ShiftsRowNotFoundError, ShiftTypeWrapperNotFoundError } from '../models/error.ts'
 import {
 	type HeaderRow,
@@ -232,8 +218,22 @@ import {
 	SHORT_DAYS,
 	shortDayToIsoDayNumberMap,
 } from '../models/shiftType.ts'
-import { compareShifts, compareShiftTypes } from '../sort.ts'
 import { useUserSettings } from '../stores/userSettings.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { rotate } from '../utils/array.ts'
+import {
+	type IsoWeekDate,
+	type IsoWeekDateWithDay,
+
+	formatDate,
+	getIsoWeekDate,
+	getZonedDateTimeForDayOfWeek,
+	localTimeZone,
+	parseIsoWeekDate,
+} from '../utils/date.ts'
+import { getInitialGroups, getInitialIsShiftAdmin } from '../utils/initialState.ts'
+import { logger } from '../utils/logger.ts'
+import { compareShifts, compareShiftTypes } from '../utils/sort.ts'
 
 const isoWeekDateInput = useTemplateRef('isoWeekDateInput')
 

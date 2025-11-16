@@ -48,7 +48,6 @@ import CreateShiftExchangeDialog from '../components/CreateShiftExchangeDialog.v
 import HeaderNavigation from '../components/HeaderNavigation.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftExchangeCard from '../components/ShiftExchangeCard.vue'
-import { APP_ID } from '../appId.ts'
 import {
 	deleteShiftExchange,
 	getShiftExchanges,
@@ -64,7 +63,8 @@ import {
 	removeIK,
 	updateIK,
 } from '../models/shiftExchange.ts'
-import { compare } from '../sort.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { compare } from '../utils/sort.ts'
 
 const loading = ref(true)
 

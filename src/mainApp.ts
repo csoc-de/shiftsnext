@@ -1,11 +1,11 @@
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from './App.vue'
-import { APP_ID } from './appId.ts'
 import router from './router/index.ts'
-import { initializeTailwindTheme } from './theme.ts'
+import { APP_ID } from './utils/appId.ts'
+import { initializeTailwindTheme } from './utils/theme.ts'
 
-import './date.ts' // Import for side effects: initializes localTimeZone
+import './utils/date.ts' // Import for side effects: initializes localTimeZone
 import '../css/style.scss'
 
 initializeTailwindTheme()

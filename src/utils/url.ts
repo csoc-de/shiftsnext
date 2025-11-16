@@ -1,4 +1,4 @@
-import type { SearchParams } from './models/url.ts'
+import type { SearchParams } from '../models/url.ts'
 
 import { generateUrl, getBaseUrl } from '@nextcloud/router'
 import { APP_ID } from './appId.ts'

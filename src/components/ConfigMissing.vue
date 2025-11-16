@@ -17,8 +17,8 @@
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
 import { generateUrl } from '@nextcloud/router'
-import { APP_ID } from '../appId.ts'
-import { ADMIN_SETTINGS_PATH } from '../url.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { ADMIN_SETTINGS_PATH } from '../utils/url.ts'
 
 defineProps<{
 	missingConfigs: string[]

@@ -6,8 +6,8 @@ import type {
 
 import axios, { type AxiosError } from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { handleError } from '../error.ts'
-import { GROUP_SHIFT_ADMIN_RELATIONS_PATH } from '../url.ts'
+import { handleError } from '../utils/error.ts'
+import { GROUP_SHIFT_ADMIN_RELATIONS_PATH } from '../utils/url.ts'
 
 /**
  * Get the group shift admin relations grouped by group

@@ -36,9 +36,9 @@ import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
 import NcContent from '@nextcloud/vue/components/NcContent'
 import ConfigMissing from './components/ConfigMissing.vue'
 import DelayBoxesWrapper from './components/DelayBoxesWrapper.vue'
-import { APP_ID } from './appId.ts'
-import { checkConfig } from './checkConfig.ts'
-import { getInitialIsShiftAdmin } from './initialState.ts'
+import { APP_ID } from './utils/appId.ts'
+import { checkConfig } from './utils/checkConfig.ts'
+import { getInitialIsShiftAdmin } from './utils/initialState.ts'
 
 const missingConfigs = checkConfig()
 

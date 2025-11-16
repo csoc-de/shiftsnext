@@ -89,11 +89,11 @@ import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
-import { APP_ID } from '../appId.ts'
 import { putAppConfig } from '../db/config.ts'
-import { getInitialAbsenceCalendar, getInitialApprovalType, getInitialApprovalTypes, getInitialCalendars, getInitialCommonCalendar, getInitialIgnoreAbsenceForByWeekShifts, getInitialSyncToPersonalCalendar } from '../initialState.ts'
-import { getNcSelectCalendarOption, getNcSelectExchangeApprovalTypeOption } from '../nextcloudVue.ts'
-import { showSavedToast } from '../toast.ts'
+import { APP_ID } from '../utils/appId.ts'
+import { getInitialAbsenceCalendar, getInitialApprovalType, getInitialApprovalTypes, getInitialCalendars, getInitialCommonCalendar, getInitialIgnoreAbsenceForByWeekShifts, getInitialSyncToPersonalCalendar } from '../utils/initialState.ts'
+import { getNcSelectCalendarOption, getNcSelectExchangeApprovalTypeOption } from '../utils/nextcloudVue.ts'
+import { showSavedToast } from '../utils/toast.ts'
 
 const saving = ref(false)
 

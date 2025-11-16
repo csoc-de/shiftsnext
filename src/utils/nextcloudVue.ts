@@ -1,12 +1,12 @@
-import type { Calendar, ExchangeApprovalType } from './models/config.ts'
+import type { Calendar, ExchangeApprovalType } from '../models/config.ts'
 import type {
 	NcSelectCalendarOption,
 	NcSelectExchangeApprovalTypeOption,
 	NcSelectShiftOption,
 	NcSelectUsersOption,
-} from './models/nextcloudVue.ts'
-import type { Shift } from './models/shift.ts'
-import type { User } from './models/user.ts'
+} from '../models/nextcloudVue.ts'
+import type { Shift } from '../models/shift.ts'
+import type { User } from '../models/user.ts'
 
 import { t } from '@nextcloud/l10n'
 import { APP_ID } from './appId.ts'

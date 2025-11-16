@@ -7,8 +7,8 @@ import type { ErrorResponse } from '../models/error.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
-import { handleError } from '../error.ts'
-import { CALENDAR_PATH } from '../url.ts'
+import { handleError } from '../utils/error.ts'
+import { CALENDAR_PATH } from '../utils/url.ts'
 
 /**
  * Synchronize the calendar by groups
