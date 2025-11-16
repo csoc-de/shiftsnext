@@ -30,9 +30,8 @@
 						required />
 				</InputGroup>
 				<InputGroup>
-					<label for="shift-type-color">{{ t(APP_ID, "Color") }}</label>
+					<span class="cursor-pointer" @click="showColorPicker = true">{{ t(APP_ID, "Color") }}</span>
 					<NcColorPicker
-						id="shift-type-color"
 						v-slot="{ attrs }"
 						v-model="color"
 						v-model:shown="showColorPicker"
@@ -40,7 +39,7 @@
 						<div
 							v-bind="attrs"
 							:style="{ backgroundColor: color }"
-							class="h-nc-clickable-area !w-full rounded-nc-element" />
+							class="h-nc-clickable-area !w-full rounded-nc-element cursor-pointer" />
 					</NcColorPicker>
 				</InputGroup>
 				<InputGroup>
