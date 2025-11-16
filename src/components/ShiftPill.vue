@@ -10,12 +10,13 @@
 			'line-through': deleting,
 			'pointer-events-none': disabled,
 		}"
-		@click.stop="onClick">
+		@click.stop="_isShiftAdmin && onClick()">
 		<div class="truncate leading-[1.1]">
 			{{ shift.shift_type.group.display_name }}<br>
 			{{ shift.shift_type.name }}
 		</div>
 		<NcButton
+			v-if="_isShiftAdmin"
 			:disabled="disabled"
 			:aria-label="t(APP_ID, 'Delete shift')"
 			variant="tertiary-no-background"
@@ -52,11 +53,14 @@ import {
 } from '../models/shiftsTable.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getContrastColor } from '../utils/color.ts'
+import { isShiftAdmin } from '../utils/groupShiftAdmin.ts'
 
 const { shift, columnIndex } = defineProps<{
 	shift: Shift
 	columnIndex: number
 }>()
+
+const _isShiftAdmin = isShiftAdmin(shift.shift_type.group.id)
 
 const multiStepAction = inject(multiStepActionIK)!
 const setMultiStepAction = inject(setMultiStepActionIK)!

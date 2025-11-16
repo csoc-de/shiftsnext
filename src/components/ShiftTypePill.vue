@@ -9,7 +9,7 @@
 			underline: isSelected,
 			'pointer-events-none': multiStepAction.type,
 		}"
-		@click.stop="onClick">
+		@click.stop="_isShiftAdmin && onClick()">
 		<div class="truncate leading-[1.1]">
 			{{ shiftTypeWrapper.shiftType.group.display_name }}<br>
 			{{ shiftTypeWrapper.shiftType.name }}
@@ -34,11 +34,14 @@ import {
 	setMultiStepActionIK,
 } from '../models/shiftsTable.ts'
 import { getContrastColor } from '../utils/color.ts'
+import { isShiftAdmin } from '../utils/groupShiftAdmin.ts'
 
 const { shiftTypeWrapper, columnIndex } = defineProps<{
 	shiftTypeWrapper: ShiftTypeWrapper
 	columnIndex: number
 }>()
+
+const _isShiftAdmin = isShiftAdmin(shiftTypeWrapper.shiftType.group.id)
 
 const multiStepAction = inject(multiStepActionIK)!
 const setTableAction = inject(setMultiStepActionIK)!
