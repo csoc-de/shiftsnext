@@ -44,7 +44,7 @@
 				</InputGroup>
 				<InputGroup>
 					<label for="shift-type-active">{{ t(APP_ID, "Active") }}</label>
-					<NcCheckboxRadioSwitch id="shift-type-active" v-model="active" />
+					<NcCheckboxRadioSwitch id="shift-type-active" v-model="active" :aria-label="t(APP_ID, 'Active')" />
 				</InputGroup>
 				<InputGroup class="col-span-2 sm:col-span-6">
 					<label for="shift-type-description">{{
