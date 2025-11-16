@@ -29,7 +29,7 @@ const settingsUrl = generateUrl(ADMIN_SETTINGS_PATH)
 const configMessage = t(
 	APP_ID,
 	'The following configuration settings need to be set in the {linkStart}administration settings{linkEnd} before you can start using the app:',
-	{ linkStart: `<a href="${settingsUrl}" class="underline">`, linkEnd: '</a>' },
+	{ linkStart: `<a href="${settingsUrl}" class="underline text-[inherit]">`, linkEnd: '</a>' },
 	{ escape: false },
 )
 
@@ -43,7 +43,7 @@ const wipMessage = t(
 const howToMessage = t(
 	APP_ID,
 	'{linkStart}Click here{linkEnd} to make yourself familiar with the app.',
-	{ linkStart: '<a href="https://github.com/csoc-de/shiftsnext/blob/main/README.md" target="_blank" class="underline">', linkEnd: '</a>' },
+	{ linkStart: '<a href="https://github.com/csoc-de/shiftsnext/blob/main/README.md" target="_blank" class="underline text-[inherit]">', linkEnd: '</a>' },
 	{ escape: false, sanitize: false },
 )
 </script>
