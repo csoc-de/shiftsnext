@@ -4,28 +4,41 @@
 			backgroundColor: shift.shift_type.color,
 			color: contrastColor,
 		}"
-		class="flex items-center justify-between gap-2 rounded-nc-container p-2"
+		class="flex items-center justify-between gap-1 rounded-nc-container p-2"
 		:class="{
 			underline: isSelected,
 			'line-through': deleting,
-			'pointer-events-none': disabled,
-		}"
-		@click.stop="_isShiftAdmin && onClick()">
+		}">
 		<div class="truncate leading-[1.1]">
 			{{ shift.shift_type.group.display_name }}<br>
 			{{ shift.shift_type.name }}
 		</div>
-		<NcButton
+		<div
 			v-if="_isShiftAdmin"
-			:disabled="disabled"
-			:aria-label="t(APP_ID, 'Delete shift')"
-			variant="tertiary-no-background"
-			:style="{ color: contrastColor }"
-			@click.stop="startDeletion">
-			<template #icon>
-				<Delete :size="24" />
-			</template>
-		</NcButton>
+			class="flex gap-1">
+			<NcButton
+				:disabled="disabled"
+				:aria-label="t(APP_ID, 'Move shift')"
+				variant="tertiary-no-background"
+				class="border"
+				:style="{ color: contrastColor, borderColor: contrastColor }"
+				@click.stop="onMoveButtonClick">
+				<template #icon>
+					<ArrowAll :size="24" />
+				</template>
+			</NcButton>
+			<NcButton
+				:disabled="disabled"
+				:aria-label="t(APP_ID, 'Delete shift')"
+				variant="tertiary-no-background"
+				class="border"
+				:style="{ color: contrastColor, borderColor: contrastColor }"
+				@click.stop="startDeletion">
+				<template #icon>
+					<Delete :size="24" />
+				</template>
+			</NcButton>
+		</div>
 		<DelayBox
 			v-if="delayBoxVisible"
 			@finished="continueDeletion"
@@ -39,6 +52,8 @@ import type { Shift } from '../models/shift.ts'
 import { t } from '@nextcloud/l10n'
 import { computed, inject, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
+// @ts-expect-error package has no types
+import ArrowAll from 'vue-material-design-icons/ArrowAll.vue'
 // @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
 import DelayBox from './DelayBox.vue'
@@ -79,7 +94,7 @@ const contrastColor = computed(() => getContrastColor(shift.shift_type.color))
 /**
  * Handle click event
  */
-function onClick() {
+function onMoveButtonClick() {
 	setMultiStepAction({ type: 'motion', columnIndex, shift })
 }
 
