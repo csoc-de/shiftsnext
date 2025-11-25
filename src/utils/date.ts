@@ -1,6 +1,5 @@
 import { getCanonicalLocale } from '@nextcloud/l10n'
 import { Temporal } from 'temporal-polyfill'
-import { compare } from './sort.ts'
 
 export const locale = getCanonicalLocale()
 
@@ -106,8 +105,6 @@ export function getZonedDateTimeForDayOfWeek(
 	return base.add(duration)
 }
 
-const dateTimeFormatters: Record<string, Intl.DateTimeFormat> = {}
-
 /**
  * Formats `date` using the specified `options`
  *
@@ -161,15 +158,7 @@ export function formatRange(
  */
 export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
 	options.timeZone ??= localTimeZone
-	const optionsAsArray = Object.entries(options)
-	optionsAsArray.sort(([key1], [key2]) => compare(key1, key2))
-
-	const key = JSON.stringify(optionsAsArray)
-
-	if (!dateTimeFormatters[key]) {
-		dateTimeFormatters[key] = new Intl.DateTimeFormat(locale, options)
-	}
-	return dateTimeFormatters[key]
+	return new Intl.DateTimeFormat(locale, options)
 }
 
 /**
