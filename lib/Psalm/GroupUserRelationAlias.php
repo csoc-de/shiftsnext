@@ -4,9 +4,16 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Psalm;
 
+use OCA\ShiftsNext\Serializable\SerializableGroup;
+use OCA\ShiftsNext\Serializable\SerializableUser;
+
 /**
- * @psalm-type Row = array{gid: string, uid: string}
- * @psalm-type Relation = array{group_id: string, user_id: string}
+ * @psalm-type GroupUserRow = array{gid: string, uid: string}
+ *
+ * @psalm-type GroupUserRelationsByGroup = array{
+ *     group: SerializableGroup,
+ *     users: SerializableUser[],
+ * }
  */
 final class GroupUserRelationAlias {
 }

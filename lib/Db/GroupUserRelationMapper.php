@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Db;
 
+use OCA\ShiftsNext\Exception\GroupUserRelationNotFoundException;
 use OCA\ShiftsNext\Psalm\GroupUserRelationAlias;
+use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
 use OCP\IDBConnection;
 
 /**
- * @psalm-suppress MissingTemplateParam
- * @psalm-suppress UnusedClass Currently unused
+ * @psalm-import-type GroupUserRow from GroupUserRelationAlias
  *
- * @psalm-import-type Row from GroupUserRelationAlias
- * @psalm-import-type Relation from GroupUserRelationAlias
+ * @extends QBMapper<GroupUserRelation>
  */
 final class GroupUserRelationMapper extends QBMapper {
 	public const string TABLE_NAME = 'group_user';
@@ -26,10 +26,10 @@ final class GroupUserRelationMapper extends QBMapper {
 	/**
 	 * Multiple parameters are combined with a logical `AND`
 	 *
-	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
-	 * @param null|string[] $userIds Adds `WHERE user_id IN($userIds)`
+	 * @param null|string[] $groupIds Adds `WHERE gid IN($groupIds)`
+	 * @param null|string[] $userIds Adds `WHERE uid IN($userIds)`
 	 *
-	 * @return Relation[]
+	 * @return GroupUserRelation[]
 	 */
 	public function findAll(
 		?array $groupIds = null,
@@ -51,20 +51,34 @@ final class GroupUserRelationMapper extends QBMapper {
 			);
 		}
 
-		$result = $qb->executeQuery();
+		return $this->findEntities($qb);
+	}
+
+	/**
+	 * @param GroupUserRow|GroupUserRelation $groupUserRelation
+	 *
+	 * @throws GroupUserRelationNotFoundException if `$groupUserRelation`
+	 *                                            is an array and no GroupUserRelation with the passed IDs exists
+	 */
+	public function findById(array|GroupUserRelation $groupUserRelation): GroupUserRelation {
+		if ($groupUserRelation instanceof GroupUserRelation) {
+			return $groupUserRelation;
+		}
+		$qb = $this->db->getQueryBuilder();
+
+		$qb->select('*')
+			->from($this->getTableName())
+			->andWhere(
+				$qb->expr()->eq('gid', $qb->createNamedParameter($groupUserRelation['gid'], IQueryBuilder::PARAM_STR)),
+			)
+			->andWhere(
+				$qb->expr()->eq('uid', $qb->createNamedParameter($groupUserRelation['uid'], IQueryBuilder::PARAM_STR)),
+			);
 
 		try {
-			/** @var Relation[] */
-			$entities = [];
-			while (/** @var Row */ $row = $result->fetch()) {
-				$entities[] = [
-					'group_id' => $row['gid'],
-					'user_id' => $row['uid'],
-				];
-			}
-			return $entities;
-		} finally {
-			$result->closeCursor();
+			return $this->findEntity($qb);
+		} catch (DoesNotExistException $e) {
+			throw new GroupUserRelationNotFoundException($e->getMessage());
 		}
 	}
 }
