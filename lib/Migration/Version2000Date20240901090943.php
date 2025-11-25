@@ -38,7 +38,15 @@ final class Version2000Date20240901090943 extends SimpleMigrationStep {
 			$table->addColumn('description', Types::TEXT);
 			$table->addColumn('color', Types::STRING, ['length' => 64]);
 			$table->addColumn('active', Types::BOOLEAN, ['default' => false, 'notnull' => false]);
+			/**
+			 * @psalm-suppress DeprecatedConstant
+			 * @disregard P1007
+			 */
 			$table->addColumn('repetition', Types::JSON);
+			/**
+			 * @psalm-suppress DeprecatedConstant
+			 * @disregard P1007
+			 */
 			$table->addColumn('caldav', Types::JSON);
 			$table->setPrimaryKey(['id']);
 		}
