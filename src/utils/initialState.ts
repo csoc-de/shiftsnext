@@ -1,6 +1,7 @@
 import type { Calendar, ExchangeApprovalType } from '../models/config.ts'
 import type { Group } from '../models/group.ts'
 import type { GroupShiftAdminRelationsByGroup } from '../models/groupShiftAdminRelation.ts'
+import type { GroupUserRelationsByGroup } from '../models/groupUserRelation.ts'
 import type { User } from '../models/user.ts'
 
 import { loadState } from '@nextcloud/initial-state'
@@ -55,6 +56,17 @@ export function getInitialGroupShiftAdminRelationsByGroup(): GroupShiftAdminRela
 	return structuredClone(loadState<GroupShiftAdminRelationsByGroup[]>(
 		APP_ID,
 		'group_shift_admin_relations_by_group',
+	))
+}
+
+/**
+ * Returns all group to user relations grouped by group that existed when the
+ * browser page was initially loaded
+ */
+export function getInitialGroupUserRelationsByGroup(): GroupUserRelationsByGroup[] {
+	return structuredClone(loadState<GroupUserRelationsByGroup[]>(
+		APP_ID,
+		'group_user_relations_by_group',
 	))
 }
 

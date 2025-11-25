@@ -9,6 +9,7 @@ use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\ConfigService;
 use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
+use OCA\ShiftsNext\Service\GroupUserRelationService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -42,6 +43,7 @@ final class PageController extends Controller {
 		ConfigService $configService,
 		GroupService $groupService,
 		GroupShiftAdminRelationService $groupShiftAdminRelationService,
+		GroupUserRelationService $groupUserRelationService,
 		CalendarService $calendarService,
 	): TemplateResponse {
 		$groups = $groupService->getAllSerializable();
@@ -92,6 +94,10 @@ final class PageController extends Controller {
 		$initialState->provideInitialState(
 			'group_shift_admin_relations_by_group',
 			$groupShiftAdminRelationService->getAllGroupedByGroup(),
+		);
+		$initialState->provideInitialState(
+			'group_user_relations_by_group',
+			$groupUserRelationService->getAllGroupedByGroup(),
 		);
 		return new TemplateResponse(Application::APP_ID, 'mainApp');
 	}
