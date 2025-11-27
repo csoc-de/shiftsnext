@@ -6,7 +6,7 @@
 		}"
 		class="flex items-center justify-between gap-1 rounded-nc-container p-2"
 		:class="{
-			underline: isSelected,
+			'opacity-40': !isSelected && disabled,
 		}">
 		<div
 			class="truncate leading-[1.1]">
