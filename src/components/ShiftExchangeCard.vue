@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="rounded-nc-container border border-solid border-nc-maxcontrast hover:bg-nc-hover"
-		:class="{ 'line-through': delayBoxVisible }">
+		:class="{ 'line-through': deleting }">
 		<div
 			class="flex items-center justify-center mx-2 h-nc-clickable-area relative">
 			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
@@ -33,7 +33,10 @@
 				<NcActionButton
 					v-if="renderDeleteButton"
 					close-after-click
-					@click="delayBoxVisible = true">
+					@click="() => {
+						deleting = true
+						delayBoxVisible = true
+					}">
 					<template #icon>
 						<Delete :size="20" />
 					</template>
@@ -115,7 +118,10 @@
 		<DelayBox
 			v-if="delayBoxVisible"
 			@finished="_remove"
-			@canceled="delayBoxVisible = false" />
+			@canceled="() => {
+				deleting = false
+				delayBoxVisible = false
+			}" />
 
 		<EditShiftExchangeDialog
 			v-if="editDialogMounted"
@@ -171,6 +177,9 @@ const remove = inject(removeIK)!
 
 const delayBoxVisible = ref(false)
 const editDialogMounted = ref(false)
+
+const deleting = ref(false)
+
 const editor = ref<ExchangeEditor>()
 
 const userAId = shiftExchange.user_a_approval.user?.id
@@ -209,6 +218,10 @@ const renderActions = renderEditButton || renderEditAsAdminButton || renderDelet
  */
 async function _remove(): Promise<void> {
 	delayBoxVisible.value = false
-	await remove(shiftExchange.id)
+	try {
+		await remove(shiftExchange.id)
+	} finally {
+		deleting.value = false
+	}
 }
 </script>
