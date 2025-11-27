@@ -2,7 +2,7 @@
 	<div
 		:style="{ borderColor: shiftType.color }"
 		class="rounded-nc-container border-8 border-solid p-4 pt-2 text-center hover:bg-nc-hover"
-		:class="{ 'line-through': deleting }">
+		:class="{ 'outline outline-2 outline-offset-2 outline-nc-error': deleting }">
 		<div class="flex justify-between items-center">
 			<NcUserStatusIcon :status="shiftType.active ? 'online' : 'dnd'" />
 
