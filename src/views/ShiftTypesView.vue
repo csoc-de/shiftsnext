@@ -7,7 +7,7 @@
 		</template>
 	</HeaderNavigation>
 	<PaddedContainer v-if="!loading">
-		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6">
+		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 my-1">
 			<ShiftTypeCard
 				v-for="shiftType in shiftTypes"
 				:key="shiftType.id"
