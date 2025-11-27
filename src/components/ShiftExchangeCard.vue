@@ -1,7 +1,7 @@
 <template>
 	<div
 		class="rounded-nc-container border border-solid border-nc-maxcontrast hover:bg-nc-hover"
-		:class="{ 'line-through': deleting }">
+		:class="{ 'outline outline-2 outline-offset-2 outline-nc-error': deleting }">
 		<div
 			class="flex items-center justify-center mx-2 h-nc-clickable-area relative">
 			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
