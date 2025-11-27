@@ -69,10 +69,13 @@ export default {
 			'nc-small': 'var(--font-size-small)',
 		},
 		lineHeight: {},
+		outlineColor: ({ theme }) => theme('borderColor'),
 		placeholderColor: {
 			'nc-light': 'var(--color-placeholder-light)', // Color for input placeholders
 			'nc-dark': 'var(--color-placeholder-dark)', // Darker version of --color-placeholder-light
 		},
+		ringColor: ({ theme }) => theme('borderColor'),
+		ringOffsetColor: ({ theme }) => theme('borderColor'),
 		spacing: {
 			0: 'calc(0 * var(--default-grid-baseline))',
 			0.5: 'calc(0.5 * var(--default-grid-baseline))',
