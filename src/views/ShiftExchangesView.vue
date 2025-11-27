@@ -13,7 +13,7 @@
 					<h3 class="mt-0 mb-5 border-b-4 border-solid border-nc-warning pb-4 text-center">
 						{{ t(APP_ID, "Open") }}
 					</h3>
-					<div class="flex flex-col gap-4">
+					<div class="flex flex-col gap-4 my-1">
 						<ShiftExchangeCard
 							v-for="shiftExchange in pendingShiftExchanges"
 							:key="shiftExchange.id"
@@ -24,7 +24,7 @@
 					<h3 class="mt-0 mb-5 border-b-4 border-solid border-nc-success pb-4 text-center">
 						{{ t(APP_ID, "Done") }}
 					</h3>
-					<div class="flex flex-col gap-4">
+					<div class="flex flex-col gap-4 my-1">
 						<ShiftExchangeCard
 							v-for="shiftExchange in doneShiftExchanges"
 							:key="shiftExchange.id"
