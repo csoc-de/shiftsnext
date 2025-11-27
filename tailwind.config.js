@@ -10,7 +10,8 @@ export default {
 			current: 'currentColor',
 			'nc-favorite': 'var(--color-favorite)', // Color to mark favorites, can be used to color e.g. a star icon for favorites
 		},
-		backgroundColor: {
+		backgroundColor: ({ theme }) => ({
+			...theme('colors'),
 			// Primary
 			// 'nc-primary': 'var(--color-primary)', // Primary color configured by user
 			// 'nc-primary-hover': 'var(--color-primary-hover)', // Variant of --color-primary for hover effects
@@ -41,8 +42,9 @@ export default {
 			'nc-success-hover': 'var(--color-success-hover)', // Background color for hover effects of --color-success
 			'nc-info': 'var(--color-info)', // Color to show info state, this should not be used for text but for element backgrounds
 			'nc-info-hover': 'var(--color-info-hover)', // Background color for hover effects of --color-info
-		},
-		borderColor: {
+		}),
+		borderColor: ({ theme }) => ({
+			...theme('colors'),
 			// General
 			nc: 'var(--color-border)', // Default element border color
 			'nc-dark': 'var(--color-border-dark)', // Dark variant of --color-border for dark themes
@@ -53,7 +55,7 @@ export default {
 			'nc-warning': 'var(--color-border-warning)',
 			'nc-success': 'var(--color-border-success)', // Border color for elements which have a success state like inputs which have been saved
 			'nc-info': 'var(--color-border-info)',
-		},
+		}),
 		borderRadius: {
 			'nc-small': 'var(--border-radius-small)', // Border radius used for smaller elements
 			'nc-element': 'var(--border-radius-element)', // Border radius of interactive elements such as buttons, input, navigation and list items.
@@ -61,19 +63,21 @@ export default {
 			'nc-container-large': 'var(--border-radius-container-large)', // For larger containers like body or modals.
 			'nc-pill': 'var(--border-radius-pill)',
 		},
-		boxShadowColor: {
+		boxShadowColor: ({ theme }) => ({
+			...theme('colors'),
 			nc: 'var(--color-box-shadow)', // Color for box shadow effects
-		},
+		}),
 		fontSize: {
 			nc: 'var(--default-font-size)', // Font size for normal text
 			'nc-small': 'var(--font-size-small)',
 		},
 		lineHeight: {},
 		outlineColor: ({ theme }) => theme('borderColor'),
-		placeholderColor: {
+		placeholderColor: ({ theme }) => ({
+			...theme('colors'),
 			'nc-light': 'var(--color-placeholder-light)', // Color for input placeholders
 			'nc-dark': 'var(--color-placeholder-dark)', // Darker version of --color-placeholder-light
-		},
+		}),
 		ringColor: ({ theme }) => theme('borderColor'),
 		ringOffsetColor: ({ theme }) => theme('borderColor'),
 		spacing: {
@@ -117,7 +121,8 @@ export default {
 			'nc-clickable-area-small': 'var(--clickable-area-small)', // Smallest possible size of interactive elements, used by tertiary actions like filter chips
 			'nc-grid-baseline': 'var(--default-grid-baseline)', // Foundation of all spacing sizes used on Nextcloud which are multiples of the baseline size
 		},
-		textColor: {
+		textColor: ({ theme }) => ({
+			...theme('colors'),
 			// Note: the values of the text color variables cannot be configured by the user directly,
 			// because they are automatically set to high contrast colors relative to their background counterparts by Nextcloud itself.
 			// For most of the text color variables, this means either #FFFFFF or #000000.
@@ -144,7 +149,7 @@ export default {
 			'nc-warning': 'var(--color-warning-text)', // Text color on elements using --color-warning as background
 			'nc-success': 'var(--color-success-text)', // Text color on elements using --color-success as background
 			'nc-info': 'var(--color-info-text)', // Text color on elements using --color-info as background
-		},
+		}),
 		transitionDuration: {
 			'nc-quick': 'var(--animation-quick)', // Animation time for snappy CSS transitions
 			'nc-slow': 'var(--animation-slow)', // Animation time for more complex transitions
