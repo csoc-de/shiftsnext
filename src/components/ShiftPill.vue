@@ -7,7 +7,7 @@
 		class="flex items-center justify-between gap-1 rounded-nc-container p-2"
 		:class="{
 			'opacity-40': !isSelected && disabled,
-			'line-through': deleting,
+			'outline outline-2 outline-offset-2 outline-nc-error': deleting,
 		}">
 		<div class="truncate leading-[1.1]">
 			{{ shift.shift_type.group.display_name }}<br>
