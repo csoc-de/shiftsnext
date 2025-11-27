@@ -72,11 +72,8 @@
 						:key="columnIndex"
 						class="border border-solid border-nc-maxcontrast p-2 text-center"
 						:class="{
-							[weekCellClasses]: columnIndexOfWeek === columnIndex,
-							[todayCellClasses]: columnIndexOfToday === columnIndex,
-							[actionCellClasses]:
-								multiStepAction.type
-								&& multiStepAction.columnIndex === columnIndex,
+							['bg-nc-primary-element text-nc-primary-element']: columnIndexOfWeek === columnIndex,
+							['bg-nc-primary-element-light text-nc-primary-element-light']: columnIndexOfToday === columnIndex,
 						}">
 						<template v-if="type === 'string'">
 							{{ data }}
@@ -97,19 +94,14 @@
 					<td
 						v-for="({ type, data }, columnIndex) in shiftTypesRow"
 						:key="columnIndex"
-						class="border border-solid border-nc-maxcontrast h-full"
+						class="border border-solid border-nc-maxcontrast p-2 h-full"
 						:class="{
-							[weekCellClasses]: columnIndexOfWeek === columnIndex,
-							[todayCellClasses]: columnIndexOfToday === columnIndex,
-							[actionCellClasses]:
-								multiStepAction.type
-								&& multiStepAction.columnIndex === columnIndex,
-							'p-2 text-center': type === 'string',
+							'text-center': type === 'string',
 						}">
 						<template v-if="type === 'string'">
 							{{ data }}
 						</template>
-						<div v-else class="flex size-full flex-col gap-1 p-2">
+						<div v-else class="flex size-full flex-col gap-2">
 							<template v-for="(shiftTypeWrapper, i) in data" :key="i">
 								<ShiftTypePill
 									v-if="
@@ -128,27 +120,21 @@
 					<td
 						v-for="({ type, data }, columnIndex) in shiftsRow"
 						:key="columnIndex"
-						class="border border-solid border-nc-maxcontrast h-full"
+						class="border border-solid border-nc-maxcontrast p-2 h-full"
 						:class="{
-							[weekCellClasses]: columnIndexOfWeek === columnIndex,
-							[todayCellClasses]: columnIndexOfToday === columnIndex,
-							[actionCellClasses]:
-								multiStepAction.type
-								&& multiStepAction.columnIndex === columnIndex,
-							'p-2 text-center': type === 'user',
-						}">
+							'text-center': type === 'user',
+							'bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'disabled',
+						}"
+						@click="
+							shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'enabled'
+								&& onShiftCellClick(shiftsRow[0].data.id)
+						">
 						<template v-if="type === 'user'">
 							{{ data.display_name }}
 						</template>
 						<div
 							v-else
-							class="flex size-full flex-col gap-1 p-2"
-							:class="{
-								'pointer-events-none':
-									multiStepAction.type
-									&& multiStepAction.columnIndex !== columnIndex,
-							}"
-							@click="onShiftCellClick(shiftsRow[0].data.id)">
+							class="flex size-full flex-col gap-2">
 							<ShiftPill
 								v-for="(shift, i) in data"
 								:key="i"
@@ -170,7 +156,7 @@ import { t } from '@nextcloud/l10n'
 import { onKeyStroke, watchImmediate } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { Temporal } from 'temporal-polyfill'
-import { provide, ref, useTemplateRef } from 'vue'
+import { computed, provide, ref, useTemplateRef } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 // @ts-expect-error package has no types
@@ -191,6 +177,7 @@ import { ShiftsRowNotFoundError, ShiftTypeWrapperNotFoundError } from '../models
 import {
 	type HeaderRow,
 	type MultiStepAction,
+	type ShiftCellStateConfig,
 	type ShiftsDataCell,
 	type ShiftsRow,
 	type ShiftTypesDataCell,
@@ -231,6 +218,7 @@ import {
 	localTimeZone,
 	parseIsoWeekDate,
 } from '../utils/date.ts'
+import { isMember } from '../utils/groupUserRelation.ts'
 import { getInitialGroups, getInitialIsShiftAdmin } from '../utils/initialState.ts'
 import { logger } from '../utils/logger.ts'
 import { compareShifts, compareShiftTypes } from '../utils/sort.ts'
@@ -277,6 +265,35 @@ let shiftTypes: ShiftType[] = []
 const headerRow = ref<HeaderRow>()
 const shiftTypesRow = ref<ShiftTypesRow>()
 const shiftsRows = ref<ShiftsRow[]>([])
+
+const multiStepActionGroupId = computed(() => {
+	if (!multiStepAction.value.type) {
+		return undefined
+	}
+	return multiStepAction.value.type === 'creation'
+		? multiStepAction.value.shiftTypeWrapper.shiftType.group.id
+		: multiStepAction.value.shift.shift_type.group.id
+})
+
+const shiftCellStatesMulti = computed<ShiftCellStateConfig[][]>(() => {
+	return shiftsRows.value.map((columns) => {
+		return columns.map((column, columnIndex) => {
+			if (column.type === 'user') {
+				return 'neutral' satisfies ShiftCellStateConfig
+			}
+			const isColumnFocused = multiStepAction.value.columnIndex === columnIndex
+			const actionGroupId = multiStepActionGroupId.value
+			const isActionPending = multiStepAction.value.type !== undefined
+			let isValidDropTarget = false
+			if (isColumnFocused && actionGroupId !== undefined) {
+				isValidDropTarget = isMember(actionGroupId, columns[0].data.id)
+			}
+			return (
+				!isActionPending || isValidDropTarget ? 'enabled' : 'disabled'
+			) satisfies ShiftCellStateConfig
+		})
+	})
+})
 
 watchImmediate([isoWeekDate, selectedGroups], initialize)
 
@@ -839,10 +856,6 @@ function resetMultiStepAction(): void {
 provide(multiStepActionIK, multiStepAction)
 provide(setMultiStepActionIK, setMultiStepAction)
 provide(resetMultiStepActionIK, resetMultiStepAction)
-
-const weekCellClasses = 'bg-nc-dark'
-const todayCellClasses = 'bg-nc-primary-element-light text-nc-primary-element-light'
-const actionCellClasses = '!bg-nc-primary-element-hover !text-nc-primary-element'
 
 /**
  * Syncs the calendar by groups

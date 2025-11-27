@@ -76,6 +76,8 @@ export interface ShiftsDataCell extends BaseCell {
 	data: Shift[]
 }
 
+export type ShiftCellStateConfig = 'neutral' | 'disabled' | 'enabled'
+
 // Type aliases for cell tuples, each alias represents the cell types of a specific row type
 
 /** Represents the cell types of the header row */
