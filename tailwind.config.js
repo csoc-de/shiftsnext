@@ -8,6 +8,7 @@ export default {
 		colors: {
 			transparent: 'transparent',
 			current: 'currentColor',
+			inherit: 'inherit',
 			'nc-favorite': 'var(--color-favorite)', // Color to mark favorites, can be used to color e.g. a star icon for favorites
 		},
 		backgroundColor: ({ theme }) => ({
