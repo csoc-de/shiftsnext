@@ -4,7 +4,9 @@
  *
  * @param referenceColor Color in HEX format
  *
- * @return Either `"#EBEBEB"` if `referenceColor` is dark, or `"#222222"` if `referenceColor` is light
+ * @return Either `"#EBEBEB"` if `referenceColor` is dark, or `"#222222"` if `referenceColor` is light.
+ *
+ * These colors correspond to the Nextcloud `--color-main-text` CSS variable for dark and light mode
  *
  * @author ChatGPT
  */
