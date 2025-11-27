@@ -22,10 +22,10 @@ export default {
 			'nc-primary-element-light-hover': 'var(--color-primary-element-light-hover)', // Variant of --color-primary-element-light for hover effects
 
 			// Background
-			'nc-plain': 'var(--color-background-plain)', // The background color of the body element
+			'nc-plain': 'var(--color-background-plain)', // The background color of the body element // Note: can be configured by the user
 
 			// General
-			'nc-main': 'var(--color-main-background)', // Main background color
+			'nc-main': 'var(--color-main-background)', // Main background color // Note: is always #FFFFFF in light mode and #171717 in dark mode
 			'nc-hover': 'var(--color-background-hover)', // Background color for hover effects
 			'nc-dark': 'var(--color-background-dark)', // Can be used e.g. to colorize selected table rows
 			'nc-darker': 'var(--color-background-darker)', // Should only be used for elements, not as a text background! Otherwise it will not work for accessibility.
@@ -115,6 +115,10 @@ export default {
 			'nc-grid-baseline': 'var(--default-grid-baseline)', // Foundation of all spacing sizes used on Nextcloud which are multiples of the baseline size
 		},
 		textColor: {
+			// Note: the values of the text color variables cannot be configured by the user directly,
+			// because they are automatically set to high contrast colors relative to their background counterparts by Nextcloud itself.
+			// For most of the text color variables, this means either #FFFFFF or #000000.
+
 			// Primary
 			// 'nc-primary': 'var(--color-primary-text)', // Text color to be used on --color-primary
 			'nc-primary-element': 'var(--color-primary-element-text)', // Text color to be used on --color-primary-element
@@ -125,7 +129,7 @@ export default {
 			'nc-plain': 'var(--color-background-plain-text)', // Text color to be used directly on the background (e.g. header menu)
 
 			// General
-			'nc-main': 'var(--color-main-text)', // Main text color
+			'nc-main': 'var(--color-main-text)', // Main text color // Note: is always #222222 in light mode and #EBEBEB in dark mode
 			'nc-maxcontrast': 'var(--color-text-maxcontrast)', // Brighter text color that still fulfills accessibility requirements
 
 			// State
