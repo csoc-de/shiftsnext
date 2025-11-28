@@ -703,6 +703,9 @@ async function onShiftCreationAttempt(userId: string): Promise<void | Shift> {
 		return
 	}
 	const shiftTypeWrapper = multiStepAction.value.shiftTypeWrapper
+	if (shiftTypeWrapper.amount < 1) {
+		throw new Error(`Attempted to create shift from shift type ${shiftTypeWrapper.shiftType.name} but amount is already 0`)
+	}
 	const columnIndex = multiStepAction.value.columnIndex
 	const column = headerRow.value?.[columnIndex]
 	if (!column?.type || column?.type === 'string') {
