@@ -58,94 +58,98 @@
 			</div>
 		</template>
 	</HeaderNavigation>
-	<PaddedContainer v-if="!loading">
-		<table class="h-fit w-full border-collapse">
-			<caption>
-				<h3 class="m-0">
-					{{ isoWeekDate }}
-				</h3>
-			</caption>
-			<thead>
-				<tr class="h-12">
-					<th
-						v-for="({ type, data }, columnIndex) in headerRow"
-						:key="columnIndex"
-						class="border border-solid border-nc-maxcontrast p-2 text-center"
-						:class="{
-							['bg-nc-primary-element text-nc-primary-element']: columnIndexOfWeek === columnIndex,
-							['bg-nc-primary-element-light text-nc-primary-element-light']: columnIndexOfToday === columnIndex,
-						}">
-						<template v-if="type === 'string'">
-							{{ data }}
-						</template>
-						<template v-else-if="type === 'week'">
-							{{
-								t(APP_ID, "Weekly shifts")
-							}}
-						</template>
-						<template v-else>
-							{{ formatDate(data, dayCellFormatOptions) }}
-						</template>
-					</th>
-				</tr>
-			</thead>
-			<tbody class="h-full">
-				<tr class="h-12">
-					<td
-						v-for="({ type, data }, columnIndex) in shiftTypesRow"
-						:key="columnIndex"
-						class="border border-solid border-nc-maxcontrast p-2 h-full"
-						:class="{
-							'text-center': type === 'string',
-						}">
-						<template v-if="type === 'string'">
-							{{ data }}
-						</template>
-						<div v-else class="flex size-full flex-col gap-2">
-							<template v-for="(shiftTypeWrapper, i) in data" :key="i">
-								<ShiftTypePill
-									v-if="
-										shiftTypeWrapper.amount > 0
-											&& shiftTypeWrapper.shiftType.active
-									"
-									:shift-type-wrapper="shiftTypeWrapper"
-									:column-index="columnIndex" />
+	<PaddedContainer v-if="!loading" class="!overflow-hidden flex flex-col">
+		<h3 class="m-0">
+			{{ isoWeekDate }}
+		</h3>
+		<div class="overflow-auto flex-1">
+			<table class="h-fit w-full border-spacing-0">
+				<thead class="sticky z-[2] top-0 bg-nc-main">
+					<tr class="h-12">
+						<th
+							v-for="({ type, data }, columnIndex) in headerRow"
+							:key="columnIndex"
+							class="border border-solid border-nc-maxcontrast p-2 text-center"
+							:class="{
+								['bg-nc-primary-element text-nc-primary-element']: columnIndexOfWeek === columnIndex,
+								['bg-nc-primary-element-light text-nc-primary-element-light']: columnIndexOfToday === columnIndex,
+								'border-l-0': columnIndex,
+								'sticky left-0 z-[1] bg-nc-main': !columnIndex,
+							}">
+							<template v-if="type === 'string'">
+								{{ data }}
 							</template>
-						</div>
-					</td>
-				</tr>
-				<tr
-					v-for="(shiftsRow, rowIndex) in shiftsRows"
-					:key="rowIndex"
-					class="h-12">
-					<td
-						v-for="({ type, data }, columnIndex) in shiftsRow"
-						:key="columnIndex"
-						class="border border-solid border-nc-maxcontrast p-2 h-full"
-						:class="{
-							'text-center': type === 'user',
-							'bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'disabled',
-						}"
-						@click="
-							shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'enabled'
-								&& onShiftCellClick(shiftsRow[0].data.id)
-						">
-						<template v-if="type === 'user'">
-							{{ data.display_name }}
-						</template>
-						<div
-							v-else
-							class="flex size-full flex-col gap-2">
-							<ShiftPill
-								v-for="(shift, i) in data"
-								:key="i"
-								:shift="shift"
-								:column-index="columnIndex" />
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+							<template v-else-if="type === 'week'">
+								{{
+									t(APP_ID, "Weekly shifts")
+								}}
+							</template>
+							<template v-else>
+								{{ formatDate(data, dayCellFormatOptions) }}
+							</template>
+						</th>
+					</tr>
+				</thead>
+				<tbody class="h-full">
+					<tr class="h-12">
+						<td
+							v-for="({ type, data }, columnIndex) in shiftTypesRow"
+							:key="columnIndex"
+							class="border-r border-b border-solid border-nc-maxcontrast p-2 h-full"
+							:class="{
+								'text-center': type === 'string',
+								'border-l sticky left-0 z-[1] bg-nc-main': !columnIndex,
+							}">
+							<template v-if="type === 'string'">
+								{{ data }}
+							</template>
+							<div v-else class="flex size-full flex-col gap-2">
+								<template v-for="(shiftTypeWrapper, i) in data" :key="i">
+									<ShiftTypePill
+										v-if="
+											shiftTypeWrapper.amount > 0
+												&& shiftTypeWrapper.shiftType.active
+										"
+										:shift-type-wrapper="shiftTypeWrapper"
+										:column-index="columnIndex" />
+								</template>
+							</div>
+						</td>
+					</tr>
+					<tr
+						v-for="(shiftsRow, rowIndex) in shiftsRows"
+						:key="rowIndex"
+						class="h-12">
+						<td
+							v-for="({ type, data }, columnIndex) in shiftsRow"
+							:key="columnIndex"
+							class="border-r border-b border-solid border-nc-maxcontrast p-2 h-full"
+							:class="{
+								'text-center': type === 'user',
+								'bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'disabled',
+								'border-l sticky left-0 z-[1] bg-nc-main': !columnIndex,
+							}"
+							@click="
+								shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'enabled'
+									&& onShiftCellClick(shiftsRow[0].data.id)
+							">
+							<template v-if="type === 'user'">
+								{{ data.display_name }}
+							</template>
+							<div
+								v-else
+								class="flex size-full flex-col gap-2">
+								<ShiftPill
+									v-for="(shift, i) in data"
+									:key="i"
+									:shift="shift"
+									:column-index="columnIndex" />
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</PaddedContainer>
 </template>
 
