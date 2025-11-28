@@ -71,8 +71,8 @@
 							:key="columnIndex"
 							class="border border-solid border-nc-maxcontrast p-2 text-center"
 							:class="{
-								['bg-nc-primary-element text-nc-primary-element']: columnIndexOfWeek === columnIndex,
-								['bg-nc-primary-element-light text-nc-primary-element-light']: columnIndexOfToday === columnIndex,
+								'bg-nc-primary-element text-nc-primary-element': columnIndexOfWeek === columnIndex,
+								'bg-nc-primary-element-light text-nc-primary-element-light': columnIndexOfToday === columnIndex,
 								'border-l-0': columnIndex,
 								'sticky left-0 z-[1] bg-nc-main': !columnIndex,
 							}">
