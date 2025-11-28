@@ -105,7 +105,8 @@
 							<template v-for="(shiftTypeWrapper, i) in data" :key="i">
 								<ShiftTypePill
 									v-if="
-										shiftTypeWrapper.amount && shiftTypeWrapper.shiftType.active
+										shiftTypeWrapper.amount > 0
+											&& shiftTypeWrapper.shiftType.active
 									"
 									:shift-type-wrapper="shiftTypeWrapper"
 									:column-index="columnIndex" />
