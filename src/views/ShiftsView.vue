@@ -256,6 +256,8 @@ function getUndefinedMultiStepAction(): UndefinedMultiStepAction {
 
 const multiStepAction = ref<MultiStepAction>(getUndefinedMultiStepAction())
 
+const createOrUpdateRequestPending = ref(false)
+
 // These are non-reactive because the reactive data is stored inside
 // `headerRow`, `shiftTypesRow` and `shiftsRows`
 let users: User[] = []
@@ -289,7 +291,10 @@ const shiftCellStatesMulti = computed<ShiftCellStateConfig[][]>(() => {
 				isValidDropTarget = isMember(actionGroupId, columns[0].data.id)
 			}
 			return (
-				!isActionPending || isValidDropTarget ? 'enabled' : 'disabled'
+				!createOrUpdateRequestPending.value
+				&& (!isActionPending || isValidDropTarget)
+					? 'enabled'
+					: 'disabled'
 			) satisfies ShiftCellStateConfig
 		})
 	})
@@ -665,18 +670,23 @@ function getShiftTypeWrapper(
  */
 async function onShiftCellClick(userId: string): Promise<void> {
 	let affectedShift: Shift | void = undefined
-	switch (multiStepAction.value.type) {
-		case 'creation':
-			affectedShift = await onShiftCreationAttempt(userId)
-			break
-		case 'motion':
-			affectedShift = await onShiftMotionAttempt(userId)
-			break
+	createOrUpdateRequestPending.value = true
+	try {
+		switch (multiStepAction.value.type) {
+			case 'creation':
+				affectedShift = await onShiftCreationAttempt(userId)
+				break
+			case 'motion':
+				affectedShift = await onShiftMotionAttempt(userId)
+				break
+		}
+		if (!affectedShift) {
+			return
+		}
+		postSynchronizeByShifts({ shift_ids: [affectedShift.id] })
+	} finally {
+		createOrUpdateRequestPending.value = false
 	}
-	if (!affectedShift) {
-		return
-	}
-	postSynchronizeByShifts({ shift_ids: [affectedShift.id] })
 }
 
 /**
