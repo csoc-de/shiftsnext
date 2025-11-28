@@ -65,14 +65,14 @@
 		<div class="overflow-auto flex-1">
 			<table class="h-fit w-full border-spacing-0">
 				<thead class="sticky z-[2] top-0 bg-nc-main">
-					<tr class="h-12">
+					<tr class="h-12 group">
 						<th
 							v-for="({ type, data }, columnIndex) in headerRow"
 							:key="columnIndex"
-							class="border border-solid border-nc-maxcontrast p-2 text-center"
+							class="border border-solid border-nc-maxcontrast p-2 text-center group-hover:bg-nc-dark"
 							:class="{
-								'bg-nc-primary-element text-nc-primary-element': columnIndexOfWeek === columnIndex,
-								'bg-nc-primary-element-light text-nc-primary-element-light': columnIndexOfToday === columnIndex,
+								'!bg-nc-primary-element text-nc-primary-element': columnIndexOfWeek === columnIndex,
+								'!bg-nc-primary-element-light text-nc-primary-element-light': columnIndexOfToday === columnIndex,
 								'border-l-0': columnIndex,
 								'sticky left-0 z-[1] bg-nc-main': !columnIndex,
 							}">
@@ -91,11 +91,11 @@
 					</tr>
 				</thead>
 				<tbody class="h-full">
-					<tr class="h-12">
+					<tr class="h-12 group">
 						<td
 							v-for="({ type, data }, columnIndex) in shiftTypesRow"
 							:key="columnIndex"
-							class="border-r border-b border-solid border-nc-maxcontrast p-2 h-full"
+							class="border-r border-b border-solid border-nc-maxcontrast p-2 h-full group-hover:bg-nc-dark"
 							:class="{
 								'text-center': type === 'string',
 								'border-l sticky left-0 z-[1] bg-nc-main': !columnIndex,
@@ -119,14 +119,14 @@
 					<tr
 						v-for="(shiftsRow, rowIndex) in shiftsRows"
 						:key="rowIndex"
-						class="h-12">
+						class="h-12 group">
 						<td
 							v-for="({ type, data }, columnIndex) in shiftsRow"
 							:key="columnIndex"
-							class="border-r border-b border-solid border-nc-maxcontrast p-2 h-full"
+							class="border-r border-b border-solid border-nc-maxcontrast p-2 h-full group-hover:bg-nc-dark"
 							:class="{
 								'text-center': type === 'user',
-								'bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'disabled',
+								'!bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'disabled',
 								'border-l sticky left-0 z-[1] bg-nc-main': !columnIndex,
 							}"
 							@click="
