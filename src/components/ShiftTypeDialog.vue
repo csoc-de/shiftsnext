@@ -157,7 +157,7 @@
 								</InputGroup>
 							</template>
 						</div>
-						<InputGroup>
+						<InputGroup v-if="weeklyType === 'by_day'">
 							<div>{{ t(APP_ID, "Duration") }} ({{ durationString }})</div>
 							<DurationBuilder v-model="duration" :disabled="!!shiftType" class="grid grid-cols-2 sm:grid-cols-4 gap-1" />
 						</InputGroup>
