@@ -4,8 +4,9 @@ import type { Group } from '../models/group.ts'
 import type { SearchParams } from '../models/url.ts'
 import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
 
-import { t } from '@nextcloud/l10n'
+import { getDayNamesMin, getFirstDay, t } from '@nextcloud/l10n'
 import { APP_ID } from '../utils/appId.ts'
+import { rotate } from '../utils/array.ts'
 
 export const REPETITION_FREQUENCIES = ['weekly'] as const
 
@@ -37,6 +38,16 @@ export const SHORT_DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'] as const
 export type ShortDay = (typeof SHORT_DAYS)[number]
 
 export type ShortDayToAmountMap = Record<ShortDay, number>
+
+const firstDay = getFirstDay()
+const reorderedlocalDaysMin = rotate(getDayNamesMin(), firstDay, 0)
+export const reorderedShortDays = rotate(SHORT_DAYS, firstDay, 0)
+// @ts-expect-error Object.fromEntries doesn't infer the proper return type
+export const shortDayToLocalMinDayMap: Record<ShortDay, string>
+	= Object.fromEntries(reorderedShortDays.map((shortDay, index) => [
+		shortDay,
+		reorderedlocalDaysMin[index] ?? 'undefined',
+	] as const))
 
 export interface RepetitionWeeklyByDayConfig {
 	/**

@@ -188,7 +188,9 @@
 									required />
 							</template>
 						</div>
-						<p>{{ repetitionSummary }}</p>
+						<div>
+							<ShiftTypeRepetitionSummary :repetition />
+						</div>
 					</div>
 				</CustomFieldset>
 			</CustomFieldset>
@@ -209,7 +211,7 @@
 </template>
 
 <script setup lang="ts">
-import { getDayNamesMin, getFirstDay, n, t } from '@nextcloud/l10n'
+import { t } from '@nextcloud/l10n'
 import { Temporal } from 'temporal-polyfill'
 import { computed, inject, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -225,7 +227,9 @@ import CustomFieldset from './CustomFieldset.vue'
 import DurationBuilder from './DurationBuilder.vue'
 import InputGroup from './InputGroup.vue'
 import IsoWeekDateInput from './IsoWeekDateInput.vue'
+import ShiftTypeRepetitionSummary from './ShiftTypeRepetitionSummary.vue'
 import {
+	type Repetition,
 	type RepetitionFrequency,
 	type RepetitionWeeklyType,
 	type ShiftType,
@@ -233,21 +237,18 @@ import {
 	type ShiftTypePayloadType,
 	type ShiftTypePostPayload,
 	type ShiftTypePutPayload,
-	type ShortDay,
 	type ShortDayToAmountMap,
 
 	createInjectionKey,
 	REPETITION_FREQUENCIES,
 	REPETITION_WEEKLY_TYPES,
-	SHORT_DAYS,
+	shortDayToLocalMinDayMap,
 	updateInjectionKey,
 	weeklyTypeTranslations,
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
-import { rotate } from '../utils/array.ts'
 import { getIsoWeekDate, localTimeZone } from '../utils/date.ts'
 import { getInitialShiftAdminGroups } from '../utils/initialState.ts'
-import { logger } from '../utils/logger.ts'
 
 const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
 
@@ -342,6 +343,27 @@ async function onSubmit() {
 	}
 }
 
+const repetition = computed<Repetition>(() => ({
+	frequency: frequency.value,
+	interval: interval.value,
+	...weeklyType.value === 'by_day'
+		? {
+				weekly_type: 'by_day',
+				config: {
+					reference: byDayReference.value,
+					short_day_to_amount_map: shortDayToAmountMap.value,
+					duration: duration.value,
+				},
+			}
+		: {
+				weekly_type: 'by_week',
+				config: {
+					reference: byWeekReference.value,
+					amount: byWeekAmount.value,
+				},
+			},
+}))
+
 /**
  * Builds the request payload
  *
@@ -360,26 +382,7 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 		const payload: ShiftTypePostPayload = {
 			...common,
 			group_id: groupId.value,
-			repetition: {
-				frequency: frequency.value,
-				interval: interval.value,
-				...weeklyType.value === 'by_day'
-					? {
-							weekly_type: 'by_day',
-							config: {
-								reference: byDayReference.value,
-								short_day_to_amount_map: shortDayToAmountMap.value,
-								duration: duration.value,
-							},
-						}
-					: {
-							weekly_type: 'by_week',
-							config: {
-								reference: byWeekReference.value,
-								amount: byWeekAmount.value,
-							},
-						},
-			},
+			repetition: repetition.value,
 		}
 		return payload as ShiftTypePayload<T>
 	} else {
@@ -387,68 +390,6 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 		return payload as ShiftTypePayload<T>
 	}
 }
-
-const firstDay = getFirstDay()
-const reorderedlocalDaysMin = rotate(getDayNamesMin(), firstDay, 0)
-const reorderedShortDays = rotate(SHORT_DAYS, firstDay, 0)
-const shortDayLocalMinDayTuples: [ShortDay, string][] = reorderedShortDays.map((shortDay, index) => {
-	let localDayMin = reorderedlocalDaysMin[index]
-	if (localDayMin === undefined) {
-		logger.fatal(
-			'reorderedlocalDaysMin accessed with invalid index',
-			{
-				reorderedlocalDaysMin,
-				reorderedShortDays,
-				shortDay,
-				index,
-				localDayMin,
-			},
-		)
-		localDayMin = 'undefined'
-	}
-	return [shortDay, localDayMin]
-})
-// @ts-expect-error Object.fromEntries doesn't infer the proper return type
-const shortDayToLocalMinDayMap: Record<ShortDay, string> = Object.fromEntries(shortDayLocalMinDayTuples)
-
-const daysWithOccurences = computed(() => {
-	const entries: string[] = []
-	if (weeklyType.value === 'by_week') {
-		return entries
-	}
-	for (const shortDay of reorderedShortDays) {
-		const amount = shortDayToAmountMap.value[shortDay]
-		if (amount > 0) {
-			const localDayMin = shortDayToLocalMinDayMap[shortDay]
-			const entry = `${localDayMin} × ${amount}`
-			entries.push(entry)
-		}
-	}
-	return entries
-})
-
-const repetitionSummary = computed(() => {
-	if (weeklyType.value === 'by_day') {
-		if (daysWithOccurences.value.length === 0) {
-			return t(APP_ID, 'Never')
-		}
-		return n(
-			APP_ID,
-			'{occurences}, every week',
-			'{occurences}, every %n weeks',
-			interval.value,
-			{ occurences: daysWithOccurences.value.join(', ') },
-		)
-	} else {
-		return n(
-			APP_ID,
-			'{amount} × every week',
-			'{amount} × every %n weeks',
-			interval.value,
-			{ amount: byWeekAmount.value },
-		)
-	}
-})
 
 /**
  * Sets the `byDayReference` by combining the value of the date time picker
