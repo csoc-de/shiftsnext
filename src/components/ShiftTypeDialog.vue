@@ -3,9 +3,9 @@
 		no-close
 		:name="dialogName"
 		size="normal">
-		<form id="shift-type-form" @submit.prevent="onSubmit">
-			<!-- Trap autofocus to this invisible input to prevent NcSelect getting focused -->
-			<AutoFocusTrap />
+		<!-- Trap autofocus to this invisible input to prevent NcSelect getting focused -->
+		<AutoFocusTrap />
+		<form id="shift-type-form" class="flex flex-col gap-3" @submit.prevent="onSubmit">
 			<div class="grid grid-cols-2 gap-3 sm:grid-cols-6">
 				<InputGroup class="sm:col-span-2">
 					<label for="shift-type-group-id">{{ t(APP_ID, "Group") }}</label>
@@ -63,136 +63,125 @@
 						label-outside />
 				</InputGroup>
 			</div>
-
-			<CustomFieldset class="mt-3">
+			<CustomFieldset>
 				<template #legend>
 					{{ t(APP_ID, "Repetition") }}
 				</template>
-				<div class="grid grid-cols-3 sm:grid-cols-5 gap-3">
-					<InputGroup class="col-span-2">
-						<label for="shift-type-repetition-frequency">{{
-							t(APP_ID, "Frequency")
-						}}</label>
-						<NcSelect
-							v-model="frequency"
-							:disabled="!!shiftType"
-							input-id="shift-type-repetition-frequency"
-							label-outside
-							:options="frequencies"
-							:clearable="false" />
-					</InputGroup>
-					<InputGroup>
-						<label for="shift-type-repetition-interval">{{
-							t(APP_ID, "Interval")
-						}}</label>
-						<NcTextField
-							id="shift-type-repetition-interval"
-							v-model.trim="interval"
-							:disabled="!!shiftType"
-							label-outside
-							type="number"
-							min="1"
-							required />
-					</InputGroup>
-				</div>
-				<CustomFieldset class="mt-3">
-					<template #legend>
-						{{ t(APP_ID, "Weekly type") }}
-					</template>
-					<div class="flex">
-						<NcCheckboxRadioSwitch
-							v-for="(type, index) in REPETITION_WEEKLY_TYPES"
-							:key="index"
-							v-model="weeklyType"
-							:disabled="!!shiftType"
-							:value="type"
-							button-variant
-							name="repetition-weekly-type"
-							type="radio"
-							button-variant-grouped="horizontal">
-							{{ weeklyTypeTranslations[type] }}
-						</NcCheckboxRadioSwitch>
-					</div>
-				</CustomFieldset>
-				<CustomFieldset class="mt-3">
-					<template #legend>
-						{{ t(APP_ID, "Config") }}
-					</template>
-					<div class="flex flex-col gap-3">
-						<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-							<InputGroup>
-								<template v-if="weeklyType === 'by_day'">
-									<label for="shift-type-repetition-config-reference">
-										{{ t(APP_ID, "Reference date & time") }}
-									</label>
-									<NcDateTimePickerNative
-										id="shift-type-repetition-config-reference"
-										v-model="byDayReferenceDate"
-										:disabled="!!shiftType"
-										class="w-full"
-										type="datetime-local"
-										hide-label
-										required
-										@update:model-value="setByDayReference()" />
-								</template>
-								<template v-else>
-									<label for="shift-type-repetition-config-reference">
-										{{ t(APP_ID, "Reference week") }}
-									</label>
-									<IsoWeekDateInput
-										v-model="byWeekReference"
-										:disabled="!!shiftType"
-										input-id="shift-type-repetition-config-reference"
-										class="w-full" />
-								</template>
+				<div class="flex flex-col gap-3">
+					<template v-if="!shiftType">
+						<div class="grid grid-cols-3 sm:grid-cols-5 gap-3">
+							<InputGroup class="col-span-2">
+								<label for="shift-type-repetition-frequency">{{
+									t(APP_ID, "Frequency")
+								}}</label>
+								<NcSelect
+									v-model="frequency"
+									input-id="shift-type-repetition-frequency"
+									label-outside
+									:options="frequencies"
+									:clearable="false" />
 							</InputGroup>
-							<template v-if="weeklyType === 'by_day'">
-								<InputGroup>
-									<label for="shift-type-repetition-config-time-zone">{{ t(APP_ID, "Time zone") }}</label>
-									<NcTimezonePicker
-										v-model="timeZone"
-										:disabled="!!shiftType"
-										input-id="shift-type-repetition-config-time-zone"
-										@update:model-value="setByDayReference()" />
-								</InputGroup>
-							</template>
-						</div>
-						<InputGroup v-if="weeklyType === 'by_day'">
-							<div>{{ t(APP_ID, "Duration") }} ({{ durationString }})</div>
-							<DurationBuilder v-model="duration" :disabled="!!shiftType" class="grid grid-cols-2 sm:grid-cols-4 gap-1" />
-						</InputGroup>
-						<div
-							class="mt-1"
-							:class="{
-								'grid grid-cols-3 gap-x-2 gap-y-3 sm:grid-cols-7': weeklyType === 'by_day',
-							}">
-							<template v-if="weeklyType === 'by_day'">
+							<InputGroup>
+								<label for="shift-type-repetition-interval">{{
+									t(APP_ID, "Interval")
+								}}</label>
 								<NcTextField
-									v-for="(localDayMin, shortDay, index) in shortDayToLocalMinDayMap"
-									:key="index"
-									v-model.trim="shortDayToAmountMap[shortDay]"
-									:disabled="!!shiftType"
+									id="shift-type-repetition-interval"
+									v-model.trim="interval"
+									label-outside
 									type="number"
-									:label="localDayMin"
-									min="0"
+									min="1"
 									required />
+							</InputGroup>
+						</div>
+						<CustomFieldset>
+							<template #legend>
+								{{ t(APP_ID, "Weekly type") }}
 							</template>
-							<template v-else>
+							<div class="flex">
+								<NcCheckboxRadioSwitch
+									v-for="(type, index) in REPETITION_WEEKLY_TYPES"
+									:key="index"
+									v-model="weeklyType"
+									:value="type"
+									button-variant
+									name="repetition-weekly-type"
+									type="radio"
+									button-variant-grouped="horizontal">
+									{{ weeklyTypeTranslations[type] }}
+								</NcCheckboxRadioSwitch>
+							</div>
+						</CustomFieldset>
+						<CustomFieldset>
+							<template #legend>
+								{{ t(APP_ID, "Config") }}
+							</template>
+							<div class="flex flex-col gap-3">
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+									<InputGroup>
+										<template v-if="weeklyType === 'by_day'">
+											<label for="shift-type-repetition-config-reference">
+												{{ t(APP_ID, "Reference date & time") }}
+											</label>
+											<NcDateTimePickerNative
+												id="shift-type-repetition-config-reference"
+												v-model="byDayReferenceDate"
+												class="w-full"
+												type="datetime-local"
+												hide-label
+												required
+												@update:model-value="setByDayReference()" />
+										</template>
+										<template v-else>
+											<label for="shift-type-repetition-config-reference">
+												{{ t(APP_ID, "Reference week") }}
+											</label>
+											<IsoWeekDateInput
+												v-model="byWeekReference"
+												input-id="shift-type-repetition-config-reference"
+												class="w-full" />
+										</template>
+									</InputGroup>
+									<template v-if="weeklyType === 'by_day'">
+										<InputGroup>
+											<label for="shift-type-repetition-config-time-zone">{{ t(APP_ID, "Time zone") }}</label>
+											<NcTimezonePicker
+												v-model="timeZone"
+												input-id="shift-type-repetition-config-time-zone"
+												@update:model-value="setByDayReference()" />
+										</InputGroup>
+									</template>
+								</div>
+								<InputGroup v-if="weeklyType === 'by_day'">
+									<div>{{ t(APP_ID, 'Amount') }}</div>
+									<div class="grid grid-cols-2 gap-x-2 gap-y-3 sm:grid-cols-4">
+										<NcTextField
+											v-for="(localDay, shortDay, index) in shortDayToLocalDayMap"
+											:key="index"
+											v-model.trim="shortDayToAmountMap[shortDay]"
+											type="number"
+											:label="localDay"
+											min="0"
+											required />
+									</div>
+								</InputGroup>
 								<NcTextField
+									v-else
 									v-model.trim="byWeekAmount"
-									:disabled="!!shiftType"
 									class="w-28"
 									type="number"
 									:label="t(APP_ID, 'Amount')"
 									min="1"
 									required />
-							</template>
-						</div>
-						<div>
-							<ShiftTypeRepetitionSummary :repetition />
-						</div>
-					</div>
-				</CustomFieldset>
+								<InputGroup v-if="weeklyType === 'by_day'">
+									<div>{{ t(APP_ID, "Duration") }} ({{ durationString }})</div>
+									<DurationBuilder v-model="duration" class="grid grid-cols-2 sm:grid-cols-4 gap-1" />
+								</InputGroup>
+							</div>
+						</CustomFieldset>
+					</template>
+					<ShiftTypeRepetitionSummary :repetition />
+				</div>
 			</CustomFieldset>
 		</form>
 		<template #actions>
@@ -242,7 +231,7 @@ import {
 	createInjectionKey,
 	REPETITION_FREQUENCIES,
 	REPETITION_WEEKLY_TYPES,
-	shortDayToLocalMinDayMap,
+	shortDayToLocalDayMap,
 	updateInjectionKey,
 	weeklyTypeTranslations,
 } from '../models/shiftType.ts'
