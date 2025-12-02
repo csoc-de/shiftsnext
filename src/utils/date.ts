@@ -268,3 +268,26 @@ export function reviver(key: string, value: unknown): unknown {
 	}
 	return value
 }
+
+/**
+ * Formats a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/Duration | Temporal.Duration} using
+ * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DurationFormat | Intl.DurationFormat}
+ *
+ * If Intl.DurationFormat is not supported, the plain
+ * {@link https://en.wikipedia.org/wiki/ISO_8601#Durations | ISO 8061 Duration}
+ * string is returned
+ *
+ * @param duration The duration to format
+ * @param style The formatting style
+ */
+export function formatDuration(
+	duration: Temporal.DurationLike,
+	style?: 'long' | 'short' | 'narrow' | 'digital',
+) {
+	try {
+		// @ts-expect-error part of ES2025
+		return new Intl.DurationFormat(locale, { style }).format(duration)
+	} catch {
+		return duration.toString()
+	}
+}
