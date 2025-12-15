@@ -104,7 +104,7 @@
 								{{ data }}
 							</template>
 							<div v-else class="flex size-full flex-col gap-2">
-								<template v-for="(shiftTypeWrapper, i) in data" :key="i">
+								<template v-for="shiftTypeWrapper in data" :key="shiftTypeWrapper.shiftType.id">
 									<ShiftTypePill
 										v-if="
 											shiftTypeWrapper.amount > 0
@@ -140,8 +140,8 @@
 								v-else
 								class="flex size-full flex-col gap-2">
 								<ShiftPill
-									v-for="(shift, i) in data"
-									:key="i"
+									v-for="shift in data"
+									:key="shift.id"
 									:shift="shift"
 									:column-index="columnIndex" />
 							</div>

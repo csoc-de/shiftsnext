@@ -3,7 +3,7 @@
 		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-html="configMessage" />
 		<ul class="list-disc">
-			<li v-for="(missingConfig, index) in missingConfigs" :key="index">
+			<li v-for="missingConfig in missingConfigs" :key="missingConfig">
 				{{ t(APP_ID, missingConfig) }}
 			</li>
 		</ul>

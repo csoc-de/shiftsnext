@@ -100,8 +100,8 @@
 							</template>
 							<div class="flex">
 								<NcCheckboxRadioSwitch
-									v-for="(type, index) in REPETITION_WEEKLY_TYPES"
-									:key="index"
+									v-for="type in REPETITION_WEEKLY_TYPES"
+									:key="type"
 									v-model="weeklyType"
 									:value="type"
 									button-variant
@@ -156,8 +156,8 @@
 									<div>{{ t(APP_ID, 'Amount') }}</div>
 									<div class="grid grid-cols-2 gap-x-2 gap-y-3 sm:grid-cols-4">
 										<NcTextField
-											v-for="(localDay, shortDay, index) in shortDayToLocalDayMap"
-											:key="index"
+											v-for="(localDay, shortDay) in shortDayToLocalDayMap"
+											:key="shortDay"
 											v-model.trim="shortDayToAmountMap[shortDay]"
 											type="number"
 											:label="localDay"

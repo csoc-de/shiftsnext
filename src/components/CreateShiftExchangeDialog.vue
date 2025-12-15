@@ -6,8 +6,8 @@
 		<form id="shift-exchange-form" @submit.prevent="onSubmit">
 			<div class="flex justify-center">
 				<NcCheckboxRadioSwitch
-					v-for="(type, index) in EXCHANGE_TYPES"
-					:key="index"
+					v-for="type in EXCHANGE_TYPES"
+					:key="type"
 					v-model="exchangeType"
 					:value="type"
 					button-variant
