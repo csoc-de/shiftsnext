@@ -59,11 +59,11 @@ import Delete from 'vue-material-design-icons/Delete.vue'
 import DelayBox from './DelayBox.vue'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
-	deletionShiftIK,
+	addDeletionShiftIK,
+	deletionShiftsIK,
 	multiStepActionIK,
 	onShiftDeletionAttemptIK,
-	resetDeletionShiftIK,
-	setDeletionShiftIK,
+	removeDeletionShiftIK,
 	setMultiStepActionIK,
 } from '../models/shiftsTable.ts'
 import { APP_ID } from '../utils/appId.ts'
@@ -80,9 +80,9 @@ const _isShiftAdmin = isShiftAdmin(shift.shift_type.group.id)
 const multiStepAction = inject(multiStepActionIK)!
 const setMultiStepAction = inject(setMultiStepActionIK)!
 
-const deletionShift = inject(deletionShiftIK)!
-const setDeletionShift = inject(setDeletionShiftIK)!
-const resetDeletionShift = inject(resetDeletionShiftIK)!
+const deletionShifts = inject(deletionShiftsIK)!
+const addDeletionShift = inject(addDeletionShiftIK)!
+const removeDeletionShift = inject(removeDeletionShiftIK)!
 const onShiftDeletionAttempt = inject(onShiftDeletionAttemptIK)!
 
 const isSelected = computed(() => multiStepAction.value.type === 'motion'
@@ -100,7 +100,7 @@ function onMoveButtonClick() {
 
 const delayBoxVisible = ref(false)
 
-const deleting = computed(() => deletionShift.value?.id === shift.id)
+const deleting = computed(() => deletionShifts.value.some(({ id }) => id === shift.id))
 
 const disabled = computed(() => Boolean(multiStepAction.value.type || deleting.value))
 
@@ -117,7 +117,7 @@ function toggleDelayBox(visible: boolean) {
  * Start the deletion of the shift
  */
 function startDeletion() {
-	setDeletionShift(shift)
+	addDeletionShift(shift)
 	toggleDelayBox(true)
 }
 
@@ -134,7 +134,7 @@ async function continueDeletion() {
  * Cancel the deletion of the shift
  */
 function cancelDeletion() {
-	resetDeletionShift()
+	removeDeletionShift(shift)
 	toggleDelayBox(false)
 }
 </script>

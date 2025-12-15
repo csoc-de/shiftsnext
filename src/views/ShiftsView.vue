@@ -194,12 +194,12 @@ import {
 	type WeekCell,
 	type ZonedDateTimeDataCell,
 
-	deletionShiftIK,
+	addDeletionShiftIK,
+	deletionShiftsIK,
 	multiStepActionIK,
 	onShiftDeletionAttemptIK,
-	resetDeletionShiftIK,
+	removeDeletionShiftIK,
 	resetMultiStepActionIK,
-	setDeletionShiftIK,
 	setMultiStepActionIK,
 } from '../models/shiftsTable.ts'
 import {
@@ -761,26 +761,28 @@ async function onShiftMotionAttempt(userId: string): Promise<void | Shift> {
 	return updatedShift
 }
 
-const deletionShift = ref<Shift>()
-provide(deletionShiftIK, deletionShift)
+const deletionShifts = ref<Shift[]>([])
+provide(deletionShiftsIK, deletionShifts)
 
 /**
- * Sets the deletion shift
+ * Add `shift` to the deletion shifts
  *
- * @param shift The shift to delete
+ * @param shift The shift to add to the deletion shifts
  */
-function setDeletionShift(shift: Shift) {
-	deletionShift.value = shift
+function addDeletionShift(shift: Shift) {
+	deletionShifts.value.push(shift)
 }
-provide(setDeletionShiftIK, setDeletionShift)
+provide(addDeletionShiftIK, addDeletionShift)
 
 /**
- * Resets the deletion shift
+ * Remove `shift` from the deletion shifts
+ *
+ * @param shift The shift to remove from the deletion shifts
  */
-function resetDeletionShift() {
-	deletionShift.value = undefined
+function removeDeletionShift(shift: Shift) {
+	deletionShifts.value = deletionShifts.value.filter(({ id }) => id !== shift.id)
 }
-provide(resetDeletionShiftIK, resetDeletionShift)
+provide(removeDeletionShiftIK, removeDeletionShift)
 
 /**
  * Handler for shift deletion attempt
@@ -801,7 +803,7 @@ async function onShiftDeletionAttempt(shift: Shift, columnIndex: number): Promis
 		shiftTypeWrapper.amount++
 		return deletedShift
 	} finally {
-		resetDeletionShift()
+		removeDeletionShift(shift)
 	}
 }
 provide(onShiftDeletionAttemptIK, onShiftDeletionAttempt)

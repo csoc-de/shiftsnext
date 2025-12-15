@@ -140,11 +140,11 @@ export const onShiftDeletionAttemptIK
 		(shift: Shift, columnIndex: number) => Promise<Shift>
 	>
 
-export const deletionShiftIK
-	= Symbol('deletionShiftIK') as InjectionKey<Ref<Shift | undefined>>
+export const deletionShiftsIK
+	= Symbol('deletionShiftsIK') as InjectionKey<Ref<Shift[]>>
 
-export const setDeletionShiftIK
-	= Symbol('setDeletionShiftIK') as InjectionKey<(shift: Shift) => void>
+export const addDeletionShiftIK
+	= Symbol('addDeletionShiftIK') as InjectionKey<(shift: Shift) => void>
 
-export const resetDeletionShiftIK
-	= Symbol('resetDeletionShiftIK') as InjectionKey<() => void>
+export const removeDeletionShiftIK
+	= Symbol('removeDeletionShiftIK') as InjectionKey<(shift: Shift) => void>
