@@ -70,11 +70,11 @@ final class ShiftMapper extends QBMapper {
 
 			$minDateTimeString = (new DateTimeImmutable($firstCalendarDate, $dateTimeZone))
 				->setTimezone($utcDateTimeZone)
-				->format(DateTimeInterface::ECMA_DATE_TIME);
+				->format(DateTimeInterface::RFC9557_NC_NF);
 			$maxDateTimeString = (new DateTimeImmutable($lastCalendarDate, $dateTimeZone))
 				->setTime(23, 59, 59, 999999)
 				->setTimezone($utcDateTimeZone)
-				->format(DateTimeInterface::ECMA_DATE_TIME);
+				->format(DateTimeInterface::RFC9557_NC_NF);
 
 			$dateOnlyArgs = $firstCalendarDate === $lastCalendarDate
 				? [
