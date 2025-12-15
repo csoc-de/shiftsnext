@@ -180,7 +180,7 @@
 							</div>
 						</CustomFieldset>
 					</template>
-					<ShiftTypeRepetitionSummary :repetition />
+					<ShiftTypeRepetitionDetails :repetition />
 				</div>
 			</CustomFieldset>
 		</form>
@@ -216,7 +216,7 @@ import CustomFieldset from './CustomFieldset.vue'
 import DurationBuilder from './DurationBuilder.vue'
 import InputGroup from './InputGroup.vue'
 import IsoWeekDateInput from './IsoWeekDateInput.vue'
-import ShiftTypeRepetitionSummary from './ShiftTypeRepetitionSummary.vue'
+import ShiftTypeRepetitionDetails from './ShiftTypeRepetitionDetails.vue'
 import {
 	type Repetition,
 	type RepetitionFrequency,
