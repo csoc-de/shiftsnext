@@ -6,10 +6,10 @@
 			id="shift-exchange-form"
 			class="flex flex-col gap-2"
 			@submit.prevent="onSubmit">
-			<CustomFieldset>
-				<template #legend>
+			<InputGroup>
+				<div>
 					{{ editor === 'admin' ? t(APP_ID, 'Admin approval') : t(APP_ID, 'User approval') }}
-				</template>
+				</div>
 				<div class="flex">
 					<NcCheckboxRadioSwitch
 						v-model="approvedString"
@@ -39,7 +39,7 @@
 						{{ t(APP_ID, "Rejected") }}
 					</NcCheckboxRadioSwitch>
 				</div>
-			</CustomFieldset>
+			</InputGroup>
 			<InputGroup>
 				<label for="comment">{{ t(APP_ID, "Comment") }}</label>
 				<NcTextArea
@@ -73,7 +73,6 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
-import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
