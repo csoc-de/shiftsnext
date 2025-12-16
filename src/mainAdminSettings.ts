@@ -3,7 +3,7 @@ import AdminSettingsView from './views/AdminSettingsView.vue'
 import { APP_ID } from './utils/appId.ts'
 import { initializeTailwindTheme } from './utils/theme.ts'
 
-import './utils/date.ts' // Import for side effects: initializes localTimeZone
+import './utils/date.ts' // Import for side effects: initializes userTimeZone
 import '../css/style.scss'
 
 initializeTailwindTheme()

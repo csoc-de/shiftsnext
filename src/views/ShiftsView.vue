@@ -220,8 +220,8 @@ import {
 	formatDate,
 	getIsoWeekDate,
 	getZonedDateTimeForDayOfWeek,
-	localTimeZone,
 	parseIsoWeekDate,
+	userTimeZone,
 } from '../utils/date.ts'
 import { isMember } from '../utils/groupUserRelation.ts'
 import { getInitialGroups, getInitialIsShiftAdmin } from '../utils/initialState.ts'
@@ -230,7 +230,7 @@ import { compareShifts, compareShiftTypes } from '../utils/sort.ts'
 
 const isoWeekDateInput = useTemplateRef('isoWeekDateInput')
 
-const today = Temporal.Now.zonedDateTimeISO(localTimeZone)
+const today = Temporal.Now.zonedDateTimeISO(userTimeZone)
 
 const currentIsoWeekDateWithDay = getIsoWeekDate(today, true)
 
@@ -489,7 +489,7 @@ function placeWeeklyByDayShiftTypes() {
 			duration,
 		} = config
 
-		let intervalZdt = reference.withTimeZone(localTimeZone)
+		let intervalZdt = reference.withTimeZone(userTimeZone)
 		let intervalIsoWeekDate = getIsoWeekDate(intervalZdt, false)
 		while (intervalIsoWeekDate <= isoWeekDate.value) {
 			if (intervalIsoWeekDate !== isoWeekDate.value) {

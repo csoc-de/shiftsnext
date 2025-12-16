@@ -3,7 +3,7 @@ import { Temporal } from 'temporal-polyfill'
 
 export const locale = getCanonicalLocale()
 
-export const localTimeZone = Temporal.Now.timeZoneId()
+export const userTimeZone = Temporal.Now.timeZoneId()
 
 /**
  * ISO calendar date, e.g. `"2024-01-01"`
@@ -78,7 +78,7 @@ export function getIsoWeekDate<T extends boolean>(
 	withDay: T,
 ): T extends true ? IsoWeekDateWithDay : IsoWeekDateWithoutDay {
 	if ('toISOString' in date) {
-		date = Temporal.Instant.fromEpochMilliseconds(date.valueOf()).toZonedDateTimeISO(localTimeZone)
+		date = Temporal.Instant.fromEpochMilliseconds(date.valueOf()).toZonedDateTimeISO(userTimeZone)
 	}
 	return buildIsoWeekDate(
 		date.yearOfWeek!,
@@ -97,7 +97,7 @@ export function getIsoWeekDate<T extends boolean>(
  */
 export function getZonedDateTimeForDayOfWeek(
 	dayOfWeek: number,
-	base: Temporal.ZonedDateTime = Temporal.Now.zonedDateTimeISO(localTimeZone),
+	base: Temporal.ZonedDateTime = Temporal.Now.zonedDateTimeISO(userTimeZone),
 ): Temporal.ZonedDateTime {
 	const referenceDayOfWeek = base.dayOfWeek
 	const distanceOfDays = dayOfWeek - referenceDayOfWeek
@@ -116,7 +116,7 @@ export function formatDate(
 	options: Intl.DateTimeFormatOptions = {},
 ): string {
 	if ('toZonedDateTime' in date) {
-		date = date.toZonedDateTime(localTimeZone)
+		date = date.toZonedDateTime(userTimeZone)
 	}
 	if ('calendarId' in date) {
 		date = new Date(date.epochMilliseconds)
@@ -136,13 +136,13 @@ export function formatRange(
 ) {
 	let [start, end] = dates
 	if ('toZonedDateTime' in start) {
-		start = start.toZonedDateTime(localTimeZone)
+		start = start.toZonedDateTime(userTimeZone)
 	}
 	if ('calendarId' in start) {
 		start = new Date(start.epochMilliseconds)
 	}
 	if ('toZonedDateTime' in end) {
-		end = end.toZonedDateTime(localTimeZone)
+		end = end.toZonedDateTime(userTimeZone)
 	}
 	if ('calendarId' in end) {
 		end = new Date(end.epochMilliseconds)
@@ -157,7 +157,7 @@ export function formatRange(
  * @param options The options to use when creating the formatter
  */
 export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
-	options.timeZone ??= localTimeZone
+	options.timeZone ??= userTimeZone
 	return new Intl.DateTimeFormat(locale, options)
 }
 
@@ -173,7 +173,7 @@ export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.
  */
 export function getIsoCalendarDate(date: Date | Temporal.ZonedDateTime = new Date()): IsoCalendarDate {
 	if ('toISOString' in date) {
-		date = Temporal.Instant.fromEpochMilliseconds(date.valueOf()).toZonedDateTimeISO(localTimeZone)
+		date = Temporal.Instant.fromEpochMilliseconds(date.valueOf()).toZonedDateTimeISO(userTimeZone)
 	}
 	const year = String(date.year).padStart(4, '0')
 	const month = String(date.month).padStart(2, '0')
@@ -209,7 +209,7 @@ export function parseIsoWeekDate(isoWeekDate: IsoWeekDateWithDay): Temporal.Zone
 		year,
 		month: 1,
 		day: 4,
-		timeZone: localTimeZone,
+		timeZone: userTimeZone,
 	})
 
 	const firstDayOfWeek = january4th.subtract({
@@ -228,7 +228,7 @@ export type NumberOfWeeks = 52 | 53
  */
 export function getNumberOfWeeks(year: number): NumberOfWeeks {
 	return Temporal.ZonedDateTime.from({
-		timeZone: localTimeZone,
+		timeZone: userTimeZone,
 		year,
 		month: 12,
 		day: 28,
@@ -245,7 +245,7 @@ export function reviver(key: string, value: unknown): unknown {
 	if (typeof value === 'string') {
 		if (['start', 'end'].includes(key)) {
 			try {
-				return Temporal.Instant.from(value).toZonedDateTimeISO(localTimeZone)
+				return Temporal.Instant.from(value).toZonedDateTimeISO(userTimeZone)
 			} catch {
 				// Failing is expected
 			}

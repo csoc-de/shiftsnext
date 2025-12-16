@@ -28,8 +28,8 @@ import {
 
 	buildIsoWeekDate,
 	getNumberOfWeeks,
-	localTimeZone,
 	parseIsoWeekDate,
+	userTimeZone,
 } from '../utils/date.ts'
 
 const isoWeekDate = defineModel<IsoWeekDateWithoutDay>({ required: true })
@@ -41,7 +41,7 @@ defineProps<{
 
 defineExpose({ decrease, increase })
 
-const today = Temporal.Now.zonedDateTimeISO(localTimeZone)
+const today = Temporal.Now.zonedDateTimeISO(userTimeZone)
 
 // Array of 11 years, from 5 years before to 5 years after the current year
 const years = Array.from({ length: 11 }, (_, i) => today.yearOfWeek! - 5 + i)

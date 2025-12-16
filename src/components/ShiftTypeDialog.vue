@@ -236,7 +236,7 @@ import {
 	weeklyTypeTranslations,
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
-import { getIsoWeekDate, localTimeZone } from '../utils/date.ts'
+import { getIsoWeekDate, userTimeZone } from '../utils/date.ts'
 import { getInitialShiftAdminGroups } from '../utils/initialState.ts'
 
 const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
@@ -263,13 +263,13 @@ const active = ref(true)
 const frequency = ref<RepetitionFrequency>('weekly')
 const interval = ref(1)
 const weeklyType = ref<RepetitionWeeklyType>('by_day')
-const byDayReference = ref(Temporal.Now.zonedDateTimeISO(localTimeZone).with({
+const byDayReference = ref(Temporal.Now.zonedDateTimeISO(userTimeZone).with({
 	second: 0,
 	millisecond: 0,
 	microsecond: 0,
 	nanosecond: 0,
 }))
-const timeZone = ref(localTimeZone)
+const timeZone = ref(userTimeZone)
 const duration = ref(new Temporal.Duration())
 const shortDayToAmountMap = ref<ShortDayToAmountMap>({
 	MO: 0, TU: 0, WE: 0, TH: 0, FR: 0, SA: 0, SU: 0,
@@ -310,7 +310,7 @@ const group = ref(shiftAdminGroups.find(({ id }) => id === groupId.value))
 
 const byDayReferenceDate = ref<Date | null>(new Date(byDayReference.value
 	.toPlainDateTime()
-	.toZonedDateTime(localTimeZone)
+	.toZonedDateTime(userTimeZone)
 	.epochMilliseconds))
 
 const durationString = computed(() => duration.value.toString())
@@ -389,7 +389,7 @@ function setByDayReference(): void {
 		return
 	}
 	byDayReference.value = Temporal.Instant.fromEpochMilliseconds(byDayReferenceDate.value.valueOf())
-		.toZonedDateTimeISO(localTimeZone)
+		.toZonedDateTimeISO(userTimeZone)
 		.toPlainDateTime()
 		.toZonedDateTime(timeZone.value)
 }
