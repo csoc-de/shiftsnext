@@ -1,9 +1,14 @@
+import { loadState } from '@nextcloud/initial-state'
 import { getCanonicalLocale } from '@nextcloud/l10n'
 import { Temporal } from 'temporal-polyfill'
 
 export const locale = getCanonicalLocale()
 
-export const userTimeZone = Temporal.Now.timeZoneId()
+export const userTimeZone = loadState<{ core: { user: { timezone: string } } }>(
+	'core',
+	'capabilities',
+	{ core: { user: { timezone: Temporal.Now.timeZoneId() } } },
+).core.user.timezone
 
 /**
  * ISO calendar date, e.g. `"2024-01-01"`
