@@ -40,8 +40,6 @@ export type IsoWeekDate = IsoWeekDateWithoutDay | IsoWeekDateWithDay
 
 export type DateLike = Date | Temporal.ZonedDateTime | Temporal.PlainDate
 
-export type DateLikeRange = [DateLike, DateLike]
-
 /**
  * Builds an ISO week date
  *
@@ -130,16 +128,17 @@ export function formatDate(
 }
 
 /**
- * Formats `dates` as range using the specified `options`
+ * Formats `start` and `end` as range using the specified `options`
  *
- * @param dates The dates to format as range
+ * @param start The start date
+ * @param end The end date
  * @param options The options to use when formatting `dates`
  */
 export function formatRange(
-	dates: DateLikeRange,
+	start: DateLike,
+	end: DateLike,
 	options: Intl.DateTimeFormatOptions = {},
 ) {
-	let [start, end] = dates
 	if ('toZonedDateTime' in start) {
 		start = start.toZonedDateTime(userTimeZone)
 	}

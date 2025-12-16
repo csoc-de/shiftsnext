@@ -58,7 +58,8 @@
 					<div>{{ shiftExchange.shift_a.shift_type.name }}</div>
 					<div>
 						{{ formatRange(
-							[shiftExchange.shift_a.start, shiftExchange.shift_a.end],
+							shiftExchange.shift_a.start,
+							shiftExchange.shift_a.end,
 							'toZonedDateTime' in shiftExchange.shift_a.start
 								? dateOnlyFormatOptions
 								: dateTimeFormatOptions,
@@ -78,7 +79,8 @@
 						<div>{{ shiftExchange.shift_b.shift_type.name }}</div>
 						<div>
 							{{ formatRange(
-								[shiftExchange.shift_b.start, shiftExchange.shift_b.end],
+								shiftExchange.shift_b.start,
+								shiftExchange.shift_b.end,
 								'toZonedDateTime' in shiftExchange.shift_b.start
 									? dateOnlyFormatOptions
 									: dateTimeFormatOptions,
