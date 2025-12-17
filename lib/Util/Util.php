@@ -17,6 +17,7 @@ use function array_search;
  * @psalm-type EcmaType = 'Date'|'ZonedDateTime'|'PlainDate'
  */
 final class Util {
+	/** It's important to keep the order of elements inside this array */
 	final public const array DATE_ECMA_FORMAT_TO_TYPE_MAP = [
 		DateTimeInterface::ECMA_DATE_TIME => 'Date',
 		DateTimeInterface::RFC9557_NC_NF => 'ZonedDateTime',
