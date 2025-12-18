@@ -4,18 +4,19 @@
 			backgroundColor: shiftTypeWrapper.shiftType.color,
 			color: contrastColor,
 		}"
-		class="flex items-center justify-between gap-1 rounded-nc-container p-2"
+		class="flex items-center justify-between gap-1 rounded-nc-container p-2 relative"
 		:class="{
 			'opacity-40': !isSelected && disabled,
 		}">
 		<div
 			class="truncate leading-[1.1]">
+			<ShiftInfoPopover
+				:shift-or-type-wrapper="shiftTypeWrapper"
+				:visible="showInfo" />
 			{{ shiftTypeWrapper.shiftType.group.display_name }}<br>
 			{{ shiftTypeWrapper.shiftType.name }}
 		</div>
-		<div
-			v-if="_isShiftAdmin"
-			class="flex gap-1 items-center">
+		<div class="flex gap-1 items-center">
 			<NcCounterBubble
 				v-if="shiftTypeWrapper.amount > 1"
 				:style="{
@@ -23,28 +24,48 @@
 					color: doubledContrastColor,
 				}"
 				:count="shiftTypeWrapper.amount" />
-			<NcButton
+			<NcActions
 				:disabled="disabled"
-				:aria-label="t(APP_ID, 'Assign shift')"
+				:inline="2"
 				variant="tertiary-no-background"
-				class="border"
-				:style="{ color: contrastColor, borderColor: contrastColor }"
-				@click.stop="onAssignButtonClick">
-				<template #icon>
-					<ArrowAll :size="24" />
-				</template>
-			</NcButton>
+				class="gap-1">
+				<NcActionButton
+					class="!bg-transparent"
+					:style="{ color: contrastColor, borderColor: contrastColor }"
+					close-after-click
+					@click.stop="showInfo = !showInfo">
+					<template #icon>
+						<InformationOutline :size="24" />
+					</template>
+					{{ t(APP_ID, 'Show info') }}
+				</NcActionButton>
+				<NcActionButton
+					v-if="_isShiftAdmin"
+					class="!bg-transparent"
+					:style="{ color: contrastColor, borderColor: contrastColor }"
+					close-after-click
+					@click.stop="onAssignButtonClick">
+					<template #icon>
+						<ArrowAll :size="24" />
+					</template>
+					{{ t(APP_ID, 'Assign shift') }}
+				</NcActionButton>
+			</NcActions>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import { computed, inject } from 'vue'
-import NcButton from '@nextcloud/vue/components/NcButton'
+import { computed, inject, ref, watch } from 'vue'
+import NcActionButton from '@nextcloud/vue/components/NcActionButton'
+import NcActions from '@nextcloud/vue/components/NcActions'
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 // @ts-expect-error package has no types
 import ArrowAll from 'vue-material-design-icons/ArrowAll.vue'
+// @ts-expect-error package has no types
+import InformationOutline from 'vue-material-design-icons/InformationOutline.vue'
+import ShiftInfoPopover from './ShiftInfoPopover.vue'
 import {
 	type ShiftTypeWrapper,
 
@@ -59,6 +80,8 @@ const { shiftTypeWrapper, columnIndex } = defineProps<{
 	shiftTypeWrapper: ShiftTypeWrapper
 	columnIndex: number
 }>()
+
+const showInfo = ref(false)
 
 const _isShiftAdmin = isShiftAdmin(shiftTypeWrapper.shiftType.group.id)
 
@@ -80,4 +103,6 @@ function onAssignButtonClick() {
 }
 
 const disabled = computed(() => Boolean(multiStepAction.value.type))
+
+watch(disabled, () => showInfo.value = false)
 </script>
