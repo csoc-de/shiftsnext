@@ -157,6 +157,7 @@ final class ConfigService {
 		if ($json === false) {
 			$json = '[]';
 		}
+		/** @psalm-suppress DeprecatedMethod */
 		$this->config->setUserValue(
 			$this->userId,
 			Application::APP_ID,
@@ -173,15 +174,15 @@ final class ConfigService {
 	 * @return string[]
 	 */
 	public function getDefaultGroupIds(): array {
-		/** @var string[] */
-		return json_decode(
-			$this->config->getUserValue(
-				$this->userId,
-				Application::APP_ID,
-				UserConfigKey::DefaultGroupIds->value,
-				'[]',
-			),
+		/** @psalm-suppress DeprecatedMethod */
+		$value = $this->config->getUserValue(
+			$this->userId,
+			Application::APP_ID,
+			UserConfigKey::DefaultGroupIds->value,
+			'[]',
 		);
+		/** @var string[] */
+		return json_decode($value);
 	}
 
 	/**
@@ -221,6 +222,7 @@ final class ConfigService {
 	 * @return non-empty-string
 	 */
 	public function getTimeZone(?string $userId = null): string {
+		/** @psalm-suppress DeprecatedMethod */
 		return $this->config->getUserValue(
 			$userId ?? $this->userId,
 			'core',
