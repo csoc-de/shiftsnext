@@ -28,7 +28,17 @@ export interface TransferShiftExchangePostRequest
 export type ShiftExchangePostRequest
 	= RegularShiftExchangePostRequest | TransferShiftExchangePostRequest
 
-export type Approved = boolean | null
+export const APPROVED_OPTIONS = [true, null, false] as const
+
+export type Approved = typeof APPROVED_OPTIONS[number]
+
+export type ApprovedTranslations = Record<`${Approved}`, string>
+
+export const approvedTranslations: ApprovedTranslations = {
+	true: t(APP_ID, 'Approved'),
+	null: t(APP_ID, 'Pending'),
+	false: t(APP_ID, 'Rejected'),
+}
 
 export interface UserApproved {
 	user: Approved

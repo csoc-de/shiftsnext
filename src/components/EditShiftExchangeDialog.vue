@@ -12,31 +12,15 @@
 				</div>
 				<div class="flex">
 					<NcCheckboxRadioSwitch
+						v-for="option in APPROVED_OPTIONS"
+						:key="`${option}`"
 						v-model="approvedString"
-						value="true"
+						:value="`${option}`"
 						button-variant
 						button-variant-grouped="horizontal"
 						name="approved_by_user"
 						type="radio">
-						{{ t(APP_ID, "Approved") }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch
-						v-model="approvedString"
-						value="null"
-						button-variant
-						button-variant-grouped="horizontal"
-						name="approved_by_user"
-						type="radio">
-						{{ t(APP_ID, "Pending") }}
-					</NcCheckboxRadioSwitch>
-					<NcCheckboxRadioSwitch
-						v-model="approvedString"
-						value="false"
-						button-variant
-						button-variant-grouped="horizontal"
-						name="approved_by_user"
-						type="radio">
-						{{ t(APP_ID, "Rejected") }}
+						{{ approvedTranslations[`${option}`] }}
 					</NcCheckboxRadioSwitch>
 				</div>
 			</InputGroup>
@@ -80,6 +64,8 @@ import {
 	type ShiftExchange,
 	type ShiftExchangePutRequest,
 
+	APPROVED_OPTIONS,
+	approvedTranslations,
 	updateIK,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
