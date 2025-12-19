@@ -217,8 +217,8 @@ final class ShiftExchangeController extends Controller {
 					$checkAbsence
 					&& $this->calendarService->isUserAbsent(
 						$userAId,
-						Util::parseEcma($shiftB->start),
-						Util::parseEcma($shiftB->end),
+						Util::parseEcma($shiftB->start)[0],
+						Util::parseEcma($shiftB->end)[0],
 					)
 				) {
 					throw new HttpException(
@@ -272,8 +272,8 @@ final class ShiftExchangeController extends Controller {
 				$checkAbsence
 				&& $this->calendarService->isUserAbsent(
 					$userBId,
-					Util::parseEcma($shiftA->start),
-					Util::parseEcma($shiftA->end),
+					Util::parseEcma($shiftA->start)[0],
+					Util::parseEcma($shiftA->end)[0],
 				)
 			) {
 				throw new HttpException(

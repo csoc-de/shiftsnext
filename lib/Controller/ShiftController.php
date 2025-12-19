@@ -142,8 +142,8 @@ final class ShiftController extends Controller {
 					"Cannot create shift for inactive shift_type_id `$shift_type_id`",
 				);
 			}
-			$start = Util::unlocalizeEcma($start, $startDateTime);
-			$end = Util::unlocalizeEcma($end, $endDateTime);
+			[$start, $startDateTime] = Util::unlocalizeEcma($start);
+			[$end, $endDateTime] = Util::unlocalizeEcma($end);
 			$ignoreAbsenceForByWeekShifts = $this->configService->getIgnoreAbsenceForByWeekShifts();
 			$weeklyType = $shiftType->getRepetition()['weekly_type'];
 			$checkAbsence = $weeklyType !== 'by_week' || !$ignoreAbsenceForByWeekShifts;
@@ -217,8 +217,8 @@ final class ShiftController extends Controller {
 				$checkAbsence
 				&& $this->calendarService->isUserAbsent(
 					$user_id,
-					Util::parseEcma($shift->getStart()),
-					Util::parseEcma($shift->getEnd()),
+					Util::parseEcma($shift->getStart())[0],
+					Util::parseEcma($shift->getEnd())[0],
 				)
 			) {
 				throw new HttpException(

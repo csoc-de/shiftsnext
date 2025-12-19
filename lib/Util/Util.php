@@ -6,6 +6,7 @@ namespace OCA\ShiftsNext\Util;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Exception;
 use OCA\ShiftsNext\Exception\EcmaMalformedStringException;
 
 use function array_search;
@@ -31,40 +32,32 @@ final class Util {
 	 * This method tries to unlocalize `$value` in the following order:
 	 *
 	 * 1. If `$value` is a full {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format Date Time String},
-	 * the returned value will be a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format Date Time String}
+	 * the returned value will contain a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format Date Time String}
 	 * with the `Z` timezone suffix.
 	 * 2. If `$value` is a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/ZonedDateTime Temporal.ZonedDateTime}
-	 * compatible string (without calendar), the returned value will be a {@link https://www.rfc-editor.org/rfc/rfc9557.html RFC 9557}
+	 * compatible string (without calendar), the returned value will contain a {@link https://www.rfc-editor.org/rfc/rfc9557.html RFC 9557}
 	 * string (without calendar), with `+00:00[UTC]` as its timezone offset + name.
 	 * 3. If `$value` is a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/PlainDate Temporal.PlainDate}
-	 * compatible string, it is simply returned as is.
+	 * compatible string, the returned value will contain the original string as is.
 	 *
 	 * @param string $value
-	 * @param DateTimeImmutable &$dateTime If specified, this variable will
-	 *                                     be filled with the parsed
-	 *                                     DateTimeImmutable object in UTC
 	 *
-	 * @return string
+	 * @return list{string,DateTimeImmutable} A tuple containing the unlocalized string and
+	 *                                        the corresponding DateTimeImmutable object in UTC
 	 *
 	 * @throws EcmaMalformedStringException {@see OCA\ShiftsNext\Util\Util::parseEcma()}
-	 *
-	 * @psalm-assert !null $dateTime
 	 */
-	public static function unlocalizeEcma(
-		string $value,
-		?DateTimeImmutable &$dateTime = null,
-	): string {
-		$dateTime = null;
-		$dateTime = self::parseEcma($value, true, $type)
-			->setTimezone(new DateTimeZone('UTC'));
-		/** @var key-of<self::DATE_ECMA_FORMAT_TO_TYPE_MAP> */
+	public static function unlocalizeEcma(string $value): array {
+		[$dateTime, $type] = self::parseEcma($value, true);
+		$unlocalizedDateTime = $dateTime->setTimezone(new DateTimeZone('UTC'));
 		$format = array_search($type, self::DATE_ECMA_FORMAT_TO_TYPE_MAP);
-		/**
-		 * @disregard P1006 Intelephense fails to infer
-		 * key-of<self::DATE_ECMA_FORMAT_TO_TYPE_MAP>, maybe due to
-		 * self::DATE_ECMA_FORMAT_TO_TYPE_MAP referencing other class constants
-		 */
-		return $dateTime->format($format);
+		// This is to satisfy psalm
+		if (!$format) {
+			throw new Exception(
+				"Failed to find type `'$type'` in DATE_ECMA_FORMAT_TO_TYPE_MAP"
+			);
+		}
+		return [$unlocalizedDateTime->format($format), $unlocalizedDateTime];
 	}
 
 	/**
@@ -74,26 +67,18 @@ final class Util {
 	 * into a DateTimeImmutable object
 	 *
 	 * @param string $value
-	 * @param bool $toUtc The returned DateTimeImmutable will always be in UTC if `$value` is a PlainDate.
+	 * @param bool $toUtc The DateTimeImmutable in the returned tuple will always be in UTC if `$value` is a PlainDate.
 	 *                    If `$value` is not a PlainDate and `$toUtc` is set to `false`,
-	 *                    the returned DateTimeImmutable will be in whatever time zone is present in `$value`.
+	 *                    the DateTimeImmutable will be in whatever time zone is present in `$value`.
 	 *                    Defaults to `true`.
 	 *
-	 * @param EcmaType &$type If specified, this variable will be filled with
-	 *                        the {@see OCA\ShiftsNext\Util\Util::EcmaType}
-	 *
-	 * @return DateTimeImmutable
+	 * @return list{DateTimeImmutable,EcmaType} A tuple containing the resulting DateTimeImmutable and
+	 *                                          the detected {@see OCA\ShiftsNext\Util\Util::EcmaType} of `$value`
 	 *
 	 * @throws EcmaMalformedStringException if `$value` is not a valid Temporal
 	 *                                      string
-	 *
-	 * @psalm-assert !null $type
 	 */
-	public static function parseEcma(
-		string $value,
-		bool $toUtc = true,
-		?string &$type = null,
-	): DateTimeImmutable {
+	public static function parseEcma(string $value, bool $toUtc = true): array {
 		foreach (self::DATE_ECMA_FORMAT_TO_TYPE_MAP as $format => $type) {
 			$dateTime = DateTimeImmutable::createFromFormat($format, $value);
 			if (!$dateTime) {
@@ -102,11 +87,11 @@ final class Util {
 			if ($format === DateTimeInterface::PLAIN_DATE) {
 				$toUtc = true;
 			}
-			return $toUtc
-				? $dateTime->setTimezone(new DateTimeZone('UTC'))
-				: $dateTime;
+			if ($toUtc) {
+				$dateTime = $dateTime->setTimezone(new DateTimeZone('UTC'));
+			}
+			return [$dateTime, $type];
 		}
-		$type = null;
 		throw new EcmaMalformedStringException(
 			"Format of value `'$value'` is not supported"
 		);

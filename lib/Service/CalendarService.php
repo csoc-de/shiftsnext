@@ -216,8 +216,8 @@ final class CalendarService {
 			$summary .= " ($userDisplayName)";
 		}
 
-		$dtStart = Util::parseEcma($shift->start);
-		$dtEnd = Util::parseEcma($shift->end);
+		$dtStart = Util::parseEcma($shift->start)[0];
+		$dtEnd = Util::parseEcma($shift->end)[0];
 
 		if ($shift->shiftType->repetition['weekly_type'] === 'by_week') {
 			$dtStart = $dtStart->format(DateTimeInterface::I_CAL_PLAIN_DATE);
