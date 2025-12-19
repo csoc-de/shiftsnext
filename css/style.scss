@@ -37,6 +37,10 @@ body[id][id] {
 		overflow-y: unset !important;
 	}
 
+	.textarea__main-wrapper {
+		height: initial;
+	}
+
 	textarea {
 		display: block;
 	}
