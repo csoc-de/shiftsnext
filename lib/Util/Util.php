@@ -8,14 +8,12 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
 use OCA\ShiftsNext\Exception\EcmaMalformedStringException;
+use OCA\ShiftsNext\Psalm\EcmaAlias;
 
 use function array_search;
 
 /**
- * Needs to be redeclared, because Psalm cannot infer the type of a variable
- * which is passed by reference into a function when that function accepts a by
- * reference parameter and this parameter uses an imported Psalm type alias
- * @psalm-type EcmaType = 'Date'|'ZonedDateTime'|'PlainDate'
+ * @psalm-import-type EcmaType from EcmaAlias
  */
 final class Util {
 	/** It's important to keep the order of elements inside this array */
