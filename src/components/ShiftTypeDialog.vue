@@ -3,8 +3,6 @@
 		no-close
 		:name="dialogName"
 		size="normal">
-		<!-- Trap autofocus to this invisible input to prevent NcSelect getting focused -->
-		<AutoFocusTrap />
 		<form id="shift-type-form" class="flex flex-col gap-3" @submit.prevent="onSubmit">
 			<div class="grid grid-cols-2 gap-3 sm:grid-cols-6">
 				<InputGroup class="sm:col-span-2">
@@ -209,7 +207,6 @@ import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcTimezonePicker from '@nextcloud/vue/components/NcTimezonePicker'
-import AutoFocusTrap from './AutoFocusTrap.vue'
 import CustomFieldset from './CustomFieldset.vue'
 import DurationBuilder from './DurationBuilder.vue'
 import InputGroup from './InputGroup.vue'
