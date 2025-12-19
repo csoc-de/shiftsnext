@@ -4,19 +4,16 @@
 		:name="t(APP_ID, 'Create shift exchange')"
 		size="normal">
 		<form id="shift-exchange-form" @submit.prevent="onSubmit">
-			<div class="flex justify-center">
-				<NcCheckboxRadioSwitch
+			<NcRadioGroup
+				v-model="exchangeType"
+				:label="t(APP_ID, 'Exchange type')"
+				hide-label>
+				<NcRadioGroupButton
 					v-for="type in EXCHANGE_TYPES"
 					:key="type"
-					v-model="exchangeType"
-					:value="type"
-					button-variant
-					name="exchange-type"
-					type="radio"
-					button-variant-grouped="horizontal">
-					{{ exchangeTypeTranslations[type] }}
-				</NcCheckboxRadioSwitch>
-			</div>
+					:label="exchangeTypeTranslations[type]"
+					:value="type" />
+			</NcRadioGroup>
 			<div class="grid grid-cols-2 gap-4">
 				<CustomFieldset class="col-span-2 md:col-span-1">
 					<template #legend>
@@ -151,9 +148,10 @@ import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
 import { computed, inject, ref, watch } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
+import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'

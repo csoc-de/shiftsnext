@@ -7,22 +7,17 @@
 			class="flex flex-col gap-2"
 			@submit.prevent="onSubmit">
 			<InputGroup>
-				<div>
-					{{ editor === 'admin' ? t(APP_ID, 'Admin approval') : t(APP_ID, 'User approval') }}
-				</div>
-				<div class="flex">
-					<NcCheckboxRadioSwitch
+				<div>{{ approvalLabel }}</div>
+				<NcRadioGroup
+					v-model="approvedString"
+					:label="approvalLabel"
+					hide-label>
+					<NcRadioGroupButton
 						v-for="option in APPROVED_OPTIONS"
 						:key="`${option}`"
-						v-model="approvedString"
 						:value="`${option}`"
-						button-variant
-						button-variant-grouped="horizontal"
-						name="approved_by_user"
-						type="radio">
-						{{ approvedTranslations[`${option}`] }}
-					</NcCheckboxRadioSwitch>
-				</div>
+						:label="approvedTranslations[`${option}`]" />
+				</NcRadioGroup>
 			</InputGroup>
 			<InputGroup>
 				<label for="comment">{{ t(APP_ID, "Comment") }}</label>
@@ -52,8 +47,9 @@
 import { t } from '@nextcloud/l10n'
 import { computed, inject, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
+import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import InputGroup from './InputGroup.vue'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
@@ -80,6 +76,10 @@ const emit = defineEmits<{ close: [] }>()
 const update = inject(updateIK)!
 
 const saving = ref(false)
+
+const approvalLabel = editor === 'admin'
+	? t(APP_ID, 'Admin approval')
+	: t(APP_ID, 'User approval')
 
 type FormValues = {
 	approved: boolean | null

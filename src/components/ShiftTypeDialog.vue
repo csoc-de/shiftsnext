@@ -94,24 +94,20 @@
 									required />
 							</InputGroup>
 						</div>
-						<CustomFieldset>
-							<template #legend>
-								{{ t(APP_ID, "Weekly type") }}
-							</template>
-							<div class="flex">
-								<NcCheckboxRadioSwitch
+						<InputGroup>
+							<div>{{ t(APP_ID, "Weekly type") }}</div>
+							<NcRadioGroup
+								v-model="weeklyType"
+								:label=" t(APP_ID, 'Weekly type')"
+								hide-label>
+								<NcRadioGroupButton
 									v-for="type in REPETITION_WEEKLY_TYPES"
 									:key="type"
-									v-model="weeklyType"
 									:value="type"
-									button-variant
-									name="repetition-weekly-type"
-									type="radio"
-									button-variant-grouped="horizontal">
-									{{ weeklyTypeTranslations[type] }}
-								</NcCheckboxRadioSwitch>
-							</div>
-						</CustomFieldset>
+									:label="weeklyTypeTranslations[type]"
+									class="whitespace-nowrap" />
+							</NcRadioGroup>
+						</InputGroup>
 						<CustomFieldset>
 							<template #legend>
 								{{ t(APP_ID, "Config") }}
@@ -208,6 +204,8 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwit
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
+import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcTimezonePicker from '@nextcloud/vue/components/NcTimezonePicker'
