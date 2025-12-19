@@ -65,8 +65,6 @@
 </template>
 
 <script setup lang="ts">
-import type { StringifiedNullableBoolean } from '../models/misc.ts'
-
 import { t } from '@nextcloud/l10n'
 import { computed, inject, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -76,6 +74,7 @@ import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import InputGroup from './InputGroup.vue'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
+	type Approved,
 	type Approveds,
 	type ExchangeEditor,
 	type ShiftExchange,
@@ -105,9 +104,9 @@ const formValues = ref<FormValues>({
 	comment: '',
 })
 
-const approvedString = computed<StringifiedNullableBoolean>({
+const approvedString = computed<`${Approved}`>({
 	get() {
-		return String(formValues.value.approved) as StringifiedNullableBoolean
+		return String(formValues.value.approved) as `${Approved}`
 	},
 	set(value) {
 		formValues.value.approved = value === 'null' ? null : value === 'true'
