@@ -5,7 +5,10 @@
 		<div
 			class="flex items-center justify-center mx-2 h-nc-clickable-area relative">
 			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
-			<NcActions v-if="renderActions" class="absolute right-0" :inline="2">
+			<NcActions
+				v-if="renderActions"
+				class="absolute right-0"
+				:inline="3">
 				<NcActionButton
 					v-if="renderEditButton"
 					close-after-click
