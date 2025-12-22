@@ -65,7 +65,7 @@
 import type { Shift } from '../models/shift.ts'
 
 import { t } from '@nextcloud/l10n'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 // @ts-expect-error package has no types
@@ -74,17 +74,10 @@ import ArrowAll from 'vue-material-design-icons/ArrowAll.vue'
 import Delete from 'vue-material-design-icons/Delete.vue'
 // @ts-expect-error package has no types
 import InformationOutline from 'vue-material-design-icons/InformationOutline.vue'
+import { injectShiftsContext } from '../views/ShiftsView.vue'
 import DelayBox from './DelayBox.vue'
 import ShiftInfoPopover from './ShiftInfoPopover.vue'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
-import {
-	addDeletionShiftIK,
-	deletionShiftsIK,
-	multiStepActionIK,
-	onShiftDeletionAttemptIK,
-	removeDeletionShiftIK,
-	setMultiStepActionIK,
-} from '../models/shiftsTable.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getContrastColor } from '../utils/color.ts'
 import { isShiftAdmin } from '../utils/groupShiftAdmin.ts'
@@ -98,13 +91,14 @@ const showInfo = ref(false)
 
 const _isShiftAdmin = isShiftAdmin(shift.shift_type.group.id)
 
-const multiStepAction = inject(multiStepActionIK)!
-const setMultiStepAction = inject(setMultiStepActionIK)!
-
-const deletionShifts = inject(deletionShiftsIK)!
-const addDeletionShift = inject(addDeletionShiftIK)!
-const removeDeletionShift = inject(removeDeletionShiftIK)!
-const onShiftDeletionAttempt = inject(onShiftDeletionAttemptIK)!
+const {
+	multiStepAction,
+	setMultiStepAction,
+	deletionShifts,
+	addDeletionShift,
+	removeDeletionShift,
+	onShiftDeletionAttempt,
+} = injectShiftsContext()
 
 const isSelected = computed(() => multiStepAction.value.type === 'motion'
 	&& multiStepAction.value.columnIndex === columnIndex

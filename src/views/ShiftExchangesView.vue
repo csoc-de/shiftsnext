@@ -40,9 +40,22 @@
 	</PaddedContainer>
 </template>
 
+<script lang="ts">
+import { createContext } from '../utils/createContext.ts'
+
+export interface ShiftExchangesContext {
+	create: (payload: ShiftExchangePostRequest) => Promise<ShiftExchange>
+	update: (id: number, payload: ShiftExchangePutRequest) => Promise<ShiftExchange>
+	remove: (id: number) => Promise<ShiftExchange>
+}
+
+export const [injectShiftExchangesContext, provideShiftExchangesContext]
+	= createContext<ShiftExchangesContext>('ShiftExchanges')
+</script>
+
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import { provide, ref } from 'vue'
+import { ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import CreateShiftExchangeDialog from '../components/CreateShiftExchangeDialog.vue'
 import HeaderNavigation from '../components/HeaderNavigation.vue'
@@ -58,10 +71,6 @@ import {
 	type ShiftExchange,
 	type ShiftExchangePostRequest,
 	type ShiftExchangePutRequest,
-
-	createIK,
-	removeIK,
-	updateIK,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { compare } from '../utils/sort.ts'
@@ -105,7 +114,6 @@ async function create(payload: ShiftExchangePostRequest): Promise<ShiftExchange>
 	createDialogMounted.value = false
 	return createdShiftExchange
 }
-provide(createIK, create)
 
 /**
  * Update shift exchange
@@ -130,7 +138,6 @@ async function update(
 	}
 	return updatedShiftExchange
 }
-provide(updateIK, update)
 
 /**
  * Remove shift exchange
@@ -148,5 +155,6 @@ async function remove(id: number): Promise<ShiftExchange> {
 	}
 	return deletedShiftExchange
 }
-provide(removeIK, remove)
+
+provideShiftExchangesContext({ create, update, remove })
 </script>

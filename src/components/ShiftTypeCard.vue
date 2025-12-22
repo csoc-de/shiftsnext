@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import { inject, ref } from 'vue'
+import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcUserStatusIcon from '@nextcloud/vue/components/NcUserStatusIcon'
@@ -69,18 +69,17 @@ import NcUserStatusIcon from '@nextcloud/vue/components/NcUserStatusIcon'
 import Delete from 'vue-material-design-icons/Delete.vue'
 // @ts-expect-error package has no types
 import Pencil from 'vue-material-design-icons/Pencil.vue'
+import { injectShiftTypesContext } from '../views/ShiftTypesView.vue'
 import DelayBox from './DelayBox.vue'
 import ShiftTypeDialog from './ShiftTypeDialog.vue'
 import {
 	type ShiftType,
-
-	removeInjectionKey,
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
 
 const { shiftType } = defineProps<{ shiftType: ShiftType }>()
 
-const remove = inject(removeInjectionKey)!
+const { remove } = injectShiftTypesContext()
 
 const delayBoxVisible = ref(false)
 const editDialogMounted = ref(false)

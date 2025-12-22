@@ -153,6 +153,23 @@
 	</PaddedContainer>
 </template>
 
+<script lang="ts">
+import { createContext } from '../utils/createContext.ts'
+
+export interface ShiftsContext {
+	setMultiStepAction: (action: MultiStepAction) => void
+	resetMultiStepAction: () => void
+	multiStepAction: Ref<MultiStepAction>
+	onShiftDeletionAttempt: (shift: Shift, columnIndex: number) => Promise<Shift>
+	deletionShifts: Ref<Shift[]>
+	addDeletionShift: (shift: Shift) => void
+	removeDeletionShift: (shift: Shift) => void
+}
+
+export const [injectShiftsContext, provideShiftsContext]
+	= createContext<ShiftsContext>('Shifts')
+</script>
+
 <script setup lang="ts">
 import type { Shift, ShiftRequest } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
@@ -161,7 +178,11 @@ import { t } from '@nextcloud/l10n'
 import { onKeyStroke, watchImmediate } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { Temporal } from 'temporal-polyfill'
-import { computed, provide, ref, useTemplateRef } from 'vue'
+import {
+	type Ref,
+
+	computed, ref, useTemplateRef,
+} from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 // @ts-expect-error package has no types
@@ -193,14 +214,6 @@ import {
 	type UserCell,
 	type WeekCell,
 	type ZonedDateTimeDataCell,
-
-	addDeletionShiftIK,
-	deletionShiftsIK,
-	multiStepActionIK,
-	onShiftDeletionAttemptIK,
-	removeDeletionShiftIK,
-	resetMultiStepActionIK,
-	setMultiStepActionIK,
 } from '../models/shiftsTable.ts'
 import {
 	type ShiftType,
@@ -762,7 +775,6 @@ async function onShiftMotionAttempt(userId: string): Promise<void | Shift> {
 }
 
 const deletionShifts = ref<Shift[]>([])
-provide(deletionShiftsIK, deletionShifts)
 
 /**
  * Add `shift` to the deletion shifts
@@ -772,7 +784,6 @@ provide(deletionShiftsIK, deletionShifts)
 function addDeletionShift(shift: Shift) {
 	deletionShifts.value.push(shift)
 }
-provide(addDeletionShiftIK, addDeletionShift)
 
 /**
  * Remove `shift` from the deletion shifts
@@ -782,7 +793,6 @@ provide(addDeletionShiftIK, addDeletionShift)
 function removeDeletionShift(shift: Shift) {
 	deletionShifts.value = deletionShifts.value.filter(({ id }) => id !== shift.id)
 }
-provide(removeDeletionShiftIK, removeDeletionShift)
 
 /**
  * Handler for shift deletion attempt
@@ -806,7 +816,6 @@ async function onShiftDeletionAttempt(shift: Shift, columnIndex: number): Promis
 		removeDeletionShift(shift)
 	}
 }
-provide(onShiftDeletionAttemptIK, onShiftDeletionAttempt)
 
 /**
  * Returns the shifts data cell for the given `userId` and `columnIndex`
@@ -873,10 +882,6 @@ function resetMultiStepAction(): void {
 	multiStepAction.value = getUndefinedMultiStepAction()
 }
 
-provide(multiStepActionIK, multiStepAction)
-provide(setMultiStepActionIK, setMultiStepAction)
-provide(resetMultiStepActionIK, resetMultiStepAction)
-
 /**
  * Syncs the calendar by groups
  */
@@ -892,4 +897,14 @@ async function synchronizeByGroups() {
 		synchronizing.value = false
 	}
 }
+
+provideShiftsContext({
+	setMultiStepAction,
+	resetMultiStepAction,
+	multiStepAction,
+	onShiftDeletionAttempt,
+	deletionShifts,
+	addDeletionShift,
+	removeDeletionShift,
+})
 </script>

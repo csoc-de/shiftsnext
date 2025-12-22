@@ -19,9 +19,22 @@
 	</PaddedContainer>
 </template>
 
+<script lang="ts">
+import { createContext } from '../utils/createContext.ts'
+
+export interface ShiftTypesContext {
+	create: (payload: ShiftTypePostPayload) => Promise<void>
+	update: (id: number, payload: ShiftTypePutPayload) => Promise<void>
+	remove: (id: number) => Promise<void>
+}
+
+export const [injectShiftTypesContext, provideShiftTypesContext]
+	= createContext<ShiftTypesContext>('ShiftTypes')
+</script>
+
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import { provide, ref } from 'vue'
+import { ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import HeaderNavigation from '../components/HeaderNavigation.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
@@ -37,10 +50,6 @@ import {
 	type ShiftType,
 	type ShiftTypePostPayload,
 	type ShiftTypePutPayload,
-
-	createInjectionKey,
-	removeInjectionKey,
-	updateInjectionKey,
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
 
@@ -68,7 +77,6 @@ async function create(payload: ShiftTypePostPayload): Promise<void> {
 	shiftTypes.value.unshift(createdShiftType)
 	createDialogMounted.value = false
 }
-provide(createInjectionKey, create)
 
 /**
  * Update shift type
@@ -81,7 +89,6 @@ async function update(id: number, payload: ShiftTypePutPayload): Promise<void> {
 	const index = shiftTypes.value.findIndex(({ id }) => id === updatedShiftType.id)
 	shiftTypes.value[index] = updatedShiftType
 }
-provide(updateInjectionKey, update)
 
 /**
  * Remove shift type
@@ -92,5 +99,6 @@ async function remove(id: number): Promise<void> {
 	const deletedShiftType = await deleteShiftType(id)
 	shiftTypes.value = shiftTypes.value.filter(({ id }) => id !== deletedShiftType.id)
 }
-provide(removeInjectionKey, remove)
+
+provideShiftTypesContext({ create, update, remove })
 </script>

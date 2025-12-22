@@ -1,5 +1,4 @@
 import type { Temporal } from 'temporal-polyfill'
-import type { InjectionKey } from 'vue'
 import type { Group } from '../models/group.ts'
 import type { SearchParams } from '../models/url.ts'
 import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
@@ -143,23 +142,3 @@ export const shortDayToIsoDayNumberMap = {
 	SA: 6,
 	SU: 7,
 } as const satisfies ShortDayToIsoDayNumberMap
-
-export type CreateShiftType = (
-	payload: ShiftTypePostPayload,
-) => Promise<void>
-
-export type UpdateShiftType = (
-	id: number,
-	payload: ShiftTypePutPayload,
-) => Promise<void>
-
-export type RemoveShiftType = (id: number) => Promise<void>
-
-export const createInjectionKey
-	= Symbol('createInjectionKey') as InjectionKey<CreateShiftType>
-
-export const updateInjectionKey
-	= Symbol('updateInjectionKey') as InjectionKey<UpdateShiftType>
-
-export const removeInjectionKey
-	= Symbol('removeInjectionKey') as InjectionKey<RemoveShiftType>

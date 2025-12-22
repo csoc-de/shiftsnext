@@ -1,4 +1,3 @@
-import type { InjectionKey } from 'vue'
 import type { Shift } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
 
@@ -93,28 +92,6 @@ export interface TransferShiftExchangeResponse
 export type ShiftExchange
 	= | RegularShiftExchange
 		| TransferShiftExchangeResponse
-
-// Injection keys
-
-export type CreateShiftExchange = (
-	payload: ShiftExchangePostRequest,
-) => Promise<ShiftExchange>
-
-export type UpdateShiftExchange = (
-	id: number,
-	payload: ShiftExchangePutRequest,
-) => Promise<ShiftExchange>
-
-export type RemoveShiftExchange = (id: number) => Promise<ShiftExchange>
-
-export const createIK
-	= Symbol('createIK') as InjectionKey<CreateShiftExchange>
-
-export const updateIK
-	= Symbol('updateIK') as InjectionKey<UpdateShiftExchange>
-
-export const removeIK
-	= Symbol('removeIK') as InjectionKey<RemoveShiftExchange>
 
 // Misc
 

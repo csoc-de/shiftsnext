@@ -146,7 +146,7 @@ import type {
 
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
@@ -155,6 +155,7 @@ import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
+import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
@@ -165,7 +166,6 @@ import {
 	type ShiftExchangePostRequestBase,
 	type ShiftExchangeType,
 
-	createIK,
 	EXCHANGE_TYPES,
 	exchangeTypeTranslations,
 } from '../models/shiftExchange.ts'
@@ -178,7 +178,7 @@ import { authUser } from '../utils/user.ts'
 
 const emit = defineEmits<{ close: [] }>()
 
-const create = inject(createIK)!
+const { create } = injectShiftExchangesContext()
 
 const isShiftAdmin = getInitialIsShiftAdmin()
 

@@ -138,13 +138,14 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import { inject, ref } from 'vue'
+import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 // @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
 // @ts-expect-error package has no types
 import Pencil from 'vue-material-design-icons/Pencil.vue'
+import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import DelayBox from './DelayBox.vue'
 import EditShiftExchangeDialog from './EditShiftExchangeDialog.vue'
 import ShiftExchangeApprovedStatus from './ShiftExchangeApprovedStatus.vue'
@@ -155,7 +156,6 @@ import {
 	type ShiftExchangeType,
 
 	exchangeTypeTranslations,
-	removeIK,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { formatRange } from '../utils/date.ts'
@@ -178,7 +178,7 @@ const dateTimeFormatOptions: Intl.DateTimeFormatOptions = {
 	timeStyle: 'short',
 }
 
-const remove = inject(removeIK)!
+const { remove } = injectShiftExchangesContext()
 
 const delayBoxVisible = ref(false)
 const editDialogMounted = ref(false)

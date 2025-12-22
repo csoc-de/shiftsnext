@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import { computed, inject, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
@@ -65,12 +65,10 @@ import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import ArrowAll from 'vue-material-design-icons/ArrowAll.vue'
 // @ts-expect-error package has no types
 import InformationOutline from 'vue-material-design-icons/InformationOutline.vue'
+import { injectShiftsContext } from '../views/ShiftsView.vue'
 import ShiftInfoPopover from './ShiftInfoPopover.vue'
 import {
 	type ShiftTypeWrapper,
-
-	multiStepActionIK,
-	setMultiStepActionIK,
 } from '../models/shiftsTable.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getContrastColor } from '../utils/color.ts'
@@ -85,8 +83,7 @@ const showInfo = ref(false)
 
 const _isShiftAdmin = isShiftAdmin(shiftTypeWrapper.shiftType.group.id)
 
-const multiStepAction = inject(multiStepActionIK)!
-const setTableAction = inject(setMultiStepActionIK)!
+const { multiStepAction, setMultiStepAction } = injectShiftsContext()
 
 const isSelected = computed(() => multiStepAction.value.type === 'creation'
 	&& multiStepAction.value.columnIndex === columnIndex
@@ -99,7 +96,7 @@ const doubledContrastColor = computed(() => getContrastColor(contrastColor.value
  * Handle click event
  */
 function onAssignButtonClick() {
-	setTableAction({ type: 'creation', columnIndex, shiftTypeWrapper })
+	setMultiStepAction({ type: 'creation', columnIndex, shiftTypeWrapper })
 }
 
 const disabled = computed(() => Boolean(multiStepAction.value.type))

@@ -45,12 +45,13 @@
 
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
-import { computed, inject, ref } from 'vue'
+import { computed, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
 import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
+import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import InputGroup from './InputGroup.vue'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
@@ -62,7 +63,6 @@ import {
 
 	APPROVED_OPTIONS,
 	approvedTranslations,
-	updateIK,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 
@@ -73,7 +73,7 @@ const { shiftExchange, editor } = defineProps<{
 
 const emit = defineEmits<{ close: [] }>()
 
-const update = inject(updateIK)!
+const { update } = injectShiftExchangesContext()
 
 const saving = ref(false)
 

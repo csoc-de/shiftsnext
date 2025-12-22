@@ -1,5 +1,4 @@
 import type { Temporal } from 'temporal-polyfill'
-import type { InjectionKey, Ref } from 'vue'
 import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
 import type { Shift } from './shift.ts'
 import type { RepetitionWeeklyType, ShiftType } from './shiftType.ts'
@@ -119,32 +118,3 @@ export type DefinedMultiStepAction
 	= CreationMultiStepAction | MotionMultiStepAction
 
 export type MultiStepAction = UndefinedMultiStepAction | DefinedMultiStepAction
-
-// Injection keys for multi step action
-
-export const setMultiStepActionIK
-	= Symbol('setMultiStepActionIK') as InjectionKey<
-		(action: MultiStepAction) => void
-	>
-
-export const resetMultiStepActionIK
-	= Symbol('resetMultiStepActionIK') as InjectionKey<() => void>
-
-export const multiStepActionIK
-	= Symbol('multiStepActionIK') as InjectionKey<Ref<MultiStepAction>>
-
-// Injection keys for shift deletion
-
-export const onShiftDeletionAttemptIK
-	= Symbol('onShiftDeletionAttemptIK') as InjectionKey<
-		(shift: Shift, columnIndex: number) => Promise<Shift>
-	>
-
-export const deletionShiftsIK
-	= Symbol('deletionShiftsIK') as InjectionKey<Ref<Shift[]>>
-
-export const addDeletionShiftIK
-	= Symbol('addDeletionShiftIK') as InjectionKey<(shift: Shift) => void>
-
-export const removeDeletionShiftIK
-	= Symbol('removeDeletionShiftIK') as InjectionKey<(shift: Shift) => void>

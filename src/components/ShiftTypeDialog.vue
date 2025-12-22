@@ -196,7 +196,7 @@
 <script setup lang="ts">
 import { t } from '@nextcloud/l10n'
 import { Temporal } from 'temporal-polyfill'
-import { computed, inject, ref } from 'vue'
+import { computed, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
@@ -207,6 +207,7 @@ import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcTimezonePicker from '@nextcloud/vue/components/NcTimezonePicker'
+import { injectShiftTypesContext } from '../views/ShiftTypesView.vue'
 import CustomFieldset from './CustomFieldset.vue'
 import DurationBuilder from './DurationBuilder.vue'
 import InputGroup from './InputGroup.vue'
@@ -223,11 +224,9 @@ import {
 	type ShiftTypePutPayload,
 	type ShortDayToAmountMap,
 
-	createInjectionKey,
 	REPETITION_FREQUENCIES,
 	REPETITION_WEEKLY_TYPES,
 	shortDayToLocalDayMap,
-	updateInjectionKey,
 	weeklyTypeTranslations,
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
@@ -238,8 +237,7 @@ const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
 
 const emit = defineEmits<{ close: [] }>()
 
-const create = inject(createInjectionKey)!
-const update = inject(updateInjectionKey)!
+const { create, update } = injectShiftTypesContext()
 
 const saving = ref(false)
 
