@@ -1,4 +1,4 @@
-import type { ErrorResponse } from '../models/error.ts'
+import type { ErrorResponsePayload } from '../models/error.ts'
 import type {
 	ShiftType,
 	ShiftTypeFilters,
@@ -26,7 +26,7 @@ export async function getShiftTypes(filters: ShiftTypeFilters = {}): Promise<Shi
 			)
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'fetch', 'shift types')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'fetch', 'shift types')
 		throw error
 	}
 }
@@ -46,7 +46,7 @@ export async function postShiftType(payload: ShiftTypePostPayload): Promise<Shif
 			)
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'create', 'shift type')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'create', 'shift type')
 		throw error
 	}
 }
@@ -70,7 +70,7 @@ export async function putShiftType(
 			)
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'update', 'shift type')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'update', 'shift type')
 		throw error
 	}
 }
@@ -89,7 +89,7 @@ export async function deleteShiftType(id: number): Promise<ShiftType> {
 			)
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'delete', 'shift type')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'delete', 'shift type')
 		throw error
 	}
 }

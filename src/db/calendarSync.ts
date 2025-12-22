@@ -1,9 +1,9 @@
 import type {
-	SynchronizeByGroupsRequest,
-	SynchronizeByShiftsRequest,
-	SynchronizeResponse,
+	SynchronizeByGroupsPostPayload,
+	SynchronizeByShiftsPostPayload,
+	SynchronizeResponsePayload,
 } from '../models/calendarSync.ts'
-import type { ErrorResponse } from '../models/error.ts'
+import type { ErrorResponsePayload } from '../models/error.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
@@ -15,17 +15,17 @@ import { CALENDAR_PATH } from '../utils/url.ts'
  *
  * @param payload The request payload
  */
-export async function postSynchronizeByGroups(payload: SynchronizeByGroupsRequest): Promise<SynchronizeResponse> {
+export async function postSynchronizeByGroups(payload: SynchronizeByGroupsPostPayload): Promise<SynchronizeResponsePayload> {
 	try {
 		return (
-			await axios.post<SynchronizeResponse>(
+			await axios.post<SynchronizeResponsePayload>(
 				generateUrl(`${CALENDAR_PATH}/synchronize-by-groups`),
 				payload,
 			)
 		).data
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'synchronize',
 			'calendar by groups',
 		)
@@ -38,17 +38,17 @@ export async function postSynchronizeByGroups(payload: SynchronizeByGroupsReques
  *
  * @param payload The request payload
  */
-export async function postSynchronizeByShifts(payload: SynchronizeByShiftsRequest): Promise<SynchronizeResponse> {
+export async function postSynchronizeByShifts(payload: SynchronizeByShiftsPostPayload): Promise<SynchronizeResponsePayload> {
 	try {
 		return (
-			await axios.post<SynchronizeResponse>(
+			await axios.post<SynchronizeResponsePayload>(
 				generateUrl(`${CALENDAR_PATH}/synchronize-by-shifts`),
 				payload,
 			)
 		).data
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'synchronize',
 			'calendar by shifts',
 		)

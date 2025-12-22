@@ -162,8 +162,8 @@ import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { getShifts } from '../db/shift.ts'
 import { getUsers } from '../db/user.ts'
 import {
-	type ShiftExchangePostRequest,
-	type ShiftExchangePostRequestBase,
+	type ShiftExchangePostPayload,
+	type ShiftExchangePostPayloadBase,
 	type ShiftExchangeType,
 
 	EXCHANGE_TYPES,
@@ -328,11 +328,11 @@ async function loadShiftsB(): Promise<void> {
 async function onSubmit() {
 	try {
 		saving.value = true
-		const base: ShiftExchangePostRequestBase = {
+		const base: ShiftExchangePostPayloadBase = {
 			comment: comment.value,
 			shift_a_id: shiftAOption.value!.id,
 		}
-		let payload: ShiftExchangePostRequest
+		let payload: ShiftExchangePostPayload
 		if (exchangeType.value === 'regular') {
 			payload = {
 				...base,

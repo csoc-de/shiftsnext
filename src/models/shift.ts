@@ -4,30 +4,30 @@ import type { SearchParams } from '../models/url.ts'
 import type { User } from '../models/user.ts'
 import type { IsoCalendarDate, IsoWeekDateWithoutDay } from '../utils/date.ts'
 
-export interface ShiftRequestBase {
+export interface ShiftPostPayloadBase {
 	user_id: string
 	shift_type_id: number
 }
 
-export interface ShiftByDayRequest extends ShiftRequestBase {
+export interface ShiftByDayPostPayload extends ShiftPostPayloadBase {
 	start: Temporal.ZonedDateTime
 	end: Temporal.ZonedDateTime
 }
 
-export interface ShiftByWeekRequest extends ShiftRequestBase {
+export interface ShiftByWeekPostPayload extends ShiftPostPayloadBase {
 	start: Temporal.PlainDate
 	end: Temporal.PlainDate
 }
 
-export type ShiftRequest = ShiftByDayRequest | ShiftByWeekRequest
+export type ShiftPostPayload = ShiftByDayPostPayload | ShiftByWeekPostPayload
 
-export interface Shift extends Omit<ShiftRequest, 'shift_type_id' | 'user_id'> {
+export type ShiftPatchPayload = Pick<ShiftPostPayload, 'user_id'>
+
+export interface Shift extends Omit<ShiftPostPayload, 'shift_type_id' | 'user_id'> {
 	id: number
 	user: User
 	shift_type: ShiftType
 }
-
-export type ShiftPatchRequest = Pick<ShiftRequest, 'user_id'>
 
 export interface ShiftFilters extends SearchParams {
 	group_ids?: string[]

@@ -104,16 +104,6 @@ export interface Caldav {
 	categories: string
 }
 
-export interface ShiftTypePostPayload extends Omit<ShiftType, 'id' | 'group'> {
-	group_id: string
-}
-
-export type ShiftTypePutPayload = Omit<ShiftTypePostPayload, 'group_id' | 'repetition'>
-
-export type ShiftTypePayloadType = 'post' | 'put'
-
-export type ShiftTypePayload<T extends ShiftTypePayloadType> = T extends 'post' ? ShiftTypePostPayload : ShiftTypePutPayload
-
 export interface ShiftType {
 	id: number
 	group: Group
@@ -124,6 +114,17 @@ export interface ShiftType {
 	repetition: Repetition
 	caldav: Caldav
 }
+
+export interface ShiftTypePostPayload extends Omit<ShiftType, 'id' | 'group'> {
+	group_id: string
+}
+
+export type ShiftTypePutPayload = Omit<ShiftTypePostPayload, 'group_id' | 'repetition'>
+
+export type ShiftTypePayloadType = 'post' | 'put'
+
+export type ShiftTypePayload<T extends ShiftTypePayloadType>
+	= T extends 'post' ? ShiftTypePostPayload : ShiftTypePutPayload
 
 export interface ShiftTypeFilters extends SearchParams {
 	group_ids?: string[]

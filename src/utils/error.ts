@@ -1,5 +1,5 @@
 import type { AxiosError } from '@nextcloud/axios'
-import type { ErrorResponse } from '../models/error.ts'
+import type { ErrorResponsePayload } from '../models/error.ts'
 
 import { showError } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
@@ -26,7 +26,7 @@ import { TOAST_TIMEOUT } from './toast.ts'
  * Pass `false` if this is not desired.
  */
 export function handleError(
-	error: AxiosError<ErrorResponse>,
+	error: AxiosError<ErrorResponsePayload>,
 	operation: string,
 	subject: string,
 	showToast: boolean = true,

@@ -1,4 +1,4 @@
-import type { ErrorResponse } from '../models/error.ts'
+import type { ErrorResponsePayload } from '../models/error.ts'
 import type { User, UserFilters } from '../models/user.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
@@ -16,7 +16,7 @@ export async function getUsers(filters: UserFilters = {}): Promise<User[]> {
 			await axios.get<User[]>(generateUrlWithSearchParams(USERS_PATH, filters))
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'fetch', 'users')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'fetch', 'users')
 		throw error
 	}
 }

@@ -1,4 +1,4 @@
-import type { ErrorResponse } from '../models/error.ts'
+import type { ErrorResponsePayload } from '../models/error.ts'
 import type { Group, GroupFilters } from '../models/group.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
@@ -16,7 +16,7 @@ export async function getGroups(filters: GroupFilters = {}): Promise<Group[]> {
 			await axios.get<Group[]>(generateUrlWithSearchParams(GROUPS_PATH, filters))
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'fetch', 'groups')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'fetch', 'groups')
 		throw error
 	}
 }

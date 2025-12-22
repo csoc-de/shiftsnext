@@ -1,5 +1,5 @@
-import type { AppConfig, ConfigPayload, DefaultGroups } from '../models/config.ts'
-import type { ErrorResponse } from '../models/error.ts'
+import type { AppConfig, ConfigPutPayload, DefaultGroupsPutPayload } from '../models/config.ts'
+import type { ErrorResponsePayload } from '../models/error.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
@@ -9,14 +9,14 @@ import { CONFIG_PATH } from '../utils/url.ts'
 /**
  * Save the default groups
  *
- * @param payload The default groups
+ * @param payload The request payload
  */
-export async function putDefaultGroups(payload: DefaultGroups): Promise<void> {
+export async function putDefaultGroups(payload: DefaultGroupsPutPayload): Promise<void> {
 	try {
 		await axios.put(generateUrl(`${CONFIG_PATH}/user/default-groups`), payload)
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'save',
 			'default groups',
 			false,
@@ -28,14 +28,14 @@ export async function putDefaultGroups(payload: DefaultGroups): Promise<void> {
 /**
  * Save the app config
  *
- * @param payload The app config
+ * @param payload The request payload
  */
-export async function putAppConfig(payload: ConfigPayload<AppConfig>): Promise<void> {
+export async function putAppConfig(payload: ConfigPutPayload<AppConfig>): Promise<void> {
 	try {
 		await axios.put(generateUrl(`${CONFIG_PATH}/app`), payload)
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'save',
 			'app config',
 		)

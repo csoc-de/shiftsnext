@@ -1,8 +1,8 @@
-import type { ErrorResponse } from '../models/error.ts'
+import type { ErrorResponsePayload } from '../models/error.ts'
 import type {
 	ShiftExchange,
-	ShiftExchangePostRequest,
-	ShiftExchangePutRequest,
+	ShiftExchangePostPayload,
+	ShiftExchangePutPayload,
 } from '../models/shiftExchange.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
@@ -24,7 +24,7 @@ export async function getShiftExchanges(): Promise<ShiftExchange[]> {
 		).data
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'fetch',
 			'shift exchanges',
 		)
@@ -37,7 +37,7 @@ export async function getShiftExchanges(): Promise<ShiftExchange[]> {
  *
  * @param payload The shift exchange
  */
-export async function postShiftExchange(payload: ShiftExchangePostRequest): Promise<ShiftExchange> {
+export async function postShiftExchange(payload: ShiftExchangePostPayload): Promise<ShiftExchange> {
 	try {
 		return (
 			await axios.post<ShiftExchange>(
@@ -48,7 +48,7 @@ export async function postShiftExchange(payload: ShiftExchangePostRequest): Prom
 		).data
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'create',
 			'shift exchange',
 		)
@@ -64,7 +64,7 @@ export async function postShiftExchange(payload: ShiftExchangePostRequest): Prom
  */
 export async function putShiftExchange(
 	id: number,
-	payload: ShiftExchangePutRequest,
+	payload: ShiftExchangePutPayload,
 ): Promise<ShiftExchange> {
 	try {
 		return (
@@ -76,7 +76,7 @@ export async function putShiftExchange(
 		).data
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'update',
 			'shift exchange',
 		)
@@ -99,7 +99,7 @@ export async function deleteShiftExchange(id: number): Promise<ShiftExchange> {
 		).data
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'delete',
 			'shift exchange',
 		)

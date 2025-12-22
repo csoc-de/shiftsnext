@@ -14,7 +14,7 @@ export interface UserConfig {
 
 export type Config = AppConfig | UserConfig
 
-export interface ConfigPayload<T extends Config> {
+export interface ConfigPutPayload<T extends Config> {
 	/**
 	 * This envelope is necessary so the backend controller receives a single
 	 * `values` array as its parameter
@@ -22,7 +22,7 @@ export interface ConfigPayload<T extends Config> {
 	values: T
 }
 
-export interface DefaultGroups {
+export interface DefaultGroupsPutPayload {
 	group_ids: string[]
 }
 

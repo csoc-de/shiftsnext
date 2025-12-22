@@ -79,7 +79,7 @@
 <script setup lang="ts">
 import type { Group } from '../models/group.ts'
 import type {
-	GroupShiftAdminRelationsByGroupRequest,
+	GroupShiftAdminRelationsByGroupPutPayload,
 } from '../models/groupShiftAdminRelation.ts'
 import type { NcSelectUsersOption } from '../models/nextcloudVue.ts'
 
@@ -161,7 +161,7 @@ async function save(
  *
  * @param payload The request payload
  */
-async function update(payload: GroupShiftAdminRelationsByGroupRequest): Promise<void> {
+async function update(payload: GroupShiftAdminRelationsByGroupPutPayload): Promise<void> {
 	const updatedRelation
 		= await putGroupShiftAdminRelationsGroupedByGroup(payload)
 

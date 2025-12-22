@@ -1,4 +1,4 @@
-export interface ErrorResponse {
+export interface ErrorResponsePayload {
 	error: string
 }
 

@@ -1,9 +1,9 @@
-import type { ErrorResponse } from '../models/error.ts'
+import type { ErrorResponsePayload } from '../models/error.ts'
 import type {
 	Shift,
 	ShiftFilters,
-	ShiftPatchRequest,
-	ShiftRequest,
+	ShiftPatchPayload,
+	ShiftPostPayload,
 } from '../models/shift.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
@@ -26,7 +26,7 @@ export async function getShifts(filters: ShiftFilters = {}): Promise<Shift[]> {
 			)
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'fetch', 'shifts')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'fetch', 'shifts')
 		throw error
 	}
 }
@@ -36,7 +36,7 @@ export async function getShifts(filters: ShiftFilters = {}): Promise<Shift[]> {
  *
  * @param payload The shift
  */
-export async function postShift(payload: ShiftRequest): Promise<Shift> {
+export async function postShift(payload: ShiftPostPayload): Promise<Shift> {
 	try {
 		return (
 			await axios.post<Shift>(generateUrl(SHIFTS_PATH), payload, {
@@ -44,7 +44,7 @@ export async function postShift(payload: ShiftRequest): Promise<Shift> {
 			})
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'create', 'shift')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'create', 'shift')
 		throw error
 	}
 }
@@ -57,7 +57,7 @@ export async function postShift(payload: ShiftRequest): Promise<Shift> {
  */
 export async function patchShift(
 	id: number,
-	payload: ShiftPatchRequest,
+	payload: ShiftPatchPayload,
 ): Promise<Shift> {
 	try {
 		return (
@@ -68,7 +68,7 @@ export async function patchShift(
 			)
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'update', 'shift')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'update', 'shift')
 		throw error
 	}
 }
@@ -86,7 +86,7 @@ export async function deleteShift(id: number): Promise<Shift> {
 			})
 		).data
 	} catch (error: unknown) {
-		handleError(error as AxiosError<ErrorResponse>, 'delete', 'shift')
+		handleError(error as AxiosError<ErrorResponsePayload>, 'delete', 'shift')
 		throw error
 	}
 }

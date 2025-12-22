@@ -171,7 +171,7 @@ export const [injectShiftsContext, provideShiftsContext]
 </script>
 
 <script setup lang="ts">
-import type { Shift, ShiftRequest } from '../models/shift.ts'
+import type { Shift, ShiftPostPayload } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
 
 import { t } from '@nextcloud/l10n'
@@ -729,7 +729,7 @@ async function onShiftCreationAttempt(userId: string): Promise<void | Shift> {
 		return
 	}
 
-	const payload: ShiftRequest = {
+	const payload: ShiftPostPayload = {
 		user_id: userId,
 		shift_type_id: shiftTypeWrapper.shiftType.id,
 		...shiftTypeWrapper.weeklyType === 'by_day'

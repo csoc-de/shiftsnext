@@ -1,9 +1,9 @@
-export interface SynchronizeByGroupsRequest {
+export interface SynchronizeByGroupsPostPayload {
 	group_ids: string[]
 }
 
-export interface SynchronizeByShiftsRequest {
+export interface SynchronizeByShiftsPostPayload {
 	shift_ids: number[]
 }
 
-export type SynchronizeResponse = string[]
+export type SynchronizeResponsePayload = string[]

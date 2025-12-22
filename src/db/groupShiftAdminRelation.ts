@@ -1,7 +1,7 @@
-import type { ErrorResponse } from '../models/error.ts'
+import type { ErrorResponsePayload } from '../models/error.ts'
 import type {
 	GroupShiftAdminRelationsByGroup,
-	GroupShiftAdminRelationsByGroupRequest,
+	GroupShiftAdminRelationsByGroupPutPayload,
 } from '../models/groupShiftAdminRelation.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
@@ -21,7 +21,7 @@ export async function getGroupShiftAdminRelationsGroupedByGroup(): Promise<
 		).data
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'fetch',
 			'group shift admin relations grouped by group',
 		)
@@ -32,9 +32,9 @@ export async function getGroupShiftAdminRelationsGroupedByGroup(): Promise<
 /**
  * Put the group shift admin relations grouped by group
  *
- * @param payload The group shift admin relations grouped by group
+ * @param payload The request payload
  */
-export async function putGroupShiftAdminRelationsGroupedByGroup(payload: GroupShiftAdminRelationsByGroupRequest): Promise<GroupShiftAdminRelationsByGroup> {
+export async function putGroupShiftAdminRelationsGroupedByGroup(payload: GroupShiftAdminRelationsByGroupPutPayload): Promise<GroupShiftAdminRelationsByGroup> {
 	try {
 		return (
 			await axios.put<GroupShiftAdminRelationsByGroup>(
@@ -44,7 +44,7 @@ export async function putGroupShiftAdminRelationsGroupedByGroup(payload: GroupSh
 		).data
 	} catch (error: unknown) {
 		handleError(
-			error as AxiosError<ErrorResponse>,
+			error as AxiosError<ErrorResponsePayload>,
 			'create',
 			'group shift admin relation grouped by group',
 		)

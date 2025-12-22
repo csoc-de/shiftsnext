@@ -44,8 +44,8 @@
 import { createContext } from '../utils/createContext.ts'
 
 export interface ShiftExchangesContext {
-	create: (payload: ShiftExchangePostRequest) => Promise<ShiftExchange>
-	update: (id: number, payload: ShiftExchangePutRequest) => Promise<ShiftExchange>
+	create: (payload: ShiftExchangePostPayload) => Promise<ShiftExchange>
+	update: (id: number, payload: ShiftExchangePutPayload) => Promise<ShiftExchange>
 	remove: (id: number) => Promise<ShiftExchange>
 }
 
@@ -69,8 +69,8 @@ import {
 } from '../db/shiftExchange.ts'
 import {
 	type ShiftExchange,
-	type ShiftExchangePostRequest,
-	type ShiftExchangePutRequest,
+	type ShiftExchangePostPayload,
+	type ShiftExchangePutPayload,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { compare } from '../utils/sort.ts'
@@ -104,7 +104,7 @@ const createDialogMounted = ref(false)
  *
  * @return The created shift exchange on success
  */
-async function create(payload: ShiftExchangePostRequest): Promise<ShiftExchange> {
+async function create(payload: ShiftExchangePostPayload): Promise<ShiftExchange> {
 	const createdShiftExchange = await postShiftExchange(payload)
 	if (createdShiftExchange.done) {
 		doneShiftExchanges.value.unshift(createdShiftExchange)
@@ -125,7 +125,7 @@ async function create(payload: ShiftExchangePostRequest): Promise<ShiftExchange>
  */
 async function update(
 	id: number,
-	payload: ShiftExchangePutRequest,
+	payload: ShiftExchangePutPayload,
 ): Promise<ShiftExchange> {
 	const updatedShiftExchange = await putShiftExchange(id, payload)
 	if (updatedShiftExchange.done) {

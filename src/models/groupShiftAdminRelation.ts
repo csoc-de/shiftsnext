@@ -1,7 +1,7 @@
 import type { Group } from '../models/group.ts'
 import type { User } from '../models/user.ts'
 
-export interface GroupShiftAdminRelationsByGroupRequest {
+export interface GroupShiftAdminRelationsByGroupPutPayload {
 	group_id: string
 	user_ids: string[]
 }

@@ -4,28 +4,24 @@ import type { User } from '../models/user.ts'
 import { t } from '@nextcloud/l10n'
 import { APP_ID } from '../utils/appId.ts'
 
-// Requests
-
 export interface ShiftExchangeBase {
 	comment: string
 }
 
-export interface ShiftExchangePostRequestBase extends ShiftExchangeBase {
+export interface ShiftExchangePostPayloadBase extends ShiftExchangeBase {
 	shift_a_id: number
 }
 
-export interface RegularShiftExchangePostRequest
-	extends ShiftExchangePostRequestBase {
+export interface RegularShiftExchangePostPayload extends ShiftExchangePostPayloadBase {
 	shift_b_id: number
 }
 
-export interface TransferShiftExchangePostRequest
-	extends ShiftExchangePostRequestBase {
+export interface TransferShiftExchangePostPayload extends ShiftExchangePostPayloadBase {
 	transfer_to_user_id: string
 }
 
-export type ShiftExchangePostRequest
-	= RegularShiftExchangePostRequest | TransferShiftExchangePostRequest
+export type ShiftExchangePostPayload
+	= RegularShiftExchangePostPayload | TransferShiftExchangePostPayload
 
 export const APPROVED_OPTIONS = [true, null, false] as const
 
@@ -48,7 +44,8 @@ export interface AdminApproved {
 }
 
 export type Approveds = UserApproved | AdminApproved
-export interface ShiftExchangePutRequest extends Partial<ShiftExchangeBase> {
+
+export interface ShiftExchangePutPayload extends Partial<ShiftExchangeBase> {
 	approveds: Approveds
 }
 
@@ -63,14 +60,12 @@ export const exchangeTypeTranslations: ExchangeTypeTranslations = {
 	transfer: t(APP_ID, 'Transfer'),
 }
 
-// Responses
-
 export interface ExchangeApproval {
 	user: User | null
 	approved: Approved
 }
 
-export interface ShiftExchangeResponseBase extends ShiftExchangeBase {
+export interface ShiftExchangeResponsePayloadBase extends ShiftExchangeBase {
 	id: number
 	shift_a: Shift
 	done: boolean
@@ -80,18 +75,15 @@ export interface ShiftExchangeResponseBase extends ShiftExchangeBase {
 	admin_approval: ExchangeApproval
 }
 
-export interface RegularShiftExchange extends ShiftExchangeResponseBase {
+export interface RegularShiftExchange extends ShiftExchangeResponsePayloadBase {
 	shift_b: Shift
 }
 
-export interface TransferShiftExchangeResponse
-	extends ShiftExchangeResponseBase {
+export interface TransferShiftExchange extends ShiftExchangeResponsePayloadBase {
 	transfer_to_user: User
 }
 
-export type ShiftExchange
-	= | RegularShiftExchange
-		| TransferShiftExchangeResponse
+export type ShiftExchange = RegularShiftExchange | TransferShiftExchange
 
 // Misc
 
