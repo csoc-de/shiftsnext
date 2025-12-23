@@ -23,7 +23,7 @@
 						<ChevronRight :size="20" />
 					</template>
 				</NcButton>
-				<NcButton @click="isoWeekDate = currentIsoWeekDateWithoutDay">
+				<NcButton @click="resetIsoWeekDate">
 					{{ t(APP_ID, "Today") }}
 				</NcButton>
 			</HeaderNavigationInputGroup>
@@ -241,21 +241,25 @@ import { getInitialGroups, getInitialIsShiftAdmin } from '../utils/initialState.
 import { logger } from '../utils/logger.ts'
 import { compareShifts, compareShiftTypes } from '../utils/sort.ts'
 
+const store = useUserSettings()
+
+const {
+	selectedGroups,
+	selectedGroupIds,
+	currentIsoWeekDateWithDay,
+	isoWeekDate,
+} = storeToRefs(store)
+
+const { updateNow, resetIsoWeekDate } = store
+
+updateNow()
+
 const isoWeekDateInput = useTemplateRef('isoWeekDateInput')
-
-const today = Temporal.Now.zonedDateTimeISO(userTimeZone)
-
-const currentIsoWeekDateWithDay = getIsoWeekDate(today, true)
-
-const currentIsoWeekDateWithoutDay = getIsoWeekDate(today, false)
-
-const isoWeekDate = ref(currentIsoWeekDateWithoutDay)
 
 const loading = ref(true)
 const synchronizing = ref(false)
 
 const groups = ref(getInitialGroups())
-const { selectedGroups, selectedGroupIds } = storeToRefs(useUserSettings())
 
 const isShiftAdmin = getInitialIsShiftAdmin()
 
@@ -370,7 +374,7 @@ function setupHeaderRow(): void {
 	const zdtsOfWeek: Temporal.ZonedDateTime[] = []
 	for (let dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
 		const isoWeekDateForDayOfWeek: IsoWeekDateWithDay = `${isoWeekDate.value}-${dayOfWeek}`
-		if (isoWeekDateForDayOfWeek === currentIsoWeekDateWithDay) {
+		if (isoWeekDateForDayOfWeek === currentIsoWeekDateWithDay.value) {
 			columnIndexOfToday = dayOfWeek + 1
 		}
 		zdtsOfWeek.push(parseIsoWeekDate(isoWeekDateForDayOfWeek))
