@@ -27,7 +27,7 @@
 				close-after-click
 				@click.stop="showInfo = !showInfo">
 				<template #icon>
-					<InformationOutline :size="24" />
+					<InformationOutline :size="20" />
 				</template>
 				{{ t(APP_ID, 'Show info') }}
 			</NcActionButton>
@@ -38,7 +38,7 @@
 				close-after-click
 				@click.stop="onMoveButtonClick">
 				<template #icon>
-					<ArrowAll :size="24" />
+					<ArrowAll :size="20" />
 				</template>
 				{{ t(APP_ID, 'Move shift') }}
 			</NcActionButton>
@@ -49,7 +49,7 @@
 				close-after-click
 				@click.stop="startDeletion">
 				<template #icon>
-					<Delete :size="24" />
+					<Delete :size="20" />
 				</template>
 				{{ t(APP_ID, 'Delete shift') }}
 			</NcActionButton>

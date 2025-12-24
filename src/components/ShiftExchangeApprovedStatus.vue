@@ -2,17 +2,17 @@
 	<ClockOutline
 		v-if="approved === null"
 		:title="t(APP_ID, 'Approval pending')"
-		:size="18"
+		:size="20"
 		class="text-nc-element-warning" />
 	<CheckCircleOutline
 		v-else-if="approved"
 		:title="t(APP_ID, 'Approved')"
-		:size="18"
+		:size="20"
 		class="text-nc-element-success" />
 	<CloseCircleOutline
 		v-else
 		:title="t(APP_ID, 'Rejected')"
-		:size="18"
+		:size="20"
 		class="text-nc-element-error" />
 </template>
 
