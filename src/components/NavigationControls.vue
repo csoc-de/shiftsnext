@@ -52,11 +52,11 @@ import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import ChevronRight from 'vue-material-design-icons/ChevronRight.vue'
 import InputGroup from './InputGroup.vue'
 import IsoWeekDateInput from './IsoWeekDateInput.vue'
-import { useUserSettings } from '../stores/userSettings.ts'
+import { useUserSettingsStore } from '../stores/userSettings.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getInitialGroups } from '../utils/initialState.ts'
 
-const store = useUserSettings()
+const store = useUserSettingsStore()
 
 const { isoWeekDate, selectedGroups } = storeToRefs(store)
 

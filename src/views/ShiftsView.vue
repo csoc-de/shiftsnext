@@ -176,7 +176,7 @@ import {
 	SHORT_DAYS,
 	shortDayToIsoDayNumberMap,
 } from '../models/shiftType.ts'
-import { useUserSettings } from '../stores/userSettings.ts'
+import { useUserSettingsStore } from '../stores/userSettings.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { rotate } from '../utils/array.ts'
 import {
@@ -194,7 +194,7 @@ import { getInitialGroups, getInitialIsShiftAdmin } from '../utils/initialState.
 import { logger } from '../utils/logger.ts'
 import { compareShifts, compareShiftTypes } from '../utils/sort.ts'
 
-const store = useUserSettings()
+const store = useUserSettingsStore()
 
 const {
 	selectedGroups,

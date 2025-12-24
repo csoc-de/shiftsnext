@@ -5,7 +5,7 @@ import { putDefaultGroups } from '../db/config.ts'
 import { getIsoWeekDate, userTimeZone } from '../utils/date.ts'
 import { getInitialDefaultGroups } from '../utils/initialState.ts'
 
-export const useUserSettings = defineStore('user-settings', () => {
+export const useUserSettingsStore = defineStore('user-settings', () => {
 	const selectedGroups = ref(getInitialDefaultGroups())
 
 	const selectedGroupIds = computed(() => selectedGroups.value.map(({ id }) => id))
