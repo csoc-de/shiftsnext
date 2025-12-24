@@ -2,6 +2,7 @@
 	<NcContent :app-name="APP_ID">
 		<template v-if="missingConfigs.length === 0">
 			<NcAppNavigation>
+				<NavigationControls />
 				<template #list>
 					<NcAppNavigationItem :name="t(APP_ID, 'Shifts')" to="/shifts" />
 					<NcAppNavigationItem
@@ -36,6 +37,7 @@ import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
 import NcContent from '@nextcloud/vue/components/NcContent'
 import ConfigMissing from './components/ConfigMissing.vue'
 import DelayBoxesWrapper from './components/DelayBoxesWrapper.vue'
+import NavigationControls from './components/NavigationControls.vue'
 import { APP_ID } from './utils/appId.ts'
 import { checkConfig } from './utils/checkConfig.ts'
 import { getInitialIsShiftAdmin } from './utils/initialState.ts'

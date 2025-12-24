@@ -1,43 +1,5 @@
 <template>
 	<HeaderNavigation :title="t(APP_ID, 'Shifts')" :loading="loading">
-		<div class="flex flex-wrap gap-2">
-			<IsoWeekDateInput
-				ref="isoWeekDateInput"
-				v-model="isoWeekDate"
-				class="w-full justify-end sm:w-auto"
-				inline />
-			<HeaderNavigationInputGroup>
-				<NcButton
-					:aria-label="t(APP_ID, 'Previous week')"
-					@click="isoWeekDateInput?.decrease()">
-					<template #icon>
-						<ChevronLeft :size="20" />
-					</template>
-				</NcButton>
-				<NcButton
-					:aria-label="t(APP_ID, 'Next week')"
-					@click="isoWeekDateInput?.increase()">
-					<template #icon>
-						<ChevronRight :size="20" />
-					</template>
-				</NcButton>
-				<NcButton @click="resetIsoWeekDate">
-					{{ t(APP_ID, "Today") }}
-				</NcButton>
-			</HeaderNavigationInputGroup>
-			<HeaderNavigationInputGroup>
-				<label for="groups">{{ t(APP_ID, "Groups") }}</label>
-				<NcSelect
-					v-model="selectedGroups"
-					input-id="groups"
-					:options="groups"
-					label="display_name"
-					label-outside
-					keep-open
-					multiple
-					class="min-w-48" />
-			</HeaderNavigationInputGroup>
-		</div>
 		<template #right>
 			<div class="flex flex-wrap gap-2">
 				<NcButton
@@ -179,17 +141,10 @@ import { Temporal } from 'temporal-polyfill'
 import {
 	type Ref,
 
-	computed, ref, useTemplateRef,
+	computed, ref,
 } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import NcSelect from '@nextcloud/vue/components/NcSelect'
-// @ts-expect-error package has no types
-import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
-// @ts-expect-error package has no types
-import ChevronRight from 'vue-material-design-icons/ChevronRight.vue'
 import HeaderNavigation from '../components/HeaderNavigation.vue'
-import HeaderNavigationInputGroup from '../components/HeaderNavigationInputGroup.vue'
-import IsoWeekDateInput from '../components/IsoWeekDateInput.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftPill from '../components/ShiftPill.vue'
 import ShiftTypePill from '../components/ShiftTypePill.vue'
@@ -248,11 +203,9 @@ const {
 	isoWeekDate,
 } = storeToRefs(store)
 
-const { updateNow, resetIsoWeekDate } = store
+const { updateNow } = store
 
 updateNow()
-
-const isoWeekDateInput = useTemplateRef('isoWeekDateInput')
 
 const loading = ref(true)
 const synchronizing = ref(false)
