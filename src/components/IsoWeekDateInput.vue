@@ -1,13 +1,20 @@
 <template>
-	<div class="flex flex-wrap gap-2">
+	<div
+		class="flex flex-wrap gap-2"
+		:class="{ 'w-full': fluid }">
 		<InputGroup
 			:inline="inline"
-			:class="{ 'items-start': !inline }">
+			:class="{
+				'items-start': !inline,
+				'flex-1': fluid,
+				'whitespace-nowrap': inline && fluid,
+			}">
 			<label :for="_yearInputId">{{ yearLabel }}</label>
 			<NcSelect
 				v-model="year"
 				:disabled="disabled"
 				class="min-w-[8.2rem]"
+				:class="{ 'w-full': fluid }"
 				:options="years"
 				:clearable="false"
 				:input-id="_yearInputId"
@@ -15,12 +22,17 @@
 		</InputGroup>
 		<InputGroup
 			:inline="inline"
-			:class="{ 'items-start': !inline }">
+			:class="{
+				'items-start': !inline,
+				'flex-1': fluid,
+				'whitespace-nowrap': inline && fluid,
+			}">
 			<label :for="_weekInputId">{{ weekLabel }}</label>
 			<NcSelect
 				v-model="week"
 				:disabled="disabled"
 				class="min-w-[7.1rem]"
+				:class="{ 'w-full': fluid }"
 				:options="weeks"
 				:clearable="false"
 				:input-id="_weekInputId"
@@ -55,6 +67,7 @@ const {
 	weekInputId = '',
 	inline = false,
 	disabled = false,
+	fluid = false,
 } = defineProps<{
 	/**
 	 * The label for the year input
@@ -92,6 +105,12 @@ const {
 	 * @default false
 	 */
 	disabled?: boolean
+	/**
+	 * Whether the whole component should be rendered as full width
+	 *
+	 * @default false
+	 */
+	fluid?: boolean
 }>()
 
 const id = useId()
