@@ -112,8 +112,8 @@
 							</template>
 							<div class="flex flex-col gap-3">
 								<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-									<InputGroup>
-										<template v-if="weeklyType === 'by_day'">
+									<template v-if="weeklyType === 'by_day'">
+										<InputGroup>
 											<label for="shift-type-repetition-config-reference">
 												{{ t(APP_ID, "Reference date & time") }}
 											</label>
@@ -125,18 +125,7 @@
 												hide-label
 												required
 												@update:model-value="setByDayReference()" />
-										</template>
-										<template v-else>
-											<label for="shift-type-repetition-config-reference">
-												{{ t(APP_ID, "Reference week") }}
-											</label>
-											<IsoWeekDateInput
-												v-model="byWeekReference"
-												input-id="shift-type-repetition-config-reference"
-												class="w-full" />
-										</template>
-									</InputGroup>
-									<template v-if="weeklyType === 'by_day'">
+										</InputGroup>
 										<InputGroup>
 											<label for="shift-type-repetition-config-time-zone">{{ t(APP_ID, "Time zone") }}</label>
 											<NcTimezonePicker
@@ -145,6 +134,12 @@
 												@update:model-value="setByDayReference()" />
 										</InputGroup>
 									</template>
+									<IsoWeekDateInput
+										v-else
+										v-model="byWeekReference"
+										:year-label="t(APP_ID, 'Reference year')"
+										:week-label="t(APP_ID, 'Reference week')"
+										class="sm:col-span-2" />
 								</div>
 								<InputGroup v-if="weeklyType === 'by_day'">
 									<div>{{ t(APP_ID, 'Amount') }}</div>

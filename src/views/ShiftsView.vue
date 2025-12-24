@@ -1,13 +1,11 @@
 <template>
 	<HeaderNavigation :title="t(APP_ID, 'Shifts')" :loading="loading">
 		<div class="flex flex-wrap gap-2">
-			<HeaderNavigationInputGroup>
-				<label for="iso-week-date">{{ t(APP_ID, "Year and week") }}</label>
-				<IsoWeekDateInput
-					ref="isoWeekDateInput"
-					v-model="isoWeekDate"
-					input-id="iso-week-date" />
-			</HeaderNavigationInputGroup>
+			<IsoWeekDateInput
+				ref="isoWeekDateInput"
+				v-model="isoWeekDate"
+				class="w-full justify-end sm:w-auto"
+				inline />
 			<HeaderNavigationInputGroup>
 				<NcButton
 					:aria-label="t(APP_ID, 'Previous week')"
