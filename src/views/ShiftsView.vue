@@ -1,19 +1,25 @@
 <template>
 	<HeaderNavigation :title="t(APP_ID, 'Shifts')" :loading="loading">
 		<template #right>
-			<div class="flex flex-wrap gap-2">
+			<div class="flex gap-1">
+				<NcButton
+					v-if="multiStepAction.type"
+					:aria-label="t(APP_ID, 'Cancel')"
+					variant="error"
+					@click="resetMultiStepAction()">
+					<template #icon>
+						<Cancel :size="24" />
+					</template>
+				</NcButton>
 				<NcButton
 					v-if="isShiftAdmin"
 					:disabled="synchronizing"
-					variant="primary"
+					:aria-label="t(APP_ID, 'Synchronize with calendar app')"
+					variant="secondary"
 					@click="synchronizeByGroups()">
-					{{ t(APP_ID, "Synchronize") }}
-				</NcButton>
-				<NcButton
-					v-if="multiStepAction.type"
-					variant="error"
-					@click="resetMultiStepAction()">
-					{{ t(APP_ID, "Cancel") }}
+					<template #icon>
+						<CalendarSync :size="24" />
+					</template>
 				</NcButton>
 			</div>
 		</template>
@@ -144,6 +150,10 @@ import {
 	computed, ref,
 } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
+// @ts-expect-error package has no types
+import CalendarSync from 'vue-material-design-icons/CalendarSync.vue'
+// @ts-expect-error package has no types
+import Cancel from 'vue-material-design-icons/Cancel.vue'
 import HeaderNavigation from '../components/HeaderNavigation.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftPill from '../components/ShiftPill.vue'
