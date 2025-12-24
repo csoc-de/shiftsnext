@@ -4,20 +4,19 @@
 
 makefile_dir := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
 nextcloud_dir := $(shell dirname $$(dirname $$(dirname $$(dirname "$(makefile_dir)"))))
-nextcloud_scripts_dir := "$(nextcloud_dir)/scripts"
-nextcloud_env_file := "$(nextcloud_dir)/.env"
-nextcloud_compose_file := "$(nextcloud_dir)/docker-compose.yml"
+nextcloud_scripts_dir := $(nextcloud_dir)/scripts
+nextcloud_env_file := $(nextcloud_dir)/.env
+nextcloud_compose_file := $(nextcloud_dir)/docker-compose.yml
 
 .PHONY: setup-nextcloud-dev
 setup-nextcloud-dev:
-	"$(nextcloud_dir)/bootstrap.sh"
-	bash "$(nextcloud_scripts_dir)/download-full-history.sh"
 	apt install -y mkcert libnss3-tools
 	mkcert --install
-	bash "$(nextcloud_scripts_dir)/update-certs"
-	bash "$(nextcloud_scripts_dir)/update-hosts"
-	sed -i 's/^PROTOCOL=.*/PROTOCOL=https/' "$(nextcloud_env_file)"
-	echo "PHP_VERSION=83" >> "$(nextcloud_env_file)"
+	cd ${nextcloud_dir} && ./scripts/download-full-history.sh
+	cd ${nextcloud_dir} && ./scripts/update-certs
+	cd ${nextcloud_dir} && ./scripts/update-hosts
+	sed -i 's/^PROTOCOL=.*/PROTOCOL=https/' $(nextcloud_env_file)
+	echo "PHP_VERSION=83" >> $(nextcloud_env_file)
 
 .PHONY: start-w-pma
 start-w-pma:
