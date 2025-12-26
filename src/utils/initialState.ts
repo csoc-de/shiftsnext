@@ -27,17 +27,6 @@ export function getInitialIsShiftAdmin(): boolean {
 }
 
 /**
- * Returns all approval types that existed when the browser page was initially
- * loaded
- */
-export function getInitialApprovalTypes(): ExchangeApprovalType[] {
-	return structuredClone(loadState<ExchangeApprovalType[]>(
-		APP_ID,
-		'exchange_approval_types',
-	))
-}
-
-/**
  * Returns the approval type that was set when the browser page was initially
  * loaded
  */

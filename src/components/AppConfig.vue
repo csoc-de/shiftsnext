@@ -90,8 +90,9 @@ import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
 import { putAppConfig } from '../db/config.ts'
+import { EXCHANGE_APPROVAL_TYPES } from '../models/config.ts'
 import { APP_ID } from '../utils/appId.ts'
-import { getInitialAbsenceCalendar, getInitialApprovalType, getInitialApprovalTypes, getInitialCalendars, getInitialCommonCalendar, getInitialIgnoreAbsenceForByWeekShifts, getInitialSyncToPersonalCalendar } from '../utils/initialState.ts'
+import { getInitialAbsenceCalendar, getInitialApprovalType, getInitialCalendars, getInitialCommonCalendar, getInitialIgnoreAbsenceForByWeekShifts, getInitialSyncToPersonalCalendar } from '../utils/initialState.ts'
 import { getNcSelectCalendarOption, getNcSelectExchangeApprovalTypeOption } from '../utils/nextcloudVue.ts'
 import { showSavedToast } from '../utils/toast.ts'
 
@@ -100,9 +101,8 @@ const saving = ref(false)
 const calendars = getInitialCalendars()
 const commonCalendarOptions = calendars.map(getNcSelectCalendarOption)
 
-const approvalTypes = getInitialApprovalTypes()
 const approvalTypeOptions
-	= approvalTypes.map(getNcSelectExchangeApprovalTypeOption)
+	= EXCHANGE_APPROVAL_TYPES.map(getNcSelectExchangeApprovalTypeOption)
 
 const initialCommonCalendar = getInitialCommonCalendar()
 const commonCalendarOption = ref(initialCommonCalendar ? getNcSelectCalendarOption(initialCommonCalendar) : undefined)

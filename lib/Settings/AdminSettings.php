@@ -3,7 +3,6 @@
 namespace OCA\ShiftsNext\Settings;
 
 use OCA\ShiftsNext\AppInfo\Application;
-use OCA\ShiftsNext\Enum\ExchangeApprovalType;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\ConfigService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
@@ -13,8 +12,6 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\Settings\ISettings;
-
-use function array_map;
 
 final class AdminSettings implements ISettings {
 	public function __construct(
@@ -59,13 +56,6 @@ final class AdminSettings implements ISettings {
 		$this->initialState->provideInitialState(
 			'ignore_absence_for_by_week_shifts',
 			$this->configService->getIgnoreAbsenceForByWeekShifts(),
-		);
-		$this->initialState->provideInitialState(
-			'exchange_approval_types',
-			array_map(
-				fn ($type) => $type->value,
-				ExchangeApprovalType::cases(),
-			),
 		);
 		$this->initialState->provideInitialState(
 			'exchange_approval_type',

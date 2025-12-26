@@ -1,4 +1,6 @@
-export type ExchangeApprovalType = 'users' | 'admin' | 'all'
+export const EXCHANGE_APPROVAL_TYPES = ['users', 'admin', 'all'] as const
+
+export type ExchangeApprovalType = (typeof EXCHANGE_APPROVAL_TYPES)[number]
 
 export interface AppConfig {
 	common_calendar_id: number
