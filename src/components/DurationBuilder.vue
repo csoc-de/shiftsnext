@@ -4,7 +4,7 @@
 			v-for="property in PROPERTIES"
 			:key="property"
 			v-model.trim="durationLike[property]"
-			:label="t(APP_ID, upperFirst(property))"
+			:label="propertyTranslations[property]"
 			type="number"
 			min="0"
 			required
@@ -18,7 +18,6 @@ import { Temporal } from 'temporal-polyfill'
 import { nextTick, ref, watch } from 'vue'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import { APP_ID } from '../utils/appId.ts'
-import { upperFirst } from '../utils/string.ts'
 
 const duration = defineModel<Temporal.Duration>({ required: true })
 
@@ -27,6 +26,17 @@ defineProps<{
 }>()
 
 const PROPERTIES = ['days', 'hours', 'minutes', 'seconds'] as const
+
+type Property = typeof PROPERTIES[number]
+
+type PropertyTranslations = Record<Property, string>
+
+const propertyTranslations: PropertyTranslations = {
+	days: t(APP_ID, 'Days'),
+	hours: t(APP_ID, 'Hours'),
+	minutes: t(APP_ID, 'Minutes'),
+	seconds: t(APP_ID, 'Seconds'),
+}
 
 const durationLike = ref<Temporal.DurationLike>({})
 

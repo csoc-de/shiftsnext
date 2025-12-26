@@ -1,4 +1,3 @@
-import type { Calendar, ExchangeApprovalType } from '../models/config.ts'
 import type {
 	NcSelectCalendarOption,
 	NcSelectExchangeApprovalTypeOption,
@@ -8,9 +7,12 @@ import type {
 import type { Shift } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
 
-import { t } from '@nextcloud/l10n'
-import { APP_ID } from './appId.ts'
-import { upperFirst } from './string.ts'
+import {
+	type Calendar,
+	type ExchangeApprovalType,
+
+	exchangeApprovalTypeTranslations,
+} from '../models/config.ts'
 
 /**
  * Get the NcSelectUsersOption for a User
@@ -56,6 +58,6 @@ export function getNcSelectCalendarOption(calendar: Calendar): NcSelectCalendarO
 export function getNcSelectExchangeApprovalTypeOption(exchangeApprovalType: ExchangeApprovalType): NcSelectExchangeApprovalTypeOption {
 	return {
 		id: exchangeApprovalType,
-		label: t(APP_ID, upperFirst(exchangeApprovalType)),
+		label: exchangeApprovalTypeTranslations[exchangeApprovalType],
 	}
 }

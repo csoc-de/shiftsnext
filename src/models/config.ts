@@ -1,6 +1,17 @@
+import { t } from '@nextcloud/l10n'
+import { APP_ID } from '../utils/appId.ts'
+
 export const EXCHANGE_APPROVAL_TYPES = ['users', 'admin', 'all'] as const
 
 export type ExchangeApprovalType = (typeof EXCHANGE_APPROVAL_TYPES)[number]
+
+export type ExchangeApprovalTypeTranslations = Record<ExchangeApprovalType, string>
+
+export const exchangeApprovalTypeTranslations: ExchangeApprovalTypeTranslations = {
+	users: t(APP_ID, 'Users'),
+	admin: t(APP_ID, 'Admin'),
+	all: t(APP_ID, 'All'),
+}
 
 export interface AppConfig {
 	common_calendar_id: number
