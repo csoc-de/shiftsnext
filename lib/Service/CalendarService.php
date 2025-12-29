@@ -304,7 +304,7 @@ final class CalendarService {
 		/** @var null|Calendar */
 		$calendar = $this->calDavBackend->getCalendarById($id);
 		if (!$calendar) {
-			throw new CalendarNotFoundException();
+			throw new CalendarNotFoundException("Calendar with ID $id not found");
 		}
 		return self::sanitizeCalendar($calendar);
 	}
@@ -334,7 +334,10 @@ final class CalendarService {
 			$calendarUri,
 		);
 		if (!$calendar) {
-			throw new CalendarNotFoundException();
+			throw new CalendarNotFoundException(
+				"Couldn't find calendar by principal URI $principalUri"
+				. " and calendar URI $calendarUri"
+			);
 		}
 		return self::sanitizeCalendar($calendar);
 	}
