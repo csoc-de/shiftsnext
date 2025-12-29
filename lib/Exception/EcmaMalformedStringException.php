@@ -7,7 +7,7 @@ namespace OCA\ShiftsNext\Exception;
 use Exception;
 
 final class EcmaMalformedStringException extends Exception {
-	public function __construct(string $message = 'ECMA string malformed') {
+	public function __construct(string $message) {
 		parent::__construct($message);
 	}
 }

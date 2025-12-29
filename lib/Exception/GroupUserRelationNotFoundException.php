@@ -7,7 +7,7 @@ namespace OCA\ShiftsNext\Exception;
 use OCP\AppFramework\Db\DoesNotExistException;
 
 final class GroupUserRelationNotFoundException extends DoesNotExistException {
-	public function __construct(string $message = 'GroupUserRelation not found') {
+	public function __construct(string $message) {
 		parent::__construct($message);
 	}
 }
