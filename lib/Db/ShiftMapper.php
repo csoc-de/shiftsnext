@@ -8,7 +8,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Psalm\ShiftAlias;
-use OCA\ShiftsNext\Util\DateTimeInterface;
+use OCA\ShiftsNext\Util\Util;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;
@@ -70,11 +70,11 @@ final class ShiftMapper extends QBMapper {
 
 			$minDateTimeString = (new DateTimeImmutable($firstCalendarDate, $dateTimeZone))
 				->setTimezone($utcDateTimeZone)
-				->format(DateTimeInterface::RFC9557_NC_NF);
+				->format(Util::RFC9557_NC_NF);
 			$maxDateTimeString = (new DateTimeImmutable($lastCalendarDate, $dateTimeZone))
 				->setTime(23, 59, 59, 999999)
 				->setTimezone($utcDateTimeZone)
-				->format(DateTimeInterface::RFC9557_NC_NF);
+				->format(Util::RFC9557_NC_NF);
 
 			$dateOnlyArgs = $firstCalendarDate === $lastCalendarDate
 				? [

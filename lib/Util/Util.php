@@ -16,12 +16,40 @@ use function array_search;
  * @psalm-import-type EcmaType from EcmaAlias
  */
 final class Util {
+	/**
+	 * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format ECMAScript Date Time String}
+	 * (example: 1970-01-01T00:00:00.000Z)
+	 */
+	public const string ECMA_DATE_TIME = 'Y-m-d\TH:i:s.vp';
+
+	/**
+	 * {@link https://www.rfc-editor.org/rfc/rfc9557.html RFC 9557}
+	 * without calendar (example: 1970-01-01T00:00:00.000+00:00[UTC])
+	 */
+	public const string RFC9557_NC = 'Y-m-d\TH:i:s.vP\[e\]';
+
+	/**
+	 * Same as {@see OCA\ShiftsNext\Util\DateTimeInterface::RFC9557_NC} but
+	 * without fractional second
+	 */
+	public const string RFC9557_NC_NF = 'Y-m-d\TH:i:sP\[e\]';
+
+	/**
+	 * A plain date (example: 1970-01-01)
+	 */
+	public const string PLAIN_DATE = 'Y-m-d';
+
+	/**
+	 * iCal plain date (example: 19700101)
+	 */
+	public const string I_CAL_PLAIN_DATE = 'Ymd';
+
 	/** It's important to keep the order of elements inside this array */
 	final public const array DATE_ECMA_FORMAT_TO_TYPE_MAP = [
-		DateTimeInterface::ECMA_DATE_TIME => 'Date',
-		DateTimeInterface::RFC9557_NC_NF => 'ZonedDateTime',
-		DateTimeInterface::RFC9557_NC => 'ZonedDateTime',
-		DateTimeInterface::PLAIN_DATE => 'PlainDate',
+		self::ECMA_DATE_TIME => 'Date',
+		self::RFC9557_NC_NF => 'ZonedDateTime',
+		self::RFC9557_NC => 'ZonedDateTime',
+		self::PLAIN_DATE => 'PlainDate',
 	];
 
 	/**
@@ -87,7 +115,7 @@ final class Util {
 			if (!$dateTime) {
 				continue;
 			}
-			if ($format === DateTimeInterface::PLAIN_DATE) {
+			if ($format === self::PLAIN_DATE) {
 				$dateTime = $dateTime->setTime(0, 0);
 			}
 			return [$dateTime, $type];
