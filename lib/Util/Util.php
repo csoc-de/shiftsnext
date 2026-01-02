@@ -46,7 +46,7 @@ final class Util {
 	 * @throws EcmaMalformedStringException {@see OCA\ShiftsNext\Util\Util::parseEcma()}
 	 */
 	public static function unlocalizeEcma(string $value): array {
-		[$dateTime, $type] = self::parseEcma($value, true);
+		[$dateTime, $type] = self::parseEcma($value, 'UTC');
 		$unlocalizedDateTime = $dateTime->setTimezone(new DateTimeZone('UTC'));
 		$format = array_search($type, self::DATE_ECMA_FORMAT_TO_TYPE_MAP);
 		// This is to satisfy psalm
@@ -65,10 +65,8 @@ final class Util {
 	 * into a DateTimeImmutable object
 	 *
 	 * @param string $value
-	 * @param bool $toUtc The DateTimeImmutable in the returned tuple will always be in UTC if `$value` is a PlainDate.
-	 *                    If `$value` is not a PlainDate and `$toUtc` is set to `false`,
-	 *                    the DateTimeImmutable will be in whatever time zone is present in `$value`.
-	 *                    Defaults to `true`.
+	 * @param non-empty-string $timeZone The time zone used for parsing. Only relevant if
+	 *                                   `$value` is a PlainDate.
 	 *
 	 * @return list{DateTimeImmutable,EcmaType} A tuple containing the resulting DateTimeImmutable and
 	 *                                          the detected {@see OCA\ShiftsNext\Util\Util::EcmaType} of `$value`
@@ -76,17 +74,16 @@ final class Util {
 	 * @throws EcmaMalformedStringException if `$value` is not a valid Temporal
 	 *                                      string
 	 */
-	public static function parseEcma(string $value, bool $toUtc = true): array {
+	public static function parseEcma(string $value, string $timeZone = 'UTC'): array {
+		$dateTimeZone = new DateTimeZone($timeZone);
 		foreach (self::DATE_ECMA_FORMAT_TO_TYPE_MAP as $format => $type) {
-			$dateTime = DateTimeImmutable::createFromFormat($format, $value);
+			$dateTime = DateTimeImmutable::createFromFormat(
+				$format,
+				$value,
+				$dateTimeZone
+			);
 			if (!$dateTime) {
 				continue;
-			}
-			if ($format === DateTimeInterface::PLAIN_DATE) {
-				$toUtc = true;
-			}
-			if ($toUtc) {
-				$dateTime = $dateTime->setTimezone(new DateTimeZone('UTC'));
 			}
 			return [$dateTime, $type];
 		}
