@@ -62,7 +62,9 @@ final class Util {
 	 * Parses a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#date_time_string_format Date Time String},
 	 * a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/ZonedDateTime Temporal.ZonedDateTime} compatible string,
 	 * or a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/PlainDate Temporal.PlainDate} compatible string
-	 * into a DateTimeImmutable object
+	 * into a DateTimeImmutable object.
+	 *
+	 * If `$value` is a Temporal.PlainDate, the resulting DateTimeImmutable will have its time components set to 0.
 	 *
 	 * @param string $value
 	 * @param non-empty-string $timeZone The time zone used for parsing. Only relevant if
@@ -84,6 +86,9 @@ final class Util {
 			);
 			if (!$dateTime) {
 				continue;
+			}
+			if ($format === DateTimeInterface::PLAIN_DATE) {
+				$dateTime = $dateTime->setTime(0, 0);
 			}
 			return [$dateTime, $type];
 		}
