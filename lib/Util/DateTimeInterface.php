@@ -26,8 +26,8 @@ interface DateTimeInterface extends \DateTimeInterface {
 	/**
 	 * A plain date (example: 1970-01-01)
 	 */
-
 	public const string PLAIN_DATE = 'Y-m-d';
+
 	/**
 	 * iCal plain date (example: 19700101)
 	 */
