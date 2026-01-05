@@ -11,7 +11,7 @@ use Throwable;
 /**
  * @template S of Http::STATUS_*
  */
-final class HttpException extends Exception {
+final class HttpException extends Exception implements LocalizedThrowable {
 	/**
 	 * An array mapping HTTP status codes to their reason phrase
 	 *
@@ -84,11 +84,18 @@ final class HttpException extends Exception {
 	/**
 	 * @param S $statusCode Defaults to 500
 	 * @param null|string $message The message that is used in the JSON response
-	 *                             body. Defaults to the HTTP status reason phrase of `$statusCode`.
+	 *                             body. If `null`, defaults to the HTTP status
+	 *                             reason phrase of `$statusCode`.
+	 * @param string $localizedMessage The localized message that is used in the JSON response body
 	 *
 	 * @return void
 	 */
-	public function __construct(int $statusCode = 500, ?string $message = null, ?Throwable $previous = null) {
+	public function __construct(
+		int $statusCode = 500,
+		?string $message = null,
+		?Throwable $previous = null,
+		protected string $localizedMessage = '',
+	) {
 		parent::__construct($message ?? self::STATUSES[$statusCode] ?? '', $statusCode, $previous);
 	}
 
@@ -100,5 +107,10 @@ final class HttpException extends Exception {
 	public function getStatusCode(): int {
 		/** @var S */
 		return $this->code;
+	}
+
+	#[\Override]
+	public function getLocalizedMessage(): string {
+		return $this->localizedMessage;
 	}
 }
