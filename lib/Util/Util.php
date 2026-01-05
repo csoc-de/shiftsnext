@@ -5,15 +5,21 @@ declare(strict_types=1);
 namespace OCA\ShiftsNext\Util;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 use Exception;
+use IntlDateFormatter;
+use IntlTimeZone;
 use OCA\ShiftsNext\Exception\EcmaMalformedStringException;
 use OCA\ShiftsNext\Psalm\EcmaAlias;
+use OCA\ShiftsNext\Psalm\UtilAlias;
+use OCA\ShiftsNext\Service\ConfigService;
 
 use function array_search;
 
 /**
  * @psalm-import-type EcmaType from EcmaAlias
+ * @psalm-import-type FormatDateTimeType from UtilAlias
  */
 final class Util {
 	/**
@@ -119,5 +125,98 @@ final class Util {
 		throw new EcmaMalformedStringException(
 			"Format of value `'$value'` is not supported"
 		);
+	}
+
+	/**
+	 * Formats `$dateTime`
+	 *
+	 * @param DateTimeInterface $dateTime The DateTime to format
+	 * @param FormatDateTimeType $dateType The format type of the date part
+	 * @param FormatDateTimeType $timeType The format type of the time part
+	 * @param null|string $locale The locale to use. Defaults to the logged-in
+	 *                            user's locale configured in the personal settings.
+	 * @param IntlTimeZone|DateTimeZone|string|null $timezone The time zone to use. Defaults to the logged-in
+	 *                                                        user's time zone configured in the personal settings.
+	 *
+	 * @return string The formatted `$dateTime`
+	 *
+	 * @psalm-suppress PossiblyUnusedMethod Currently unused
+	 */
+	public static function formatDateTime(
+		DateTimeInterface $dateTime,
+		int $dateType = IntlDateFormatter::FULL,
+		int $timeType = IntlDateFormatter::FULL,
+		?string $locale = null,
+		IntlTimeZone|DateTimeZone|string|null $timezone = null,
+	): string {
+		$configService = ConfigService::get();
+		$formatter = new IntlDateFormatter(
+			$locale ?? $configService->getLocale(),
+			$dateType,
+			$timeType,
+			$timezone ?? $configService->getTimeZone(),
+		);
+		$formatted = $formatter->format($dateTime);
+		if ($formatted === false) {
+			throw new Exception('Formatting DateTime failed');
+		}
+		return $formatted;
+	}
+
+	/**
+	 * Formats `$start` and `$end` as range using the specified arguments
+	 *
+	 * @param DateTimeInterface $start The start DateTime
+	 * @param DateTimeInterface $end The end DateTime
+	 * @param FormatDateTimeType $dateType The format type of the date part
+	 * @param FormatDateTimeType $timeType The format type of the time part
+	 * @param null|string $locale The locale to use. Defaults to the logged-in
+	 *                            user's locale configured in the personal settings.
+	 * @param IntlTimeZone|DateTimeZone|string|null $timezone The time zone to use. Defaults to the logged-in
+	 *                                                        user's time zone configured in the personal settings.
+	 *
+	 * @return string The formatted range
+	 */
+	public static function formatRange(
+		DateTimeInterface $start,
+		DateTimeInterface $end,
+		int $dateType = IntlDateFormatter::FULL,
+		int $timeType = IntlDateFormatter::FULL,
+		?string $locale = null,
+		IntlTimeZone|DateTimeZone|string|null $timezone = null,
+	): string {
+		$configService = ConfigService::get();
+		$locale ??= $configService->getLocale();
+		$timezone ??= $configService->getTimeZone();
+		$formatter = new IntlDateFormatter(
+			$locale,
+			$dateType,
+			$timeType,
+			$timezone,
+		);
+		$formattedStart = $formatter->format($start);
+		$formattedEnd = $formatter->format($end);
+		if ($formattedStart === false || $formattedEnd === false) {
+			throw new Exception('Formatting range failed');
+		}
+		if ($formattedStart === $formattedEnd) {
+			return $formattedStart;
+		}
+		$dateOnlyFormatter = new IntlDateFormatter(
+			$locale,
+			$dateType,
+			IntlDateFormatter::NONE,
+			$timezone,
+		);
+		if ($dateOnlyFormatter->format($start) === $dateOnlyFormatter->format($end)) {
+			$timeOnlyFormatter = new IntlDateFormatter(
+				$locale,
+				IntlDateFormatter::NONE,
+				$timeType,
+				$timezone,
+			);
+			return "$formattedStart – {$timeOnlyFormatter->format($end)}";
+		}
+		return "$formattedStart – $formattedEnd";
 	}
 }
