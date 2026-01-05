@@ -92,7 +92,7 @@ final class Util {
 	 * or a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/PlainDate Temporal.PlainDate} compatible string
 	 * into a DateTimeImmutable object.
 	 *
-	 * If `$value` is a Temporal.PlainDate, the resulting DateTimeImmutable will have its time components set to 0.
+	 * Resets all fields not present in `$value` to zero-like values.
 	 *
 	 * @param string $value
 	 * @param non-empty-string $timeZone The time zone used for parsing. Only relevant if
@@ -101,22 +101,18 @@ final class Util {
 	 * @return list{DateTimeImmutable,EcmaType} A tuple containing the resulting DateTimeImmutable and
 	 *                                          the detected {@see OCA\ShiftsNext\Util\Util::EcmaType} of `$value`
 	 *
-	 * @throws EcmaMalformedStringException if `$value` is not a valid Temporal
-	 *                                      string
+	 * @throws EcmaMalformedStringException if `$value` is not a valid ECMA string
 	 */
 	public static function parseEcma(string $value, string $timeZone = 'UTC'): array {
 		$dateTimeZone = new DateTimeZone($timeZone);
 		foreach (self::DATE_ECMA_FORMAT_TO_TYPE_MAP as $format => $type) {
 			$dateTime = DateTimeImmutable::createFromFormat(
-				$format,
+				"$format|",
 				$value,
 				$dateTimeZone
 			);
 			if (!$dateTime) {
 				continue;
-			}
-			if ($format === self::PLAIN_DATE) {
-				$dateTime = $dateTime->setTime(0, 0);
 			}
 			return [$dateTime, $type];
 		}
