@@ -25,7 +25,7 @@
     "@nextcloud/l10n": "^3.4.1",
     "@nextcloud/logger": "^3.0.3",
     "@nextcloud/router": "^3.1.0",
-    "@nextcloud/vue": "^9.3.1",
+    "@nextcloud/vue": "^9.3.2",
     "@vueuse/core": "^14.0.0",
     "pinia": "^3.0.4",
     "temporal-polyfill": "^0.3.0",
@@ -43,8 +43,8 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
-    "vite": "^7.3.0",
-    "vue-tsc": "^3.2.1"
+    "vite": "^7.3.1",
+    "vue-tsc": "^3.2.2"
   },
   "engines": {
     "node": "^20.0.0",
