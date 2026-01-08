@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Controller;
 
-use OCA\ShiftsNext\Exception\HttpException;
+use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\GroupUserRelationService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
@@ -28,7 +27,7 @@ final class GroupUserRelationController extends Controller {
 			$relationsExtended = $this->groupUserRelationService->getAllExtended();
 			return new DataResponse($relationsExtended);
 		} catch (Throwable $th) {
-			return new DataResponse(['error' => $th->getMessage()], Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -38,8 +37,7 @@ final class GroupUserRelationController extends Controller {
 			$groupedRelations = $this->groupUserRelationService->getAllGroupedByGroup();
 			return new DataResponse($groupedRelations);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Controller;
 
+use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\UserService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
@@ -48,7 +48,7 @@ final class UserController extends Controller {
 			$users = $this->userService->getAllSerializable(groupIds: $group_ids);
 			return new DataResponse($users);
 		} catch (Throwable $th) {
-			return new DataResponse(['error' => $th->getMessage()], Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new ErrorResponse($th);
 		}
 	}
 }

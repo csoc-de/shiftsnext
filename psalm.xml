@@ -43,6 +43,7 @@
 		<UndefinedClass>
 			<errorLevel type="suppress">
 				<referencedClass name="Doctrine\DBAL\Exception\UniqueConstraintViolationException" />
+				<referencedClass name="OC" />
 				<referencedClass name="OC\DB\Exceptions\DbalException" />
 				<referencedClass name="OCA\DAV\CalDAV\CalDavBackend" />
 				<referencedClass name="Sabre\VObject\Component\VCalendar" />

@@ -32,7 +32,7 @@ use function json_encode;
  *     defaultGroupIds: string[],
  * }
  */
-final class ConfigService {
+final class ConfigService extends AbstractService {
 	public function __construct(
 		private string $userId,
 		private IAppConfig $appConfig,
@@ -228,5 +228,24 @@ final class ConfigService {
 			'core',
 			'timezone',
 		) ?: 'UTC';
+	}
+
+	/**
+	 * Gets the locale, e.g. "de_DE" of `$userId`.
+	 *
+	 * The locale is only set if the user adjusted it in the personal settings,
+	 * otherwise "en" is returned.
+	 *
+	 * @param null|string $userId If `null`, the logged-in user is used
+	 *
+	 * @return non-empty-string
+	 */
+	public function getLocale(?string $userId = null): string {
+		/** @psalm-suppress DeprecatedMethod */
+		return $this->config->getUserValue(
+			$userId ?? $this->userId,
+			'core',
+			'locale',
+		) ?: 'en';
 	}
 }

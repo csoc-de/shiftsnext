@@ -14,7 +14,6 @@ use OCA\ShiftsNext\Exception\CalendarNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Extended\ShiftExtended;
 use OCA\ShiftsNext\Psalm\CalendarAlias;
-use OCA\ShiftsNext\Util\DateTimeInterface;
 use OCA\ShiftsNext\Util\Util;
 use Ramsey\Uuid\Uuid;
 use Sabre\VObject\Component\VCalendar;
@@ -220,10 +219,10 @@ final class CalendarService {
 		$dtEnd = Util::parseEcma($shift->end)[0];
 
 		if ($shift->shiftType->repetition['weekly_type'] === 'by_week') {
-			$dtStart = $dtStart->format(DateTimeInterface::I_CAL_PLAIN_DATE);
+			$dtStart = $dtStart->format(Util::I_CAL_PLAIN_DATE);
 			$dtEnd = $dtEnd
 				->add(new DateInterval('P1D')) // Necessary because full day iCal events are DTEND exclusive
-				->format(DateTimeInterface::I_CAL_PLAIN_DATE);
+				->format(Util::I_CAL_PLAIN_DATE);
 		} else {
 			$timeZone = $this->configService->getTimeZone($shift->user->getUID());
 			$dateTimeZone = new DateTimeZone($timeZone);
@@ -304,7 +303,7 @@ final class CalendarService {
 		/** @var null|Calendar */
 		$calendar = $this->calDavBackend->getCalendarById($id);
 		if (!$calendar) {
-			throw new CalendarNotFoundException();
+			throw new CalendarNotFoundException("Calendar with ID $id not found");
 		}
 		return self::sanitizeCalendar($calendar);
 	}
@@ -334,7 +333,10 @@ final class CalendarService {
 			$calendarUri,
 		);
 		if (!$calendar) {
-			throw new CalendarNotFoundException();
+			throw new CalendarNotFoundException(
+				"Couldn't find calendar by principal URI $principalUri"
+				. " and calendar URI $calendarUri"
+			);
 		}
 		return self::sanitizeCalendar($calendar);
 	}
