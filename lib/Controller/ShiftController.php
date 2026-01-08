@@ -6,6 +6,7 @@ namespace OCA\ShiftsNext\Controller;
 
 use OCA\ShiftsNext\Db\ShiftExchangeMapper;
 use OCA\ShiftsNext\Db\ShiftMapper;
+use OCA\ShiftsNext\Db\ShiftTypeMapper;
 use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
@@ -15,8 +16,6 @@ use OCA\ShiftsNext\Service\ConfigService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\GroupUserRelationService;
 use OCA\ShiftsNext\Service\ShiftService;
-use OCA\ShiftsNext\Service\ShiftTypeService;
-use OCA\ShiftsNext\Service\UserService;
 use OCA\ShiftsNext\Util\Util;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -31,13 +30,12 @@ final class ShiftController extends Controller {
 		string $appName,
 		IRequest $request,
 		private ShiftMapper $shiftMapper,
+		private ShiftTypeMapper $shiftTypeMapper,
 		private ShiftExchangeMapper $shiftExchangeMapper,
 		private ShiftService $shiftService,
-		private ShiftTypeService $shiftTypeService,
 		private GroupUserRelationService $groupUserService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
 		private CalendarChangeService $calendarChangeService,
-		private UserService $userService,
 		private CalendarService $calendarService,
 		private ConfigService $configService,
 	) {
@@ -115,7 +113,7 @@ final class ShiftController extends Controller {
 	): DataResponse {
 		try {
 			try {
-				$shiftType = $this->shiftTypeService->getRestricted($shift_type_id);
+				$shiftType = $this->shiftTypeMapper->findById($shift_type_id);
 			} catch (ShiftTypeNotFoundException $e) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
@@ -189,7 +187,7 @@ final class ShiftController extends Controller {
 			}
 			$shiftTypeId = $shift->getShiftTypeId();
 			try {
-				$shiftType = $this->shiftTypeService->getRestricted($shiftTypeId);
+				$shiftType = $this->shiftTypeMapper->findById($shiftTypeId);
 			} catch (ShiftTypeNotFoundException $e) {
 				throw new HttpException(
 					Http::STATUS_INTERNAL_SERVER_ERROR,
@@ -268,12 +266,19 @@ final class ShiftController extends Controller {
 			}
 			$shiftTypeId = $shift->getShiftTypeId();
 			try {
-				$this->shiftTypeService->getRestricted($shiftTypeId);
+				$shiftType = $this->shiftTypeMapper->findById($shiftTypeId);
 			} catch (ShiftTypeNotFoundException $e) {
 				throw new HttpException(
 					Http::STATUS_INTERNAL_SERVER_ERROR,
 					'Foreign key `shift_type_id` could not be resolved',
 					$e,
+				);
+			}
+			$groupId = $shiftType->getGroupId();
+			if (!$this->groupShiftAdminRelationService->isShiftAdmin($groupId)) {
+				throw new HttpException(
+					Http::STATUS_FORBIDDEN,
+					"You are not a group shift admin of group `\"$groupId\"` of shift_type_id `$shiftTypeId`",
 				);
 			}
 			$shift = $this->shiftMapper->deleteById($shift);

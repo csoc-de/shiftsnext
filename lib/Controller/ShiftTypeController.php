@@ -10,7 +10,6 @@ use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Psalm\ShiftTypeAlias;
 use OCA\ShiftsNext\Service\CalendarChangeService;
-use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\ShiftTypeService;
 use OCP\AppFramework\Controller;
@@ -36,7 +35,6 @@ final class ShiftTypeController extends Controller {
 		private ShiftMapper $shiftMapper,
 		private ShiftTypeService $shiftTypeService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
-		private GroupService $groupService,
 		private CalendarChangeService $calendarChangeService,
 	) {
 		parent::__construct($appName, $request);
@@ -140,9 +138,16 @@ final class ShiftTypeController extends Controller {
 	): DataResponse {
 		try {
 			try {
-				$shiftType = $this->shiftTypeService->getRestricted($id);
+				$shiftType = $this->shiftTypeMapper->findById($id);
 			} catch (ShiftTypeNotFoundException $e) {
 				throw new HttpException(Http::STATUS_NOT_FOUND, null, $e);
+			}
+			$groupId = $shiftType->getGroupId();
+			if (!$this->groupShiftAdminRelationService->isShiftAdmin($groupId)) {
+				throw new HttpException(
+					Http::STATUS_FORBIDDEN,
+					"You are not a group shift admin of group `\"$groupId\"` of shift_type_id `$id`",
+				);
 			}
 			$shiftType = $this->shiftTypeMapper->updateById(
 				$shiftType,
@@ -167,9 +172,16 @@ final class ShiftTypeController extends Controller {
 	public function destroy(int $id): DataResponse {
 		try {
 			try {
-				$shiftType = $this->shiftTypeService->getRestricted($id);
+				$shiftType = $this->shiftTypeMapper->findById($id);
 			} catch (ShiftTypeNotFoundException $e) {
 				throw new HttpException(Http::STATUS_NOT_FOUND, null, $e);
+			}
+			$groupId = $shiftType->getGroupId();
+			if (!$this->groupShiftAdminRelationService->isShiftAdmin($groupId)) {
+				throw new HttpException(
+					Http::STATUS_FORBIDDEN,
+					"You are not a group shift admin of group `\"$groupId\"` of shift_type_id `$id`",
+				);
 			}
 			$shifts = $this->shiftMapper->findAll(shiftTypeId: $shiftType->getId());
 			array_walk($shifts, $this->calendarChangeService->safeCreate(...));
