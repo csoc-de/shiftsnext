@@ -1,5 +1,6 @@
 export interface ErrorResponsePayload {
 	error: string
+	localizedError?: string
 }
 
 export class ShiftsRowNotFoundError extends Error {

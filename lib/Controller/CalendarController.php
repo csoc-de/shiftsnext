@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace OCA\ShiftsNext\Controller;
 
 use OCA\ShiftsNext\Db\CalendarChangeMapper;
+use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
@@ -46,10 +46,7 @@ final class CalendarController extends Controller {
 
 			return new DataResponse($errors);
 		} catch (Throwable $th) {
-			return new DataResponse(
-				['error' => $th->getMessage()],
-				Http::STATUS_INTERNAL_SERVER_ERROR,
-			);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -66,10 +63,7 @@ final class CalendarController extends Controller {
 
 			return new DataResponse($errors);
 		} catch (Throwable $th) {
-			return new DataResponse(
-				['error' => $th->getMessage()],
-				Http::STATUS_INTERNAL_SERVER_ERROR,
-			);
+			return new ErrorResponse($th);
 		}
 	}
 }

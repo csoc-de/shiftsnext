@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Controller;
 
+use IntlDateFormatter;
 use OCA\ShiftsNext\Db\ShiftExchangeApprovalMapper;
 use OCA\ShiftsNext\Db\ShiftExchangeMapper;
 use OCA\ShiftsNext\Db\ShiftMapper;
@@ -13,12 +14,12 @@ use OCA\ShiftsNext\Exception\ShiftExchangeApprovalNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftExchangeNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
+use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\CalendarChangeService;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\ConfigService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\GroupUserRelationService;
-use OCA\ShiftsNext\Service\ShiftExchangeApprovalService;
 use OCA\ShiftsNext\Service\ShiftExchangeService;
 use OCA\ShiftsNext\Service\ShiftService;
 use OCA\ShiftsNext\Service\UserService;
@@ -28,6 +29,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
 
@@ -37,6 +39,7 @@ use function in_array;
 
 final class ShiftExchangeController extends Controller {
 	public function __construct(
+		private IL10N $l,
 		string $appName,
 		IRequest $request,
 		private ShiftExchangeApprovalMapper $shiftExchangeApprovalMapper,
@@ -49,7 +52,6 @@ final class ShiftExchangeController extends Controller {
 		private string $userId,
 		private CalendarChangeService $calendarChangeService,
 		private UserService $userService,
-		private ShiftExchangeApprovalService $shiftExchangeApprovalService,
 		private ConfigService $configService,
 		private CalendarService $calendarService,
 	) {
@@ -83,8 +85,7 @@ final class ShiftExchangeController extends Controller {
 			}
 			return new DataResponse($shiftExchangesExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -117,8 +118,7 @@ final class ShiftExchangeController extends Controller {
 			}
 			return new DataResponse($shiftExchangeExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -139,6 +139,8 @@ final class ShiftExchangeController extends Controller {
 					throw new HttpException(
 						Http::STATUS_BAD_REQUEST,
 						'shift_b_id and transfer_to_user_id are mutually exclusive',
+						null,
+						$this->l->t('You can either exchange shifts or transfer a shift to another user, but not both.'),
 					);
 				}
 				if ($shift_b_id !== null) {
@@ -152,6 +154,8 @@ final class ShiftExchangeController extends Controller {
 					throw new HttpException(
 						Http::STATUS_BAD_REQUEST,
 						'Either shift_b_id or transfer_to_user_id need to be set',
+						null,
+						$this->l->t('Specify a second shift or a user to transfer the shift to.'),
 					);
 				}
 				$isGroupShiftAdmin = $this->groupShiftAdminRelationService->isShiftAdminAll($groupIds);
@@ -159,6 +163,8 @@ final class ShiftExchangeController extends Controller {
 					throw new HttpException(
 						Http::STATUS_FORBIDDEN,
 						'You can create a shift exchange for other users only if you have the appropriate shift admin privileges',
+						null,
+						$this->l->t('You do not have permissions to create shift exchanges for other users.'),
 					);
 				}
 			} catch (ShiftNotFoundException $e) {
@@ -182,12 +188,16 @@ final class ShiftExchangeController extends Controller {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
 						'You cannot exchange shifts with yourself',
+						null,
+						$this->l->t('Exchanging shifts with yourself is not possible.'),
 					);
 				}
 				if ($shiftA->shiftType->group->getGID() !== $shiftB->shiftType->group->getGID()) {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
-						'You can only exchange shifts, whose shift types\'s groups are identical',
+						"You can only exchange shifts, whose shift types's groups are identical",
+						null,
+						$this->l->t('Shifts can only be exchanged within the same group.'),
 					);
 				}
 
@@ -202,14 +212,30 @@ final class ShiftExchangeController extends Controller {
 						done: false,
 					),
 				];
+				$shiftBStartDateTime = Util::parseEcma($shiftB->start)[0];
+				$shiftBEndDateTime = Util::parseEcma($shiftB->end)[0];
+				$weeklyType = $shiftB->shiftType->repetition['weekly_type'];
 				if ($shiftBPendingExchanges) {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
-						"There is already an open shift exchange for shift_b_id `$shift_b_id`",
+						"There is already an open shift exchange for shift B `$shift_b_id`",
+						null,
+						$this->l->t(
+							'There is already an open shift exchange for %1$s %2$s on %3$s.',
+							[
+								$shiftB->shiftType->group->getDisplayName(),
+								$shiftB->shiftType->name,
+								Util::formatRange(
+									$shiftBStartDateTime,
+									$shiftBEndDateTime,
+									IntlDateFormatter::SHORT,
+									$weeklyType === 'by_day' ? IntlDateFormatter::SHORT : IntlDateFormatter::NONE,
+								),
+							]
+						),
 					);
 				}
 
-				$weeklyType = $shiftB->shiftType->repetition['weekly_type'];
 				$checkAbsence = $weeklyType !== 'by_week' || !$ignoreAbsenceForByWeekShifts;
 
 				// Check if userA is absent during shiftB
@@ -217,13 +243,27 @@ final class ShiftExchangeController extends Controller {
 					$checkAbsence
 					&& $this->calendarService->isUserAbsent(
 						$userAId,
-						Util::parseEcma($shiftB->start)[0],
-						Util::parseEcma($shiftB->end)[0],
+						$shiftBStartDateTime,
+						$shiftBEndDateTime,
 					)
 				) {
+					$userName = $this->userService->get($userAId)->getDisplayName();
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
-						"User A `\"$userAId\"` appears to be absent during shift B",
+						"User A `\"$userAId\"` appears to be absent during shift B `$shift_b_id`",
+						null,
+						$this->l->t(
+							'User A %1$s is absent during shift B period (%2$s).',
+							[
+								$userName,
+								Util::formatRange(
+									$shiftBStartDateTime,
+									$shiftBEndDateTime,
+									IntlDateFormatter::SHORT,
+									$weeklyType === 'by_day' ? IntlDateFormatter::SHORT : IntlDateFormatter::NONE,
+								),
+							]
+						),
 					);
 				}
 			} else { // Transfer
@@ -231,6 +271,8 @@ final class ShiftExchangeController extends Controller {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
 						'You cannot transfer shifts to yourself',
+						null,
+						$this->l->t('Transfering shifts to yourself is not possible.'),
 					);
 				}
 				if (
@@ -242,6 +284,8 @@ final class ShiftExchangeController extends Controller {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
 						'The user you are trying to transfer the shift to, is not a member of the group of the shift type of the shift',
+						null,
+						$this->l->t("Shifts can only be transfered to users who are members of the shift's group."),
 					);
 				}
 			}
@@ -257,14 +301,30 @@ final class ShiftExchangeController extends Controller {
 					done: false,
 				)
 			];
+			$shiftAStartDateTime = Util::parseEcma($shiftA->start)[0];
+			$shiftAEndDateTime = Util::parseEcma($shiftA->end)[0];
+			$weeklyType = $shiftA->shiftType->repetition['weekly_type'];
 			if ($shiftAPendingExchanges) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"There is already an open shift exchange for shift_a_id `$shift_a_id`",
+					"There is already an open shift exchange for shift A `$shift_a_id`",
+					null,
+					$this->l->t(
+						'There is already an open shift exchange for %1$s %2$s on %3$s.',
+						[
+							$shiftA->shiftType->group->getDisplayName(),
+							$shiftA->shiftType->name,
+							Util::formatRange(
+								$shiftAStartDateTime,
+								$shiftAEndDateTime,
+								IntlDateFormatter::SHORT,
+								$weeklyType === 'by_day' ? IntlDateFormatter::SHORT : IntlDateFormatter::NONE,
+							),
+						]
+					),
 				);
 			}
 
-			$weeklyType = $shiftA->shiftType->repetition['weekly_type'];
 			$checkAbsence = $weeklyType !== 'by_week' || !$ignoreAbsenceForByWeekShifts;
 
 			// Check if userB is absent during shiftA
@@ -272,13 +332,27 @@ final class ShiftExchangeController extends Controller {
 				$checkAbsence
 				&& $this->calendarService->isUserAbsent(
 					$userBId,
-					Util::parseEcma($shiftA->start)[0],
-					Util::parseEcma($shiftA->end)[0],
+					$shiftAStartDateTime,
+					$shiftAEndDateTime,
 				)
 			) {
+				$userName = $this->userService->get($userBId)->getDisplayName();
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"User B `\"$userBId\"` appears to be absent during shift A",
+					"User B `\"$userBId\"` appears to be absent during shift A `$shift_a_id`",
+					null,
+					$this->l->t(
+						'User B %1$s is absent during shift A period (%2$s).',
+						[
+							$userName,
+							Util::formatRange(
+								$shiftAStartDateTime,
+								$shiftAEndDateTime,
+								IntlDateFormatter::SHORT,
+								$weeklyType === 'by_day' ? IntlDateFormatter::SHORT : IntlDateFormatter::NONE,
+							),
+						]
+					),
 				);
 			}
 
@@ -352,8 +426,7 @@ final class ShiftExchangeController extends Controller {
 			$shiftExchangeExtended = $this->shiftExchangeService->getExtended($shiftExchange);
 			return new DataResponse($shiftExchangeExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -374,6 +447,8 @@ final class ShiftExchangeController extends Controller {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
 						'Cannot update a shift exchange that is already done',
+						null,
+						$this->l->t('Cannot update a shift exchange that has already been marked as done.'),
 					);
 				}
 				if (
@@ -383,6 +458,8 @@ final class ShiftExchangeController extends Controller {
 					throw new HttpException(
 						Http::STATUS_BAD_REQUEST,
 						'approveds.user and approveds.admin are mutually exclusive',
+						null,
+						$this->l->t('You cannot update the user and admin approval at the same time.'),
 					);
 				}
 
@@ -442,6 +519,9 @@ final class ShiftExchangeController extends Controller {
 						throw new HttpException(
 							Http::STATUS_FORBIDDEN,
 							'The user approval can only be updated by the participating users',
+							null,
+							$this->l->t('The user approval can only be updated by the participating users.'),
+
 						);
 				}
 			} elseif (array_key_exists('admin', $approveds)) {
@@ -455,7 +535,9 @@ final class ShiftExchangeController extends Controller {
 				} else {
 					throw new HttpException(
 						Http::STATUS_FORBIDDEN,
-						'The admin approval can only be updated by an appropriate group shift admin',
+						'The admin approval can only be updated by appropriate group shift admins',
+						null,
+						$this->l->t('The admin approval can only be updated by appropriate group shift admins.'),
 					);
 				}
 			}
@@ -513,8 +595,7 @@ final class ShiftExchangeController extends Controller {
 			$shiftExchangeExtended = $this->shiftExchangeService->getExtended($shiftExchange);
 			return new DataResponse($shiftExchangeExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -546,6 +627,8 @@ final class ShiftExchangeController extends Controller {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
 						'As a normal user, you are not allowed to delete a shift exchange that is already done',
+						null,
+						$this->l->t('Shift exchanges already marked as done can only be deleted by appropriate group shift admins.'),
 					);
 				}
 
@@ -561,7 +644,9 @@ final class ShiftExchangeController extends Controller {
 				if (!$isParticipant && !$isGroupShiftAdmin) {
 					throw new HttpException(
 						Http::STATUS_FORBIDDEN,
-						'The shift exchange can only be deleted by the owners, or a group shift admin of the group of the shift type, of the shifts',
+						'Shift exchanges can only be deleted by the participating users or appropriate group shift admins',
+						null,
+						$this->l->t('Shift exchanges can only be deleted by the participating users or appropriate group shift admins.'),
 					);
 				}
 				$this->shiftExchangeMapper->deleteById($shiftExchange);
@@ -590,8 +675,7 @@ final class ShiftExchangeController extends Controller {
 			}
 			return new DataResponse($shiftExchangeExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 }

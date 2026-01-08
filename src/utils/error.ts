@@ -1,14 +1,13 @@
 import type { AxiosError } from '@nextcloud/axios'
 import type { ErrorResponsePayload } from '../models/error.ts'
 
-import { showError } from '@nextcloud/dialogs'
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { t } from '@nextcloud/l10n'
 import { APP_ID } from './appId.ts'
 import { logger } from './logger.ts'
-import { TOAST_TIMEOUT } from './toast.ts'
 
 /**
- * Prints an error to the console consisting of the passed parameters
+ * Prints an error to the console
  *
  * Also shows a toast if `showToast` is `true`
  *
@@ -16,7 +15,7 @@ import { TOAST_TIMEOUT } from './toast.ts'
  * ```JavaScript
  * handleError(error, "create", "foo")
  * // Prints "Failed to create foo" followed by the actual error message
- * // Shows "Failed to create foo" in an error toast
+ * // Shows the backend error message within an error toast
  * ```
  *
  * @param error The Axios error
@@ -31,12 +30,11 @@ export function handleError(
 	subject: string,
 	showToast: boolean = true,
 ): void {
-	logger.error(`Failed to ${operation} ${subject}: ${error.response?.data.error ?? error.message}`)
-	const translated = t(APP_ID, 'Failed to {operation} {subject}', {
-		operation,
-		subject,
-	})
+	const message = error.response?.data.error ?? error.message
+	const localizedMessage
+		= error.response?.data.localizedError || t(APP_ID, 'An error occurred')
+	logger.error(`Failed to ${operation} ${subject}: ${message}`)
 	if (showToast) {
-		showError(translated, { timeout: TOAST_TIMEOUT })
+		showError(localizedMessage, { timeout: TOAST_PERMANENT_TIMEOUT })
 	}
 }

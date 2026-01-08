@@ -4,29 +4,35 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Controller;
 
+use IntlDateFormatter;
 use OCA\ShiftsNext\Db\ShiftExchangeMapper;
 use OCA\ShiftsNext\Db\ShiftMapper;
 use OCA\ShiftsNext\Db\ShiftTypeMapper;
 use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
+use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\CalendarChangeService;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\ConfigService;
+use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\GroupUserRelationService;
 use OCA\ShiftsNext\Service\ShiftService;
+use OCA\ShiftsNext\Service\UserService;
 use OCA\ShiftsNext\Util\Util;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
 
 final class ShiftController extends Controller {
 	public function __construct(
+		private IL10N $l,
 		string $appName,
 		IRequest $request,
 		private ShiftMapper $shiftMapper,
@@ -36,6 +42,8 @@ final class ShiftController extends Controller {
 		private GroupUserRelationService $groupUserService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
 		private CalendarChangeService $calendarChangeService,
+		private GroupService $groupService,
+		private UserService $userService,
 		private CalendarService $calendarService,
 		private ConfigService $configService,
 	) {
@@ -57,7 +65,9 @@ final class ShiftController extends Controller {
 			if ($calendar_date !== null && $week_date !== null) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					'Filters `calendar_date` and `week_date` are mutually exclusive',
+					'Filters calendar_date and week_date are mutually exclusive',
+					null,
+					$this->l->t('You cannot filter for a calendar date and week date at the same time.'),
 				);
 			}
 			try {
@@ -76,8 +86,7 @@ final class ShiftController extends Controller {
 			}
 			return new DataResponse($shiftsExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -98,8 +107,7 @@ final class ShiftController extends Controller {
 			}
 			return new DataResponse($shiftExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -117,27 +125,36 @@ final class ShiftController extends Controller {
 			} catch (ShiftTypeNotFoundException $e) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"The shift_type_id `$shift_type_id` does not exist",
+					"The shift type `$shift_type_id` does not exist",
 					$e,
 				);
 			}
 			$groupId = $shiftType->getGroupId();
+			$name = $shiftType->getName();
+			$groupName = $this->groupService->get($groupId)->getDisplayName();
 			if (!$this->groupShiftAdminRelationService->isShiftAdmin($groupId)) {
 				throw new HttpException(
 					Http::STATUS_FORBIDDEN,
-					"You are not a group shift admin of group `\"$groupId\"` of shift_type_id `$shift_type_id`",
+					"You are not a group shift admin of group `\"$groupId\"` of shift type `$shift_type_id`",
+					null,
+					$this->l->t('You do not have permissions to create shifts for group %1$s.', [$groupName]),
 				);
 			}
+			$userName = $this->userService->get($user_id)->getDisplayName();
 			if (!$this->groupUserService->isMember($groupId, $user_id)) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"The user_id `\"$user_id\"` is not a member of group `\"$groupId\"` of shift_type_id `$shift_type_id`",
+					"The user `\"$user_id\"` is not a member of group `\"$groupId\"` of shift type `$shift_type_id`",
+					null,
+					$this->l->t('User %1$s is not a member of group %2$s.', [$userName, $groupName]),
 				);
 			}
 			if (!$shiftType->getActive()) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"Cannot create shift for inactive shift_type_id `$shift_type_id`",
+					"Cannot create shift from inactive shift type `$shift_type_id`",
+					null,
+					$this->l->t('You cannot create shifts from inactive shift type %1$s.', [$name]),
 				);
 			}
 			[$start, $startDateTime] = Util::unlocalizeEcma($start);
@@ -155,7 +172,20 @@ final class ShiftController extends Controller {
 			) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"Cannot create shift for absent user_id `\"$user_id\"`",
+					"Cannot create shift for absent user `\"$user_id\"`",
+					null,
+					$this->l->t(
+						'User %1$s is absent during the shift period (%2$s).',
+						[
+							$userName,
+							Util::formatRange(
+								$startDateTime,
+								$endDateTime,
+								IntlDateFormatter::SHORT,
+								$weeklyType === 'by_day' ? IntlDateFormatter::SHORT : IntlDateFormatter::NONE,
+							),
+						]
+					),
 				);
 			}
 			$shift = $this->shiftMapper->create(
@@ -168,8 +198,7 @@ final class ShiftController extends Controller {
 			$this->calendarChangeService->safeCreate($shiftExtended);
 			return new DataResponse($shiftExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -196,18 +225,26 @@ final class ShiftController extends Controller {
 				);
 			}
 			$groupId = $shiftType->getGroupId();
+			$groupName = $this->groupService->get($groupId)->getDisplayName();
 			if (!$this->groupShiftAdminRelationService->isShiftAdmin($groupId)) {
 				throw new HttpException(
 					Http::STATUS_FORBIDDEN,
-					"You are not a group shift admin of group `\"$groupId\"` of shift_type_id `$shiftTypeId`",
+					"You are not a group shift admin of group `\"$groupId\"` of shift type `$shiftTypeId`",
+					null,
+					$this->l->t('You do not have permissions to update shifts for group %1$s.', [$groupName]),
 				);
 			}
+			$userName = $this->userService->get($user_id)->getDisplayName();
 			if (!$this->groupUserService->isMember($groupId, $user_id)) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"The user_id `\"$user_id\"` is not a member of group `\"$groupId\"` of shift_type_id `$shiftTypeId`",
+					"The user `\"$user_id\"` is not a member of group `\"$groupId\"` of shift type `$shiftTypeId`",
+					null,
+					$this->l->t('User %1$s is not a member of group %2$s.', [$userName, $groupName]),
 				);
 			}
+			$startDateTime = Util::parseEcma($shift->getStart())[0];
+			$endDateTime = Util::parseEcma($shift->getEnd())[0];
 			$ignoreAbsenceForByWeekShifts = $this->configService->getIgnoreAbsenceForByWeekShifts();
 			$weeklyType = $shiftType->getRepetition()['weekly_type'];
 			$checkAbsence = $weeklyType !== 'by_week' || !$ignoreAbsenceForByWeekShifts;
@@ -215,13 +252,26 @@ final class ShiftController extends Controller {
 				$checkAbsence
 				&& $this->calendarService->isUserAbsent(
 					$user_id,
-					Util::parseEcma($shift->getStart())[0],
-					Util::parseEcma($shift->getEnd())[0],
+					$startDateTime,
+					$endDateTime,
 				)
 			) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"Cannot move shift to absent user_id `\"$user_id\"`",
+					"Cannot move shift to absent user `\"$user_id\"`",
+					null,
+					$this->l->t(
+						'User %1$s is absent during the shift period (%2$s).',
+						[
+							$userName,
+							Util::formatRange(
+								$startDateTime,
+								$endDateTime,
+								IntlDateFormatter::SHORT,
+								$weeklyType === 'by_day' ? IntlDateFormatter::SHORT : IntlDateFormatter::NONE,
+							),
+						]
+					),
 				);
 			}
 			$shiftId = $shift->getId();
@@ -240,6 +290,8 @@ final class ShiftController extends Controller {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
 					"Cannot move shift as there is a pending shift exchange for shift `$shiftId`",
+					null,
+					$this->l->t('Cannot move shift as there is a pending shift exchange for the shift.'),
 				);
 			}
 			// This queues a removal of the shift from the previous user's calendar
@@ -250,8 +302,7 @@ final class ShiftController extends Controller {
 			$this->calendarChangeService->safeCreate($shiftExtended);
 			return new DataResponse($shiftExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -275,10 +326,13 @@ final class ShiftController extends Controller {
 				);
 			}
 			$groupId = $shiftType->getGroupId();
+			$groupName = $this->groupService->get($groupId)->getDisplayName();
 			if (!$this->groupShiftAdminRelationService->isShiftAdmin($groupId)) {
 				throw new HttpException(
 					Http::STATUS_FORBIDDEN,
-					"You are not a group shift admin of group `\"$groupId\"` of shift_type_id `$shiftTypeId`",
+					"You are not a group shift admin of group `\"$groupId\"` of shift type `$shiftTypeId`",
+					null,
+					$this->l->t('You do not have permissions to delete shifts for group %1$s.', [$groupName]),
 				);
 			}
 			$shift = $this->shiftMapper->deleteById($shift);
@@ -286,8 +340,7 @@ final class ShiftController extends Controller {
 			$this->calendarChangeService->safeCreate($shiftExtended);
 			return new DataResponse($shiftExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 }

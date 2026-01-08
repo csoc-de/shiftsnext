@@ -9,20 +9,27 @@ use OC\DB\Exceptions\DbalException;
 use OCA\ShiftsNext\Db\GroupShiftAdminRelationMapper;
 use OCA\ShiftsNext\Exception\GroupShiftAdminRelationNotFoundException;
 use OCA\ShiftsNext\Exception\HttpException;
+use OCA\ShiftsNext\Response\ErrorResponse;
+use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
+use OCA\ShiftsNext\Service\UserService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
 
 final class GroupShiftAdminRelationController extends Controller {
 	public function __construct(
+		private IL10N $l,
 		string $appName,
 		IRequest $request,
 		private GroupShiftAdminRelationMapper $groupShiftAdminRelationMapper,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
+		private GroupService $groupService,
+		private UserService $userService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -33,7 +40,7 @@ final class GroupShiftAdminRelationController extends Controller {
 			$relationsExtended = $this->groupShiftAdminRelationService->getAllExtended();
 			return new DataResponse($relationsExtended);
 		} catch (Throwable $th) {
-			return new DataResponse(['error' => $th->getMessage()], Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -43,8 +50,7 @@ final class GroupShiftAdminRelationController extends Controller {
 			$groupedRelations = $this->groupShiftAdminRelationService->getAllGroupedByGroup();
 			return new DataResponse($groupedRelations);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -58,8 +64,7 @@ final class GroupShiftAdminRelationController extends Controller {
 			}
 			return new DataResponse($relationExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -78,7 +83,15 @@ final class GroupShiftAdminRelationController extends Controller {
 				if ($e->getPrevious() instanceof UniqueConstraintViolationException) {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
-						'This relation already exists',
+						"Group shift admin relation $group_id <=> $user_id already exists",
+						null,
+						$this->l->t(
+							'A group to shift admin relation for group %1$s and user %2$s already exists.',
+							[
+								$this->groupService->get($group_id)->getDisplayName(),
+								$this->userService->get($user_id)->getDisplayName(),
+							]
+						),
 					);
 				}
 				throw $e;
@@ -86,8 +99,7 @@ final class GroupShiftAdminRelationController extends Controller {
 			$relationExtended = $this->groupShiftAdminRelationService->getExtended($relation);
 			return new DataResponse($relationExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -106,8 +118,7 @@ final class GroupShiftAdminRelationController extends Controller {
 			$groupedRelation = $this->groupShiftAdminRelationService->updateAllOfGroup($group_id, $user_ids);
 			return new DataResponse($groupedRelation);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -122,8 +133,7 @@ final class GroupShiftAdminRelationController extends Controller {
 			$relationExtended = $this->groupShiftAdminRelationService->getExtended($relation);
 			return new DataResponse($relationExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 }

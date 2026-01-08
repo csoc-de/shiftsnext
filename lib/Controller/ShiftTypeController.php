@@ -9,7 +9,9 @@ use OCA\ShiftsNext\Db\ShiftTypeMapper;
 use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Psalm\ShiftTypeAlias;
+use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\CalendarChangeService;
+use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\ShiftTypeService;
 use OCP\AppFramework\Controller;
@@ -17,6 +19,7 @@ use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
+use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
 
@@ -29,11 +32,13 @@ use function array_walk;
  */
 final class ShiftTypeController extends Controller {
 	public function __construct(
+		private IL10N $l,
 		string $appName,
 		IRequest $request,
 		private ShiftTypeMapper $shiftTypeMapper,
 		private ShiftMapper $shiftMapper,
 		private ShiftTypeService $shiftTypeService,
+		private GroupService $groupService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
 		private CalendarChangeService $calendarChangeService,
 	) {
@@ -64,7 +69,7 @@ final class ShiftTypeController extends Controller {
 			);
 			return new DataResponse($shiftTypesExtended);
 		} catch (Throwable $th) {
-			return new DataResponse(['error' => $th->getMessage()], Http::STATUS_INTERNAL_SERVER_ERROR);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -79,8 +84,7 @@ final class ShiftTypeController extends Controller {
 			}
 			return new DataResponse($shiftTypeExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -101,9 +105,12 @@ final class ShiftTypeController extends Controller {
 	): DataResponse {
 		try {
 			if (!$this->groupShiftAdminRelationService->isShiftAdmin($group_id)) {
+				$groupName = $this->groupService->get($group_id)->getDisplayName();
 				throw new HttpException(
 					Http::STATUS_FORBIDDEN,
 					"You are not a group shift admin for group_id $group_id",
+					null,
+					$this->l->t('You do not have permissions to create shift types for group %1$s.', [$groupName]),
 				);
 			}
 			$shiftType = $this->shiftTypeMapper->create(
@@ -118,8 +125,7 @@ final class ShiftTypeController extends Controller {
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new DataResponse($shiftTypeExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -143,10 +149,13 @@ final class ShiftTypeController extends Controller {
 				throw new HttpException(Http::STATUS_NOT_FOUND, null, $e);
 			}
 			$groupId = $shiftType->getGroupId();
+			$groupName = $this->groupService->get($groupId)->getDisplayName();
 			if (!$this->groupShiftAdminRelationService->isShiftAdmin($groupId)) {
 				throw new HttpException(
 					Http::STATUS_FORBIDDEN,
-					"You are not a group shift admin of group `\"$groupId\"` of shift_type_id `$id`",
+					"You are not a group shift admin of group `\"$groupId\"` of shift type `$id`",
+					null,
+					$this->l->t('You do not have permissions to update shift types for group %1$s.', [$groupName]),
 				);
 			}
 			$shiftType = $this->shiftTypeMapper->updateById(
@@ -162,8 +171,7 @@ final class ShiftTypeController extends Controller {
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new DataResponse($shiftTypeExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 
@@ -177,10 +185,13 @@ final class ShiftTypeController extends Controller {
 				throw new HttpException(Http::STATUS_NOT_FOUND, null, $e);
 			}
 			$groupId = $shiftType->getGroupId();
+			$groupName = $this->groupService->get($groupId)->getDisplayName();
 			if (!$this->groupShiftAdminRelationService->isShiftAdmin($groupId)) {
 				throw new HttpException(
 					Http::STATUS_FORBIDDEN,
-					"You are not a group shift admin of group `\"$groupId\"` of shift_type_id `$id`",
+					"You are not a group shift admin of group `\"$groupId\"` of shift type `$id`",
+					null,
+					$this->l->t('You do not have permissions to delete shift types for group %1$s.', [$groupName]),
 				);
 			}
 			$shifts = $this->shiftMapper->findAll(shiftTypeId: $shiftType->getId());
@@ -189,8 +200,7 @@ final class ShiftTypeController extends Controller {
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new DataResponse($shiftTypeExtended);
 		} catch (Throwable $th) {
-			$responseCode = $th instanceof HttpException ? $th->getStatusCode() : Http::STATUS_INTERNAL_SERVER_ERROR;
-			return new DataResponse(['error' => $th->getMessage()], $responseCode);
+			return new ErrorResponse($th);
 		}
 	}
 }
