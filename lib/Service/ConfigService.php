@@ -231,6 +231,25 @@ final class ConfigService extends AbstractService {
 	}
 
 	/**
+	 * Gets the language, e.g. "de" of `$userId`.
+	 *
+	 * The language is only set if the user did log in at least once,
+	 * otherwise "en" is returned.
+	 *
+	 * @param null|string $userId If `null`, the logged-in user is used
+	 *
+	 * @return non-empty-string
+	 */
+	public function getLanguage(?string $userId = null): string {
+		/** @psalm-suppress DeprecatedMethod */
+		return $this->config->getUserValue(
+			$userId ?? $this->userId,
+			'core',
+			'lang',
+		) ?: 'en';
+	}
+
+	/**
 	 * Gets the locale, e.g. "de_DE" of `$userId`.
 	 *
 	 * The locale is only set if the user adjusted it in the personal settings,
