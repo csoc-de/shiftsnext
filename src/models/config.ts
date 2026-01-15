@@ -8,7 +8,7 @@ export type ExchangeApprovalType = (typeof EXCHANGE_APPROVAL_TYPES)[number]
 export type ExchangeApprovalTypeTranslations = Record<ExchangeApprovalType, string>
 
 export const exchangeApprovalTypeTranslations: ExchangeApprovalTypeTranslations = {
-	users: t(APP_ID, 'Users'),
+	users: t(APP_ID, 'Participants'),
 	admin: t(APP_ID, 'Admin'),
 	all: t(APP_ID, 'All'),
 }

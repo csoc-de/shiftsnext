@@ -21,7 +21,7 @@
 					</template>
 					<div class="flex flex-col gap-2">
 						<InputGroup>
-							<label for="user-a"> {{ t(APP_ID, "User") }}</label>
+							<label for="user-a"> {{ t(APP_ID, "Participant") }}</label>
 							<NcSelectUsers
 								v-model="userAOption"
 								required
@@ -65,7 +65,7 @@
 					<div class="flex flex-col gap-2">
 						<template v-if="exchangeType === 'regular'">
 							<InputGroup>
-								<label for="user-b"> {{ t(APP_ID, "User") }}</label>
+								<label for="user-b"> {{ t(APP_ID, "Participant") }}</label>
 								<NcSelectUsers
 									v-model="userBOption"
 									required
@@ -100,7 +100,7 @@
 						</template>
 						<template v-else>
 							<InputGroup>
-								<label for="user-b"> {{ t(APP_ID, "User") }}</label>
+								<label for="user-b"> {{ t(APP_ID, "Participant") }}</label>
 								<NcSelectUsers
 									v-model="userBOption"
 									required

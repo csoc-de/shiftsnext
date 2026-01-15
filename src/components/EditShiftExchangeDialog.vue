@@ -79,7 +79,7 @@ const saving = ref(false)
 
 const approvalLabel = editor === 'admin'
 	? t(APP_ID, 'Admin approval')
-	: t(APP_ID, 'User approval')
+	: t(APP_ID, 'Participant approval')
 
 type FormValues = {
 	approved: boolean | null

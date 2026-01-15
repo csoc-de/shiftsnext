@@ -250,10 +250,10 @@ final class ShiftExchangeController extends Controller {
 					$userName = $this->userService->get($userAId)->getDisplayName();
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
-						"User A `\"$userAId\"` appears to be absent during shift B `$shift_b_id`",
+						"Participant A `\"$userAId\"` appears to be absent during shift B `$shift_b_id`",
 						null,
 						$this->l->t(
-							'User A %1$s is absent during shift B period (%2$s).',
+							'Participant A %1$s is absent during shift B period (%2$s).',
 							[
 								$userName,
 								Util::formatRange(
@@ -339,10 +339,10 @@ final class ShiftExchangeController extends Controller {
 				$userName = $this->userService->get($userBId)->getDisplayName();
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"User B `\"$userBId\"` appears to be absent during shift A `$shift_a_id`",
+					"Participant B `\"$userBId\"` appears to be absent during shift A `$shift_a_id`",
 					null,
 					$this->l->t(
-						'User B %1$s is absent during shift A period (%2$s).',
+						'Participant B %1$s is absent during shift A period (%2$s).',
 						[
 							$userName,
 							Util::formatRange(
@@ -459,7 +459,7 @@ final class ShiftExchangeController extends Controller {
 						Http::STATUS_BAD_REQUEST,
 						'approveds.user and approveds.admin are mutually exclusive',
 						null,
-						$this->l->t('You cannot update the user and admin approval at the same time.'),
+						$this->l->t('You cannot update the participant and admin approval at the same time.'),
 					);
 				}
 
@@ -518,9 +518,9 @@ final class ShiftExchangeController extends Controller {
 					default:
 						throw new HttpException(
 							Http::STATUS_FORBIDDEN,
-							'The user approval can only be updated by the participating users',
+							'The participant approval can only be updated by the participating users',
 							null,
-							$this->l->t('The user approval can only be updated by the participating users.'),
+							$this->l->t('The participant approval can only be updated by the participating users.'),
 
 						);
 				}
