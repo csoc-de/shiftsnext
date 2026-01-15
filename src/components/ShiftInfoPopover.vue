@@ -5,6 +5,10 @@
 		class="absolute left-1/2 bottom-0 -translate-x-1/2"
 		:shown="visible">
 		<div class="flex flex-col gap-2 p-2 max-w-[300px]">
+			<div>
+				{{ groupName }}<br>
+				{{ typeName }}
+			</div>
 			<div>{{ formattedRange }}</div>
 			<div v-if="description">
 				{{ description }}
@@ -26,15 +30,32 @@ const { shiftOrTypeWrapper } = defineProps<{
 	visible: boolean
 }>()
 
+let groupName: string
+let typeName: string
+
 let start: Temporal.ZonedDateTime | Temporal.PlainDate
 let end: Temporal.ZonedDateTime | Temporal.PlainDate
 
 let description: string
 
 if ('id' in shiftOrTypeWrapper) {
-	({ start, end, shift_type: { description } } = shiftOrTypeWrapper)
+	({
+		start,
+		end,
+		shift_type: {
+			group: { display_name: groupName },
+			name: typeName, description,
+		},
+	} = shiftOrTypeWrapper)
 } else {
-	({ shiftStart: start, shiftEnd: end, shiftType: { description } } = shiftOrTypeWrapper)
+	({
+		shiftStart: start,
+		shiftEnd: end,
+		shiftType: {
+			group: { display_name: groupName },
+			name: typeName, description,
+		},
+	} = shiftOrTypeWrapper)
 }
 const formattedRange = formatRange(
 	start,
