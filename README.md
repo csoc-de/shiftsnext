@@ -12,7 +12,7 @@ This document uses the terms _create_ and _assign_ regarding the creation of shi
 
 ### Calendar app
 
-Currently, this app requires the [calendar app](https://apps.nextcloud.com/apps/calendar) to be installed. This requirement will likely be removed in the future.
+This app requires the [calendar app](https://apps.nextcloud.com/apps/calendar) to be installed.
 
 Nextcloud admins need to create two calendars in the calendar app:
 
