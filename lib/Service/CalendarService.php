@@ -77,7 +77,7 @@ final class CalendarService {
 	 * @return string[] Error messages
 	 *
 	 * @throws CalendarNotFoundException
-	 *                                   {@see OCA\ShiftsNext\Service\ConfigService::getCommonCalendarUri()}
+	 *                                   {@see OCA\ShiftsNext\Service\ConfigService::getCommonCalendarId()}
 	 */
 	public function applyChanges(array $calendarChanges): array {
 		$errors = [];
@@ -115,7 +115,7 @@ final class CalendarService {
 	 * @return SanitizedCalendar[] Calendars where applying the change failed
 	 *
 	 * @throws CalendarNotFoundException
-	 *                                   {@see OCA\ShiftsNext\Service\ConfigService::getCommonCalendarUri()}
+	 *                                   {@see OCA\ShiftsNext\Service\ConfigService::getCommonCalendarId()}
 	 */
 	public function applyChange(CalendarChange $calendarChange): array {
 		$userId = $calendarChange->getUserId();
