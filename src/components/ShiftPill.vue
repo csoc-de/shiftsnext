@@ -9,7 +9,7 @@
 			'opacity-40': !isSelected && disabled,
 			'outline outline-2 outline-offset-2 outline-nc-error': deleting,
 		}">
-		<div class="truncate leading-[1.1]">
+		<div class="max-w-48 truncate leading-[1.1]">
 			<ShiftInfoPopover
 				:shift-or-type-wrapper="shift"
 				:visible="showInfo" />

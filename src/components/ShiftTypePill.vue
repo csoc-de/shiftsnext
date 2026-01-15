@@ -8,8 +8,7 @@
 		:class="{
 			'opacity-40': !isSelected && disabled,
 		}">
-		<div
-			class="truncate leading-[1.1]">
+		<div class="max-w-48 truncate leading-[1.1]">
 			<ShiftInfoPopover
 				:shift-or-type-wrapper="shiftTypeWrapper"
 				:visible="showInfo" />
