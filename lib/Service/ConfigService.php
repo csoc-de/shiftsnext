@@ -253,7 +253,7 @@ final class ConfigService extends AbstractService {
 	 * Gets the locale, e.g. "de_DE" of `$userId`.
 	 *
 	 * The locale is only set if the user adjusted it in the personal settings,
-	 * otherwise "en" is returned.
+	 * otherwise this method will call {@see OCA\ShiftsNext\Service\ConfigService::getLanguage()}
 	 *
 	 * @param null|string $userId If `null`, the logged-in user is used
 	 *
@@ -265,6 +265,6 @@ final class ConfigService extends AbstractService {
 			$userId ?? $this->userId,
 			'core',
 			'locale',
-		) ?: 'en';
+		) ?: $this->getLanguage($userId);
 	}
 }
