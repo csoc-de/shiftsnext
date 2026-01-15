@@ -35,8 +35,8 @@ final class Util {
 	public const string RFC9557_NC = 'Y-m-d\TH:i:s.vP\[e\]';
 
 	/**
-	 * Same as {@see OCA\ShiftsNext\Util\DateTimeInterface::RFC9557_NC} but
-	 * without fractional second
+	 * {@link https://www.rfc-editor.org/rfc/rfc9557.html RFC 9557}
+	 * without calendar and fractional second (example: 1970-01-01T00:00:00+00:00[UTC])
 	 */
 	public const string RFC9557_NC_NF = 'Y-m-d\TH:i:sP\[e\]';
 
