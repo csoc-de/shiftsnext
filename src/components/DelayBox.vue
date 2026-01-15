@@ -1,7 +1,7 @@
 <template>
 	<Teleport to="#delay-boxes-wrapper">
 		<div class="flex items-center gap-2 rounded-nc-container bg-nc-dark p-2 shadow-lg">
-			<div class="h-[4px] flex-1 bg-nc-loading-light">
+			<div class="h-[4px] w-36 flex-1 bg-nc-loading-light">
 				<div
 					class="h-full rounded-nc-pill bg-nc-loading-dark transition-[width] ease-linear"
 					:style="{ transitionDuration, width }" />
