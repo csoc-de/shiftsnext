@@ -11,7 +11,7 @@
 			<div class="grid w-full max-w-[1000px] grid-cols-1 gap-9 md:grid-cols-2">
 				<div>
 					<h3 class="mt-0 mb-5 border-b-4 border-solid border-nc-warning pb-4 text-center">
-						{{ t(APP_ID, "Open") }}
+						{{ t(APP_ID, "Pending") }}
 					</h3>
 					<div class="flex flex-col gap-4 my-1">
 						<ShiftExchangeCard

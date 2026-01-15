@@ -218,10 +218,10 @@ final class ShiftExchangeController extends Controller {
 				if ($shiftBPendingExchanges) {
 					throw new HttpException(
 						Http::STATUS_UNPROCESSABLE_ENTITY,
-						"There is already an open shift exchange for shift B `$shift_b_id`",
+						"There is a pending shift exchange for shift B `$shift_b_id`",
 						null,
 						$this->l->t(
-							'There is already an open shift exchange for %1$s %2$s on %3$s.',
+							'You cannot create a new shift exchange as long as there is a pending shift exchange for %1$s %2$s (%3$s).',
 							[
 								$shiftB->shiftType->group->getDisplayName(),
 								$shiftB->shiftType->name,
@@ -307,10 +307,10 @@ final class ShiftExchangeController extends Controller {
 			if ($shiftAPendingExchanges) {
 				throw new HttpException(
 					Http::STATUS_UNPROCESSABLE_ENTITY,
-					"There is already an open shift exchange for shift A `$shift_a_id`",
+					"There is a pending shift exchange for shift A `$shift_a_id`",
 					null,
 					$this->l->t(
-						'There is already an open shift exchange for %1$s %2$s on %3$s.',
+						'You cannot create a new shift exchange as long as there is a pending shift exchange for %1$s %2$s (%3$s).',
 						[
 							$shiftA->shiftType->group->getDisplayName(),
 							$shiftA->shiftType->name,
