@@ -1,7 +1,7 @@
 <template>
 	<ClockOutline
 		v-if="approved === null"
-		:title="t(APP_ID, 'Approval pending')"
+		:title="t(APP_ID, 'Pending')"
 		:size="20"
 		class="text-nc-element-warning" />
 	<CheckCircleOutline
