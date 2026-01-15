@@ -145,4 +145,4 @@ This app always uses the [ISO 8601 week numbering system](https://en.wikipedia.o
 
 ### Software used
 
-This app relies heavily on the new [JavaScript Temporal API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal). As of July 2025, only Firefox ships this API in its stable browser version, so this app uses [fullcalendar/temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) created by [Adam Shaw](https://github.com/arshaw).
+This app relies heavily on the new [JavaScript Temporal API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal). As of January 14, 2026, only Firefox and Chrome ship this API in their stable browser versions, so this app uses [fullcalendar/temporal-polyfill](https://github.com/fullcalendar/temporal-polyfill) created by [Adam Shaw](https://github.com/arshaw).
