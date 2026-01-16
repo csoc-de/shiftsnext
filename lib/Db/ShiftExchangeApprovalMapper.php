@@ -91,7 +91,10 @@ final class ShiftExchangeApprovalMapper extends QBMapper {
 
 		$provider = $this->db->getDatabaseProvider();
 		if (
-			$provider === IDBConnection::PLATFORM_POSTGRES
+			(
+				$provider === IDBConnection::PLATFORM_POSTGRES
+				|| $provider === IDBConnection::PLATFORM_SQLITE
+			)
 			&& array_all(func_get_args(), fn (mixed $arg) => $arg === null)
 		) {
 			$table = $this->db->getQueryBuilder()->getTableName($this->getTableName());
