@@ -11,7 +11,7 @@
 		"You do not have permissions to delete shifts for group %1$s.": "Du hast keine Berechtigung, um Schichten für Gruppe %1$s zu löschen.",
 		"You can either exchange shifts or transfer a shift to another user, but not both.": "Du kannst entweder Schichten tauschen oder transferieren, jedoch nicht beides.",
 		"Specify a second shift or a user to transfer the shift to.": "Spezifiziere eine zweite Schicht oder eine:n Benutzer:in zum Transferieren.",
-		"You do not have permissions to create shift exchanges for other users.": "Du hast keine Berechtigung, um Schicht-Tausche für andere Benutzer:innen zu erstellen.",
+		"You do not have permissions to create shift exchanges for all specified shifts.": "Du hast keine Berechtigung, um Schicht-Tausche für alle angegebenen Schichten zu erstellen.",
 		"Exchanging shifts with yourself is not possible.": "Schichten mit dir selbst zu tauschen, ist nicht möglich.",
 		"Shifts can only be exchanged within the same group.": "Schichten können nur innerhalb derselben Gruppe getauscht werden.",
 		"You cannot create a new shift exchange as long as there is a pending shift exchange for %1$s %2$s (%3$s).": "Du kannst keinen neuen Schicht-Tausch erstellen, solange ein ausstehender Schicht-Tausch für %1$s %2$s (%3$s) existiert.",

@@ -164,7 +164,7 @@ final class ShiftExchangeController extends Controller {
 						Http::STATUS_FORBIDDEN,
 						'You can create a shift exchange for other users only if you have the appropriate shift admin privileges',
 						null,
-						$this->l->t('You do not have permissions to create shift exchanges for other users.'),
+						$this->l->t('You do not have permissions to create shift exchanges for all specified shifts.'),
 					);
 				}
 			} catch (ShiftNotFoundException $e) {
