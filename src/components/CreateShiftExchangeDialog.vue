@@ -315,6 +315,9 @@ async function loadShiftsB(): Promise<void> {
 		const shifts = await getShifts({
 			calendar_date: getIsoCalendarDate(dateB.value),
 			user_id: userBOption.value.id,
+			group_ids: shiftAOption.value
+				? [shiftAOption.value.shift_type.group.id]
+				: undefined,
 		})
 		shiftBOptions.value = shifts.map(getNcSelectShiftOption)
 	} finally {
