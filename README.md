@@ -82,7 +82,7 @@ This field is a comma-separated input, which will be inserted as is into the cal
 
 ##### Frequency & Interval
 
-These two settings in conjuction with the _Reference_ and _Amount_ fields controls when shifts are considered _creatable_.
+These two settings in conjuction with the _Reference_ and _Amount_ fields control when shifts are considered _creatable_.
 
 For example, setting _Frequency_ to _weekly_ (which currently is the only option) and _Interval_ to _2_ reads as: allow shift admins to create shifts from this type _every 2 weeks_, relative to the reference field. See [config](#config-weekly-by-day) for more info.
 
