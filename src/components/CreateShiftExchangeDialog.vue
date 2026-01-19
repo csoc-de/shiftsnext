@@ -1,13 +1,13 @@
 <template>
 	<NcDialog
-		no-close
+		noClose
 		:name="t(APP_ID, 'Create shift exchange')"
 		size="normal">
 		<form id="shift-exchange-form" @submit.prevent="onSubmit">
 			<NcRadioGroup
 				v-model="exchangeType"
 				:label="t(APP_ID, 'Exchange type')"
-				hide-label>
+				hideLabel>
 				<NcRadioGroupButton
 					v-for="type in EXCHANGE_TYPES"
 					:key="type"
@@ -25,12 +25,12 @@
 							<NcSelectUsers
 								v-model="userAOption"
 								required
-								input-id="user-a"
+								inputId="user-a"
 								:disabled="!isShiftAdmin"
 								class="w-full"
 								:options="userAOptions"
 								:loading="userAOptionsLoading"
-								@update:model-value="loadShiftsA()" />
+								@update:modelValue="loadShiftsA()" />
 						</InputGroup>
 						<InputGroup>
 							<label for="date-a">{{ t(APP_ID, "Date") }}</label>
@@ -40,7 +40,7 @@
 								required
 								class="w-full"
 								type="date"
-								hide-label
+								hideLabel
 								@change="loadShiftsA()" />
 						</InputGroup>
 						<InputGroup>
@@ -48,12 +48,12 @@
 							<NcSelect
 								v-model="shiftAOption"
 								required
-								input-id="shift-a"
+								inputId="shift-a"
 								:disabled="shiftASelectDisabled"
 								class="w-full"
 								:options="shiftAOptions"
 								:loading="shiftAOptionsLoading"
-								@update:model-value="loadUsersB" />
+								@update:modelValue="loadUsersB" />
 						</InputGroup>
 					</div>
 				</CustomFieldset>
@@ -69,11 +69,11 @@
 								<NcSelectUsers
 									v-model="userBOption"
 									required
-									input-id="user-b"
+									inputId="user-b"
 									class="w-full"
 									:options="userBOptions"
 									:loading="userBOptionsLoading"
-									@update:model-value="loadShiftsB()" />
+									@update:modelValue="loadShiftsB()" />
 							</InputGroup>
 							<InputGroup>
 								<label for="date-b">{{ t(APP_ID, "Date") }}</label>
@@ -83,7 +83,7 @@
 									required
 									class="w-full"
 									type="date"
-									hide-label
+									hideLabel
 									@change="loadShiftsB()" />
 							</InputGroup>
 							<InputGroup>
@@ -91,7 +91,7 @@
 								<NcSelect
 									v-model="shiftBOption"
 									required
-									input-id="shift-b"
+									inputId="shift-b"
 									:disabled="shiftBSelectDisabled"
 									class="w-full"
 									:options="shiftBOptions"
@@ -104,7 +104,7 @@
 								<NcSelectUsers
 									v-model="userBOption"
 									required
-									input-id="user-b"
+									inputId="user-b"
 									class="w-full"
 									:options="userBOptions"
 									:loading="userBOptionsLoading" />
@@ -118,7 +118,7 @@
 						id="comment"
 						v-model.trim="comment"
 						resize="vertical"
-						label-outside />
+						labelOutside />
 				</InputGroup>
 			</div>
 		</form>

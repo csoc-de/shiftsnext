@@ -11,7 +11,7 @@
 		}">
 		<div class="max-w-48 truncate leading-[1.1]">
 			<ShiftInfoPopover
-				:shift-or-type-wrapper="shift"
+				:shiftOrTypeWrapper="shift"
 				:visible="showInfo" />
 			{{ shift.shift_type.group.display_name }}<br>
 			{{ shift.shift_type.name }}
@@ -24,7 +24,7 @@
 			<NcActionButton
 				class="!bg-transparent"
 				:style="{ color: contrastColor, borderColor: contrastColor }"
-				close-after-click
+				closeAfterClick
 				@click.stop="showInfo = !showInfo">
 				<template #icon>
 					<InformationOutline :size="20" />
@@ -35,7 +35,7 @@
 				v-if="_isShiftAdmin"
 				class="!bg-transparent"
 				:style="{ color: contrastColor, borderColor: contrastColor }"
-				close-after-click
+				closeAfterClick
 				@click.stop="onMoveButtonClick">
 				<template #icon>
 					<ArrowAll :size="20" />
@@ -46,7 +46,7 @@
 				v-if="_isShiftAdmin"
 				class="!bg-transparent"
 				:style="{ color: contrastColor, borderColor: contrastColor }"
-				close-after-click
+				closeAfterClick
 				@click.stop="startDeletion">
 				<template #icon>
 					<Delete :size="20" />

@@ -11,7 +11,7 @@
 			<ShiftTypeCard
 				v-for="shiftType in shiftTypes"
 				:key="shiftType.id"
-				:shift-type="shiftType" />
+				:shiftType="shiftType" />
 		</div>
 		<ShiftTypeDialog
 			v-if="createDialogMounted"

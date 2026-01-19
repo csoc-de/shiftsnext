@@ -1,6 +1,6 @@
 <template>
 	<NcDialog
-		no-close
+		noClose
 		:name="dialogName"
 		size="normal">
 		<form id="shift-type-form" class="flex flex-col gap-3" @submit.prevent="onSubmit">
@@ -10,21 +10,21 @@
 					<NcSelect
 						v-model="group"
 						:disabled="!!shiftType"
-						input-id="shift-type-group-id"
+						inputId="shift-type-group-id"
 						:options="shiftAdminGroups"
 						label="display_name"
-						label-outside
+						labelOutside
 						:clearable="false"
 						required
 						class="w-full !min-w-0"
-						@update:model-value="groupId = group?.id ?? ''" />
+						@update:modelValue="groupId = group?.id ?? ''" />
 				</InputGroup>
 				<InputGroup class="sm:col-span-2">
 					<label for="shift-type-name">{{ t(APP_ID, "Name") }}</label>
 					<NcTextField
 						id="shift-type-name"
 						v-model.trim="name"
-						label-outside
+						labelOutside
 						required />
 				</InputGroup>
 				<InputGroup>
@@ -51,14 +51,14 @@
 					<NcTextField
 						id="shift-type-description"
 						v-model.trim="description"
-						label-outside />
+						labelOutside />
 				</InputGroup>
 				<InputGroup class="col-span-2 sm:col-span-6">
 					<label for="shift-type-categories">{{ t(APP_ID, "Categories") }}</label>
 					<NcTextField
 						id="shift-type-categories"
 						v-model.trim="categories"
-						label-outside />
+						labelOutside />
 				</InputGroup>
 			</div>
 			<CustomFieldset>
@@ -74,8 +74,8 @@
 								}}</label>
 								<NcSelect
 									v-model="frequency"
-									input-id="shift-type-repetition-frequency"
-									label-outside
+									inputId="shift-type-repetition-frequency"
+									labelOutside
 									:options="frequencies"
 									:clearable="false" />
 							</InputGroup>
@@ -86,7 +86,7 @@
 								<NcTextField
 									id="shift-type-repetition-interval"
 									v-model.trim="interval"
-									label-outside
+									labelOutside
 									type="number"
 									min="1"
 									required />
@@ -97,7 +97,7 @@
 							<NcRadioGroup
 								v-model="weeklyType"
 								:label=" t(APP_ID, 'Weekly type')"
-								hide-label>
+								hideLabel>
 								<NcRadioGroupButton
 									v-for="type in REPETITION_WEEKLY_TYPES"
 									:key="type"
@@ -122,23 +122,23 @@
 												v-model="byDayReferenceDate"
 												class="w-full"
 												type="datetime-local"
-												hide-label
+												hideLabel
 												required
-												@update:model-value="setByDayReference()" />
+												@update:modelValue="setByDayReference()" />
 										</InputGroup>
 										<InputGroup>
 											<label for="shift-type-repetition-config-time-zone">{{ t(APP_ID, "Time zone") }}</label>
 											<NcTimezonePicker
 												v-model="timeZone"
-												input-id="shift-type-repetition-config-time-zone"
-												@update:model-value="setByDayReference()" />
+												inputId="shift-type-repetition-config-time-zone"
+												@update:modelValue="setByDayReference()" />
 										</InputGroup>
 									</template>
 									<IsoWeekDateInput
 										v-else
 										v-model="byWeekReference"
-										:year-label="t(APP_ID, 'Reference year')"
-										:week-label="t(APP_ID, 'Reference week')"
+										:yearLabel="t(APP_ID, 'Reference year')"
+										:weekLabel="t(APP_ID, 'Reference week')"
 										class="sm:col-span-2" />
 								</div>
 								<InputGroup v-if="weeklyType === 'by_day'">
@@ -260,7 +260,13 @@ const byDayReference = ref(Temporal.Now.zonedDateTimeISO(userTimeZone).with({
 const timeZone = ref(userTimeZone)
 const duration = ref(new Temporal.Duration())
 const shortDayToAmountMap = ref<ShortDayToAmountMap>({
-	MO: 0, TU: 0, WE: 0, TH: 0, FR: 0, SA: 0, SU: 0,
+	MO: 0,
+	TU: 0,
+	WE: 0,
+	TH: 0,
+	FR: 0,
+	SA: 0,
+	SU: 0,
 })
 const byWeekReference = ref(getIsoWeekDate(undefined, false))
 const byWeekAmount = ref(1)

@@ -12,22 +12,22 @@
 								{{ t(APP_ID, "Common calendar") }}</label>
 							<NcSelect
 								v-model="commonCalendarOption"
-								input-id="common-calendar"
+								inputId="common-calendar"
 								:options="commonCalendarOptions"
 								required
 								class="min-w-64"
-								@update:model-value="formValues.common_calendar_id = commonCalendarOption?.id" />
+								@update:modelValue="formValues.common_calendar_id = commonCalendarOption?.id" />
 						</InputGroup>
 						<InputGroup>
 							<label for="absence-calendar">
 								{{ t(APP_ID, "Absence calendar") }}</label>
 							<NcSelect
 								v-model="absenceCalendarOption"
-								input-id="absence-calendar"
+								inputId="absence-calendar"
 								:options="absenceCalendarOptions"
 								required
 								class="min-w-64"
-								@update:model-value="formValues.absence_calendar_id = absenceCalendarOption?.id" />
+								@update:modelValue="formValues.absence_calendar_id = absenceCalendarOption?.id" />
 						</InputGroup>
 						<InputGroup>
 							<label for="sync-to-personal-calendar">
@@ -61,11 +61,11 @@
 							{{ t(APP_ID, "Required approvals") }}</label>
 						<NcSelect
 							v-model="approvalTypeOption"
-							input-id="exchange-approval-type"
+							inputId="exchange-approval-type"
 							:options="approvalTypeOptions"
 							:clearable="false"
 							class="min-w-64"
-							@update:model-value="formValues.exchange_approval_type = approvalTypeOption?.id" />
+							@update:modelValue="formValues.exchange_approval_type = approvalTypeOption?.id" />
 					</InputGroup>
 				</CustomFieldset>
 			</div>

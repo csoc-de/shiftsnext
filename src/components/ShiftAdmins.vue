@@ -34,7 +34,7 @@
 									v-model="selectedUserOptions2D[index]"
 									class="min-w-56"
 									multiple
-									keep-open
+									keepOpen
 									:options="userOptions" />
 							</td>
 							<td class="w-0">
@@ -67,10 +67,10 @@
 			<label for="selected-group">{{ t(APP_ID, "Add group") }}</label>
 			<NcSelect
 				v-model="group"
-				input-id="selected-group"
+				inputId="selected-group"
 				:options="groups"
 				label="display_name"
-				label-outside
+				labelOutside
 				class="min-w-44" />
 		</InputGroup>
 	</NcSettingsSection>

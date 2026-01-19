@@ -1,5 +1,5 @@
 <template>
-	<NcContent :app-name="APP_ID">
+	<NcContent :appName="APP_ID">
 		<template v-if="missingConfigs.length === 0">
 			<NcAppNavigation>
 				<NavigationControls />
@@ -25,7 +25,7 @@
 
 			<DelayBoxesWrapper />
 		</template>
-		<ConfigMissing v-else :missing-configs="missingConfigs" />
+		<ConfigMissing v-else :missingConfigs="missingConfigs" />
 	</NcContent>
 </template>
 

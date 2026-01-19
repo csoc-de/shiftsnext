@@ -11,7 +11,7 @@
 				:inline="3">
 				<NcActionButton
 					v-if="renderEditButton"
-					close-after-click
+					closeAfterClick
 					@click="() => {
 						editor = participant,
 						editDialogMounted = true
@@ -23,7 +23,7 @@
 				</NcActionButton>
 				<NcActionButton
 					v-if="renderEditAsAdminButton"
-					close-after-click
+					closeAfterClick
 					@click="() => {
 						editor = 'admin'
 						editDialogMounted = true
@@ -35,7 +35,7 @@
 				</NcActionButton>
 				<NcActionButton
 					v-if="renderDeleteButton"
-					close-after-click
+					closeAfterClick
 					@click="() => {
 						deleting = true
 						delayBoxVisible = true
@@ -130,7 +130,7 @@
 
 		<EditShiftExchangeDialog
 			v-if="editDialogMounted"
-			:shift-exchange="shiftExchange"
+			:shiftExchange="shiftExchange"
 			:editor="editor!"
 			@close="editDialogMounted = false" />
 	</div>

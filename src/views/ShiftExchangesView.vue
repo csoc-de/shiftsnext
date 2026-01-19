@@ -17,7 +17,7 @@
 						<ShiftExchangeCard
 							v-for="shiftExchange in pendingShiftExchanges"
 							:key="shiftExchange.id"
-							:shift-exchange="shiftExchange" />
+							:shiftExchange="shiftExchange" />
 					</div>
 				</div>
 				<div>
@@ -28,7 +28,7 @@
 						<ShiftExchangeCard
 							v-for="shiftExchange in doneShiftExchanges"
 							:key="shiftExchange.id"
-							:shift-exchange="shiftExchange" />
+							:shiftExchange="shiftExchange" />
 					</div>
 				</div>
 			</div>

@@ -1,7 +1,7 @@
 <template>
 	<NcPopover
-		no-focus-trap
-		no-close-on-click-outside
+		noFocusTrap
+		noCloseOnClickOutside
 		class="absolute left-1/2 bottom-0 -translate-x-1/2"
 		:shown="visible">
 		<div class="flex flex-col gap-2 p-2 max-w-[300px]">
@@ -44,7 +44,8 @@ if ('id' in shiftOrTypeWrapper) {
 		end,
 		shift_type: {
 			group: { display_name: groupName },
-			name: typeName, description,
+			name: typeName,
+			description,
 		},
 	} = shiftOrTypeWrapper)
 } else {
@@ -53,7 +54,8 @@ if ('id' in shiftOrTypeWrapper) {
 		shiftEnd: end,
 		shiftType: {
 			group: { display_name: groupName },
-			name: typeName, description,
+			name: typeName,
+			description,
 		},
 	} = shiftOrTypeWrapper)
 }

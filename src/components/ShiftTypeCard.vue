@@ -8,7 +8,7 @@
 
 			<NcActions :inline="2">
 				<NcActionButton
-					close-after-click
+					closeAfterClick
 					@click="editDialogMounted = true">
 					<template #icon>
 						<Pencil :size="20" />
@@ -16,7 +16,7 @@
 					{{ t(APP_ID, "Edit") }}
 				</NcActionButton>
 				<NcActionButton
-					close-after-click
+					closeAfterClick
 					@click="() => {
 						deleting = true
 						delayBoxVisible = true
@@ -54,7 +54,7 @@
 
 		<ShiftTypeDialog
 			v-if="editDialogMounted"
-			:shift-type="shiftType"
+			:shiftType="shiftType"
 			@close="editDialogMounted = false" />
 	</div>
 </template>

@@ -17,8 +17,8 @@
 				:class="{ 'w-full': fluid }"
 				:options="years"
 				:clearable="false"
-				:input-id="_yearInputId"
-				label-outside />
+				:inputId="_yearInputId"
+				labelOutside />
 		</InputGroup>
 		<InputGroup
 			:inline="inline"
@@ -35,8 +35,8 @@
 				:class="{ 'w-full': fluid }"
 				:options="weeks"
 				:clearable="false"
-				:input-id="_weekInputId"
-				label-outside />
+				:inputId="_weekInputId"
+				labelOutside />
 		</InputGroup>
 	</div>
 </template>

@@ -76,8 +76,8 @@
 											shiftTypeWrapper.amount > 0
 												&& shiftTypeWrapper.shiftType.active
 										"
-										:shift-type-wrapper="shiftTypeWrapper"
-										:column-index="columnIndex" />
+										:shiftTypeWrapper="shiftTypeWrapper"
+										:columnIndex="columnIndex" />
 								</template>
 							</div>
 						</td>
@@ -109,7 +109,7 @@
 									v-for="shift in data"
 									:key="shift.id"
 									:shift="shift"
-									:column-index="columnIndex" />
+									:columnIndex="columnIndex" />
 							</div>
 						</td>
 					</tr>
@@ -147,7 +147,8 @@ import { Temporal } from 'temporal-polyfill'
 import {
 	type Ref,
 
-	computed, ref,
+	computed,
+	ref,
 } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 // @ts-expect-error package has no types

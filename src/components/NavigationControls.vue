@@ -29,11 +29,11 @@
 			<label for="groups">{{ t(APP_ID, "Groups") }}</label>
 			<NcSelect
 				v-model="selectedGroups"
-				input-id="groups"
+				inputId="groups"
 				:options="groups"
 				label="display_name"
-				label-outside
-				keep-open
+				labelOutside
+				keepOpen
 				multiple
 				class="min-w-48" />
 		</InputGroup>

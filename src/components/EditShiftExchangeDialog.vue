@@ -1,6 +1,6 @@
 <template>
 	<NcDialog
-		no-close
+		noClose
 		:name="t(APP_ID, 'Edit shift exchange')">
 		<form
 			id="shift-exchange-form"
@@ -11,7 +11,7 @@
 				<NcRadioGroup
 					v-model="approvedString"
 					:label="approvalLabel"
-					hide-label>
+					hideLabel>
 					<NcRadioGroupButton
 						v-for="option in APPROVED_OPTIONS"
 						:key="`${option}`"
@@ -25,7 +25,7 @@
 					id="comment"
 					v-model.trim="formValues.comment"
 					resize="vertical"
-					label-outside />
+					labelOutside />
 			</InputGroup>
 		</form>
 		<template #actions>

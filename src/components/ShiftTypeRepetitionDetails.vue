@@ -36,7 +36,8 @@ import { computed } from 'vue'
 import {
 	type Repetition,
 
-	reorderedShortDays, shortDayToLocalDayMap,
+	reorderedShortDays,
+	shortDayToLocalDayMap,
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { formatDate, formatDuration } from '../utils/date.ts'
