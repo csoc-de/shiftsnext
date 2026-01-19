@@ -114,7 +114,7 @@ OC.L10N.register(
 		"New": "Neu",
 		"Done": "Erledigt",
 		"Open shifts": "Offene Schichten",
-		"Synchronize with calendar app": "Mit Kalendar-App synchronisieren",
+		"Synchronize with calendar app": "Mit Kalender-App synchronisieren",
 		"Weekly shifts": "Wöchentliche Schichten",
 		"Participants": "Teilnehmer:innen",
 		"Admin": "Admin",
