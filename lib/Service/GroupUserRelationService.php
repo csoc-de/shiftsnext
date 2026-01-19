@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace OCA\ShiftsNext\Service;
 
 use Exception;
-use OCA\ShiftsNext\Db\GroupUserRelation;
-use OCA\ShiftsNext\Db\GroupUserRelationMapper;
 use OCA\ShiftsNext\Exception\GroupNotFoundException;
 use OCA\ShiftsNext\Exception\GroupUserRelationNotFoundException;
 use OCA\ShiftsNext\Exception\UserNotFoundException;
@@ -18,11 +16,9 @@ use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
 
-use function array_filter;
 use function array_map;
-
-
 use function array_values;
+use function in_array;
 
 /**
  * @psalm-import-type GroupUserRow from GroupUserRelationAlias
@@ -32,7 +28,6 @@ final class GroupUserRelationService {
 	public function __construct(
 		private string $userId,
 		private IGroupManager $groupManager,
-		private GroupUserRelationMapper $groupUserRelationMapper,
 		private GroupService $groupService,
 		private UserService $userService,
 	) {
@@ -63,50 +58,34 @@ final class GroupUserRelationService {
 	 * @return GroupUserRelationsByGroup[]
 	 */
 	public function getAllGroupedByGroup(?array $groupIds = null): array {
-		$relations = $this->getAllExtended($groupIds);
-		$groups = $this->groupService->getAll($groupIds);
-		$groupedRelations = [];
-		foreach ($groups as $group) {
-			$matchingRelations = array_filter(
-				$relations,
-				fn (GroupUserRelationExtended $relation)
-					=> $relation->group->getGID() === $group->getGID(),
-			);
-			$matchingRelations = array_values($matchingRelations);
-			$groupedRelations[] = [
-				'group' => new SerializableGroup($group),
-				'users' => array_map(
-					fn ($relation) => new SerializableUser($relation->user),
-					$matchingRelations,
-				),
-			];
-		}
-		return $groupedRelations;
+		return array_map(fn ($group) => [
+			'group' => new SerializableGroup($group),
+			'users' => array_map(
+				fn ($user) => new SerializableUser($user),
+				array_values($group->getUsers()),
+			),
+		], $this->groupService->getAll($groupIds));
 	}
 
 	/**
-	 * @param GroupUserRow|GroupUserRelation|GroupUserRelationExtended $groupUserRelation
+	 * @param GroupUserRow|GroupUserRelationExtended $groupUserRelation
 	 *
 	 * @throws GroupUserRelationNotFoundException {@see OCA\ShiftsNext\Db\GroupUserRelationMapper::findById()}
 	 * @throws GroupNotFoundException {@see OCA\ShiftsNext\Service\GroupService::get()}
 	 * @throws UserNotFoundException {@see OCA\ShiftsNext\Service\UserService::get()}
+	 *
+	 * @psalm-suppress PossiblyUnusedMethod
 	 */
 	public function getExtended(
-		array|GroupUserRelation|GroupUserRelationExtended $groupUserRelation,
+		array|GroupUserRelationExtended $groupUserRelation,
 		null|string|IGroup $group = null,
 		null|string|IUser $user = null,
 	): GroupUserRelationExtended {
 		if ($groupUserRelation instanceof GroupUserRelationExtended) {
 			return $groupUserRelation;
 		}
-		$groupUserRelation = $this->groupUserRelationMapper->findById($groupUserRelation);
-
-		$group ??= $groupUserRelation->getGid();
-		$group = $this->groupService->get($group);
-
-		$user ??= $groupUserRelation->getUid();
-		$user = $this->userService->get($user);
-
+		$group = $this->groupService->get($group ?? $groupUserRelation['gid']);
+		$user = $this->userService->get($user ?? $groupUserRelation['uid']);
 		return new GroupUserRelationExtended($group, $user);
 	}
 
@@ -124,7 +103,18 @@ final class GroupUserRelationService {
 		?array $groupIds = null,
 		?array $userIds = null,
 	): array {
-		$groupUserRelations = $this->groupUserRelationMapper->findAll($groupIds, $userIds);
-		return array_map($this->getExtended(...), $groupUserRelations);
+		$groups = $this->groupService->getAll($groupIds);
+		/** @var GroupUserRelationExtended[] */
+		$relations = [];
+		foreach ($groups as $group) {
+			$users = $group->getUsers();
+			foreach ($users as $user) {
+				if (isset($userIds) && !in_array($user->getUID(), $userIds, true)) {
+					continue;
+				}
+				$relations[] = new GroupUserRelationExtended($group, $user);
+			}
+		}
+		return $relations;
 	}
 }
