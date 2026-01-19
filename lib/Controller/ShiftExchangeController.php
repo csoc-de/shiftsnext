@@ -496,6 +496,19 @@ final class ShiftExchangeController extends Controller {
 					$e,
 				);
 			}
+			$isGroupShiftAdmin = $this->groupShiftAdminRelationService->isShiftAdminAll($groupIds);
+			if (
+				!$isGroupShiftAdmin
+				&& $this->userId !== $userAId
+				&& $this->userId !== $userBId
+			) {
+				throw new HttpException(
+					Http::STATUS_FORBIDDEN,
+					'The shift exchange can only be updated by the participating users or appropriate group shift admins',
+					null,
+					$this->l->t('You do not have permissions to update this shift exchange.'),
+				);
+			}
 
 			$userAApproval = $this->shiftExchangeApprovalMapper->findById($shiftExchange->getUserAApprovalId());
 			$userBApproval = $this->shiftExchangeApprovalMapper->findById($shiftExchange->getUserBApprovalId());
@@ -521,11 +534,9 @@ final class ShiftExchangeController extends Controller {
 							'The participant approval can only be updated by the participating users',
 							null,
 							$this->l->t('The participant approval can only be updated by the participating users.'),
-
 						);
 				}
 			} elseif (array_key_exists('admin', $approveds)) {
-				$isGroupShiftAdmin = $this->groupShiftAdminRelationService->isShiftAdminAll($groupIds);
 				if ($isGroupShiftAdmin) {
 					$adminApproval = $this->shiftExchangeApprovalMapper->updateById(
 						$adminApproval,

@@ -22,6 +22,7 @@ OC.L10N.register(
 		"Participant B %1$s is absent during shift A period (%2$s).": "Teilnehmer:in B %1$s ist abwesend während des Schicht-A-Zeitraums (%2$s).",
 		"Cannot update a shift exchange that has already been marked as done.": "Bereits als erledigt markierte Schicht-Tausche können nicht aktualisiert werden.",
 		"You cannot update the participant and admin approval at the same time.": "Sie können nicht gleichzeitig die Teilnehmer- und Admin-Genehmigung aktualisieren.",
+		"You do not have permissions to update this shift exchange.": "Sie haben keine Berechtigung, um diesen Schicht-Tausch zu aktualisieren.",
 		"The participant approval can only be updated by the participating users.": "Die Teilnehmer-Genehmigung kann nur von den teilnehmenden Benutzer:innen aktualisiert werden.",
 		"The admin approval can only be updated by appropriate group shift admins.": "Die Admin-Genehmigung kann nur von entsprechenden Gruppen-Schicht-Admins aktualisiert werden.",
 		"Shift exchanges already marked as done can only be deleted by appropriate group shift admins.": "Bereits als erledigt markierte Schicht-Tausche können nur von entsprechenden Gruppen-Schicht-Admins gelöscht werden.",
