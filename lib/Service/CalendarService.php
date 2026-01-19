@@ -48,15 +48,15 @@ final class CalendarService {
 	}
 
 	/**
-	 * @return SanitizedCalendar[]
+	 * @return list<SanitizedCalendar>
 	 */
 	public function getCalendars(): array {
 		$users = $this->userService->getAll();
-		/** @var Calendar[] */
+		/** @var list<Calendar> */
 		$calendars = [];
 		foreach ($users as $user) {
 			$principalUri = 'principals/users/' . $user->getUID();
-			/** @var Calendar[] */
+			/** @var list<Calendar> */
 			$userCalendars = $this->calDavBackend->getUsersOwnCalendars(
 				$principalUri,
 			);
@@ -74,7 +74,7 @@ final class CalendarService {
 	 *
 	 * @param CalendarChange[] $calendarChanges
 	 *
-	 * @return string[] Error messages
+	 * @return list<string> Error messages
 	 *
 	 * @throws CalendarNotFoundException
 	 *                                   {@see OCA\ShiftsNext\Service\ConfigService::getCommonCalendarId()}
@@ -112,7 +112,7 @@ final class CalendarService {
 	 *
 	 * @param CalendarChange $calendarChange
 	 *
-	 * @return SanitizedCalendar[] Calendars where applying the change failed
+	 * @return list<SanitizedCalendar> Calendars where applying the change failed
 	 *
 	 * @throws CalendarNotFoundException
 	 *                                   {@see OCA\ShiftsNext\Service\ConfigService::getCommonCalendarId()}
@@ -355,7 +355,7 @@ final class CalendarService {
 
 		$calendar = $this->getAbsenceCalendar();
 
-		/** @var SearchResult[] */
+		/** @var list<SearchResult> */
 		$results = $this->calDavBackend->search(
 			['id' => $calendar['id']],
 			'',

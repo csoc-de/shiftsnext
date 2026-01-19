@@ -105,7 +105,7 @@ final class GroupShiftAdminRelationController extends Controller {
 
 	/**
 	 * @param string $group_id
-	 * @param string[] $user_ids
+	 * @param list<string> $user_ids
 	 *
 	 * @return DataResponse
 	 */

@@ -48,7 +48,7 @@ final class UserService {
 	 * @param null|string[] $groupIds If not `null`, only users who are a member
 	 *                                of at least one group inside `$groupIds` are returned
 	 *
-	 * @return IUser[]
+	 * @return list<IUser>
 	 */
 	public function getAll(
 		?array $userIds = null,
@@ -99,7 +99,7 @@ final class UserService {
 	 * @param null|string[] $groupIds If not `null`, only users who are a member
 	 *                                of at least one group inside `$groupIds` are returned
 	 *
-	 * @return SerializableUser[]
+	 * @return list<SerializableUser>
 	 */
 	public function getAllSerializable(
 		?array $userIds = null,

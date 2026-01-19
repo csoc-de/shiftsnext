@@ -29,7 +29,7 @@ use function json_encode;
  * }
  *
  * @psalm-type UserConfig = array{
- *     defaultGroupIds: string[],
+ *     defaultGroupIds: list<string>,
  * }
  */
 final class ConfigService extends AbstractService {
@@ -148,7 +148,7 @@ final class ConfigService extends AbstractService {
 	 * Sets group IDs for the logged-in user, which are used as the default
 	 * group filter values on the shifts view
 	 *
-	 * @param string[] $groupIds
+	 * @param list<string> $groupIds
 	 *
 	 * @return static
 	 */
@@ -171,7 +171,7 @@ final class ConfigService extends AbstractService {
 	 * Gets group IDs for the logged-in user, which are used as the default
 	 * group filter values on the shifts view
 	 *
-	 * @return string[]
+	 * @return list<string>
 	 */
 	public function getDefaultGroupIds(): array {
 		/** @psalm-suppress DeprecatedMethod */
@@ -181,7 +181,7 @@ final class ConfigService extends AbstractService {
 			UserConfigKey::DefaultGroupIds->value,
 			'[]',
 		);
-		/** @var string[] */
+		/** @var list<string> */
 		return json_decode($value);
 	}
 

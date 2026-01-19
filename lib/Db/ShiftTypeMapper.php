@@ -27,7 +27,7 @@ final class ShiftTypeMapper extends QBMapper {
 	/**
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
 	 *
-	 * @return ShiftType[]
+	 * @return list<ShiftType>
 	 */
 	public function findAll(?array $groupIds = null): array {
 		$qb = $this->db->getQueryBuilder();

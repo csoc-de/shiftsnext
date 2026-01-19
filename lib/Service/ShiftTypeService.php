@@ -43,7 +43,7 @@ final class ShiftTypeService {
 	/**
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
 	 *
-	 * @return ShiftTypeExtended[]
+	 * @return list<ShiftTypeExtended>
 	 *
 	 * @throws Exception {@see OCA\ShiftsNext\Service\ShiftTypeService::getExtended()}
 	 */

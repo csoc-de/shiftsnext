@@ -14,7 +14,7 @@ namespace OCA\ShiftsNext\Psalm;
  * }
  *
  * @psalm-type UserConfig = array{
- *     defaultGroupIds: string[],
+ *     defaultGroupIds: list<string>,
  * }
  */
 final class ConfigAlias {

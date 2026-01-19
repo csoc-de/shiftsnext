@@ -10,7 +10,7 @@ use OCA\ShiftsNext\Serializable\SerializableUser;
 /**
  * @psalm-type GroupShiftAdminRelationsByGroup = array{
  *     group: SerializableGroup,
- *     users: SerializableUser[],
+ *     users: list<SerializableUser>,
  * }
  */
 final class GroupShiftAdminRelationAlias {

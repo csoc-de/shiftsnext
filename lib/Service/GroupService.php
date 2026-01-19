@@ -39,7 +39,7 @@ final class GroupService {
 	 * @param null|string[] $groupIds If not `null`, only groups whose ID is an
 	 *                                element of `$groupIds` are returned
 	 *
-	 * @return IGroup[]
+	 * @return list<IGroup>
 	 */
 	public function getAll(?array $groupIds = null): array {
 		$groups = $this->groupManager->search('');
@@ -73,7 +73,7 @@ final class GroupService {
 	 * @param null|string[] $groupIds If not `null`, only groups whose ID is an
 	 *                                element of `$groupIds` are returned
 	 *
-	 * @return SerializableGroup[]
+	 * @return list<SerializableGroup>
 	 */
 	public function getAllSerializable(?array $groupIds = null): array {
 		return array_map(

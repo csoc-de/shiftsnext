@@ -29,7 +29,7 @@ final class CalendarController extends Controller {
 	}
 
 	/**
-	 * @param string[] $group_ids
+	 * @param list<string> $group_ids
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'POST', url: '/api/calendars/synchronize-by-groups')]
@@ -51,7 +51,7 @@ final class CalendarController extends Controller {
 	}
 
 	/**
-	 * @param int[] $shift_ids
+	 * @param list<int> $shift_ids
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'POST', url: '/api/calendars/synchronize-by-shifts')]

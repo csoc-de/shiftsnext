@@ -41,7 +41,7 @@ final class GroupShiftAdminRelationService {
 	/**
 	 * Gets the group IDs for which the logged-in user has shift admin privileges
 	 *
-	 * @return string[]
+	 * @return list<string>
 	 */
 	public function getShiftAdminGroupIds(): array {
 		$groupShiftAdminRelations = $this->groupShiftAdminRelationMapper->findAll(
@@ -106,7 +106,7 @@ final class GroupShiftAdminRelationService {
 	 *                                contain an element for every group with its 'users' field set to an empty
 	 *                                array if there are no corresponding users (admins) for that group.
 	 *
-	 * @return GroupShiftAdminRelationsByGroup[]
+	 * @return list<GroupShiftAdminRelationsByGroup>
 	 */
 	public function getAllGroupedByGroup(?array $groupIds = null): array {
 		$relations = $this->getAllExtended($groupIds);
@@ -193,7 +193,7 @@ final class GroupShiftAdminRelationService {
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
 	 * @param null|string[] $userIds Adds `WHERE user_id IN($userIds)`
 	 *
-	 * @return GroupShiftAdminRelationExtended[]
+	 * @return list<GroupShiftAdminRelationExtended>
 	 *
 	 * @throws Exception {@see OCA\ShiftsNext\Service\GroupShiftAdminRelationService::getExtended()}
 	 */

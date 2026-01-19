@@ -29,7 +29,7 @@ final class ShiftExchangeMapper extends QBMapper {
 	 * @param null|NullColumnParam|string $transferToUserId Adds `WHERE transfer_to_user_id = $transferToUserId`
 	 * @param null|bool $done Adds `WHERE done = $done`
 	 *
-	 * @return ShiftExchange[]
+	 * @return list<ShiftExchange>
 	 */
 	public function findAll(
 		?int $shiftAId = null,

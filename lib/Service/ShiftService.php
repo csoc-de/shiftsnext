@@ -65,7 +65,7 @@ final class ShiftService {
 	 * @param null|string $calendarDate Returns Shifts on that date
 	 * @param null|string $weekDate Returns Shifts with their start date in the given week
 	 *
-	 * @return ShiftExtended[]
+	 * @return list<ShiftExtended>
 	 *
 	 * @throws Exception {@see OCA\ShiftsNext\Service\ShiftService::getExtended()}
 	 */

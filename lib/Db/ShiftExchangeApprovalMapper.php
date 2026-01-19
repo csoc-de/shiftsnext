@@ -29,7 +29,7 @@ final class ShiftExchangeApprovalMapper extends QBMapper {
 	/**
 	 * @param null|NullColumnParam|string $userId Adds `WHERE user_id = $userId`
 	 *
-	 * @return ShiftExchangeApproval[]
+	 * @return list<ShiftExchangeApproval>
 	 */
 	public function findAll(
 		?string $userId = null,

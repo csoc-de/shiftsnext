@@ -54,7 +54,7 @@ final class ConfigController extends Controller {
 	}
 
 	/**
-	 * @param string[] $group_ids
+	 * @param list<string> $group_ids
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'PUT', url: '/api/config/user/default-groups')]

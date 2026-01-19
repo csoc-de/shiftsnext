@@ -35,7 +35,7 @@ final class ShiftMapper extends QBMapper {
 	 * @param null|int $shiftTypeId Adds `WHERE shift_type_id = $shiftTypeId`
 	 * @param null|int[] $shiftIds Adds `WHERE id IN($shiftIds)`
 	 *
-	 * @return Shift[]
+	 * @return list<Shift>
 	 */
 	public function findAll(
 		?array $groupIds = null,

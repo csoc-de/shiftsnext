@@ -24,7 +24,7 @@ final class CalendarChangeMapper extends QBMapper {
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
 	 * @param null|int[] $shiftIds Adds `WHERE shift_id IN($shiftIds)`
 	 *
-	 * @return CalendarChange[]
+	 * @return list<CalendarChange>
 	 */
 	public function findAll(
 		?array $groupIds = null,

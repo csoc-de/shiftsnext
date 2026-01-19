@@ -12,7 +12,7 @@ use OCA\ShiftsNext\Serializable\SerializableUser;
  *
  * @psalm-type GroupUserRelationsByGroup = array{
  *     group: SerializableGroup,
- *     users: SerializableUser[],
+ *     users: list<SerializableUser>,
  * }
  */
 final class GroupUserRelationAlias {

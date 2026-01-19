@@ -85,7 +85,7 @@ final class ShiftExchangeService {
 	}
 
 	/**
-	 * @return ShiftExchangeExtended[]
+	 * @return list<ShiftExchangeExtended>
 	 *
 	 * @throws Exception {@see OCA\ShiftsNext\Service\ShiftExchangeService::getExtended()}
 	 */

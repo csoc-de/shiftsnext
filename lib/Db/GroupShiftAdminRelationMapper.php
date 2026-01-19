@@ -27,7 +27,7 @@ final class GroupShiftAdminRelationMapper extends QBMapper {
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
 	 * @param null|string[] $userIds Adds `WHERE user_id IN($userIds)`
 	 *
-	 * @return GroupShiftAdminRelation[]
+	 * @return list<GroupShiftAdminRelation>
 	 */
 	public function findAll(
 		?array $groupIds = null,

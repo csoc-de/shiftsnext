@@ -51,7 +51,7 @@ final class ShiftController extends Controller {
 	}
 
 	/**
-	 * @param null|string[] $group_ids
+	 * @param null|list<string> $group_ids
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/shifts')]

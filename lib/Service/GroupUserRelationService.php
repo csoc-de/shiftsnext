@@ -55,7 +55,7 @@ final class GroupUserRelationService {
 	 *                                contain an element for every group with its 'users' field set to an empty
 	 *                                array if there are no corresponding users (members) for that group.
 	 *
-	 * @return GroupUserRelationsByGroup[]
+	 * @return list<GroupUserRelationsByGroup>
 	 */
 	public function getAllGroupedByGroup(?array $groupIds = null): array {
 		return array_map(fn ($group) => [
@@ -95,7 +95,7 @@ final class GroupUserRelationService {
 	 * @param null|string[] $groupIds Adds `WHERE gid IN($groupIds)`
 	 * @param null|string[] $userIds Adds `WHERE uid IN($userIds)`
 	 *
-	 * @return GroupUserRelationExtended[]
+	 * @return list<GroupUserRelationExtended>
 	 *
 	 * @throws Exception {@see OCA\ShiftsNext\Service\GroupUserRelationService::getExtended()}
 	 */
@@ -104,7 +104,6 @@ final class GroupUserRelationService {
 		?array $userIds = null,
 	): array {
 		$groups = $this->groupService->getAll($groupIds);
-		/** @var GroupUserRelationExtended[] */
 		$relations = [];
 		foreach ($groups as $group) {
 			$users = $group->getUsers();
