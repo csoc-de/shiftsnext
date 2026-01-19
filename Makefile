@@ -105,6 +105,7 @@ appstore:
 	"appinfo" \
 	"css" \
 	"img" \
+	"l10n" \
 	"lib" \
 	"templates" \
 	"vendor" \
