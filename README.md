@@ -37,7 +37,7 @@ Specify who needs to approve shift exchanges in order for them to be considered 
 
 ### Shift admins
 
-There a certain functionalities of the app which are not available to all users, including
+There are certain functionalities of the app which are not available to all users, including
 
 - creating/modifying shift types,
 - assigning shifts to users,
