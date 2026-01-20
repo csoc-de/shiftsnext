@@ -34,6 +34,7 @@
 									v-model="selectedUserOptions2D[index]"
 									class="min-w-56"
 									multiple
+									noWrap
 									keepOpen
 									:options="userOptions" />
 							</td>

@@ -35,6 +35,7 @@
 				labelOutside
 				keepOpen
 				multiple
+				noWrap
 				class="min-w-48" />
 		</InputGroup>
 	</div>
