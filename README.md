@@ -18,6 +18,7 @@ Nextcloud admins need to create two calendars in the calendar app:
 
 1. A _common_ calendar, which the Shifts Next app uses to sync events to
 2. An _absence_ calendar, which the Shifts Next app uses to check if a certain user is absent when assigning a shift to them
+    - For the absence check to work, the _absence calendar_ event name has to be either the user ID or the user name. Imagine a user with ID "john.doe@example.com" and name "John Doe" exists, then the event name inside the _absence calendar_ needs to be "john.doe@example.com" or "John Doe".
 
 ## Configuration
 
@@ -109,11 +110,11 @@ _Amount_ sets the number of occurrences a shift can be created in a single week.
 
 The second row of the table, labeled _Open shifts_, displays all shifts determined to be _creatable_ for the selected week. To be more precise, it actually displays shift types, because not yet assigned shifts don't actually exist: assigning a shift means creating a shift. _By week_ shifts/types are displayed in the second column. The remaining columns to the right display _By day_ shifts/types. The exact day column, where a shift/type is displayed in, depends on the shift's start time/the type's reference time + time zone, respectively. **Note:** The shift/types displayed in the _By day_ columns are browser time zone aware. If, for example, a shift type named _Foo_ exists, with its reference set to `2025-07-14T06:00:00+02:00[Europe/Berlin]` and Monday amount set to _0_ and Tuesday amount set to _1_, this type will displayed in the Monday column with amount _1_, if a user's browser time zone is _America/Los_Angeles_, because `2025-07-14T06:00:00+02:00[Europe/Berlin]` translates to `2025-07-13T21:00:00-07:00[America/Los_Angeles]`, i.e. the reference time is on a different day.
 
-Shifts can be assigned by clicking the colored box in the _Open shifts_ row and then clicking into the cell of a user's row. Already assigned shifts can also be deleted or moved to another user. Assigning, moving and deleting require shift admin privileges.
+Shifts can be assigned by clicking the 4-way arrow button of the colored boxes in the _Open shifts_ row and then clicking into the cell of a user's row. Already assigned shifts can also be deleted or moved to another user. Assigning, moving and deleting require shift admin privileges.
 
 ### Exchanges
 
-Exchanges can be used to request swapping an already assigned shift with a shift of another user. Alternatively, they can be used to request transfering a shift to another user.
+Exchanges can be used to request swapping an already assigned shift with a shift of another user. Alternatively, they can be used to request transferring a shift to another user.
 
 #### Create/request a shift exchange
 
@@ -125,7 +126,7 @@ Select a user (which should be yourself most of the time, except when creating a
 
 ##### B
 
-If creating a regular exchange, repeat the steps from _[A](#a)_. Select a user you want to swap shifts with. If creating a transfer, you only need to choose a user you want to transfer _shift A_ to.
+For regular exchanges, repeat the steps from _[A](#a)_. If creating a transfer, you only need to choose a user you want to transfer _shift A_ to.
 
 #### Approve pending shift exchanges
 
@@ -136,6 +137,10 @@ After a shift exchange has been created, it needs to be approved by either
 - or both (depending on the value of the [shift exchanges](#shift-exchanges) setting).
 
 When all required parties have either approved or rejected the exchange, the exchange will change its state to _done_.
+
+### Calendar sync
+
+Whenever a shift is assigned, moved, deleted, transferred or exchanged, it will get synced to the _common_ calendar automatically.
 
 ## Additional information
 
