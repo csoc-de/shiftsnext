@@ -1,5 +1,6 @@
 <template>
 	<ContentHeader :title="t(APP_ID, 'Shifts')" :loading="loading">
+		<span class="font-semibold">{{ isoWeekDate }}</span>
 		<template #right>
 			<div class="flex gap-1">
 				<NcButton
@@ -24,11 +25,8 @@
 			</div>
 		</template>
 	</ContentHeader>
-	<PaddedContainer v-if="!loading" class="!overflow-hidden flex flex-col">
-		<h3 class="m-0">
-			{{ isoWeekDate }}
-		</h3>
-		<div class="overflow-auto flex-1">
+	<PaddedContainer v-if="!loading" class="!overflow-hidden">
+		<div class="overflow-auto h-full">
 			<table class="h-fit w-full border-spacing-0">
 				<thead class="sticky z-[2] top-0 bg-nc-main">
 					<tr class="h-12 group">
