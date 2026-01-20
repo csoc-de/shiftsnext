@@ -620,8 +620,8 @@ function getShiftsRow(userId: string): ShiftsRow {
 
 const dayCellFormatOptions: Intl.DateTimeFormatOptions = {
 	month: 'short',
-	weekday: 'long',
-	day: '2-digit',
+	weekday: 'short',
+	day: 'numeric',
 }
 
 /**
