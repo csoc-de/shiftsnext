@@ -34,7 +34,12 @@ body[id][id] {
 	}
 
 	.app-navigation__body {
-		overflow-y: unset !important;
+		overflow-y: auto !important;
+	}
+
+	.app-navigation__list {
+		flex: 1;
+		height: unset !important;
 	}
 
 	.textarea__main-wrapper {
