@@ -1,6 +1,8 @@
 <template>
 	<div class="w-full flex flex-col items-center justify-center text-nc-plain gap-3 font-semibold">
 		<!-- eslint-disable-next-line vue/no-v-html -->
+		<div v-html="calendarAppMessage" />
+		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-html="configMessage" />
 		<ul class="list-disc">
 			<li v-for="missingConfig in missingConfigs" :key="missingConfig">
@@ -25,6 +27,13 @@ defineProps<{
 }>()
 
 const settingsUrl = generateUrl(ADMIN_SETTINGS_PATH)
+
+const calendarAppMessage = t(
+	APP_ID,
+	'Make sure you have the {linkStart}calendar app{linkEnd} installed.',
+	{ linkStart: '<a href="https://apps.nextcloud.com/apps/calendar" target="_blank" class="underline text-inherit">', linkEnd: '</a>' },
+	{ escape: false, sanitize: false },
+)
 
 const configMessage = t(
 	APP_ID,
