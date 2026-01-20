@@ -1,6 +1,8 @@
 <template>
 	<ContentHeader :title="t(APP_ID, 'Shifts')" :loading="loading">
-		<span class="font-semibold">{{ isoWeekDate }}</span>
+		<div class="font-semibold mt-1">
+			{{ isoWeekDate }}
+		</div>
 		<template #right>
 			<div class="flex gap-1">
 				<NcButton
