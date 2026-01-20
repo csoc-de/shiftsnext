@@ -11,8 +11,8 @@
 		}">
 		<div class="max-w-48 truncate leading-[1.1]">
 			<ShiftInfoPopover
-				:shiftOrTypeWrapper="shift"
-				:visible="showInfo" />
+				v-model:visible="showInfo"
+				:shiftOrTypeWrapper="shift" />
 			{{ shift.shift_type.group.display_name }}<br>
 			{{ shift.shift_type.name }}
 		</div>

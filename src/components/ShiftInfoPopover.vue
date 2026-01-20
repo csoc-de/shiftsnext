@@ -1,9 +1,9 @@
 <template>
 	<NcPopover
 		noFocusTrap
-		noCloseOnClickOutside
 		class="absolute left-1/2 bottom-0 -translate-x-1/2"
-		:shown="visible">
+		:shown="visible"
+		@afterHide="visible = false">
 		<div class="flex flex-col gap-2 p-2 max-w-[300px]">
 			<div>
 				{{ groupName }}<br>
@@ -25,9 +25,10 @@ import type { ShiftTypeWrapper } from '../models/shiftsTable.ts'
 import NcPopover from '@nextcloud/vue/components/NcPopover'
 import { formatRange } from '../utils/date.ts'
 
+const visible = defineModel<boolean>('visible', { required: true })
+
 const { shiftOrTypeWrapper } = defineProps<{
 	shiftOrTypeWrapper: Shift | ShiftTypeWrapper
-	visible: boolean
 }>()
 
 let groupName: string
