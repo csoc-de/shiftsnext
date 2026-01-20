@@ -99,7 +99,7 @@ OC.L10N.register(
 		"Repetition": "Wiederholung",
 		"Frequency": "Frequenz",
 		"Interval": "Interval",
-		"Config": "Konfig",
+		"Config": "Konfiguration",
 		"Reference date & time": "Referenz-Datum & -Zeit",
 		"Time zone": "Zeitzone",
 		"Duration": "Dauer",
