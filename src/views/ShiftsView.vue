@@ -1,5 +1,5 @@
 <template>
-	<HeaderNavigation :title="t(APP_ID, 'Shifts')" :loading="loading">
+	<ContentHeader :title="t(APP_ID, 'Shifts')" :loading="loading">
 		<template #right>
 			<div class="flex gap-1">
 				<NcButton
@@ -23,7 +23,7 @@
 				</NcButton>
 			</div>
 		</template>
-	</HeaderNavigation>
+	</ContentHeader>
 	<PaddedContainer v-if="!loading" class="!overflow-hidden flex flex-col">
 		<h3 class="m-0">
 			{{ isoWeekDate }}
@@ -155,7 +155,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import CalendarSync from 'vue-material-design-icons/CalendarSync.vue'
 // @ts-expect-error package has no types
 import Cancel from 'vue-material-design-icons/Cancel.vue'
-import HeaderNavigation from '../components/HeaderNavigation.vue'
+import ContentHeader from '../components/ContentHeader.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftPill from '../components/ShiftPill.vue'
 import ShiftTypePill from '../components/ShiftTypePill.vue'

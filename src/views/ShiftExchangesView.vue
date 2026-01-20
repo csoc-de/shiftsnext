@@ -1,11 +1,11 @@
 <template>
-	<HeaderNavigation :title="t(APP_ID, 'Exchanges')" :loading="loading">
+	<ContentHeader :title="t(APP_ID, 'Exchanges')" :loading="loading">
 		<template #right>
 			<NcButton @click="createDialogMounted = true">
 				{{ t(APP_ID, "New") }}
 			</NcButton>
 		</template>
-	</HeaderNavigation>
+	</ContentHeader>
 	<PaddedContainer v-if="!loading">
 		<div class="flex justify-center">
 			<div class="grid w-full max-w-[1000px] grid-cols-1 gap-9 md:grid-cols-2">
@@ -57,8 +57,8 @@ export const [injectShiftExchangesContext, provideShiftExchangesContext]
 import { t } from '@nextcloud/l10n'
 import { ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
+import ContentHeader from '../components/ContentHeader.vue'
 import CreateShiftExchangeDialog from '../components/CreateShiftExchangeDialog.vue'
-import HeaderNavigation from '../components/HeaderNavigation.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftExchangeCard from '../components/ShiftExchangeCard.vue'
 import {

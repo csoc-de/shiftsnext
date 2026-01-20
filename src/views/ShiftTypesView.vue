@@ -1,11 +1,11 @@
 <template>
-	<HeaderNavigation :title="t(APP_ID, 'Types')" :loading="loading">
+	<ContentHeader :title="t(APP_ID, 'Types')" :loading="loading">
 		<template #right>
 			<NcButton @click="createDialogMounted = true">
 				{{ t(APP_ID, "New") }}
 			</NcButton>
 		</template>
-	</HeaderNavigation>
+	</ContentHeader>
 	<PaddedContainer v-if="!loading">
 		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 my-1">
 			<ShiftTypeCard
@@ -36,7 +36,7 @@ export const [injectShiftTypesContext, provideShiftTypesContext]
 import { t } from '@nextcloud/l10n'
 import { ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
-import HeaderNavigation from '../components/HeaderNavigation.vue'
+import ContentHeader from '../components/ContentHeader.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftTypeCard from '../components/ShiftTypeCard.vue'
 import ShiftTypeDialog from '../components/ShiftTypeDialog.vue'
