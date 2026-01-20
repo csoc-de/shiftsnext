@@ -29,11 +29,11 @@
 		<div class="overflow-auto h-full">
 			<table class="h-fit w-full border-spacing-0">
 				<thead class="sticky z-[2] top-0 bg-nc-main">
-					<tr class="h-12 group">
+					<tr class="group">
 						<th
 							v-for="({ type, data }, columnIndex) in headerRow"
 							:key="columnIndex"
-							class="border border-solid border-nc-maxcontrast p-2 text-center group-hover:bg-nc-dark"
+							class="border border-solid border-nc-maxcontrast p-1 text-center group-hover:bg-nc-dark"
 							:class="{
 								'!bg-nc-primary-element text-nc-primary-element': columnIndexOfWeek === columnIndex,
 								'!bg-nc-primary-element-light text-nc-primary-element-light': columnIndexOfToday === columnIndex,
@@ -54,12 +54,12 @@
 						</th>
 					</tr>
 				</thead>
-				<tbody class="h-full">
-					<tr class="h-12 group">
+				<tbody class="h-full whitespace-pre-wrap">
+					<tr class="group">
 						<td
 							v-for="({ type, data }, columnIndex) in shiftTypesRow"
 							:key="columnIndex"
-							class="border-r border-b border-solid border-nc-maxcontrast p-2 h-full group-hover:bg-nc-dark"
+							class="border-r border-b border-solid border-nc-maxcontrast p-1 h-full group-hover:bg-nc-dark"
 							:class="{
 								'text-center': type === 'string',
 								'border-l sticky left-0 z-[1] bg-nc-main': !columnIndex,
@@ -67,7 +67,7 @@
 							<template v-if="type === 'string'">
 								{{ data }}
 							</template>
-							<div v-else class="flex size-full flex-col gap-2">
+							<div v-else class="flex size-full flex-col gap-1">
 								<template v-for="shiftTypeWrapper in data" :key="shiftTypeWrapper.shiftType.id">
 									<ShiftTypePill
 										v-if="
@@ -83,11 +83,11 @@
 					<tr
 						v-for="(shiftsRow, rowIndex) in shiftsRows"
 						:key="rowIndex"
-						class="h-12 group">
+						class="group">
 						<td
 							v-for="({ type, data }, columnIndex) in shiftsRow"
 							:key="columnIndex"
-							class="border-r border-b border-solid border-nc-maxcontrast p-2 h-full group-hover:bg-nc-dark"
+							class="border-r border-b border-solid border-nc-maxcontrast p-1 h-full group-hover:bg-nc-dark"
 							:class="{
 								'text-center': type === 'user',
 								'!bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'disabled',
@@ -102,7 +102,7 @@
 							</template>
 							<div
 								v-else
-								class="flex size-full flex-col gap-2">
+								class="flex size-full flex-col gap-1">
 								<ShiftPill
 									v-for="shift in data"
 									:key="shift.id"
