@@ -272,7 +272,7 @@ final class ShiftExchangeController extends Controller {
 						Http::STATUS_UNPROCESSABLE_ENTITY,
 						'You cannot transfer shifts to yourself',
 						null,
-						$this->l->t('Transfering shifts to yourself is not possible.'),
+						$this->l->t('Transferring shifts to yourself is not possible.'),
 					);
 				}
 				if (

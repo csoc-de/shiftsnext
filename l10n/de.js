@@ -17,7 +17,7 @@ OC.L10N.register(
 		"Shifts can only be exchanged within the same group.": "Schichten können nur innerhalb derselben Gruppe getauscht werden.",
 		"You cannot create a new shift exchange as long as there is a pending shift exchange for %1$s %2$s (%3$s).": "Du kannst keinen neuen Schicht-Tausch erstellen, solange ein ausstehender Schicht-Tausch für %1$s %2$s (%3$s) existiert.",
 		"Participant A %1$s is absent during shift B period (%2$s).": "Teilnehmer:in A %1$s ist abwesend während des Schicht-B-Zeitraums (%2$s).",
-		"Transfering shifts to yourself is not possible.": "Schichten zu dir selbst zu transferieren, ist nicht möglich.",
+		"Transferring shifts to yourself is not possible.": "Schichten zu dir selbst zu transferieren, ist nicht möglich.",
 		"Shifts can only be transfered to users who are members of the shift's group.": "Schichten können nur zu Benutzer:innen transferiert werden, welche Mitglieder der Gruppe der Schicht sind.",
 		"Participant B %1$s is absent during shift A period (%2$s).": "Teilnehmer:in B %1$s ist abwesend während des Schicht-A-Zeitraums (%2$s).",
 		"Cannot update a shift exchange that has already been marked as done.": "Bereits als erledigt markierte Schicht-Tausche können nicht aktualisiert werden.",
