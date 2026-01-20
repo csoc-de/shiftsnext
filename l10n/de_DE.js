@@ -47,6 +47,7 @@ OC.L10N.register(
 		"Shift exchanges": "Schicht-Tausche",
 		"Required approvals": "Benötigte Genehmigungen",
 		"Save": "Speichern",
+		"Make sure you have the {linkStart}calendar app{linkEnd} installed.": "Vergewissern Sie sich, dass die {linkStart}Kalender-App{linkEnd} installiert ist.",
 		"The following configuration settings need to be set in the {linkStart}administration settings{linkEnd} before you can start using the app:": "Die folgenden Konfigurationseinstellungen müssen in den {linkStart}Administrationseinstellungen{linkEnd} gesetzt werden, bevor die App genutzt werden kann:",
 		"{strongStart}Note:{strongEnd} This app is work in progress.": "{strongStart}Beachten Sie:{strongEnd} Diese App befindet sich noch in der Entwicklung.",
 		"{linkStart}Click here{linkEnd} to make yourself familiar with the app.": "{linkStart}Klicken Sie hier{linkEnd}, um sich mit der App vetraut zu machen.",
