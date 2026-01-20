@@ -2,9 +2,9 @@
 	<div
 		class="sticky top-0 z-[20] flex w-full flex-wrap items-center justify-start gap-[calc(2*var(--app-navigation-padding))] py-[var(--app-navigation-padding)] pe-[var(--app-navigation-padding)] ps-[calc(var(--default-clickable-area)+2*var(--app-navigation-padding))]"
 		role="toolbar">
-		<h2 class="max-w-64 truncate">
+		<h3 class="max-w-64 truncate">
 			{{ title }}
-		</h2>
+		</h3>
 
 		<div>
 			<slot />

@@ -10,9 +10,9 @@
 		<div class="flex justify-center">
 			<div class="grid w-full max-w-[1000px] grid-cols-1 gap-9 md:grid-cols-2">
 				<div>
-					<h3 class="mt-0 mb-5 border-b-4 border-solid border-nc-warning pb-4 text-center">
+					<h4 class="mt-0 mb-5 border-b-4 border-solid border-nc-warning pb-4 text-center">
 						{{ t(APP_ID, "Pending") }}
-					</h3>
+					</h4>
 					<div class="flex flex-col gap-4 my-1">
 						<ShiftExchangeCard
 							v-for="shiftExchange in pendingShiftExchanges"
@@ -21,9 +21,9 @@
 					</div>
 				</div>
 				<div>
-					<h3 class="mt-0 mb-5 border-b-4 border-solid border-nc-success pb-4 text-center">
+					<h4 class="mt-0 mb-5 border-b-4 border-solid border-nc-success pb-4 text-center">
 						{{ t(APP_ID, "Done") }}
-					</h3>
+					</h4>
 					<div class="flex flex-col gap-4 my-1">
 						<ShiftExchangeCard
 							v-for="shiftExchange in doneShiftExchanges"
