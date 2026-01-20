@@ -1,6 +1,8 @@
 <template>
 	<div class="w-full flex flex-col items-center justify-center text-nc-plain gap-3 font-semibold">
 		<!-- eslint-disable-next-line vue/no-v-html -->
+		<div v-html="wipMessage" />
+		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-html="calendarAppMessage" />
 		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-html="configMessage" />
@@ -9,8 +11,6 @@
 				{{ t(APP_ID, missingConfig) }}
 			</li>
 		</ul>
-		<!-- eslint-disable-next-line vue/no-v-html -->
-		<div v-html="wipMessage" />
 		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-html="howToMessage" />
 	</div>
@@ -28,6 +28,13 @@ defineProps<{
 
 const settingsUrl = generateUrl(ADMIN_SETTINGS_PATH)
 
+const wipMessage = t(
+	APP_ID,
+	'{strongStart}Note:{strongEnd} This app is work in progress.',
+	{ strongStart: '<strong>', strongEnd: '</strong>' },
+	{ escape: false },
+)
+
 const calendarAppMessage = t(
 	APP_ID,
 	'Make sure you have the {linkStart}calendar app{linkEnd} installed.',
@@ -39,13 +46,6 @@ const configMessage = t(
 	APP_ID,
 	'The following configuration settings need to be set in the {linkStart}administration settings{linkEnd} before you can start using the app:',
 	{ linkStart: `<a href="${settingsUrl}" class="underline text-inherit">`, linkEnd: '</a>' },
-	{ escape: false },
-)
-
-const wipMessage = t(
-	APP_ID,
-	'{strongStart}Note:{strongEnd} This app is work in progress.',
-	{ strongStart: '<strong>', strongEnd: '</strong>' },
 	{ escape: false },
 )
 
