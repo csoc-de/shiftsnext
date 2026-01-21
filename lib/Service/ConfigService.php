@@ -40,6 +40,14 @@ final class ConfigService extends AbstractService {
 	) {
 	}
 
+	public function getInstalledVersion(): string {
+		return $this->appConfig->getValueString(
+			Application::APP_ID,
+			'installed_version',
+			'0.0.0',
+		);
+	}
+
 	/**
 	 * @psalm-suppress PossiblyUnusedMethod Called dynamically by
 	 * {@see OCA\ShiftsNext\Service\ConfigService::setConfigValue()}
