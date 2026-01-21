@@ -10,7 +10,7 @@ use OCA\ShiftsNext\Service\UserService;
 use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use Throwable;
 
@@ -35,7 +35,7 @@ final class UserController extends ApiController {
 	public function index(
 		?array $group_ids = null,
 		bool $restricted = false,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			if ($restricted) {
 				$shiftAdminGroupIds = $this->groupShiftAdminRelationService->getShiftAdminGroupIds();
@@ -46,7 +46,7 @@ final class UserController extends ApiController {
 				}
 			}
 			$users = $this->userService->getAllSerializable(groupIds: $group_ids);
-			return new DataResponse($users);
+			return new JSONResponse($users);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}

@@ -16,7 +16,7 @@ use OCA\ShiftsNext\Service\UserService;
 use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
@@ -35,34 +35,34 @@ final class GroupShiftAdminRelationController extends ApiController {
 	}
 
 	#[FrontpageRoute(verb: 'GET', url: '/api/group-shift-admin-relations')]
-	public function index(): DataResponse {
+	public function index(): JSONResponse {
 		try {
 			$relationsExtended = $this->groupShiftAdminRelationService->getAllExtended();
-			return new DataResponse($relationsExtended);
+			return new JSONResponse($relationsExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
 	}
 
 	#[FrontpageRoute(verb: 'GET', url: '/api/group-shift-admin-relations/grouped-by-group')]
-	public function indexGroupedByGroup(): DataResponse {
+	public function indexGroupedByGroup(): JSONResponse {
 		try {
 			$groupedRelations = $this->groupShiftAdminRelationService->getAllGroupedByGroup();
-			return new DataResponse($groupedRelations);
+			return new JSONResponse($groupedRelations);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
 	}
 
 	#[FrontpageRoute(verb: 'GET', url: '/api/group-shift-admin-relations/{id}')]
-	public function show(int $id): DataResponse {
+	public function show(int $id): JSONResponse {
 		try {
 			try {
 				$relationExtended = $this->groupShiftAdminRelationService->getExtended($id);
 			} catch (GroupShiftAdminRelationNotFoundException $e) {
 				throw new HttpException(Http::STATUS_NOT_FOUND, null, $e);
 			}
-			return new DataResponse($relationExtended);
+			return new JSONResponse($relationExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -72,7 +72,7 @@ final class GroupShiftAdminRelationController extends ApiController {
 	public function create(
 		string $group_id,
 		string $user_id,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			try {
 				$relation = $this->groupShiftAdminRelationMapper->create(
@@ -97,7 +97,7 @@ final class GroupShiftAdminRelationController extends ApiController {
 				throw $e;
 			}
 			$relationExtended = $this->groupShiftAdminRelationService->getExtended($relation);
-			return new DataResponse($relationExtended);
+			return new JSONResponse($relationExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -107,23 +107,23 @@ final class GroupShiftAdminRelationController extends ApiController {
 	 * @param string $group_id
 	 * @param list<string> $user_ids
 	 *
-	 * @return DataResponse
+	 * @return JSONResponse
 	 */
 	#[FrontpageRoute(verb: 'PUT', url: '/api/group-shift-admin-relations/grouped-by-group')]
 	public function updateAllOfGroup(
 		string $group_id,
 		array $user_ids,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			$groupedRelation = $this->groupShiftAdminRelationService->updateAllOfGroup($group_id, $user_ids);
-			return new DataResponse($groupedRelation);
+			return new JSONResponse($groupedRelation);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
 	}
 
 	#[FrontpageRoute(verb: 'DELETE', url: '/api/group-shift-admin-relations/{id}')]
-	public function destroy(int $id): DataResponse {
+	public function destroy(int $id): JSONResponse {
 		try {
 			try {
 				$relation = $this->groupShiftAdminRelationMapper->deleteById($id);
@@ -131,7 +131,7 @@ final class GroupShiftAdminRelationController extends ApiController {
 				throw new HttpException(Http::STATUS_NOT_FOUND, null, $e);
 			}
 			$relationExtended = $this->groupShiftAdminRelationService->getExtended($relation);
-			return new DataResponse($relationExtended);
+			return new JSONResponse($relationExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}

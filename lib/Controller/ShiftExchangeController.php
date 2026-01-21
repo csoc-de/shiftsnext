@@ -28,7 +28,7 @@ use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
@@ -60,7 +60,7 @@ final class ShiftExchangeController extends ApiController {
 
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/shift-exchanges')]
-	public function index(): DataResponse {
+	public function index(): JSONResponse {
 		try {
 			try {
 				$shiftExchangesExtended = $this->shiftExchangeService->getAllExtended();
@@ -83,7 +83,7 @@ final class ShiftExchangeController extends ApiController {
 					$e,
 				);
 			}
-			return new DataResponse($shiftExchangesExtended);
+			return new JSONResponse($shiftExchangesExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -91,7 +91,7 @@ final class ShiftExchangeController extends ApiController {
 
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/shift-exchanges/{id}')]
-	public function show(int $id): DataResponse {
+	public function show(int $id): JSONResponse {
 		try {
 			try {
 				$shiftExchangeExtended = $this->shiftExchangeService->getExtended($id);
@@ -116,7 +116,7 @@ final class ShiftExchangeController extends ApiController {
 					$e,
 				);
 			}
-			return new DataResponse($shiftExchangeExtended);
+			return new JSONResponse($shiftExchangeExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -129,7 +129,7 @@ final class ShiftExchangeController extends ApiController {
 		string $comment,
 		?int $shift_b_id = null,
 		?string $transfer_to_user_id = null,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			try {
 				$shiftA = $this->shiftService->getExtended($shift_a_id);
@@ -424,7 +424,7 @@ final class ShiftExchangeController extends ApiController {
 			}
 
 			$shiftExchangeExtended = $this->shiftExchangeService->getExtended($shiftExchange);
-			return new DataResponse($shiftExchangeExtended);
+			return new JSONResponse($shiftExchangeExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -439,7 +439,7 @@ final class ShiftExchangeController extends ApiController {
 		int $id,
 		array $approveds,
 		?string $comment = null,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			try {
 				$shiftExchange = $this->shiftExchangeMapper->findById($id);
@@ -604,7 +604,7 @@ final class ShiftExchangeController extends ApiController {
 			}
 
 			$shiftExchangeExtended = $this->shiftExchangeService->getExtended($shiftExchange);
-			return new DataResponse($shiftExchangeExtended);
+			return new JSONResponse($shiftExchangeExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -612,7 +612,7 @@ final class ShiftExchangeController extends ApiController {
 
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'DELETE', url: '/api/shift-exchanges/{id}')]
-	public function destroy(int $id): DataResponse {
+	public function destroy(int $id): JSONResponse {
 		try {
 			try {
 				$shiftExchange = $this->shiftExchangeMapper->findById($id);
@@ -684,7 +684,7 @@ final class ShiftExchangeController extends ApiController {
 					$e,
 				);
 			}
-			return new DataResponse($shiftExchangeExtended);
+			return new JSONResponse($shiftExchangeExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}

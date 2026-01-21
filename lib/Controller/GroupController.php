@@ -10,7 +10,7 @@ use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use Throwable;
 
@@ -29,13 +29,13 @@ final class GroupController extends ApiController {
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/groups')]
-	public function index(bool $restricted = false): DataResponse {
+	public function index(bool $restricted = false): JSONResponse {
 		try {
 			$groupIds = $restricted
 				? $this->groupShiftAdminRelationService->getShiftAdminGroupIds()
 				: null;
 			$groups = $this->groupService->getAllSerializable($groupIds);
-			return new DataResponse($groups);
+			return new JSONResponse($groups);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}

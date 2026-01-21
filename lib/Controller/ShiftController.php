@@ -25,7 +25,7 @@ use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
@@ -60,7 +60,7 @@ final class ShiftController extends ApiController {
 		?string $user_id = null,
 		?string $calendar_date = null,
 		?string $week_date = null,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			if ($calendar_date !== null && $week_date !== null) {
 				throw new HttpException(
@@ -84,7 +84,7 @@ final class ShiftController extends ApiController {
 					$e,
 				);
 			}
-			return new DataResponse($shiftsExtended);
+			return new JSONResponse($shiftsExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -92,7 +92,7 @@ final class ShiftController extends ApiController {
 
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/shifts/{id}')]
-	public function show(int $id): DataResponse {
+	public function show(int $id): JSONResponse {
 		try {
 			try {
 				$shiftExtended = $this->shiftService->getExtended($id);
@@ -105,7 +105,7 @@ final class ShiftController extends ApiController {
 					$e,
 				);
 			}
-			return new DataResponse($shiftExtended);
+			return new JSONResponse($shiftExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -118,7 +118,7 @@ final class ShiftController extends ApiController {
 		int $shift_type_id,
 		string $start,
 		string $end,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			try {
 				$shiftType = $this->shiftTypeMapper->findById($shift_type_id);
@@ -196,7 +196,7 @@ final class ShiftController extends ApiController {
 			);
 			$shiftExtended = $this->shiftService->getExtended($shift);
 			$this->calendarChangeService->safeCreate($shiftExtended);
-			return new DataResponse($shiftExtended);
+			return new JSONResponse($shiftExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -207,7 +207,7 @@ final class ShiftController extends ApiController {
 	public function update(
 		int $id,
 		string $user_id,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			try {
 				$shift = $this->shiftMapper->findById($id);
@@ -300,7 +300,7 @@ final class ShiftController extends ApiController {
 			$shiftExtended = $this->shiftService->getExtended($shift);
 			// This queues a creation of the shift in $user_id's calendar
 			$this->calendarChangeService->safeCreate($shiftExtended);
-			return new DataResponse($shiftExtended);
+			return new JSONResponse($shiftExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -308,7 +308,7 @@ final class ShiftController extends ApiController {
 
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'DELETE', url: '/api/shifts/{id}')]
-	public function destroy(int $id): DataResponse {
+	public function destroy(int $id): JSONResponse {
 		try {
 			try {
 				$shift = $this->shiftMapper->findById($id);
@@ -338,7 +338,7 @@ final class ShiftController extends ApiController {
 			$shift = $this->shiftMapper->deleteById($shift);
 			$shiftExtended = $this->shiftService->getExtended($shift);
 			$this->calendarChangeService->safeCreate($shiftExtended);
-			return new DataResponse($shiftExtended);
+			return new JSONResponse($shiftExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}

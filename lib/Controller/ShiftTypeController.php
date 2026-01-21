@@ -18,7 +18,7 @@ use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
@@ -54,7 +54,7 @@ final class ShiftTypeController extends ApiController {
 	public function index(
 		?array $group_ids = null,
 		bool $restricted = false,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			if ($restricted) {
 				$shiftAdminGroupIds = $this->groupShiftAdminRelationService->getShiftAdminGroupIds();
@@ -67,7 +67,7 @@ final class ShiftTypeController extends ApiController {
 			$shiftTypesExtended = $this->shiftTypeService->getAllExtended(
 				$group_ids,
 			);
-			return new DataResponse($shiftTypesExtended);
+			return new JSONResponse($shiftTypesExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -75,14 +75,14 @@ final class ShiftTypeController extends ApiController {
 
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/api/shift-types/{id}')]
-	public function show(int $id): DataResponse {
+	public function show(int $id): JSONResponse {
 		try {
 			try {
 				$shiftTypeExtended = $this->shiftTypeService->getExtended($id);
 			} catch (ShiftTypeNotFoundException $e) {
 				throw new HttpException(Http::STATUS_NOT_FOUND, null, $e);
 			}
-			return new DataResponse($shiftTypeExtended);
+			return new JSONResponse($shiftTypeExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -102,7 +102,7 @@ final class ShiftTypeController extends ApiController {
 		bool $active,
 		array $repetition,
 		array $caldav,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			if (!$this->groupShiftAdminRelationService->isShiftAdmin($group_id)) {
 				$groupName = $this->groupService->get($group_id)->getDisplayName();
@@ -123,7 +123,7 @@ final class ShiftTypeController extends ApiController {
 				$caldav,
 			);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
-			return new DataResponse($shiftTypeExtended);
+			return new JSONResponse($shiftTypeExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -141,7 +141,7 @@ final class ShiftTypeController extends ApiController {
 		string $color,
 		bool $active,
 		array $caldav,
-	): DataResponse {
+	): JSONResponse {
 		try {
 			try {
 				$shiftType = $this->shiftTypeMapper->findById($id);
@@ -169,7 +169,7 @@ final class ShiftTypeController extends ApiController {
 				$caldav,
 			);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
-			return new DataResponse($shiftTypeExtended);
+			return new JSONResponse($shiftTypeExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -177,7 +177,7 @@ final class ShiftTypeController extends ApiController {
 
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'DELETE', url: '/api/shift-types/{id}')]
-	public function destroy(int $id): DataResponse {
+	public function destroy(int $id): JSONResponse {
 		try {
 			try {
 				$shiftType = $this->shiftTypeMapper->findById($id);
@@ -198,7 +198,7 @@ final class ShiftTypeController extends ApiController {
 			array_walk($shifts, $this->calendarChangeService->safeCreate(...));
 			$shiftType = $this->shiftTypeMapper->deleteById($shiftType);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
-			return new DataResponse($shiftTypeExtended);
+			return new JSONResponse($shiftTypeExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}

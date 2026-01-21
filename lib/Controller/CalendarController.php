@@ -11,7 +11,7 @@ use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
-use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use Throwable;
 
@@ -33,7 +33,7 @@ final class CalendarController extends ApiController {
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'POST', url: '/api/calendars/synchronize-by-groups')]
-	public function synchronizeByGroups(array $group_ids): DataResponse {
+	public function synchronizeByGroups(array $group_ids): JSONResponse {
 		try {
 			$adminGroupIds
 				= $this->groupShiftAdminRelationService->getShiftAdminGroupIds();
@@ -44,7 +44,7 @@ final class CalendarController extends ApiController {
 
 			$errors = $this->calendarService->applyChanges($changes);
 
-			return new DataResponse($errors);
+			return new JSONResponse($errors);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -55,13 +55,13 @@ final class CalendarController extends ApiController {
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'POST', url: '/api/calendars/synchronize-by-shifts')]
-	public function synchronizeByShifts(array $shift_ids): DataResponse {
+	public function synchronizeByShifts(array $shift_ids): JSONResponse {
 		try {
 			$changes = $this->calendarChangeMapper->findAll(shiftIds: $shift_ids);
 
 			$errors = $this->calendarService->applyChanges($changes);
 
-			return new DataResponse($errors);
+			return new JSONResponse($errors);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
