@@ -6,6 +6,7 @@ namespace OCA\ShiftsNext\AppInfo;
 
 use OCA\ShiftsNext\Listener\GroupDeletedListener;
 use OCA\ShiftsNext\Listener\UserDeletedListener;
+use OCA\ShiftsNext\Middleware\VersionMatchMiddleware;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -33,6 +34,7 @@ final class Application extends App implements IBootstrap {
 	#[\Override]
 	public function register(IRegistrationContext $context): void {
 		include_once __DIR__ . '/../../vendor/autoload.php';
+		$context->registerMiddleware(VersionMatchMiddleware::class);
 	}
 
 	#[\Override]
