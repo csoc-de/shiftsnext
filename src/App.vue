@@ -15,7 +15,7 @@
 				</template>
 
 				<template #footer>
-					<span class="pl-2">Shifts Next {{ _appVersion }}</span>
+					<span class="pl-2">Shifts Next {{ APP_VERSION }}</span>
 				</template>
 			</NcAppNavigation>
 
@@ -38,14 +38,11 @@ import NcContent from '@nextcloud/vue/components/NcContent'
 import ConfigMissing from './components/ConfigMissing.vue'
 import DelayBoxesWrapper from './components/DelayBoxesWrapper.vue'
 import NavigationControls from './components/NavigationControls.vue'
-import { APP_ID } from './utils/appId.ts'
+import { APP_ID, APP_VERSION } from './utils/appId.ts'
 import { checkConfig } from './utils/checkConfig.ts'
 import { getInitialIsShiftAdmin } from './utils/initialState.ts'
 
 const missingConfigs = checkConfig()
 
 const isShiftAdmin = getInitialIsShiftAdmin()
-
-// @ts-expect-error global variable injected by the build process
-const _appVersion = appVersion
 </script>
