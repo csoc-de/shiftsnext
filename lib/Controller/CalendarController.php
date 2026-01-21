@@ -8,7 +8,7 @@ use OCA\ShiftsNext\Db\CalendarChangeMapper;
 use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
@@ -17,7 +17,7 @@ use Throwable;
 
 use function array_intersect;
 
-final class CalendarController extends Controller {
+final class CalendarController extends ApiController {
 	public function __construct(
 		string $appName,
 		IRequest $request,

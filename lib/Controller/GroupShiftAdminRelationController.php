@@ -13,7 +13,7 @@ use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\UserService;
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\DataResponse;
@@ -21,7 +21,7 @@ use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
 
-final class GroupShiftAdminRelationController extends Controller {
+final class GroupShiftAdminRelationController extends ApiController {
 	public function __construct(
 		private IL10N $l,
 		string $appName,

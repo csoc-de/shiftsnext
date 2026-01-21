@@ -6,13 +6,13 @@ namespace OCA\ShiftsNext\Controller;
 
 use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\GroupUserRelationService;
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use Throwable;
 
-final class GroupUserRelationController extends Controller {
+final class GroupUserRelationController extends ApiController {
 	public function __construct(
 		string $appName,
 		IRequest $request,

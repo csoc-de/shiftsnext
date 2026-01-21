@@ -21,7 +21,7 @@ use OCA\ShiftsNext\Service\GroupUserRelationService;
 use OCA\ShiftsNext\Service\ShiftService;
 use OCA\ShiftsNext\Service\UserService;
 use OCA\ShiftsNext\Util\Util;
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -30,7 +30,7 @@ use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
 
-final class ShiftController extends Controller {
+final class ShiftController extends ApiController {
 	public function __construct(
 		private IL10N $l,
 		string $appName,

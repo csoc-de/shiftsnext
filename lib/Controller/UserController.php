@@ -7,7 +7,7 @@ namespace OCA\ShiftsNext\Controller;
 use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\UserService;
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
@@ -16,7 +16,7 @@ use Throwable;
 
 use function array_intersect;
 
-final class UserController extends Controller {
+final class UserController extends ApiController {
 	public function __construct(
 		string $appName,
 		IRequest $request,

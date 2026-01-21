@@ -8,7 +8,7 @@ use OCA\ShiftsNext\Enum\AppConfigKey;
 use OCA\ShiftsNext\Enum\UserConfigKey;
 use OCA\ShiftsNext\Psalm\ConfigAlias;
 use OCA\ShiftsNext\Service\ConfigService;
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -19,7 +19,7 @@ use OCP\IRequest;
  * @psalm-import-type AppConfig from ConfigAlias
  * @psalm-import-type UserConfig from ConfigAlias
  */
-final class ConfigController extends Controller {
+final class ConfigController extends ApiController {
 	public function __construct(
 		string $appName,
 		IRequest $request,

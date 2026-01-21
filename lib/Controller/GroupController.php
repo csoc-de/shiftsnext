@@ -7,14 +7,14 @@ namespace OCA\ShiftsNext\Controller;
 use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use Throwable;
 
-final class GroupController extends Controller {
+final class GroupController extends ApiController {
 	public function __construct(
 		string $appName,
 		IRequest $request,

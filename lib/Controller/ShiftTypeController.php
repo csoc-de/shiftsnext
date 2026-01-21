@@ -14,7 +14,7 @@ use OCA\ShiftsNext\Service\CalendarChangeService;
 use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\ShiftTypeService;
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -30,7 +30,7 @@ use function array_walk;
  * @psalm-import-type Repetition from ShiftTypeAlias
  * @psalm-import-type Caldav from ShiftTypeAlias
  */
-final class ShiftTypeController extends Controller {
+final class ShiftTypeController extends ApiController {
 	public function __construct(
 		private IL10N $l,
 		string $appName,

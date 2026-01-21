@@ -24,7 +24,7 @@ use OCA\ShiftsNext\Service\ShiftExchangeService;
 use OCA\ShiftsNext\Service\ShiftService;
 use OCA\ShiftsNext\Service\UserService;
 use OCA\ShiftsNext\Util\Util;
-use OCP\AppFramework\Controller;
+use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\FrontpageRoute;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -37,7 +37,7 @@ use function array_key_exists;
 use function array_walk;
 use function in_array;
 
-final class ShiftExchangeController extends Controller {
+final class ShiftExchangeController extends ApiController {
 	public function __construct(
 		private IL10N $l,
 		string $appName,
