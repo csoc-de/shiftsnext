@@ -93,6 +93,8 @@
 							:class="{
 								'text-center': type === 'user',
 								'!bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'disabled',
+								'bg-nc-primary-element-light text-nc-primary-element-light':
+									type === 'user' && data.id === authUser.id,
 								'border-l sticky left-0 z-[1] bg-nc-main': !columnIndex,
 							}"
 							@click="
@@ -121,6 +123,7 @@
 
 <script lang="ts">
 import { createContext } from '../utils/createContext.ts'
+import { authUser } from '../utils/user.ts'
 
 export interface ShiftsContext {
 	setMultiStepAction: (action: MultiStepAction) => void
