@@ -51,7 +51,7 @@ OC.L10N.register(
 		"Make sure you have the {linkStart}calendar app{linkEnd} installed.": "Vergewissere dich, dass die {linkStart}Kalender-App{linkEnd} installiert ist.",
 		"The following configuration settings need to be set in the {linkStart}administration settings{linkEnd} before you can start using the app:": "Die folgenden Konfigurationseinstellungen müssen in den {linkStart}Administrationseinstellungen{linkEnd} gesetzt werden, bevor die App genutzt werden kann:",
 		"{strongStart}Note:{strongEnd} This app is work in progress.": "{strongStart}Beachte:{strongEnd} Diese App befindet sich noch in der Entwicklung.",
-		"{linkStart}Click here{linkEnd} to make yourself familiar with the app.": "{linkStart}Klicke hier{linkEnd}, um dich mit der App vetraut zu machen.",
+		"{linkStart}Click here{linkEnd} to make yourself familiar with the app.": "{linkStart}Klicke hier{linkEnd}, um dich mit der App vertraut zu machen.",
 		"Create shift exchange": "Schicht-Tausch erstellen",
 		"Exchange type": "Tausch-Typ",
 		"User": "Benutzer:in",
