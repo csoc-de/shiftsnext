@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="sticky top-0 z-[20] flex h-[calc(var(--default-clickable-area)+2*var(--app-navigation-padding))] w-full flex-wrap items-center justify-start gap-3 py-[var(--app-navigation-padding)] pe-[var(--app-navigation-padding)] ps-[calc(var(--default-clickable-area)+2*var(--app-navigation-padding))]"
+		class="sticky top-0 z-[20] flex min-h-[calc(var(--default-clickable-area)+2*var(--app-navigation-padding))] w-full flex-wrap items-center justify-start gap-3 py-[var(--app-navigation-padding)] pe-[var(--app-navigation-padding)] ps-[calc(var(--default-clickable-area)+2*var(--app-navigation-padding))]"
 		role="toolbar">
 		<h3 class="max-w-64 truncate">
 			{{ title }}
