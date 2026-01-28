@@ -40,7 +40,7 @@
 			</li>
 			<li>
 				<span class="font-bold">{{ t(APP_ID, "Description") }}: </span>
-				<span>{{ shiftType.description }}</span>
+				<span class="whitespace-pre-wrap break-words">{{ shiftType.description }}</span>
 			</li>
 		</ul>
 
