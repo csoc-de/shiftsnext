@@ -3,8 +3,8 @@
 		noClose
 		:name="dialogName"
 		size="normal">
-		<form id="shift-type-form" class="flex flex-col gap-3" @submit.prevent="onSubmit">
-			<div class="grid grid-cols-2 gap-3 sm:grid-cols-6">
+		<form id="shift-type-form" class="flex flex-col gap-2" @submit.prevent="onSubmit">
+			<div class="grid grid-cols-2 gap-2 sm:grid-cols-6">
 				<InputGroup class="sm:col-span-2">
 					<label for="shift-type-group-id">{{ t(APP_ID, "Group") }}</label>
 					<NcSelect
@@ -65,9 +65,9 @@
 				<template #legend>
 					{{ t(APP_ID, "Repetition") }}
 				</template>
-				<div class="flex flex-col gap-3">
+				<div class="flex flex-col gap-2">
 					<template v-if="!shiftType">
-						<div class="grid grid-cols-3 sm:grid-cols-5 gap-3">
+						<div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
 							<InputGroup class="col-span-2">
 								<label for="shift-type-repetition-frequency">{{
 									t(APP_ID, "Frequency")
@@ -110,8 +110,8 @@
 							<template #legend>
 								{{ t(APP_ID, "Config") }}
 							</template>
-							<div class="flex flex-col gap-3">
-								<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+							<div class="flex flex-col gap-2">
+								<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
 									<template v-if="weeklyType === 'by_day'">
 										<InputGroup>
 											<label for="shift-type-repetition-config-reference">
@@ -143,7 +143,7 @@
 								</div>
 								<InputGroup v-if="weeklyType === 'by_day'">
 									<div>{{ t(APP_ID, 'Amount') }}</div>
-									<div class="grid grid-cols-2 gap-x-2 gap-y-3 sm:grid-cols-4">
+									<div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
 										<NcTextField
 											v-for="(localDay, shortDay) in shortDayToLocalDayMap"
 											:key="shortDay"
@@ -164,7 +164,7 @@
 									required />
 								<InputGroup v-if="weeklyType === 'by_day'">
 									<div>{{ t(APP_ID, "Duration") }} ({{ durationString }})</div>
-									<DurationBuilder v-model="duration" class="grid grid-cols-2 sm:grid-cols-4 gap-1" />
+									<DurationBuilder v-model="duration" class="grid grid-cols-2 sm:grid-cols-4 gap-2" />
 								</InputGroup>
 							</div>
 						</CustomFieldset>
