@@ -48,10 +48,11 @@
 					<label for="shift-type-description">{{
 						t(APP_ID, "Description")
 					}}</label>
-					<NcTextField
+					<NcTextArea
 						id="shift-type-description"
 						v-model.trim="description"
-						labelOutside />
+						labelOutside
+						resize="vertical" />
 				</InputGroup>
 				<InputGroup class="col-span-2 sm:col-span-6">
 					<label for="shift-type-categories">{{ t(APP_ID, "Categories") }}</label>
@@ -200,6 +201,7 @@ import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
 import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
+import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
 import NcTimezonePicker from '@nextcloud/vue/components/NcTimezonePicker'
 import { injectShiftTypesContext } from '../views/ShiftTypesView.vue'
