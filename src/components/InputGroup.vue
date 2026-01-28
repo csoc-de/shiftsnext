@@ -1,7 +1,7 @@
 <template>
 	<div
-		class="flex gap-1"
-		:class="[inline ? 'items-center' : 'flex-col']">
+		class="flex"
+		:class="[inline ? 'items-center gap-x-1' : 'flex-col']">
 		<slot />
 	</div>
 </template>
