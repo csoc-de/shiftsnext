@@ -97,6 +97,7 @@ OC.L10N.register(
 		"Reference week": "Referenz-Woche",
 		"Amount": "Menge",
 		"Color": "Farbe",
+		"Location": "Ort",
 		"Categories": "Kategorien",
 		"Repetition": "Wiederholung",
 		"Frequency": "Frequenz",

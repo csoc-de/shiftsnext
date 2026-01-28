@@ -207,6 +207,8 @@ final class CalendarService {
 	): string {
 		$shiftTypeGroupId = $shift->shiftType->group->getGID();
 		$shiftTypeName = $shift->shiftType->name;
+		$description = $shift->shiftType->caldav['description'] ?? '';
+		$location = $shift->shiftType->caldav['location'] ?? '';
 		$categories = $shift->shiftType->caldav['categories'] ?? '';
 
 		$summary = "$shiftTypeGroupId $shiftTypeName";
@@ -239,7 +241,9 @@ final class CalendarService {
 					'DTSTART' => $dtStart,
 					'DTEND' => $dtEnd,
 				],
-				$categories !== '' ? ['CATEGORIES' => $categories] : []
+				$description !== '' ? ['DESCRIPTION' => $description] : [],
+				$location !== '' ? ['LOCATION' => $location] : [],
+				$categories !== '' ? ['CATEGORIES' => $categories] : [],
 			),
 		]);
 

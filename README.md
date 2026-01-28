@@ -75,9 +75,13 @@ Shift types need to be marked as active in order to create shifts from them.
 
 Add a description to include more information what this type is about.
 
-#### Categories
+#### Calendar event fields
 
-This field is a comma-separated input, which will be inserted as is into the calendar event's _Categories_, when synchronizing shifts to the Calendar app.
+The values of these fields will be inserted as is into the corresponding calendar event fields when synchronizing shifts to the Calendar app.
+
+- _Description_
+- _Location_
+- _Categories_
 
 #### Repetition
 
