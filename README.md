@@ -77,7 +77,7 @@ Add a description to include more information what this type is about.
 
 #### Calendar event fields
 
-The values of these fields will be inserted as is into the corresponding calendar event fields when synchronizing shifts to the Calendar app.
+The values of these fields will be inserted into the corresponding calendar event fields when synchronizing shifts to the calendar app.
 
 - _Description_
 - _Location_
