@@ -97,6 +97,7 @@ OC.L10N.register(
 		"Reference week": "Referenz-Woche",
 		"Amount": "Menge",
 		"Color": "Farbe",
+		"Calendar event fields": "Kalenderereignisfelder",
 		"The values of these fields will be inserted into the corresponding calendar event fields when synchronizing shifts to the calendar app.": "Die Werte dieser Felder werden beim Synchronisieren von Schichten mit der Kalender-App in die entsprechenden Kalenderereignisfelder eingefügt.",
 		"Location": "Ort",
 		"Categories": "Kategorien",
