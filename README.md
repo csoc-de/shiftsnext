@@ -53,7 +53,7 @@ For these functionalities you need to define shift admins per Nextcloud group. W
 
 Before being able to assign any shifts, you need to create shift types.
 
-**Note:** Most fields cannot be edited after a shift type has been created, with the exception being _Name_, _Color_, _Active_, _Description_ and _Categories_.
+**Note:** Most fields cannot be edited after a shift type has been created, with the exception being _Name_, _Color_, _Active_, _Description_ and the _Calendar event fields_.
 
 #### Group
 
