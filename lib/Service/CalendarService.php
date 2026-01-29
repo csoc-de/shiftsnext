@@ -213,10 +213,14 @@ final class CalendarService {
 		$description = $shift->shiftType->caldav['description'] ?? '';
 		$location = $shift->shiftType->caldav['location'] ?? '';
 		$categories = $shift->shiftType->caldav['categories'] ?? '';
+		$categories = mb_split('(?<!\\\\),', $categories);
+		if ($categories === false) {
+			$categories = [];
+		}
 		$categories = array_filter(
 			array_map(
 				fn ($category) => mb_ereg_replace('\\\\,', ',', trim($category)),
-				mb_split('(?<!\\\\),', $categories) ?: [],
+				$categories,
 			),
 			fn ($category) => $category !== '',
 		);
