@@ -72,6 +72,7 @@ import Pencil from 'vue-material-design-icons/Pencil.vue'
 import { injectShiftTypesContext } from '../views/ShiftTypesView.vue'
 import DelayBox from './DelayBox.vue'
 import ShiftTypeDialog from './ShiftTypeDialog.vue'
+import { postSynchronizeByGroups } from '../db/calendarSync.ts'
 import {
 	type ShiftType,
 } from '../models/shiftType.ts'
@@ -93,6 +94,7 @@ async function _remove(): Promise<void> {
 	delayBoxVisible.value = false
 	try {
 		await remove(shiftType.id)
+		postSynchronizeByGroups({ group_ids: [shiftType.group.id] })
 	} finally {
 		deleting.value = false
 	}
