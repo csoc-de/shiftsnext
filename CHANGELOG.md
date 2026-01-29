@@ -1,12 +1,20 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
-
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-
-## [Unreleased]
+## [2.8.0] - 2026-01-29
 
 ### Added
 
-- First release
+- Display explanation regarding calendar event fields when creating/editing shift types
+- Let shift admins additionally configure the calendar event description and location when creating/editing shift types
+- Include helper text explaining how to define multiple calendar event categories when creating/editing shift types
+
+### Changed
+
+- Switch from single line shift type description to multi line shift type description
+- Adjust gaps between some form elements
+
+### Fixed
+
+- Fix multiple comma-separated calendar event categories being interpreted as a single category when creating/editing shift types
+- Synchronize with calendar app when shifts are automatically deleted due to shift types being deleted
+- Clear all red shift deletion indicators when a user navigates between weeks before the shift deletion actually concludes
