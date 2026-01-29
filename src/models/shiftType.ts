@@ -101,6 +101,8 @@ export type RepetitionWeekly = RepetitionWeeklyByDay | RepetitionWeeklyByWeek
 export type Repetition = RepetitionWeekly
 
 export interface Caldav {
+	description?: string
+	location?: string
 	categories: string
 }
 

@@ -58,6 +58,8 @@ namespace OCA\ShiftsNext\Psalm;
  * @psalm-type Repetition = RepetitionWeekly
  *
  * @psalm-type Caldav = array{
+ *     description?: string,
+ *     location?: string,
  *     categories: string,
  * }
  */

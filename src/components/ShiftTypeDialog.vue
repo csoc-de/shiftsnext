@@ -54,14 +54,39 @@
 						labelOutside
 						resize="vertical" />
 				</InputGroup>
-				<InputGroup class="col-span-2 sm:col-span-6">
-					<label for="shift-type-categories">{{ t(APP_ID, "Categories") }}</label>
-					<NcTextField
-						id="shift-type-categories"
-						v-model.trim="categories"
-						labelOutside />
-				</InputGroup>
 			</div>
+			<CustomFieldset>
+				<template #legend>
+					{{ t(APP_ID, "Calendar event fields") }}
+				</template>
+				<div class="flex flex-col gap-2">
+					<div>{{ t(APP_ID, 'The values of these fields will be inserted into the corresponding calendar event fields when synchronizing shifts to the calendar app.') }}</div>
+					<InputGroup>
+						<label for="shift-type-caldav-description">{{ t(APP_ID, "Description") }}</label>
+						<NcTextArea
+							id="shift-type-caldav-description"
+							v-model.trim="caldavDescription"
+							labelOutside
+							resize="vertical" />
+					</InputGroup>
+					<InputGroup>
+						<label for="shift-type-caldav-location">{{ t(APP_ID, "Location") }}</label>
+						<NcTextField
+							id="shift-type-caldav-location"
+							v-model.trim="caldavLocation"
+							labelOutside />
+					</InputGroup>
+					<InputGroup>
+						<label for="shift-type-caldav-categories">{{ t(APP_ID, "Categories") }}</label>
+						<NcTextField
+							id="shift-type-caldav-categories"
+							v-model.trim="caldavCategories"
+							labelOutside
+							:placeholder="t(APP_ID, 'Category 1, Category 2\\, with comma')"
+							:helperText="t(APP_ID, `Separate categories by commas. To make the comma a part of the category, prepend the comma using a backslash: \\,`)" />
+					</InputGroup>
+				</div>
+			</CustomFieldset>
 			<CustomFieldset>
 				<template #legend>
 					{{ t(APP_ID, "Repetition") }}
@@ -272,7 +297,9 @@ const shortDayToAmountMap = ref<ShortDayToAmountMap>({
 })
 const byWeekReference = ref(getIsoWeekDate(undefined, false))
 const byWeekAmount = ref(1)
-const categories = ref('')
+const caldavDescription = ref('')
+const caldavLocation = ref('')
+const caldavCategories = ref('')
 
 if (shiftType) {
 	groupId.value = shiftType.group.id
@@ -280,7 +307,9 @@ if (shiftType) {
 	description.value = shiftType.description
 	color.value = shiftType.color
 	active.value = shiftType.active
-	categories.value = shiftType.caldav.categories
+	caldavDescription.value = shiftType.caldav.description ?? ''
+	caldavLocation.value = shiftType.caldav.location ?? ''
+	caldavCategories.value = shiftType.caldav.categories
 
 	frequency.value = shiftType.repetition.frequency
 	interval.value = shiftType.repetition.interval
@@ -360,7 +389,11 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 		description: description.value,
 		color: color.value,
 		active: active.value,
-		caldav: { categories: categories.value },
+		caldav: {
+			description: caldavDescription.value,
+			location: caldavLocation.value,
+			categories: caldavCategories.value,
+		},
 	}
 
 	if (type === 'post') {

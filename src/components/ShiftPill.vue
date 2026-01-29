@@ -65,7 +65,7 @@
 import type { Shift } from '../models/shift.ts'
 
 import { t } from '@nextcloud/l10n'
-import { computed, ref, watch } from 'vue'
+import { computed, onUnmounted, ref, watch } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 // @ts-expect-error package has no types
@@ -154,6 +154,8 @@ function cancelDeletion() {
 	removeDeletionShift(shift)
 	toggleDelayBox(false)
 }
+
+onUnmounted(() => removeDeletionShift(shift))
 </script>
 
 <style scoped lang="scss">

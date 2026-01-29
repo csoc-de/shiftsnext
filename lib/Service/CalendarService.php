@@ -20,10 +20,13 @@ use Sabre\VObject\Component\VCalendar;
 use Throwable;
 
 use function array_column;
+use function array_filter;
 use function array_map;
 use function array_merge;
 use function array_push;
 use function in_array;
+use function mb_ereg_replace;
+use function mb_split;
 use function mb_strtolower;
 use function trim;
 
@@ -88,7 +91,7 @@ final class CalendarService {
 			foreach ($calendars as $calendar) {
 				$errors[]
 					= 'Failed to apply change to calendar '
-					. "'{$calendar['displayName']}' of user"
+					. "'{$calendar['displayName']}' of user "
 					. "'{$calendar['ownerDisplayName']}'";
 			}
 
@@ -207,7 +210,16 @@ final class CalendarService {
 	): string {
 		$shiftTypeGroupId = $shift->shiftType->group->getGID();
 		$shiftTypeName = $shift->shiftType->name;
+		$description = $shift->shiftType->caldav['description'] ?? '';
+		$location = $shift->shiftType->caldav['location'] ?? '';
 		$categories = $shift->shiftType->caldav['categories'] ?? '';
+		$categories = array_filter(
+			array_map(
+				fn ($category) => mb_ereg_replace('\\\\,', ',', trim($category)),
+				mb_split('(?<!\\\\),', $categories) ?: [],
+			),
+			fn ($category) => $category !== '',
+		);
 
 		$summary = "$shiftTypeGroupId $shiftTypeName";
 		if (!$isPersonal) {
@@ -239,7 +251,9 @@ final class CalendarService {
 					'DTSTART' => $dtStart,
 					'DTEND' => $dtEnd,
 				],
-				$categories !== '' ? ['CATEGORIES' => $categories] : []
+				$description !== '' ? ['DESCRIPTION' => $description] : [],
+				$location !== '' ? ['LOCATION' => $location] : [],
+				$categories ? ['CATEGORIES' => $categories] : [],
 			),
 		]);
 
