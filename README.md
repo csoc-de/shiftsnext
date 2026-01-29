@@ -18,7 +18,7 @@ Nextcloud admins need to create two calendars in the calendar app:
 
 1. A _common_ calendar, which the Shifts Next app uses to sync events to
 2. An _absence_ calendar, which the Shifts Next app uses to check if a certain user is absent when assigning a shift to them
-    - For the absence check to work, the _absence calendar_ event name has to be either the user ID or the user name. Imagine a user with ID "john.doe@example.com" and name "John Doe" exists, then the event name inside the _absence calendar_ needs to be "john.doe@example.com" or "John Doe".
+   - For the absence check to work, the _absence calendar_ event name has to be either the user ID or the user name. Imagine a user with ID "john.doe@example.com" and name "John Doe" exists, then the event name inside the _absence calendar_ needs to be "john.doe@example.com" or "John Doe".
 
 ## Configuration
 
