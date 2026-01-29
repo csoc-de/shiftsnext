@@ -91,7 +91,7 @@ final class CalendarService {
 			foreach ($calendars as $calendar) {
 				$errors[]
 					= 'Failed to apply change to calendar '
-					. "'{$calendar['displayName']}' of user"
+					. "'{$calendar['displayName']}' of user "
 					. "'{$calendar['ownerDisplayName']}'";
 			}
 
