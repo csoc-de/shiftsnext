@@ -99,6 +99,8 @@ OC.L10N.register(
 		"Color": "Farbe",
 		"Location": "Ort",
 		"Categories": "Kategorien",
+		"Category 1, Category 2\\, with comma": "Kategorie 1, Kategorie 2\\, mit Komma",
+		"Separate categories by commas. To make the comma a part of the category, prepend the comma using a backslash: \\,": "Trenne Kategorien durch Kommas. Um das Komma in die Kategorie einzubeziehen, stelle dem Komma einen Backslash voran: \\,",
 		"Repetition": "Wiederholung",
 		"Frequency": "Frequenz",
 		"Interval": "Interval",

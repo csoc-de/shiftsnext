@@ -59,8 +59,8 @@
 				<template #legend>
 					{{ t(APP_ID, "Calendar event fields") }}
 				</template>
-				<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-					<InputGroup class="sm:col-span-2">
+				<div class="flex flex-col gap-2">
+					<InputGroup>
 						<label for="shift-type-caldav-description">{{ t(APP_ID, "Description") }}</label>
 						<NcTextArea
 							id="shift-type-caldav-description"
@@ -80,7 +80,9 @@
 						<NcTextField
 							id="shift-type-caldav-categories"
 							v-model.trim="caldavCategories"
-							labelOutside />
+							labelOutside
+							:placeholder="t(APP_ID, 'Category 1, Category 2\\, with comma')"
+							:helperText="t(APP_ID, `Separate categories by commas. To make the comma a part of the category, prepend the comma using a backslash: \\,`)" />
 					</InputGroup>
 				</div>
 			</CustomFieldset>
