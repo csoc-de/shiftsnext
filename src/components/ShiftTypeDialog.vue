@@ -60,6 +60,7 @@
 					{{ t(APP_ID, "Calendar event fields") }}
 				</template>
 				<div class="flex flex-col gap-2">
+					<div>{{ t(APP_ID, 'The values of these fields will be inserted into the corresponding calendar event fields when synchronizing shifts to the calendar app.') }}</div>
 					<InputGroup>
 						<label for="shift-type-caldav-description">{{ t(APP_ID, "Description") }}</label>
 						<NcTextArea
