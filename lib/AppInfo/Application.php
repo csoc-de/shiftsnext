@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\ShiftsNext\AppInfo;
 
 use OCA\ShiftsNext\Listener\GroupDeletedListener;
+use OCA\ShiftsNext\Listener\UserChangedListener;
 use OCA\ShiftsNext\Listener\UserDeletedListener;
 use OCA\ShiftsNext\Middleware\VersionMatchMiddleware;
 use OCP\AppFramework\App;
@@ -13,6 +14,7 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Group\Events\GroupDeletedEvent;
+use OCP\User\Events\UserChangedEvent;
 use OCP\User\Events\UserDeletedEvent;
 
 final class Application extends App implements IBootstrap {
@@ -28,6 +30,7 @@ final class Application extends App implements IBootstrap {
 		$dispatcher = $this->getContainer()->get(IEventDispatcher::class);
 
 		$dispatcher->addServiceListener(GroupDeletedEvent::class, GroupDeletedListener::class);
+		$dispatcher->addServiceListener(UserChangedEvent::class, UserChangedListener::class);
 		$dispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedListener::class);
 	}
 
