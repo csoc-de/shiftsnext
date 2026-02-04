@@ -23,7 +23,7 @@
 				<label for="comment">{{ t(APP_ID, "Comment") }}</label>
 				<NcTextArea
 					id="comment"
-					v-model.trim="formValues.comment"
+					v-model.trim="comment"
 					resize="vertical"
 					labelOutside />
 			</InputGroup>
@@ -81,21 +81,15 @@ const approvalLabel = editor === 'admin'
 	? t(APP_ID, 'Admin approval')
 	: t(APP_ID, 'Participant approval')
 
-type FormValues = {
-	approved: boolean | null
-	comment: string
-}
-const formValues = ref<FormValues>({
-	approved: null,
-	comment: '',
-})
+const approved = ref<Approved>(null)
+const comment = ref('')
 
 const approvedString = computed<`${Approved}`>({
 	get() {
-		return String(formValues.value.approved) as `${Approved}`
+		return String(approved.value) as `${Approved}`
 	},
 	set(value) {
-		formValues.value.approved = value === 'null' ? null : value === 'true'
+		approved.value = value === 'null' ? null : value === 'true'
 	},
 })
 
@@ -107,29 +101,28 @@ fillForm()
 function fillForm() {
 	switch (editor) {
 		case 'userA':
-			formValues.value.approved = shiftExchange.user_a_approval.approved
+			approved.value = shiftExchange.user_a_approval.approved
 			break
 		case 'userB':
-			formValues.value.approved = shiftExchange.user_b_approval.approved
+			approved.value = shiftExchange.user_b_approval.approved
 			break
 		case 'admin':
-			formValues.value.approved = shiftExchange.admin_approval.approved
+			approved.value = shiftExchange.admin_approval.approved
 			break
 	}
-	formValues.value.comment = shiftExchange.comment
+	comment.value = shiftExchange.comment
 }
 
 /**
  * Handle the form submission
  */
 async function onSubmit() {
-	const approved = formValues.value.approved
 	const approveds: Approveds = editor === 'admin'
-		? { admin: approved }
-		: { user: approved }
+		? { admin: approved.value }
+		: { user: approved.value }
 	const payload: ShiftExchangePutPayload = {
 		approveds,
-		comment: formValues.value.comment,
+		comment: comment.value,
 	}
 	try {
 		saving.value = true
