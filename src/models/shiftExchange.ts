@@ -1,7 +1,14 @@
+import type { Component } from 'vue'
 import type { Shift } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
 
 import { t } from '@nextcloud/l10n'
+// @ts-expect-error package has no types
+import CheckCircleOutline from 'vue-material-design-icons/CheckCircleOutline.vue'
+// @ts-expect-error package has no types
+import ClockOutline from 'vue-material-design-icons/ClockOutline.vue'
+// @ts-expect-error package has no types
+import CloseCircleOutline from 'vue-material-design-icons/CloseCircleOutline.vue'
 import { APP_ID } from '../utils/appId.ts'
 
 export interface ShiftExchangeBase {
@@ -90,3 +97,17 @@ export type ShiftExchange = RegularShiftExchange | TransferShiftExchange
 export type ExchangeParticipant = 'userA' | 'userB'
 
 export type ExchangeEditor = ExchangeParticipant | 'admin'
+
+// Component-related
+
+export const approvedIconComponents = {
+	true: CheckCircleOutline,
+	null: ClockOutline,
+	false: CloseCircleOutline,
+} as const satisfies Record<`${Approved}`, Component>
+
+export const approvedColorClasses = {
+	true: 'text-nc-element-success',
+	null: 'text-nc-element-warning',
+	false: 'text-nc-element-error',
+} as const satisfies Record<`${Approved}`, string>
