@@ -106,13 +106,16 @@ switch (editor) {
 }
 comment.value = shiftExchange.comment
 
+const previousApproved = approved.value
+
 /**
  * Handle the form submission
  */
 async function onSubmit() {
-	const approveds: Approveds = editor === 'admin'
-		? { admin: approved.value }
-		: { user: approved.value }
+	const approveds: Approveds = {}
+	if (previousApproved !== approved.value) {
+		approveds[editor === 'admin' ? 'admin' : 'user'] = approved.value
+	}
 	const payload: ShiftExchangePatchPayload = {
 		approveds,
 		comment: comment.value,
