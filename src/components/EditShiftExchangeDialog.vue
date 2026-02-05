@@ -6,7 +6,7 @@
 			id="shift-exchange-form"
 			class="flex flex-col gap-2"
 			@submit.prevent="onSubmit">
-			<InputGroup>
+			<InputGroup v-if="editor">
 				<div>{{ approvalLabel }}</div>
 				<NcRadioGroup
 					v-model="approvedString"
@@ -66,9 +66,12 @@ import {
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 
-const { shiftExchange, editor } = defineProps<{
+const { shiftExchange, editor = undefined } = defineProps<{
 	shiftExchange: ShiftExchange
-	editor: ExchangeEditor
+	/**
+	 * If `undefined`, the user can only update the comment
+	 */
+	editor?: ExchangeEditor
 }>()
 
 const emit = defineEmits<{ close: [] }>()
@@ -113,7 +116,7 @@ const previousApproved = approved.value
  */
 async function onSubmit() {
 	const approveds: Approveds = {}
-	if (previousApproved !== approved.value) {
+	if (editor && previousApproved !== approved.value) {
 		approveds[editor === 'admin' ? 'admin' : 'user'] = approved.value
 	}
 	const payload: ShiftExchangePatchPayload = {
