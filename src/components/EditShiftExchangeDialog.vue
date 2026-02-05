@@ -6,7 +6,7 @@
 			id="shift-exchange-form"
 			class="flex flex-col gap-2"
 			@submit.prevent="onSubmit">
-			<InputGroup>
+			<InputGroup v-if="editor">
 				<div>{{ approvalLabel }}</div>
 				<NcRadioGroup
 					v-model="approvedString"
@@ -23,7 +23,7 @@
 				<label for="comment">{{ t(APP_ID, "Comment") }}</label>
 				<NcTextArea
 					id="comment"
-					v-model.trim="formValues.comment"
+					v-model.trim="comment"
 					resize="vertical"
 					labelOutside />
 			</InputGroup>
@@ -59,16 +59,19 @@ import {
 	type Approveds,
 	type ExchangeEditor,
 	type ShiftExchange,
-	type ShiftExchangePutPayload,
+	type ShiftExchangePatchPayload,
 
 	APPROVED_OPTIONS,
 	approvedTranslations,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 
-const { shiftExchange, editor } = defineProps<{
+const { shiftExchange, editor = undefined } = defineProps<{
 	shiftExchange: ShiftExchange
-	editor: ExchangeEditor
+	/**
+	 * If `undefined`, the user can only update the comment
+	 */
+	editor?: ExchangeEditor
 }>()
 
 const emit = defineEmits<{ close: [] }>()
@@ -81,55 +84,44 @@ const approvalLabel = editor === 'admin'
 	? t(APP_ID, 'Admin approval')
 	: t(APP_ID, 'Participant approval')
 
-type FormValues = {
-	approved: boolean | null
-	comment: string
-}
-const formValues = ref<FormValues>({
-	approved: null,
-	comment: '',
-})
+const approved = ref<Approved>(null)
+const comment = ref('')
 
 const approvedString = computed<`${Approved}`>({
 	get() {
-		return String(formValues.value.approved) as `${Approved}`
+		return String(approved.value) as `${Approved}`
 	},
 	set(value) {
-		formValues.value.approved = value === 'null' ? null : value === 'true'
+		approved.value = value === 'null' ? null : value === 'true'
 	},
 })
 
-fillForm()
-
-/**
- * Fill the form with the shift exchange data
- */
-function fillForm() {
-	switch (editor) {
-		case 'userA':
-			formValues.value.approved = shiftExchange.user_a_approval.approved
-			break
-		case 'userB':
-			formValues.value.approved = shiftExchange.user_b_approval.approved
-			break
-		case 'admin':
-			formValues.value.approved = shiftExchange.admin_approval.approved
-			break
-	}
-	formValues.value.comment = shiftExchange.comment
+switch (editor) {
+	case 'userA':
+		approved.value = shiftExchange.user_a_approval.approved
+		break
+	case 'userB':
+		approved.value = shiftExchange.user_b_approval.approved
+		break
+	case 'admin':
+		approved.value = shiftExchange.admin_approval.approved
+		break
 }
+comment.value = shiftExchange.comment
+
+const previousApproved = approved.value
 
 /**
  * Handle the form submission
  */
 async function onSubmit() {
-	const approved = formValues.value.approved
-	const approveds: Approveds = editor === 'admin'
-		? { admin: approved }
-		: { user: approved }
-	const payload: ShiftExchangePutPayload = {
+	const approveds: Approveds = {}
+	if (editor && previousApproved !== approved.value) {
+		approveds[editor === 'admin' ? 'admin' : 'user'] = approved.value
+	}
+	const payload: ShiftExchangePatchPayload = {
 		approveds,
-		comment: formValues.value.comment,
+		comment: comment.value,
 	}
 	try {
 		saving.value = true

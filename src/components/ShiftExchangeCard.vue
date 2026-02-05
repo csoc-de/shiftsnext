@@ -3,60 +3,50 @@
 		class="rounded-nc-container border border-solid border-nc-maxcontrast hover:bg-nc-hover"
 		:class="{ 'outline outline-2 outline-offset-2 outline-nc-error': deleting }">
 		<div
-			class="flex items-center justify-center mx-2 h-nc-clickable-area relative">
+			class="flex items-center justify-between mx-2">
+			<ShiftExchangeApprovedStatus
+				class="!size-nc-clickable-area"
+				:approved="shiftExchange.approved" />
 			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
-			<NcActions
-				v-if="renderActions"
-				class="absolute right-0"
-				:inline="3">
-				<NcActionButton
-					v-if="renderEditButton"
-					closeAfterClick
-					@click="() => {
-						editor = participant,
-						editDialogMounted = true
-					}">
-					<template #icon>
-						<Pencil :size="20" />
-					</template>
-					{{ t(APP_ID, "Edit approval") }}
-				</NcActionButton>
-				<NcActionButton
-					v-if="renderEditAsAdminButton"
-					closeAfterClick
-					@click="() => {
-						editor = 'admin'
-						editDialogMounted = true
-					}">
-					<template #icon>
-						<Pencil :size="20" />
-					</template>
-					{{ t(APP_ID, "Edit admin approval") }}
-				</NcActionButton>
-				<NcActionButton
-					v-if="renderDeleteButton"
-					closeAfterClick
-					@click="() => {
-						deleting = true
-						delayBoxVisible = true
-					}">
-					<template #icon>
-						<Delete :size="20" />
-					</template>
-					{{ t(APP_ID, "Delete") }}
-				</NcActionButton>
-			</NcActions>
+			<div class="size-nc-clickable-area">
+				<NcActions
+					:inline="2"
+					class="float-right">
+					<NcActionButton
+						v-if="renderCommentButton"
+						closeAfterClick
+						@click="openDialog()">
+						<template #icon>
+							<Comment :size="20" />
+						</template>
+						{{ t(APP_ID, "Comment") }}
+					</NcActionButton>
+					<NcActionButton
+						v-if="renderDeleteButton"
+						closeAfterClick
+						@click="() => {
+							deleting = true
+							delayBoxVisible = true
+						}">
+						<template #icon>
+							<Delete :size="20" />
+						</template>
+						{{ t(APP_ID, "Delete") }}
+					</NcActionButton>
+				</NcActions>
+			</div>
 		</div>
 
 		<div class="flex flex-col gap-2 px-3 pb-3">
 			<div class="grid grid-cols-2 gap-2">
 				<div class="border-r border-y border-solid border-nc-maxcontrast py-1 px-2">
-					<div class="flex items-center justify-between gap-1">
-						<span>{{ shiftExchange.user_a_approval.user?.display_name }}</span>
-						<ShiftExchangeApprovedStatus
-							v-if="approvalType !== 'admin'"
-							:approved="shiftExchange.user_a_approval.approved" />
-					</div>
+					<ShiftExchangeApprovedStatus
+						v-if="approvalType !== 'admin'"
+						class="float-right"
+						:approved="shiftExchange.user_a_approval.approved"
+						:isButton="renderEditUserAButton"
+						@click="renderEditUserAButton && openDialog('userA')" />
+					<div>{{ shiftExchange.user_a_approval.user?.display_name }}</div>
 					<div>{{ shiftExchange.shift_a.shift_type.group.display_name }}</div>
 					<div>{{ shiftExchange.shift_a.shift_type.name }}</div>
 					<div>
@@ -72,12 +62,13 @@
 
 				<div class="border-l border-y border-solid border-nc-maxcontrast py-1 px-2">
 					<template v-if="'shift_b' in shiftExchange">
-						<div class="flex items-center justify-between gap-1">
-							<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>
-							<ShiftExchangeApprovedStatus
-								v-if="approvalType !== 'admin'"
-								:approved="shiftExchange.user_b_approval.approved" />
-						</div>
+						<ShiftExchangeApprovedStatus
+							v-if="approvalType !== 'admin'"
+							class="float-right"
+							:approved="shiftExchange.user_b_approval.approved"
+							:isButton="renderEditUserBButton"
+							@click="renderEditUserBButton && openDialog('userB')" />
+						<div>{{ shiftExchange.user_b_approval.user?.display_name }}</div>
 						<div>{{ shiftExchange.shift_b.shift_type.group.display_name }}</div>
 						<div>{{ shiftExchange.shift_b.shift_type.name }}</div>
 						<div>
@@ -91,12 +82,13 @@
 						</div>
 					</template>
 					<template v-if="'transfer_to_user' in shiftExchange">
-						<div class="flex items-center justify-between gap-1">
-							<span>{{ shiftExchange.user_b_approval.user?.display_name }}</span>
-							<ShiftExchangeApprovedStatus
-								v-if="approvalType !== 'admin'"
-								:approved="shiftExchange.user_b_approval.approved" />
-						</div>
+						<ShiftExchangeApprovedStatus
+							v-if="approvalType !== 'admin'"
+							class="float-right"
+							:approved="shiftExchange.user_b_approval.approved"
+							:isButton="renderEditUserBButton"
+							@click="renderEditUserBButton && openDialog('userB')" />
+						<div>{{ shiftExchange.user_b_approval.user?.display_name }}</div>
 					</template>
 				</div>
 			</div>
@@ -106,7 +98,10 @@
 					v-if="approvalType !== 'users'"
 					class="flex items-center gap-1">
 					<span>{{ t(APP_ID, "Admin approval") }}:</span>
-					<ShiftExchangeApprovedStatus :approved="shiftExchange.admin_approval.approved" />
+					<ShiftExchangeApprovedStatus
+						:approved="shiftExchange.admin_approval.approved"
+						:isButton="renderEditAdminButton"
+						@click="renderEditAdminButton && openDialog('admin')" />
 				</div>
 
 				<div
@@ -131,8 +126,8 @@
 		<EditShiftExchangeDialog
 			v-if="editDialogMounted"
 			:shiftExchange="shiftExchange"
-			:editor="editor!"
-			@close="editDialogMounted = false" />
+			:editor="editor"
+			@close="closeDialog()" />
 	</div>
 </template>
 
@@ -142,16 +137,15 @@ import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 // @ts-expect-error package has no types
-import Delete from 'vue-material-design-icons/Delete.vue'
+import Comment from 'vue-material-design-icons/Comment.vue'
 // @ts-expect-error package has no types
-import Pencil from 'vue-material-design-icons/Pencil.vue'
+import Delete from 'vue-material-design-icons/Delete.vue'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import DelayBox from './DelayBox.vue'
 import EditShiftExchangeDialog from './EditShiftExchangeDialog.vue'
 import ShiftExchangeApprovedStatus from './ShiftExchangeApprovedStatus.vue'
 import {
 	type ExchangeEditor,
-	type ExchangeParticipant,
 	type ShiftExchange,
 	type ShiftExchangeType,
 
@@ -187,9 +181,8 @@ const deleting = ref(false)
 
 const editor = ref<ExchangeEditor>()
 
-const userAId = shiftExchange.user_a_approval.user?.id
-
-const userBId = shiftExchange.user_b_approval.user?.id
+const isUserA = authUser.id === shiftExchange.user_a_approval.user?.id
+const isUserB = authUser.id === shiftExchange.user_b_approval.user?.id
 
 /** Contains always shiftA's group ID, and potentially shiftB's group ID */
 const groupIds = [shiftExchange.shift_a.shift_type.group.id]
@@ -197,26 +190,34 @@ if ('shift_b' in shiftExchange) {
 	groupIds.push(shiftExchange.shift_b.shift_type.group.id)
 }
 
-const participant: ExchangeParticipant | undefined
-	= authUser.id === userAId
-		? 'userA'
-		: authUser.id === userBId
-			? 'userB'
-			: undefined
-
 /** Is `true` if the logged-in user is a shift admin for shiftA's and (if applicable) shiftB's group */
 const isGroupShiftAdmin = groupIds.every((groupId) => {
 	const relation = relations.find((relation) => relation.group.id === groupId)
 	return relation?.users.some((user) => user.id === authUser.id)
 })
 
-const renderEditButton = !!(participant && !shiftExchange.done)
+const renderEditUserAButton = !shiftExchange.done && isUserA
+const renderEditUserBButton = !shiftExchange.done && isUserB
+const renderEditAdminButton = !shiftExchange.done && isGroupShiftAdmin
+const renderCommentButton = !shiftExchange.done && (isUserA || isUserB || isGroupShiftAdmin)
+const renderDeleteButton = (!shiftExchange.done && (isUserA || isUserB)) || isGroupShiftAdmin
 
-const renderEditAsAdminButton = isGroupShiftAdmin && !shiftExchange.done
+/**
+ * Opens the edit dialog
+ *
+ * @param newEditor The user who is editing the shift exchange
+ */
+function openDialog(newEditor?: ExchangeEditor) {
+	editor.value = newEditor
+	editDialogMounted.value = true
+}
 
-const renderDeleteButton = !!(isGroupShiftAdmin || (participant && !shiftExchange.done))
-
-const renderActions = renderEditButton || renderEditAsAdminButton || renderDeleteButton
+/**
+ * Closes the edit dialog
+ */
+function closeDialog() {
+	editDialogMounted.value = false
+}
 
 /**
  * Remove shift exchange
