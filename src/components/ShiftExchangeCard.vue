@@ -9,8 +9,20 @@
 				:approved="shiftExchange.approved" />
 			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
 			<div class="size-nc-clickable-area">
-				<NcActions v-if="renderDeleteButton">
+				<NcActions
+					:inline="2"
+					class="float-right">
 					<NcActionButton
+						v-if="renderCommentButton"
+						closeAfterClick
+						@click="openDialog()">
+						<template #icon>
+							<Comment :size="20" />
+						</template>
+						{{ t(APP_ID, "Comment") }}
+					</NcActionButton>
+					<NcActionButton
+						v-if="renderDeleteButton"
 						closeAfterClick
 						@click="() => {
 							deleting = true
@@ -114,7 +126,7 @@
 		<EditShiftExchangeDialog
 			v-if="editDialogMounted"
 			:shiftExchange="shiftExchange"
-			:editor="editor!"
+			:editor="editor"
 			@close="closeDialog()" />
 	</div>
 </template>
@@ -124,6 +136,8 @@ import { t } from '@nextcloud/l10n'
 import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
+// @ts-expect-error package has no types
+import Comment from 'vue-material-design-icons/Comment.vue'
 // @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
@@ -185,6 +199,7 @@ const isGroupShiftAdmin = groupIds.every((groupId) => {
 const renderEditUserAButton = !shiftExchange.done && isUserA
 const renderEditUserBButton = !shiftExchange.done && isUserB
 const renderEditAdminButton = !shiftExchange.done && isGroupShiftAdmin
+const renderCommentButton = !shiftExchange.done && (isUserA || isUserB || isGroupShiftAdmin)
 const renderDeleteButton = (!shiftExchange.done && (isUserA || isUserB)) || isGroupShiftAdmin
 
 /**
@@ -192,7 +207,7 @@ const renderDeleteButton = (!shiftExchange.done && (isUserA || isUserB)) || isGr
  *
  * @param newEditor The user who is editing the shift exchange
  */
-function openDialog(newEditor: ExchangeEditor) {
+function openDialog(newEditor?: ExchangeEditor) {
 	editor.value = newEditor
 	editDialogMounted.value = true
 }
