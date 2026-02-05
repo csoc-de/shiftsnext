@@ -93,25 +93,18 @@ const approvedString = computed<`${Approved}`>({
 	},
 })
 
-fillForm()
-
-/**
- * Fill the form with the shift exchange data
- */
-function fillForm() {
-	switch (editor) {
-		case 'userA':
-			approved.value = shiftExchange.user_a_approval.approved
-			break
-		case 'userB':
-			approved.value = shiftExchange.user_b_approval.approved
-			break
-		case 'admin':
-			approved.value = shiftExchange.admin_approval.approved
-			break
-	}
-	comment.value = shiftExchange.comment
+switch (editor) {
+	case 'userA':
+		approved.value = shiftExchange.user_a_approval.approved
+		break
+	case 'userB':
+		approved.value = shiftExchange.user_b_approval.approved
+		break
+	case 'admin':
+		approved.value = shiftExchange.admin_approval.approved
+		break
 }
+comment.value = shiftExchange.comment
 
 /**
  * Handle the form submission
