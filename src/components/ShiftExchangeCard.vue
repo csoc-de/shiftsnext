@@ -3,24 +3,26 @@
 		class="rounded-nc-container border border-solid border-nc-maxcontrast hover:bg-nc-hover"
 		:class="{ 'outline outline-2 outline-offset-2 outline-nc-error': deleting }">
 		<div
-			class="flex items-center justify-center mx-2 h-nc-clickable-area relative">
+			class="flex items-center justify-between mx-2">
+			<ShiftExchangeApprovedStatus
+				class="!size-nc-clickable-area"
+				:approved="shiftExchange.approved" />
 			<div>{{ exchangeTypeTranslations[exchangeType] }}</div>
-			<NcActions
-				v-if="renderDeleteButton"
-				class="absolute right-0"
-				:inline="3">
-				<NcActionButton
-					closeAfterClick
-					@click="() => {
-						deleting = true
-						delayBoxVisible = true
-					}">
-					<template #icon>
-						<Delete :size="20" />
-					</template>
-					{{ t(APP_ID, "Delete") }}
-				</NcActionButton>
-			</NcActions>
+			<div class="size-nc-clickable-area">
+				<NcActions v-if="renderDeleteButton">
+					<NcActionButton
+						closeAfterClick
+						@click="() => {
+							deleting = true
+							delayBoxVisible = true
+						}">
+						<template #icon>
+							<Delete :size="20" />
+						</template>
+						{{ t(APP_ID, "Delete") }}
+					</NcActionButton>
+				</NcActions>
+			</div>
 		</div>
 
 		<div class="flex flex-col gap-2 px-3 pb-3">
