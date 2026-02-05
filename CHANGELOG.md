@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.9.0] - 2026-02-05
+
+### Added
+
+- All shifts, shift exchanges and shift admin relations of a user will now be deleted when a user is disabled. Previously, this was only the case when a user was deleted.
+- The combined approval state of a shift exchange is now displayed in the upper left corner of the exchange card
+
+### Changed
+
+- There are now separate shift exchange edit buttons for each approval as well as a dedicated button to edit the comment only
+
 ## [2.8.0] - 2026-01-29
 
 ### Added
