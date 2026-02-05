@@ -434,7 +434,7 @@ final class ShiftExchangeController extends ApiController {
 	 * @param array{user?: ?boolean, admin?: ?boolean} $approveds
 	 */
 	#[NoAdminRequired]
-	#[FrontpageRoute(verb: 'PUT', url: '/api/shift-exchanges/{id}')]
+	#[FrontpageRoute(verb: 'PATCH', url: '/api/shift-exchanges/{id}')]
 	public function update(
 		int $id,
 		array $approveds,

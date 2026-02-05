@@ -52,7 +52,7 @@ export interface AdminApproved {
 
 export type Approveds = UserApproved | AdminApproved
 
-export interface ShiftExchangePutPayload extends Partial<ShiftExchangeBase> {
+export interface ShiftExchangePatchPayload extends Partial<ShiftExchangeBase> {
 	approveds: Approveds
 }
 

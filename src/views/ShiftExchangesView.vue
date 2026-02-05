@@ -45,7 +45,7 @@ import { createContext } from '../utils/createContext.ts'
 
 export interface ShiftExchangesContext {
 	create: (payload: ShiftExchangePostPayload) => Promise<ShiftExchange>
-	update: (id: number, payload: ShiftExchangePutPayload) => Promise<ShiftExchange>
+	update: (id: number, payload: ShiftExchangePatchPayload) => Promise<ShiftExchange>
 	remove: (id: number) => Promise<ShiftExchange>
 }
 
@@ -64,13 +64,13 @@ import ShiftExchangeCard from '../components/ShiftExchangeCard.vue'
 import {
 	deleteShiftExchange,
 	getShiftExchanges,
+	patchShiftExchange,
 	postShiftExchange,
-	putShiftExchange,
 } from '../db/shiftExchange.ts'
 import {
 	type ShiftExchange,
+	type ShiftExchangePatchPayload,
 	type ShiftExchangePostPayload,
-	type ShiftExchangePutPayload,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { compare } from '../utils/sort.ts'
@@ -125,9 +125,9 @@ async function create(payload: ShiftExchangePostPayload): Promise<ShiftExchange>
  */
 async function update(
 	id: number,
-	payload: ShiftExchangePutPayload,
+	payload: ShiftExchangePatchPayload,
 ): Promise<ShiftExchange> {
-	const updatedShiftExchange = await putShiftExchange(id, payload)
+	const updatedShiftExchange = await patchShiftExchange(id, payload)
 	if (updatedShiftExchange.done) {
 		pendingShiftExchanges.value = pendingShiftExchanges.value.filter(({ id }) => id !== updatedShiftExchange.id)
 		doneShiftExchanges.value.push(updatedShiftExchange)

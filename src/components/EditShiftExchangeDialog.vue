@@ -59,7 +59,7 @@ import {
 	type Approveds,
 	type ExchangeEditor,
 	type ShiftExchange,
-	type ShiftExchangePutPayload,
+	type ShiftExchangePatchPayload,
 
 	APPROVED_OPTIONS,
 	approvedTranslations,
@@ -120,7 +120,7 @@ async function onSubmit() {
 	const approveds: Approveds = editor === 'admin'
 		? { admin: approved.value }
 		: { user: approved.value }
-	const payload: ShiftExchangePutPayload = {
+	const payload: ShiftExchangePatchPayload = {
 		approveds,
 		comment: comment.value,
 	}

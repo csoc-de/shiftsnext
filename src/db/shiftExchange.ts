@@ -1,8 +1,8 @@
 import type { ErrorResponsePayload } from '../models/error.ts'
 import type {
 	ShiftExchange,
+	ShiftExchangePatchPayload,
 	ShiftExchangePostPayload,
-	ShiftExchangePutPayload,
 } from '../models/shiftExchange.ts'
 
 import axios, { type AxiosError } from '@nextcloud/axios'
@@ -62,13 +62,13 @@ export async function postShiftExchange(payload: ShiftExchangePostPayload): Prom
  * @param id The shift exchange id
  * @param payload The shift exchange
  */
-export async function putShiftExchange(
+export async function patchShiftExchange(
 	id: number,
-	payload: ShiftExchangePutPayload,
+	payload: ShiftExchangePatchPayload,
 ): Promise<ShiftExchange> {
 	try {
 		return (
-			await axios.put<ShiftExchange>(
+			await axios.patch<ShiftExchange>(
 				generateUrl(`${SHIFT_EXCHANGES_PATH}/${id}`),
 				payload,
 				{ transformResponse },
