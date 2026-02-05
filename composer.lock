@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bamarni/composer-bin-plugin",
-            "version": "1.8.3",
+            "version": "1.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bamarni/composer-bin-plugin.git",
-                "reference": "e7ef9e012667327516c24e5fad9903a3bc91389d"
+                "reference": "641d0663f5ac270b1aeec4337b7856f76204df47"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bamarni/composer-bin-plugin/zipball/e7ef9e012667327516c24e5fad9903a3bc91389d",
-                "reference": "e7ef9e012667327516c24e5fad9903a3bc91389d",
+                "url": "https://api.github.com/repos/bamarni/composer-bin-plugin/zipball/641d0663f5ac270b1aeec4337b7856f76204df47",
+                "reference": "641d0663f5ac270b1aeec4337b7856f76204df47",
                 "shasum": ""
             },
             "require": {
@@ -25,11 +25,11 @@
                 "php": "^7.2.5 || ^8.0"
             },
             "require-dev": {
-                "composer/composer": "^2.0",
+                "composer/composer": "^2.2.26",
                 "ext-json": "*",
                 "phpstan/extension-installer": "^1.1",
-                "phpstan/phpstan": "^1.8",
-                "phpstan/phpstan-phpunit": "^1.1",
+                "phpstan/phpstan": "^1.8 || ^2.0",
+                "phpstan/phpstan-phpunit": "^1.1 || ^2.0",
                 "phpunit/phpunit": "^8.5 || ^9.6 || ^10.0",
                 "symfony/console": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0",
                 "symfony/finder": "^2.8.52 || ^3.4.35 || ^4.4 || ^5.0 || ^6.0",
@@ -59,22 +59,22 @@
             ],
             "support": {
                 "issues": "https://github.com/bamarni/composer-bin-plugin/issues",
-                "source": "https://github.com/bamarni/composer-bin-plugin/tree/1.8.3"
+                "source": "https://github.com/bamarni/composer-bin-plugin/tree/1.9.1"
             },
-            "time": "2025-11-24T19:20:55+00:00"
+            "time": "2026-02-04T10:18:12+00:00"
         },
         {
             "name": "brick/math",
-            "version": "0.14.1",
+            "version": "0.14.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "f05858549e5f9d7bb45875a75583240a38a281d0"
+                "reference": "32498d5e1897e7642c0b961ace2df6d7dc9a3bc3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/f05858549e5f9d7bb45875a75583240a38a281d0",
-                "reference": "f05858549e5f9d7bb45875a75583240a38a281d0",
+                "url": "https://api.github.com/repos/brick/math/zipball/32498d5e1897e7642c0b961ace2df6d7dc9a3bc3",
+                "reference": "32498d5e1897e7642c0b961ace2df6d7dc9a3bc3",
                 "shasum": ""
             },
             "require": {
@@ -113,7 +113,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.14.1"
+                "source": "https://github.com/brick/math/tree/0.14.6"
             },
             "funding": [
                 {
@@ -121,7 +121,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-24T14:40:29+00:00"
+            "time": "2026-02-05T07:59:58+00:00"
         },
         {
             "name": "jawira/case-converter",
@@ -681,12 +681,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "c4162b6092bc6170cc6d0758ba6ee7d29d0dfbb8"
+                "reference": "258cd5fdcb59c29f421927b2cf77f48de9458a98"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c4162b6092bc6170cc6d0758ba6ee7d29d0dfbb8",
-                "reference": "c4162b6092bc6170cc6d0758ba6ee7d29d0dfbb8",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/258cd5fdcb59c29f421927b2cf77f48de9458a98",
+                "reference": "258cd5fdcb59c29f421927b2cf77f48de9458a98",
                 "shasum": ""
             },
             "conflict": {
@@ -796,6 +796,7 @@
                 "cesnet/simplesamlphp-module-proxystatistics": "<3.1",
                 "chriskacerguis/codeigniter-restserver": "<=2.7.1",
                 "chrome-php/chrome": "<1.14",
+                "ci4-cms-erp/ci4ms": "<0.28.5",
                 "civicrm/civicrm-core": ">=4.2,<4.2.9|>=4.3,<4.3.3",
                 "ckeditor/ckeditor": "<4.25",
                 "clickstorm/cs-seo": ">=6,<6.8|>=7,<7.5|>=8,<8.4|>=9,<9.3",
@@ -827,6 +828,8 @@
                 "couleurcitron/tarteaucitron-wp": "<0.3",
                 "cpsit/typo3-mailqueue": "<0.4.3|>=0.5,<0.5.1",
                 "craftcms/cms": "<=4.16.16|>=5,<=5.8.20",
+                "craftcms/commerce": ">=4.0.0.0-RC1-dev,<=4.10|>=5,<=5.5.1",
+                "craftcms/composer": ">=4.0.0.0-RC1-dev,<=4.10|>=5.0.0.0-RC1-dev,<=5.5.1",
                 "croogo/croogo": "<=4.0.7",
                 "cuyz/valinor": "<0.12",
                 "czim/file-handling": "<1.5|>=2,<2.3",
@@ -844,7 +847,7 @@
                 "derhansen/sf_event_mgt": "<4.3.1|>=5,<5.1.1|>=7,<7.4",
                 "desperado/xml-bundle": "<=0.1.7",
                 "dev-lancer/minecraft-motd-parser": "<=1.0.5",
-                "devcode-it/openstamanager": "<=2.9.4",
+                "devcode-it/openstamanager": "<=2.9.8",
                 "devgroup/dotplant": "<2020.09.14-dev",
                 "digimix/wp-svg-upload": "<=1",
                 "directmailteam/direct-mail": "<6.0.3|>=7,<7.0.3|>=8,<9.5.2",
@@ -927,18 +930,18 @@
                 "ezsystems/ezplatform-admin-ui-assets": ">=4,<4.2.1|>=5,<5.0.1|>=5.1,<5.1.1|>=5.3.0.0-beta1,<5.3.5",
                 "ezsystems/ezplatform-graphql": ">=1.0.0.0-RC1-dev,<1.0.13|>=2.0.0.0-beta1,<2.3.12",
                 "ezsystems/ezplatform-http-cache": "<2.3.16",
-                "ezsystems/ezplatform-kernel": "<1.2.5.1-dev|>=1.3,<1.3.35",
+                "ezsystems/ezplatform-kernel": "<=1.2.5|>=1.3,<1.3.35",
                 "ezsystems/ezplatform-rest": ">=1.2,<=1.2.2|>=1.3,<1.3.8",
                 "ezsystems/ezplatform-richtext": ">=2.3,<2.3.26|>=3.3,<3.3.40",
                 "ezsystems/ezplatform-solr-search-engine": ">=1.7,<1.7.12|>=2,<2.0.2|>=3.3,<3.3.15",
                 "ezsystems/ezplatform-user": ">=1,<1.0.1",
-                "ezsystems/ezpublish-kernel": "<6.13.8.2-dev|>=7,<7.5.31",
+                "ezsystems/ezpublish-kernel": "<=6.13.8.1|>=7,<7.5.31",
                 "ezsystems/ezpublish-legacy": "<=2017.12.7.3|>=2018.6,<=2019.03.5.1",
                 "ezsystems/platform-ui-assets-bundle": ">=4.2,<4.2.3",
                 "ezsystems/repository-forms": ">=2.3,<2.3.2.1-dev|>=2.5,<2.5.15",
                 "ezyang/htmlpurifier": "<=4.2",
                 "facade/ignition": "<1.16.15|>=2,<2.4.2|>=2.5,<2.5.2",
-                "facturascripts/facturascripts": "<=2025.4|==2025.11|==2025.41|==2025.43",
+                "facturascripts/facturascripts": "<2025.81",
                 "fastly/magento2": "<1.2.26",
                 "feehi/cms": "<=2.1.1",
                 "feehi/feehicms": "<=2.1.1",
@@ -1227,7 +1230,7 @@
                 "open-web-analytics/open-web-analytics": "<1.8.1",
                 "opencart/opencart": ">=0",
                 "openid/php-openid": "<2.3",
-                "openmage/magento-lts": "<20.16",
+                "openmage/magento-lts": "<20.16.1",
                 "opensolutions/vimbadmin": "<=3.0.15",
                 "opensource-workshop/connect-cms": "<1.8.7|>=2,<2.4.7",
                 "orchid/platform": ">=8,<14.43",
@@ -1305,7 +1308,7 @@
                 "prestashop/blockwishlist": ">=2,<2.1.1",
                 "prestashop/contactform": ">=1.0.1,<4.3",
                 "prestashop/gamification": "<2.3.2",
-                "prestashop/prestashop": "<8.2.3",
+                "prestashop/prestashop": "<8.2.4|>=9.0.0.0-alpha1,<9.0.3",
                 "prestashop/productcomments": "<5.0.2",
                 "prestashop/ps_checkout": "<4.4.1|>=5,<5.0.5",
                 "prestashop/ps_contactinfo": "<=3.3.2",
@@ -1316,6 +1319,7 @@
                 "processwire/processwire": "<=3.0.246",
                 "propel/propel": ">=2.0.0.0-alpha1,<=2.0.0.0-alpha7",
                 "propel/propel1": ">=1,<=1.7.1",
+                "psy/psysh": "<=0.11.22|>=0.12,<=0.12.18",
                 "pterodactyl/panel": "<1.12",
                 "ptheofan/yii2-statemachine": ">=2.0.0.0-RC1-dev,<=2",
                 "ptrofimov/beanstalk_console": "<1.7.14",
@@ -1579,7 +1583,7 @@
                 "wikimedia/parsoid": "<0.12.2",
                 "willdurand/js-translation-bundle": "<2.1.1",
                 "winter/wn-backend-module": "<1.2.4",
-                "winter/wn-cms-module": "<1.0.476|>=1.1,<1.1.11|>=1.2,<1.2.7",
+                "winter/wn-cms-module": "<=1.2.9",
                 "winter/wn-dusk-plugin": "<2.1",
                 "winter/wn-system-module": "<1.2.4",
                 "wintercms/winter": "<=1.2.3",
@@ -1688,7 +1692,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-28T22:08:32+00:00"
+            "time": "2026-02-04T22:06:32+00:00"
         }
     ],
     "aliases": [],
