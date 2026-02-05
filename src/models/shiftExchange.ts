@@ -42,15 +42,10 @@ export const approvedTranslations: ApprovedTranslations = {
 	false: t(APP_ID, 'Rejected'),
 }
 
-export interface UserApproved {
-	user: Approved
+export interface Approveds {
+	user?: Approved
+	admin?: Approved
 }
-
-export interface AdminApproved {
-	admin: Approved
-}
-
-export type Approveds = UserApproved | AdminApproved
 
 export interface ShiftExchangePatchPayload extends Partial<ShiftExchangeBase> {
 	approveds: Approveds
