@@ -144,7 +144,7 @@ When all required parties have either approved or rejected the exchange, the exc
 
 ### Calendar sync
 
-Whenever a shift is assigned, moved, deleted, transferred or exchanged, it will get synced to the _common_ calendar automatically.
+Whenever a shift is assigned, moved, deleted, transferred or exchanged, it will get synced to the _common_ calendar and — depending on the [administration settings](#calendar) — the _personal_ calendar automatically.
 
 ## Additional information
 
