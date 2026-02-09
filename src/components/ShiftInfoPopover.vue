@@ -3,7 +3,7 @@
 		noFocusTrap
 		class="absolute left-1/2 bottom-0 -translate-x-1/2"
 		:shown="visible"
-		@afterHide="visible = false">
+		@update:shown="(shown: boolean) => visible = shown">
 		<div class="flex flex-col gap-2 p-2 max-w-[300px]">
 			<div>
 				{{ groupName }}<br>
