@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace OCA\ShiftsNext\Psalm;
 
 /**
+ * @psalm-import-type SerializableGroupSerialized from GroupAlias
+ *
  * @psalm-type RepetitionFrequency = 'weekly'
  *
  * @psalm-type RepetitionBase = array{
@@ -61,6 +63,17 @@ namespace OCA\ShiftsNext\Psalm;
  *     description?: string,
  *     location?: string,
  *     categories: string,
+ * }
+ *
+ * @psalm-type ShiftTypeExtendedSerialized = array{
+ *     id: int,
+ *     group: SerializableGroupSerialized,
+ *     name: string,
+ *     description: string,
+ *     color: string,
+ *     active: bool,
+ *     repetition: Repetition,
+ *     caldav: Caldav,
  * }
  */
 final class ShiftTypeAlias {
