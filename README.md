@@ -102,13 +102,13 @@ You need to define whether shifts occur on specific days of the week or span a w
 
 _Reference date & time_, _Time zone_ and _[Interval](#frequency--interval)_ determine if shifts can be created in any given week. Furthermore, they also determine the earliest possible moment in time a shift can be created. On days a shift is determined to be _creatable_, the time part of _Reference date & time_ is used as the start time of a shift. The end time is calculated by adding the specified _Duration_ to the start time.
 
-The _Amount_ input fields set the number of occurrences a shift can be created on a specific day of week. This will be _1_ most of the time.
+The _Amount_ input fields set the maximum number of occurrences a shift of this type can be created on a specific day of week. Imagine a shift which occurs once on Mondays and once on Fridays, then you'd set the amount for Monday and Friday to `1` and leave the amount for the other days at `0`. This would allow you to create one shift instance of this type on Mondays and Fridays each. Note that the app does not force you to actually assign all the available instances, it is just an upper limit.
 
 ##### Config (Weekly by week)
 
 _Reference week_ and _[Interval](#frequency--interval)_ determine if shifts can be created for a given week. Furthermore, they also determine the earliest ISO week a shift can be created.
 
-_Amount_ sets the number of occurrences a shift can be created in a single week. This will be _1_ most of the time.
+_Amount_ sets the maximum number of occurrences a shift of this type can be created in a single week.
 
 ### Shifts
 
