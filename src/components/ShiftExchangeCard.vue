@@ -153,7 +153,8 @@ import {
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { formatRange } from '../utils/date.ts'
-import { getInitialApprovalType, getInitialGroupShiftAdminRelationsByGroup } from '../utils/initialState.ts'
+import { isShiftAdminAll } from '../utils/groupShiftAdmin.ts'
+import { getInitialApprovalType } from '../utils/initialState.ts'
 import { authUser } from '../utils/user.ts'
 
 const { shiftExchange } = defineProps<{ shiftExchange: ShiftExchange }>()
@@ -161,7 +162,6 @@ const { shiftExchange } = defineProps<{ shiftExchange: ShiftExchange }>()
 const exchangeType: ShiftExchangeType = 'shift_b' in shiftExchange ? 'regular' : 'transfer'
 
 const approvalType = getInitialApprovalType()
-const relations = getInitialGroupShiftAdminRelationsByGroup()
 
 const dateOnlyFormatOptions: Intl.DateTimeFormatOptions = {
 	dateStyle: 'short',
@@ -191,10 +191,7 @@ if ('shift_b' in shiftExchange) {
 }
 
 /** Is `true` if the logged-in user is a shift admin for shiftA's and (if applicable) shiftB's group */
-const isGroupShiftAdmin = groupIds.every((groupId) => {
-	const relation = relations.find((relation) => relation.group.id === groupId)
-	return relation?.users.some((user) => user.id === authUser.id)
-})
+const isGroupShiftAdmin = isShiftAdminAll(groupIds)
 
 const renderEditUserAButton = !shiftExchange.done && isUserA
 const renderEditUserBButton = !shiftExchange.done && isUserB
