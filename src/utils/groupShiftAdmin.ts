@@ -13,3 +13,14 @@ export function isShiftAdmin(groupId: string): boolean {
 	shiftAdminGroups ??= getInitialShiftAdminGroups()
 	return shiftAdminGroups.some(({ id }) => id === groupId)
 }
+
+/**
+ * Checks if the logged-in user is a group shift admin of all `groupIds`
+ *
+ * @param groupIds The group IDs to check
+ */
+export function isShiftAdminAll(groupIds: string[]): boolean {
+	shiftAdminGroups ??= getInitialShiftAdminGroups()
+	return groupIds
+		.every((groupId) => shiftAdminGroups.some(({ id }) => id === groupId))
+}
