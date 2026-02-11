@@ -386,7 +386,7 @@ final class ShiftExchangeController extends ApiController {
 				],
 			};
 
-			$done = !in_array(null, $requiredApprovedList, true);
+			$done = !in_array(null, $requiredApprovedList, true) || in_array(false, $requiredApprovedList, true);
 
 			$approved = !$done ? null : !in_array(false, $requiredApprovedList, true);
 
@@ -571,7 +571,7 @@ final class ShiftExchangeController extends ApiController {
 				],
 			};
 
-			$done = !in_array(null, $requiredApprovedList, true);
+			$done = !in_array(null, $requiredApprovedList, true) || in_array(false, $requiredApprovedList, true);
 
 			$approved = !$done ? null : !in_array(false, $requiredApprovedList, true);
 

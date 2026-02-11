@@ -140,7 +140,7 @@ After a shift exchange has been created, it needs to be approved by either
 - a shift admin,
 - or both (depending on the value of the [shift exchanges](#shift-exchanges) setting).
 
-When all required parties have either approved or rejected the exchange, the exchange will change its state to _done_.
+When all required parties have approved the exchange or at least one of them rejected the exchange, the exchange will change its state to _done_.
 
 ### Calendar sync
 
