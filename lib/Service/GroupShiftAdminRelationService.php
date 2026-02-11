@@ -39,13 +39,15 @@ final class GroupShiftAdminRelationService {
 	}
 
 	/**
-	 * Gets the group IDs for which the logged-in user has shift admin privileges
+	 * Gets the group IDs for which `$userId` has shift admin privileges
+	 *
+	 * @param null|string $userId If `null`, the logged-in user is used
 	 *
 	 * @return list<string>
 	 */
-	public function getShiftAdminGroupIds(): array {
+	public function getShiftAdminGroupIds(?string $userId = null): array {
 		$groupShiftAdminRelations = $this->groupShiftAdminRelationMapper->findAll(
-			userIds: [$this->userId],
+			userIds: [$userId ?? $this->userId],
 		);
 		return array_map(
 			fn ($groupShiftAdminRelation) => $groupShiftAdminRelation->getGroupId(),
@@ -54,14 +56,15 @@ final class GroupShiftAdminRelationService {
 	}
 
 	/**
-	 * Checks if the logged-in user is a group shift admin of all `$groupIds`
+	 * Checks if `$userId` is a group shift admin of all `$groupIds`
 	 *
 	 * @param string[] $groupIds
+	 * @param null|string $userId If `null`, the logged-in user is used
 	 *
 	 * @return bool
 	 */
-	public function isShiftAdminAll(array $groupIds): bool {
-		$shiftAdminGroupIds = $this->getShiftAdminGroupIds();
+	public function isShiftAdminAll(array $groupIds, ?string $userId = null): bool {
+		$shiftAdminGroupIds = $this->getShiftAdminGroupIds($userId ?? $this->userId);
 		return array_all(
 			$groupIds,
 			fn (string $groupId) => in_array($groupId, $shiftAdminGroupIds, true),
@@ -69,16 +72,17 @@ final class GroupShiftAdminRelationService {
 	}
 
 	/**
-	 * Checks if the logged-in user is a group shift admin of any of the `$groupIds`
+	 * Checks if `$userId` is a group shift admin of any of the `$groupIds`
 	 *
 	 * @param string[] $groupIds
+	 * @param null|string $userId If `null`, the logged-in user is used
 	 *
 	 * @return bool
 	 *
 	 * @psalm-suppress PossiblyUnusedMethod Currently unused
 	 */
-	public function isShiftAdminAny(array $groupIds): bool {
-		$shiftAdminGroupIds = $this->getShiftAdminGroupIds();
+	public function isShiftAdminAny(array $groupIds, ?string $userId = null): bool {
+		$shiftAdminGroupIds = $this->getShiftAdminGroupIds($userId ?? $this->userId);
 		return array_any(
 			$groupIds,
 			fn (string $groupId) => in_array($groupId, $shiftAdminGroupIds, true),
@@ -86,14 +90,15 @@ final class GroupShiftAdminRelationService {
 	}
 
 	/**
-	 * Checks if the logged-in user is a group shift admin of `$groupId`
+	 * Checks if `$userId` is a group shift admin of `$groupId`
 	 *
 	 * @param string $groupId
+	 * @param null|string $userId If `null`, the logged-in user is used
 	 *
 	 * @return bool
 	 */
-	public function isShiftAdmin(string $groupId): bool {
-		return in_array($groupId, $this->getShiftAdminGroupIds(), true);
+	public function isShiftAdmin(string $groupId, ?string $userId = null): bool {
+		return in_array($groupId, $this->getShiftAdminGroupIds($userId ?? $this->userId), true);
 	}
 
 	/**
