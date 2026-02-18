@@ -148,15 +148,13 @@
 												class="w-full"
 												type="datetime-local"
 												hideLabel
-												required
-												@update:modelValue="setByDayReference()" />
+												required />
 										</InputGroup>
 										<InputGroup>
 											<label for="shift-type-repetition-config-time-zone">{{ t(APP_ID, "Time zone") }}</label>
 											<NcTimezonePicker
 												v-model="timeZone"
-												inputId="shift-type-repetition-config-time-zone"
-												@update:modelValue="setByDayReference()" />
+												inputId="shift-type-repetition-config-time-zone" />
 										</InputGroup>
 									</template>
 									<IsoWeekDateInput
@@ -218,7 +216,7 @@ import type { Group } from '../models/group.ts'
 
 import { t } from '@nextcloud/l10n'
 import { Temporal } from 'temporal-polyfill'
-import { computed, ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
@@ -408,11 +406,7 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 	}
 }
 
-/**
- * Sets the `byDayReference` by combining the value of the date time picker
- * and time zone picker
- */
-function setByDayReference(): void {
+watchEffect(() => {
 	if (!byDayReferenceDate.value) {
 		return
 	}
@@ -420,5 +414,5 @@ function setByDayReference(): void {
 		.toZonedDateTimeISO(userTimeZone)
 		.toPlainDateTime()
 		.toZonedDateTime(timeZone.value)
-}
+})
 </script>
