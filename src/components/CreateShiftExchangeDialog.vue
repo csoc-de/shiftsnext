@@ -29,8 +29,7 @@
 								:disabled="!isShiftAdmin"
 								class="w-full"
 								:options="userAOptions"
-								:loading="userAOptionsLoading"
-								@update:modelValue="loadShiftsA()" />
+								:loading="userAOptionsLoading" />
 						</InputGroup>
 						<InputGroup>
 							<label for="date-a">{{ t(APP_ID, "Date") }}</label>
@@ -40,8 +39,7 @@
 								required
 								class="w-full"
 								type="date"
-								hideLabel
-								@change="loadShiftsA()" />
+								hideLabel />
 						</InputGroup>
 						<InputGroup>
 							<label for="shift-a"> {{ t(APP_ID, "Shift") }}</label>
@@ -52,8 +50,7 @@
 								:disabled="shiftASelectDisabled"
 								class="w-full"
 								:options="shiftAOptions"
-								:loading="shiftAOptionsLoading"
-								@update:modelValue="loadUsersB" />
+								:loading="shiftAOptionsLoading" />
 						</InputGroup>
 					</div>
 				</CustomFieldset>
@@ -72,8 +69,7 @@
 									inputId="user-b"
 									class="w-full"
 									:options="userBOptions"
-									:loading="userBOptionsLoading"
-									@update:modelValue="loadShiftsB()" />
+									:loading="userBOptionsLoading" />
 							</InputGroup>
 							<InputGroup>
 								<label for="date-b">{{ t(APP_ID, "Date") }}</label>
@@ -83,8 +79,7 @@
 									required
 									class="w-full"
 									type="date"
-									hideLabel
-									@change="loadShiftsB()" />
+									hideLabel />
 							</InputGroup>
 							<InputGroup>
 								<label for="shift-b"> {{ t(APP_ID, "Shift") }}</label>
@@ -225,11 +220,16 @@ whenever(shiftASelectDisabled, () => clearShiftSelect('A'))
 
 whenever(shiftBSelectDisabled, () => clearShiftSelect('B'))
 
+watch([userAOption, dateA], loadShiftsA)
+
+watch([userBOption, dateB], loadShiftsB)
+
 watch(shiftAOption, () => {
 	userBOptions.value = []
 	userBOption.value = undefined
 	shiftBOptions.value = []
 	shiftBOption.value = undefined
+	loadUsersB()
 })
 
 const comment = ref('')
