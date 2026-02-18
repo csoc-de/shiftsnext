@@ -281,7 +281,7 @@ const active = ref(true)
 const frequency = ref<RepetitionFrequency>('weekly')
 const interval = ref(1)
 const weeklyType = ref<RepetitionWeeklyType>('by_day')
-const byDayReference = ref(Temporal.Now.zonedDateTimeISO(userTimeZone).with({
+const byDayReferenceZdt = ref(Temporal.Now.zonedDateTimeISO(userTimeZone).with({
 	second: 0,
 	millisecond: 0,
 	microsecond: 0,
@@ -319,9 +319,9 @@ if (shiftType) {
 	weeklyType.value = shiftType.repetition.weekly_type
 
 	if (shiftType.repetition.weekly_type === 'by_day') {
-		byDayReference.value
+		byDayReferenceZdt.value
 			= Temporal.ZonedDateTime.from(shiftType.repetition.config.reference)
-		timeZone.value = byDayReference.value.timeZoneId
+		timeZone.value = byDayReferenceZdt.value.timeZoneId
 		duration.value
 			= Temporal.Duration.from(shiftType.repetition.config.duration)
 		shortDayToAmountMap.value
@@ -332,7 +332,7 @@ if (shiftType) {
 	}
 }
 
-const byDayReferenceDate = ref<Date | null>(new Date(byDayReference.value
+const byDayReferenceDate = ref<Date | null>(new Date(byDayReferenceZdt.value
 	.toPlainDateTime()
 	.toZonedDateTime(userTimeZone)
 	.epochMilliseconds))
@@ -363,7 +363,7 @@ const repetition = computed<Repetition>(() => ({
 		? {
 				weekly_type: 'by_day',
 				config: {
-					reference: byDayReference.value,
+					reference: byDayReferenceZdt.value,
 					short_day_to_amount_map: shortDayToAmountMap.value,
 					duration: duration.value,
 				},
@@ -416,7 +416,7 @@ function setByDayReference(): void {
 	if (!byDayReferenceDate.value) {
 		return
 	}
-	byDayReference.value = Temporal.Instant.fromEpochMilliseconds(byDayReferenceDate.value.valueOf())
+	byDayReferenceZdt.value = Temporal.Instant.fromEpochMilliseconds(byDayReferenceDate.value.valueOf())
 		.toZonedDateTimeISO(userTimeZone)
 		.toPlainDateTime()
 		.toZonedDateTime(timeZone.value)
