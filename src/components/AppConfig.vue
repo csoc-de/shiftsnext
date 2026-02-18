@@ -15,8 +15,7 @@
 								inputId="common-calendar"
 								:options="commonCalendarOptions"
 								required
-								class="min-w-64"
-								@update:modelValue="formValues.common_calendar_id = commonCalendarOption?.id" />
+								class="min-w-64" />
 						</InputGroup>
 						<InputGroup>
 							<label for="absence-calendar">
@@ -26,15 +25,14 @@
 								inputId="absence-calendar"
 								:options="absenceCalendarOptions"
 								required
-								class="min-w-64"
-								@update:modelValue="formValues.absence_calendar_id = absenceCalendarOption?.id" />
+								class="min-w-64" />
 						</InputGroup>
 						<InputGroup>
 							<label for="sync-to-personal-calendar">
 								{{ t(APP_ID, "Personal calendar") }}</label>
 							<NcCheckboxRadioSwitch
 								id="sync-to-personal-calendar"
-								v-model="formValues.sync_to_personal_calendar"
+								v-model="syncToPersonalCalendar"
 								type="checkbox">
 								{{ t(APP_ID, "Synchronize") }}
 							</NcCheckboxRadioSwitch>
@@ -44,7 +42,7 @@
 								{{ t(APP_ID, "Absence check") }}</label>
 							<NcCheckboxRadioSwitch
 								id="ignore-absence-for-by-week-shifts"
-								v-model="formValues.ignore_absence_for_by_week_shifts"
+								v-model="ignoreAbsenceForByWeekShifts"
 								type="checkbox">
 								{{ t(APP_ID, "Ignore for weekly shifts") }}
 							</NcCheckboxRadioSwitch>
@@ -64,8 +62,7 @@
 							inputId="exchange-approval-type"
 							:options="approvalTypeOptions"
 							:clearable="false"
-							class="min-w-64"
-							@update:modelValue="formValues.exchange_approval_type = approvalTypeOption?.id" />
+							class="min-w-64" />
 					</InputGroup>
 				</CustomFieldset>
 			</div>
@@ -127,22 +124,19 @@ whenever(
 	},
 )
 
-const formValues = ref({
-	common_calendar_id: commonCalendarOption.value?.id,
-	absence_calendar_id: absenceCalendarOption.value?.id,
-	sync_to_personal_calendar: syncToPersonalCalendar.value,
-	ignore_absence_for_by_week_shifts: ignoreAbsenceForByWeekShifts.value,
-	exchange_approval_type: approvalTypeOption.value?.id,
-})
-
 /**
  * Save app config
  */
 async function save() {
 	try {
 		saving.value = true
-		// @ts-expect-error checked by required attributes
-		await putAppConfig({ values: formValues.value })
+		await putAppConfig({ values: {
+			common_calendar_id: commonCalendarOption.value!.id,
+			absence_calendar_id: absenceCalendarOption.value!.id,
+			sync_to_personal_calendar: syncToPersonalCalendar.value,
+			ignore_absence_for_by_week_shifts: ignoreAbsenceForByWeekShifts.value,
+			exchange_approval_type: approvalTypeOption.value.id,
+		} })
 		showSavedToast()
 	} finally {
 		saving.value = false
