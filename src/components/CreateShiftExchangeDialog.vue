@@ -185,7 +185,7 @@ whenever(() => exchangeType.value === 'regular', loadShiftsB)
 
 const userAOptions = ref<NcSelectUsersOption[]>([getNcSelectUsersOption(authUser)])
 const userAOptionsLoading = ref(false)
-const userAOption = ref<NcSelectUsersOption>(userAOptions.value[0]!)
+const userAOption = ref<NcSelectUsersOption | undefined>(userAOptions.value[0]!)
 const dateA = ref<Date>()
 const shiftASelectDisabled = computed(() => !userAOption.value || !dateA.value)
 const shiftAOptions = ref<NcSelectShiftOption[]>()
