@@ -16,8 +16,7 @@
 						labelOutside
 						:clearable="false"
 						required
-						class="w-full !min-w-0"
-						@update:modelValue="groupId = group?.id ?? ''" />
+						class="w-full !min-w-0" />
 				</InputGroup>
 				<InputGroup class="sm:col-span-2">
 					<label for="shift-type-name">{{ t(APP_ID, "Name") }}</label>
@@ -215,6 +214,8 @@
 </template>
 
 <script setup lang="ts">
+import type { Group } from '../models/group.ts'
+
 import { t } from '@nextcloud/l10n'
 import { Temporal } from 'temporal-polyfill'
 import { computed, ref } from 'vue'
@@ -270,7 +271,9 @@ const dialogName = shiftType
 const frequencies = ref(REPETITION_FREQUENCIES)
 const showColorPicker = ref(false)
 
-const groupId = ref('')
+const shiftAdminGroups = getInitialShiftAdminGroups()
+
+const group = ref<Group>()
 const name = ref('')
 const description = ref('')
 const color = ref('#E40303')
@@ -302,7 +305,7 @@ const caldavLocation = ref('')
 const caldavCategories = ref('')
 
 if (shiftType) {
-	groupId.value = shiftType.group.id
+	group.value = shiftType.group
 	name.value = shiftType.name
 	description.value = shiftType.description
 	color.value = shiftType.color
@@ -328,10 +331,6 @@ if (shiftType) {
 		byWeekAmount.value = shiftType.repetition.config.amount
 	}
 }
-
-const shiftAdminGroups = getInitialShiftAdminGroups()
-
-const group = ref(shiftAdminGroups.find(({ id }) => id === groupId.value))
 
 const byDayReferenceDate = ref<Date | null>(new Date(byDayReference.value
 	.toPlainDateTime()
@@ -399,7 +398,7 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 	if (type === 'post') {
 		const payload: ShiftTypePostPayload = {
 			...common,
-			group_id: groupId.value,
+			group_id: group.value!.id,
 			repetition: repetition.value,
 		}
 		return payload as ShiftTypePayload<T>
