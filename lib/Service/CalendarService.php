@@ -208,7 +208,7 @@ final class CalendarService {
 		ShiftExtended $shift,
 		bool $isPersonal,
 	): string {
-		$shiftTypeGroupId = $shift->shiftType->group->getGID();
+		$shiftTypeGroupDisplayName = $shift->shiftType->group->getDisplayName();
 		$shiftTypeName = $shift->shiftType->name;
 		$description = $shift->shiftType->caldav['description'] ?? '';
 		$location = $shift->shiftType->caldav['location'] ?? '';
@@ -225,7 +225,7 @@ final class CalendarService {
 			fn ($category) => $category !== '',
 		);
 
-		$summary = "$shiftTypeGroupId $shiftTypeName";
+		$summary = "$shiftTypeGroupDisplayName $shiftTypeName";
 		if (!$isPersonal) {
 			$userDisplayName = $shift->user->getDisplayName();
 			$summary .= " ($userDisplayName)";

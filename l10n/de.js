@@ -35,7 +35,7 @@ OC.L10N.register(
 		"App for managing shifts": "App zum Schichten verwalten",
 		"Manage your shifts and sync them to your calendar": "Verwalte deine Schichten und synchronisiere sie mit deinem Kalender",
 		"Shifts": "Schichten",
-		"Types": "Typen",
+		"Types": "Schicht-Typen",
 		"Exchanges": "Tausche",
 		"App config": "App-Konfiguration",
 		"Calendar": "Kalender",
