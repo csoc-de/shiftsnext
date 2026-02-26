@@ -31,7 +31,7 @@
     "temporal-polyfill": "^0.3.0",
     "vue": "^3.5.27",
     "vue-material-design-icons": "^5.3.1",
-    "vue-router": "^5.0.2"
+    "vue-router": "^5.0.3"
   },
   "devDependencies": {
     "@nextcloud/browserslist-config": "^3.1.2",
@@ -39,12 +39,12 @@
     "@nextcloud/stylelint-config": "^3.2.1",
     "@nextcloud/vite-config": "^2.5.2",
     "@vue/tsconfig": "^0.8.1",
-    "autoprefixer": "^10.4.24",
+    "autoprefixer": "^10.4.27",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
-    "vue-tsc": "^3.2.4"
+    "vue-tsc": "^3.2.5"
   },
   "engines": {
     "node": "^20.0.0",
