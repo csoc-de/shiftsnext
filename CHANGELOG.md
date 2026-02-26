@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.10.0] - 2026-02-26
+
+### Added
+
+- Support Nextcloud version 33
+
+### Changed
+
+- Improve _Calendar sync_ section in the README
+- Improve explanation of the _Amount_ input fields of the shift type config in the README
+- Shift exchanges are now immediately marked as _done_ as soon as one of the required approvals is rejected. Previously, exchanges weren't marked as _done_ as long as at least one required approval was still pending.
+- The navigation items for shift types and shift exchanges now use a more detailed label 
+
+### Fixed
+
+- Prevent shift/type info popover glitch on shifts view
+- The summary of the synchronized shift Calendar events now display the Nextcloud group's display name instead of the group's ID
+
 ## [2.9.0] - 2026-02-05
 
 ### Added
