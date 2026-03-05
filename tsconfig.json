@@ -3,5 +3,6 @@
   "include": ["./src/**/*.ts", "./src/**/*.vue"],
   "compilerOptions": {
     "outDir": "./js/",
+	"noUncheckedIndexedAccess": true,
   }
 }
