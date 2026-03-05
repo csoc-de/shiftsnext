@@ -114,8 +114,8 @@ final class ShiftExchangeApprovalMapper extends QBMapper {
 	 */
 	public function updateById(
 		int|ShiftExchangeApproval $shiftExchangeApproval,
+		?bool $approved,
 		?string $userId = null,
-		?bool $approved = null,
 	): ShiftExchangeApproval {
 		$shiftExchangeApproval = $this->findById($shiftExchangeApproval);
 		if ($userId !== null) {

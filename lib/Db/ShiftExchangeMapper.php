@@ -144,9 +144,9 @@ final class ShiftExchangeMapper extends QBMapper {
 	 */
 	public function updateById(
 		int|ShiftExchange $shiftExchange,
+		?bool $approved,
 		?string $comment = null,
 		?bool $done = null,
-		?bool $approved = null,
 	): ShiftExchange {
 		$shiftExchange = $this->findById($shiftExchange);
 		if ($comment !== null) {

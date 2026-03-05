@@ -519,13 +519,13 @@ final class ShiftExchangeController extends ApiController {
 					case $userAId:
 						$userAApproval = $this->shiftExchangeApprovalMapper->updateById(
 							$userAApproval,
-							approved: $approveds['user'],
+							$approveds['user'],
 						);
 						break;
 					case $userBId:
 						$userBApproval = $this->shiftExchangeApprovalMapper->updateById(
 							$userBApproval,
-							approved: $approveds['user'],
+							$approveds['user'],
 						);
 						break;
 					default:
@@ -540,8 +540,8 @@ final class ShiftExchangeController extends ApiController {
 				if ($isGroupShiftAdmin) {
 					$adminApproval = $this->shiftExchangeApprovalMapper->updateById(
 						$adminApproval,
-						$this->userId,
 						$approveds['admin'],
+						$this->userId,
 					);
 				} else {
 					throw new HttpException(
@@ -577,9 +577,9 @@ final class ShiftExchangeController extends ApiController {
 
 			$shiftExchange = $this->shiftExchangeMapper->updateById(
 				$shiftExchange,
+				$approved,
 				$comment,
 				$done,
-				$approved
 			);
 
 			if ($approved) {
