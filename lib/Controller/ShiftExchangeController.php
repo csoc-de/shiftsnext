@@ -520,12 +520,14 @@ final class ShiftExchangeController extends ApiController {
 						$userAApproval = $this->shiftExchangeApprovalMapper->updateById(
 							$userAApproval,
 							$approveds['user'],
+							$userAApproval->getUserId(),
 						);
 						break;
 					case $userBId:
 						$userBApproval = $this->shiftExchangeApprovalMapper->updateById(
 							$userBApproval,
 							$approveds['user'],
+							$userBApproval->getUserId(),
 						);
 						break;
 					default:
