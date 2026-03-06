@@ -42,13 +42,14 @@ export const approvedTranslations: ApprovedTranslations = {
 	false: t(APP_ID, 'Rejected'),
 }
 
-export interface Approveds {
-	user?: Approved
-	admin?: Approved
+export interface ApprovalUpdate {
+	approved?: Approved
 }
 
 export interface ShiftExchangePatchPayload extends Partial<ShiftExchangeBase> {
-	approveds: Approveds
+	user_a_approval?: ApprovalUpdate
+	user_b_approval?: ApprovalUpdate
+	admin_approval?: ApprovalUpdate
 }
 
 export const EXCHANGE_TYPES = ['regular', 'transfer'] as const
@@ -89,7 +90,7 @@ export type ShiftExchange = RegularShiftExchange | TransferShiftExchange
 
 // Misc
 
-export type ApprovalDiscriminator = 'userA' | 'userB' | 'admin'
+export type ApprovalDiscriminator = 'user_a' | 'user_b' | 'admin'
 
 // Component-related
 

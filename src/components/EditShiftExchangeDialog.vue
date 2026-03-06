@@ -57,7 +57,6 @@ import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
 	type ApprovalDiscriminator,
 	type Approved,
-	type Approveds,
 	type ShiftExchange,
 	type ShiftExchangePatchPayload,
 
@@ -97,17 +96,10 @@ const approvedString = computed<`${Approved}`>({
 	},
 })
 
-switch (discriminator) {
-	case 'userA':
-		approved.value = shiftExchange.user_a_approval.approved
-		break
-	case 'userB':
-		approved.value = shiftExchange.user_b_approval.approved
-		break
-	case 'admin':
-		approved.value = shiftExchange.admin_approval.approved
-		break
+if (discriminator) {
+	approved.value = shiftExchange[`${discriminator}_approval`].approved
 }
+
 comment.value = shiftExchange.comment
 
 const previousApproved = approved.value
@@ -116,13 +108,9 @@ const previousApproved = approved.value
  * Handle the form submission
  */
 async function onSubmit() {
-	const approveds: Approveds = {}
+	const payload: ShiftExchangePatchPayload = { comment: comment.value }
 	if (discriminator && previousApproved !== approved.value) {
-		approveds[discriminator === 'admin' ? 'admin' : 'user'] = approved.value
-	}
-	const payload: ShiftExchangePatchPayload = {
-		approveds,
-		comment: comment.value,
+		payload[`${discriminator}_approval`] = { approved: approved.value }
 	}
 	try {
 		saving.value = true

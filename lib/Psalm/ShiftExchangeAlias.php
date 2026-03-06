@@ -29,6 +29,10 @@ namespace OCA\ShiftsNext\Psalm;
  * }
  *
  * @psalm-type ShiftExchangeExtendedSerialized = RegularShiftExchangeExtendedSerialized | TransferShiftExchangeExtendedSerialized
+ *
+ * @psalm-type ApprovalUpdate = array{
+ *     approved?: null|bool,
+ * }
  */
 final class ShiftExchangeAlias {
 }

@@ -14,6 +14,7 @@ use OCA\ShiftsNext\Exception\ShiftExchangeApprovalNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftExchangeNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
+use OCA\ShiftsNext\Psalm\ShiftExchangeAlias;
 use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\CalendarChangeService;
 use OCA\ShiftsNext\Service\CalendarService;
@@ -37,6 +38,9 @@ use function array_key_exists;
 use function array_walk;
 use function in_array;
 
+/**
+ * @psalm-import-type ApprovalUpdate from ShiftExchangeAlias
+ */
 final class ShiftExchangeController extends ApiController {
 	public function __construct(
 		private IL10N $l,
@@ -431,13 +435,17 @@ final class ShiftExchangeController extends ApiController {
 	}
 
 	/**
-	 * @param array{user?: ?boolean, admin?: ?boolean} $approveds
+	 * @param ApprovalUpdate $user_a_approval
+	 * @param ApprovalUpdate $user_b_approval
+	 * @param ApprovalUpdate $admin_approval
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'PATCH', url: '/api/shift-exchanges/{id}')]
 	public function update(
 		int $id,
-		array $approveds,
+		array $user_a_approval = [],
+		array $user_b_approval = [],
+		array $admin_approval = [],
 		?string $comment = null,
 	): JSONResponse {
 		try {
@@ -449,17 +457,6 @@ final class ShiftExchangeController extends ApiController {
 						'Cannot update a shift exchange that is already done',
 						null,
 						$this->l->t('Cannot update a shift exchange that has already been marked as done.'),
-					);
-				}
-				if (
-					array_key_exists('user', $approveds)
-					&& array_key_exists('admin', $approveds)
-				) {
-					throw new HttpException(
-						Http::STATUS_BAD_REQUEST,
-						'approveds.user and approveds.admin are mutually exclusive',
-						null,
-						$this->l->t('You cannot update the participant and admin approval at the same time.'),
 					);
 				}
 
@@ -514,38 +511,32 @@ final class ShiftExchangeController extends ApiController {
 			$userBApproval = $this->shiftExchangeApprovalMapper->findById($shiftExchange->getUserBApprovalId());
 			$adminApproval = $this->shiftExchangeApprovalMapper->findById($shiftExchange->getAdminApprovalId());
 
-			if (array_key_exists('user', $approveds)) {
-				switch ($this->userId) {
-					case $userAId:
-						$userAApproval = $this->shiftExchangeApprovalMapper->updateById(
-							$userAApproval,
-							$approveds['user'],
-							$userAApproval->getUserId(),
-						);
-						break;
-					case $userBId:
-						$userBApproval = $this->shiftExchangeApprovalMapper->updateById(
-							$userBApproval,
-							$approveds['user'],
-							$userBApproval->getUserId(),
-						);
-						break;
-					default:
-						throw new HttpException(
-							Http::STATUS_FORBIDDEN,
-							'The participant approval can only be updated by the participating users',
-							null,
-							$this->l->t('The participant approval can only be updated by the participating users.'),
-						);
+			$participantException = new HttpException(
+				Http::STATUS_FORBIDDEN,
+				'The participant approval can only be updated by the participating users',
+				null,
+				$this->l->t('The participant approval can only be updated by the participating users.'),
+			);
+			if (array_key_exists('approved', $user_a_approval)) {
+				if ($this->userId !== $userAId) {
+					throw $participantException;
 				}
-			} elseif (array_key_exists('admin', $approveds)) {
-				if ($isGroupShiftAdmin) {
-					$adminApproval = $this->shiftExchangeApprovalMapper->updateById(
-						$adminApproval,
-						$approveds['admin'],
-						$this->userId,
-					);
-				} else {
+				$userAApproval = $this->shiftExchangeApprovalMapper->updateById(
+					$userAApproval,
+					$user_a_approval['approved'],
+					$userAApproval->getUserId(),
+				);
+			} elseif (array_key_exists('approved', $user_b_approval)) {
+				if ($this->userId !== $userBId) {
+					throw $participantException;
+				}
+				$userBApproval = $this->shiftExchangeApprovalMapper->updateById(
+					$userBApproval,
+					$user_b_approval['approved'],
+					$userBApproval->getUserId(),
+				);
+			} elseif (array_key_exists('approved', $admin_approval)) {
+				if (!$isGroupShiftAdmin) {
 					throw new HttpException(
 						Http::STATUS_FORBIDDEN,
 						'The admin approval can only be updated by appropriate group shift admins',
@@ -553,8 +544,12 @@ final class ShiftExchangeController extends ApiController {
 						$this->l->t('The admin approval can only be updated by appropriate group shift admins.'),
 					);
 				}
+				$adminApproval = $this->shiftExchangeApprovalMapper->updateById(
+					$adminApproval,
+					$admin_approval['approved'],
+					$this->userId,
+				);
 			}
-
 
 			$approvalType = $this->configService->getExchangeApprovalType();
 

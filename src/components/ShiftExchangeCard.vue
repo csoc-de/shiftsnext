@@ -45,7 +45,7 @@
 						class="float-right"
 						:approved="shiftExchange.user_a_approval.approved"
 						:isButton="renderEditUserAButton"
-						@click="renderEditUserAButton && openDialog('userA')" />
+						@click="renderEditUserAButton && openDialog('user_a')" />
 					<div>{{ shiftExchange.user_a_approval.user?.display_name }}</div>
 					<div>{{ shiftExchange.shift_a.shift_type.group.display_name }}</div>
 					<div>{{ shiftExchange.shift_a.shift_type.name }}</div>
@@ -67,7 +67,7 @@
 							class="float-right"
 							:approved="shiftExchange.user_b_approval.approved"
 							:isButton="renderEditUserBButton"
-							@click="renderEditUserBButton && openDialog('userB')" />
+							@click="renderEditUserBButton && openDialog('user_b')" />
 						<div>{{ shiftExchange.user_b_approval.user?.display_name }}</div>
 						<div>{{ shiftExchange.shift_b.shift_type.group.display_name }}</div>
 						<div>{{ shiftExchange.shift_b.shift_type.name }}</div>
@@ -87,7 +87,7 @@
 							class="float-right"
 							:approved="shiftExchange.user_b_approval.approved"
 							:isButton="renderEditUserBButton"
-							@click="renderEditUserBButton && openDialog('userB')" />
+							@click="renderEditUserBButton && openDialog('user_b')" />
 						<div>{{ shiftExchange.user_b_approval.user?.display_name }}</div>
 					</template>
 				</div>
