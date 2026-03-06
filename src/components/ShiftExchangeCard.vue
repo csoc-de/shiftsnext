@@ -126,7 +126,7 @@
 		<EditShiftExchangeDialog
 			v-if="editDialogMounted"
 			:shiftExchange="shiftExchange"
-			:editor="editor"
+			:discriminator="discriminator"
 			@close="closeDialog()" />
 	</div>
 </template>
@@ -145,7 +145,7 @@ import DelayBox from './DelayBox.vue'
 import EditShiftExchangeDialog from './EditShiftExchangeDialog.vue'
 import ShiftExchangeApprovedStatus from './ShiftExchangeApprovedStatus.vue'
 import {
-	type ExchangeEditor,
+	type ApprovalDiscriminator,
 	type ShiftExchange,
 	type ShiftExchangeType,
 
@@ -179,7 +179,7 @@ const editDialogMounted = ref(false)
 
 const deleting = ref(false)
 
-const editor = ref<ExchangeEditor>()
+const discriminator = ref<ApprovalDiscriminator>()
 
 const isUserA = authUser.id === shiftExchange.user_a_approval.user?.id
 const isUserB = authUser.id === shiftExchange.user_b_approval.user?.id
@@ -202,10 +202,11 @@ const renderDeleteButton = (!shiftExchange.done && (isUserA || isUserB)) || isGr
 /**
  * Opens the edit dialog
  *
- * @param newEditor The user who is editing the shift exchange
+ * @param newDiscriminator Determines the editable approval in the edit dialog.
+ * If `undefined`, the dialog only allows to edit the comment.
  */
-function openDialog(newEditor?: ExchangeEditor) {
-	editor.value = newEditor
+function openDialog(newDiscriminator?: ApprovalDiscriminator) {
+	discriminator.value = newDiscriminator
 	editDialogMounted.value = true
 }
 

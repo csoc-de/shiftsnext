@@ -6,7 +6,7 @@
 			id="shift-exchange-form"
 			class="flex flex-col gap-2"
 			@submit.prevent="onSubmit">
-			<InputGroup v-if="editor">
+			<InputGroup v-if="discriminator">
 				<div>{{ approvalLabel }}</div>
 				<NcRadioGroup
 					v-model="approvedString"
@@ -55,9 +55,9 @@ import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import InputGroup from './InputGroup.vue'
 import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
+	type ApprovalDiscriminator,
 	type Approved,
 	type Approveds,
-	type ExchangeEditor,
 	type ShiftExchange,
 	type ShiftExchangePatchPayload,
 
@@ -66,12 +66,13 @@ import {
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 
-const { shiftExchange, editor = undefined } = defineProps<{
+const { shiftExchange, discriminator = undefined } = defineProps<{
 	shiftExchange: ShiftExchange
 	/**
-	 * If `undefined`, the user can only update the comment
+	 * Determines the editable approval.
+	 * If `undefined`, only the comment can be edited.
 	 */
-	editor?: ExchangeEditor
+	discriminator?: ApprovalDiscriminator
 }>()
 
 const emit = defineEmits<{ close: [] }>()
@@ -80,7 +81,7 @@ const { update } = injectShiftExchangesContext()
 
 const saving = ref(false)
 
-const approvalLabel = editor === 'admin'
+const approvalLabel = discriminator === 'admin'
 	? t(APP_ID, 'Admin approval')
 	: t(APP_ID, 'Participant approval')
 
@@ -96,7 +97,7 @@ const approvedString = computed<`${Approved}`>({
 	},
 })
 
-switch (editor) {
+switch (discriminator) {
 	case 'userA':
 		approved.value = shiftExchange.user_a_approval.approved
 		break
@@ -116,8 +117,8 @@ const previousApproved = approved.value
  */
 async function onSubmit() {
 	const approveds: Approveds = {}
-	if (editor && previousApproved !== approved.value) {
-		approveds[editor === 'admin' ? 'admin' : 'user'] = approved.value
+	if (discriminator && previousApproved !== approved.value) {
+		approveds[discriminator === 'admin' ? 'admin' : 'user'] = approved.value
 	}
 	const payload: ShiftExchangePatchPayload = {
 		approveds,

@@ -89,9 +89,7 @@ export type ShiftExchange = RegularShiftExchange | TransferShiftExchange
 
 // Misc
 
-export type ExchangeParticipant = 'userA' | 'userB'
-
-export type ExchangeEditor = ExchangeParticipant | 'admin'
+export type ApprovalDiscriminator = 'userA' | 'userB' | 'admin'
 
 // Component-related
 
