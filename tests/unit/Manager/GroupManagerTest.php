@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Tests;
 
-use OC;
-use OCA\ShiftsNext\AppInfo\Application;
 use OCP\IGroupManager;
 use OCP\IUserManager;
+use OCP\Server;
 use Test\TestCase;
 
 use function array_walk;
@@ -34,10 +33,8 @@ class GroupManagerTest extends TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		OC::$server->getAppManager()->enableApp(Application::APP_ID);
-
-		$this->groupManager = OC::$server->get(IGroupManager::class);
-		$this->userManager = OC::$server->get(IUserManager::class);
+		$this->groupManager = Server::get(IGroupManager::class);
+		$this->userManager = Server::get(IUserManager::class);
 	}
 
 	public function testCreateGroups() {

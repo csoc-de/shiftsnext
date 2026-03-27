@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Tests;
 
-use OC;
-use OCA\ShiftsNext\AppInfo\Application;
 use OCA\ShiftsNext\Db\ShiftExchangeApprovalMapper;
+use OCP\Server;
 use Test\TestCase;
 
 /**
@@ -28,9 +27,7 @@ class ShiftExchangeApprovalMapperTest extends TestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		OC::$server->getAppManager()->enableApp(Application::APP_ID);
-
-		$this->mapper = OC::$server->get(ShiftExchangeApprovalMapper::class);
+		$this->mapper = Server::get(ShiftExchangeApprovalMapper::class);
 	}
 
 	public function testCreate() {
