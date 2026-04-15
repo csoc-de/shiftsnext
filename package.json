@@ -18,7 +18,7 @@
     "extends @nextcloud/browserslist-config"
   ],
   "dependencies": {
-    "@nextcloud/auth": "^2.5.3",
+    "@nextcloud/auth": "^2.6.0",
     "@nextcloud/axios": "^2.5.2",
     "@nextcloud/dialogs": "^7.3.0",
     "@nextcloud/initial-state": "^3.0.0",
@@ -39,7 +39,7 @@
     "@nextcloud/stylelint-config": "^3.2.1",
     "@nextcloud/vite-config": "^2.5.2",
     "@vue/tsconfig": "^0.9.1",
-    "autoprefixer": "^10.4.27",
+    "autoprefixer": "^10.5.0",
     "postcss": "^8.5.9",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3",
