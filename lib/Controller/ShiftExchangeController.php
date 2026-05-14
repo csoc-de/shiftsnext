@@ -40,6 +40,7 @@ use function in_array;
 
 /**
  * @psalm-import-type ApprovalUpdate from ShiftExchangeAlias
+ * @psalm-import-type AdminApprovalUpdate from ShiftExchangeAlias
  */
 final class ShiftExchangeController extends ApiController {
 	public function __construct(
@@ -133,6 +134,7 @@ final class ShiftExchangeController extends ApiController {
 		string $comment,
 		?int $shift_b_id = null,
 		?string $transfer_to_user_id = null,
+		?string $admin_approval_user_id = null,
 	): JSONResponse {
 		try {
 			try {
@@ -169,6 +171,21 @@ final class ShiftExchangeController extends ApiController {
 						'You can create a shift exchange for other users only if you have the appropriate shift admin privileges',
 						null,
 						$this->l->t('You do not have permissions to create shift exchanges for all specified shifts.'),
+					);
+				}
+				if (
+					$admin_approval_user_id !== null
+					&& !$this->groupShiftAdminRelationService->isShiftAdminAll($groupIds, $admin_approval_user_id)
+				) {
+					$shiftAdmin = $this->userService->get($admin_approval_user_id);
+					throw new HttpException(
+						Http::STATUS_UNPROCESSABLE_ENTITY,
+						"User '$admin_approval_user_id' is not a shift admin for all specified shifts.",
+						null,
+						$this->l->t(
+							'%1$s is not a shift admin for all specified shifts.',
+							[$shiftAdmin->getDisplayName()]
+						),
 					);
 				}
 			} catch (ShiftNotFoundException $e) {
@@ -369,8 +386,8 @@ final class ShiftExchangeController extends ApiController {
 				$this->userId === $userBId ? true : null,
 			);
 			$adminApproval = $this->shiftExchangeApprovalMapper->create(
-				$isGroupShiftAdmin ? $this->userId : null,
-				$isGroupShiftAdmin ? true : null,
+				$admin_approval_user_id,
+				$admin_approval_user_id === $this->userId ? true : null,
 			);
 
 			$approvalType = $this->configService->getExchangeApprovalType();
@@ -437,7 +454,7 @@ final class ShiftExchangeController extends ApiController {
 	/**
 	 * @param ApprovalUpdate $user_a_approval
 	 * @param ApprovalUpdate $user_b_approval
-	 * @param ApprovalUpdate $admin_approval
+	 * @param AdminApprovalUpdate $admin_approval
 	 */
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'PATCH', url: '/api/shift-exchanges/{id}')]
@@ -506,10 +523,45 @@ final class ShiftExchangeController extends ApiController {
 					$this->l->t('You do not have permissions to update this shift exchange.'),
 				);
 			}
+			if (
+				isset($admin_approval['user_id'])
+				&& !$this->groupShiftAdminRelationService->isShiftAdminAll($groupIds, $admin_approval['user_id'])
+			) {
+				$shiftAdmin = $this->userService->get($admin_approval['user_id']);
+				throw new HttpException(
+					Http::STATUS_UNPROCESSABLE_ENTITY,
+					"User '{$admin_approval['user_id']}' is not a shift admin for all specified shifts.",
+					null,
+					$this->l->t(
+						'%1$s is not a shift admin for all specified shifts.',
+						[$shiftAdmin->getDisplayName()]
+					),
+				);
+			}
 
 			$userAApproval = $this->shiftExchangeApprovalMapper->findById($shiftExchange->getUserAApprovalId());
 			$userBApproval = $this->shiftExchangeApprovalMapper->findById($shiftExchange->getUserBApprovalId());
 			$adminApproval = $this->shiftExchangeApprovalMapper->findById($shiftExchange->getAdminApprovalId());
+
+			$hasApprovalAdminChanged
+				= array_key_exists('user_id', $admin_approval)
+					&& $admin_approval['user_id'] !== $adminApproval->getUserId();
+
+			if ($hasApprovalAdminChanged) {
+				if ($adminApproval->getApproved() === false) {
+					throw new HttpException(
+						Http::STATUS_FORBIDDEN,
+						'Changing the preferred shift admin is not allowed if a shift admin has already rejected the exchange',
+						null,
+						$this->l->t('Changing the preferred shift admin is not allowed if a shift admin has already rejected the exchange.'),
+					);
+				}
+				$adminApproval = $this->shiftExchangeApprovalMapper->updateById(
+					$adminApproval,
+					$admin_approval['user_id'] === $this->userId ? true : null,
+					$admin_approval['user_id'],
+				);
+			}
 
 			$participantException = new HttpException(
 				Http::STATUS_FORBIDDEN,

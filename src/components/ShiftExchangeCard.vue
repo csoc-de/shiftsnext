@@ -13,13 +13,13 @@
 					:inline="2"
 					class="float-right">
 					<NcActionButton
-						v-if="renderCommentButton"
+						v-if="renderEditButton"
 						closeAfterClick
 						@click="openDialog()">
 						<template #icon>
-							<Comment :size="20" />
+							<Pencil :size="20" />
 						</template>
-						{{ t(APP_ID, "Comment") }}
+						{{ t(APP_ID, "Edit") }}
 					</NcActionButton>
 					<NcActionButton
 						v-if="renderDeleteButton"
@@ -44,8 +44,8 @@
 						v-if="approvalType !== 'admin'"
 						class="float-right"
 						:approved="shiftExchange.user_a_approval.approved"
-						:isButton="renderEditUserAButton"
-						@click="renderEditUserAButton && openDialog('user_a')" />
+						:isButton="renderEditUserAApprovalButton"
+						@click="renderEditUserAApprovalButton && openDialog('user_a')" />
 					<div>{{ shiftExchange.user_a_approval.user?.display_name }}</div>
 					<div>{{ shiftExchange.shift_a.shift_type.group.display_name }}</div>
 					<div>{{ shiftExchange.shift_a.shift_type.name }}</div>
@@ -66,8 +66,8 @@
 							v-if="approvalType !== 'admin'"
 							class="float-right"
 							:approved="shiftExchange.user_b_approval.approved"
-							:isButton="renderEditUserBButton"
-							@click="renderEditUserBButton && openDialog('user_b')" />
+							:isButton="renderEditUserBApprovalButton"
+							@click="renderEditUserBApprovalButton && openDialog('user_b')" />
 						<div>{{ shiftExchange.user_b_approval.user?.display_name }}</div>
 						<div>{{ shiftExchange.shift_b.shift_type.group.display_name }}</div>
 						<div>{{ shiftExchange.shift_b.shift_type.name }}</div>
@@ -86,8 +86,8 @@
 							v-if="approvalType !== 'admin'"
 							class="float-right"
 							:approved="shiftExchange.user_b_approval.approved"
-							:isButton="renderEditUserBButton"
-							@click="renderEditUserBButton && openDialog('user_b')" />
+							:isButton="renderEditUserBApprovalButton"
+							@click="renderEditUserBApprovalButton && openDialog('user_b')" />
 						<div>{{ shiftExchange.user_b_approval.user?.display_name }}</div>
 					</template>
 				</div>
@@ -100,8 +100,11 @@
 					<span>{{ t(APP_ID, "Admin approval") }}:</span>
 					<ShiftExchangeApprovedStatus
 						:approved="shiftExchange.admin_approval.approved"
-						:isButton="renderEditAdminButton"
-						@click="renderEditAdminButton && openDialog('admin')" />
+						:isButton="renderEditAdminApprovalButton"
+						@click="renderEditAdminApprovalButton && openDialog('admin')" />
+					<span v-if="shiftExchange.admin_approval.user">
+						{{ shiftExchange.admin_approval.user.display_name }}
+					</span>
 				</div>
 
 				<div
@@ -137,9 +140,9 @@ import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 // @ts-expect-error package has no types
-import Comment from 'vue-material-design-icons/Comment.vue'
-// @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
+// @ts-expect-error package has no types
+import Pencil from 'vue-material-design-icons/Pencil.vue'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import DelayBox from './DelayBox.vue'
 import EditShiftExchangeDialog from './EditShiftExchangeDialog.vue'
@@ -193,17 +196,18 @@ if ('shift_b' in shiftExchange) {
 /** Is `true` if the logged-in user is a shift admin for shiftA's and (if applicable) shiftB's group */
 const isGroupShiftAdmin = isShiftAdminAll(groupIds)
 
-const renderEditUserAButton = !shiftExchange.done && isUserA
-const renderEditUserBButton = !shiftExchange.done && isUserB
-const renderEditAdminButton = !shiftExchange.done && isGroupShiftAdmin
-const renderCommentButton = !shiftExchange.done && (isUserA || isUserB || isGroupShiftAdmin)
+const renderEditUserAApprovalButton = !shiftExchange.done && isUserA
+const renderEditUserBApprovalButton = !shiftExchange.done && isUserB
+const renderEditAdminApprovalButton = !shiftExchange.done && isGroupShiftAdmin
+const renderEditButton = !shiftExchange.done && (isUserA || isUserB || isGroupShiftAdmin)
 const renderDeleteButton = (!shiftExchange.done && (isUserA || isUserB)) || isGroupShiftAdmin
 
 /**
  * Opens the edit dialog
  *
  * @param newDiscriminator Determines the editable approval in the edit dialog.
- * If `undefined`, the dialog only allows to edit the comment.
+ * If `undefined`, the dialog only allows to edit the comment as well as the
+ * user ID of the admin approval.
  */
 function openDialog(newDiscriminator?: ApprovalDiscriminator) {
 	discriminator.value = newDiscriminator

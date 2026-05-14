@@ -17,6 +17,7 @@ export interface ShiftExchangeBase {
 
 export interface ShiftExchangePostPayloadBase extends ShiftExchangeBase {
 	shift_a_id: number
+	admin_approval_user_id?: null | string
 }
 
 export interface RegularShiftExchangePostPayload extends ShiftExchangePostPayloadBase {
@@ -46,10 +47,14 @@ export interface ApprovalUpdate {
 	approved?: Approved
 }
 
+export interface AdminApprovalUpdate extends ApprovalUpdate {
+	user_id?: string | null
+}
+
 export interface ShiftExchangePatchPayload extends Partial<ShiftExchangeBase> {
 	user_a_approval?: ApprovalUpdate
 	user_b_approval?: ApprovalUpdate
-	admin_approval?: ApprovalUpdate
+	admin_approval?: AdminApprovalUpdate
 }
 
 export const EXCHANGE_TYPES = ['regular', 'transfer'] as const

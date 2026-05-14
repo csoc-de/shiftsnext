@@ -14,7 +14,7 @@
 					:label="exchangeTypeTranslations[type]"
 					:value="type" />
 			</NcRadioGroup>
-			<div class="grid grid-cols-2 gap-4">
+			<div class="grid grid-cols-2 gap-2">
 				<CustomFieldset class="col-span-2 md:col-span-1">
 					<template #legend>
 						A
@@ -115,6 +115,16 @@
 						resize="vertical"
 						labelOutside />
 				</InputGroup>
+				<InputGroup
+					v-if="approvalType !== 'users'"
+					class="col-span-2">
+					<label for="shift-admin"> {{ t(APP_ID, "Require admin approval from") }}</label>
+					<NcSelectUsers
+						v-model="shiftAdminOption"
+						inputId="shift-admin"
+						class="w-full"
+						:options="shiftAdminOptions" />
+				</InputGroup>
 			</div>
 		</form>
 
@@ -166,7 +176,8 @@ import {
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getIsoCalendarDate } from '../utils/date.ts'
-import { getInitialIsShiftAdmin } from '../utils/initialState.ts'
+import { getShiftAdmins } from '../utils/groupShiftAdmin.ts'
+import { getInitialApprovalType, getInitialIsShiftAdmin } from '../utils/initialState.ts'
 import { getNcSelectShiftOption, getNcSelectUsersOption } from '../utils/nextcloudVue.ts'
 import { compare } from '../utils/sort.ts'
 import { authUser } from '../utils/user.ts'
@@ -176,6 +187,8 @@ const emit = defineEmits<{ close: [] }>()
 const { create } = injectShiftExchangesContext()
 
 const isShiftAdmin = getInitialIsShiftAdmin()
+
+const approvalType = getInitialApprovalType()
 
 const saving = ref(false)
 
@@ -200,6 +213,23 @@ const shiftBSelectDisabled = computed(() => !userBOption.value || !dateB.value)
 const shiftBOptions = ref<NcSelectShiftOption[]>()
 const shiftBOptionsLoading = ref(false)
 const shiftBOption = ref<NcSelectShiftOption>()
+
+const shiftAdminOptions = ref<NcSelectUsersOption[]>([])
+const shiftAdminOption = ref<NcSelectUsersOption>()
+
+if (approvalType !== 'users') {
+	watch(() => shiftAOption.value?.shift_type.group.id, (shiftAGroupId) => {
+		if (!shiftAGroupId) {
+			shiftAdminOptions.value = []
+			shiftAdminOption.value = undefined
+			return
+		}
+		shiftAdminOptions.value
+			= getShiftAdmins([shiftAGroupId]).map(getNcSelectUsersOption)
+		shiftAdminOption.value
+			= shiftAdminOptions.value.find(({ id }) => id === authUser.id)
+	})
+}
 
 /**
  * Clear shift options and selected shift
@@ -334,6 +364,7 @@ async function onSubmit() {
 		const base: ShiftExchangePostPayloadBase = {
 			comment: comment.value,
 			shift_a_id: shiftAOption.value!.id,
+			admin_approval_user_id: shiftAdminOption.value?.id,
 		}
 		let payload: ShiftExchangePostPayload
 		if (exchangeType.value === 'regular') {

@@ -33,6 +33,10 @@ namespace OCA\ShiftsNext\Psalm;
  * @psalm-type ApprovalUpdate = array{
  *     approved?: null|bool,
  * }
+ *
+ * @psalm-type AdminApprovalUpdate = ApprovalUpdate & array{
+ *     user_id?: null|string,
+ * }
  */
 final class ShiftExchangeAlias {
 }
