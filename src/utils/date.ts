@@ -289,7 +289,6 @@ export function formatDuration(
 	style?: 'long' | 'short' | 'narrow' | 'digital',
 ) {
 	try {
-		// @ts-expect-error part of ES2025
 		return new Intl.DurationFormat(locale, { style }).format(duration)
 	} catch {
 		return duration.toString()
