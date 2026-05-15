@@ -1,6 +1,6 @@
 {
 	"extends": "@vue/tsconfig/tsconfig.json",
-	"include": ["./src/**/*.ts", "./src/**/*.vue"],
+	"include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
 	"compilerOptions": {
 		"outDir": "./js/",
 		"noUncheckedIndexedAccess": true,
