@@ -17,6 +17,7 @@ use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Middleware;
 use OCP\IL10N;
 use OCP\IRequest;
+use Override;
 
 final class VersionMatchMiddleware extends Middleware {
 	public function __construct(
@@ -31,7 +32,7 @@ final class VersionMatchMiddleware extends Middleware {
 	 *                                  the client's app version does not match
 	 *                                  the installed app version
 	 */
-	#[\Override]
+	#[Override]
 	public function beforeController(
 		Controller $controller,
 		string $methodName,
@@ -52,7 +53,7 @@ final class VersionMatchMiddleware extends Middleware {
 	 * @throws Exception if `$exception` is not a
 	 *                   {@see OCA\ShiftsNext\Exception\VersionMismatchException}
 	 */
-	#[\Override]
+	#[Override]
 	public function afterException(
 		Controller $controller,
 		string $methodName,

@@ -14,9 +14,10 @@ use OCA\ShiftsNext\Db\ShiftTypeMapper;
 use OCP\DB\Types;
 use OCP\Migration\IOutput;
 use OCP\Migration\SimpleMigrationStep;
+use Override;
 
 final class Version2000Date20240901090943 extends SimpleMigrationStep {
-	#[\Override]
+	#[Override]
 	public function changeSchema(IOutput $output, Closure $schemaClosure, array $options) {
 		$schema = $schemaClosure();
 

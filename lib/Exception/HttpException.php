@@ -6,6 +6,7 @@ namespace OCA\ShiftsNext\Exception;
 
 use Exception;
 use OCP\AppFramework\Http;
+use Override;
 use Throwable;
 
 /**
@@ -109,7 +110,7 @@ final class HttpException extends Exception implements LocalizedThrowable {
 		return $this->code;
 	}
 
-	#[\Override]
+	#[Override]
 	public function getLocalizedMessage(): string {
 		return $this->localizedMessage;
 	}

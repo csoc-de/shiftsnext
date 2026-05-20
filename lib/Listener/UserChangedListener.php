@@ -11,6 +11,7 @@ use OCA\ShiftsNext\Db\ShiftMapper;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\User\Events\UserChangedEvent;
+use Override;
 
 /**
  * @implements IEventListener<UserChangedEvent>
@@ -24,7 +25,7 @@ final class UserChangedListener implements IEventListener {
 	) {
 	}
 
-	#[\Override]
+	#[Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof UserChangedEvent)) {
 			return;

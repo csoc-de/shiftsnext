@@ -6,6 +6,7 @@ namespace OCA\ShiftsNext\Serializable;
 
 use JsonSerializable;
 use OCP\IGroup;
+use Override;
 
 final class SerializableGroup implements JsonSerializable {
 	public string $id;
@@ -16,7 +17,7 @@ final class SerializableGroup implements JsonSerializable {
 		$this->displayName = $group->getDisplayName();
 	}
 
-	#[\Override]
+	#[Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,

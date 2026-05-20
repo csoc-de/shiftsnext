@@ -11,6 +11,7 @@ use OCA\ShiftsNext\Db\ShiftMapper;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\User\Events\UserDeletedEvent;
+use Override;
 
 use function array_walk;
 
@@ -26,7 +27,7 @@ final class UserDeletedListener implements IEventListener {
 	) {
 	}
 
-	#[\Override]
+	#[Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof UserDeletedEvent)) {
 			return;

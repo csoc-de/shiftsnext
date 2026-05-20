@@ -10,6 +10,7 @@ use OCA\ShiftsNext\Serializable\SerializableGroup;
 use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IGroup;
 use OCP\IUser;
+use Override;
 
 /**
  * This class is used to create objects representing a group shift admin relation
@@ -26,7 +27,7 @@ final class GroupShiftAdminRelationExtended implements JsonSerializable {
 		$this->id = $groupShiftAdminRelation->getId();
 	}
 
-	#[\Override]
+	#[Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,

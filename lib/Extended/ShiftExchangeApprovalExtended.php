@@ -8,6 +8,7 @@ use JsonSerializable;
 use OCA\ShiftsNext\Db\ShiftExchangeApproval;
 use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IUser;
+use Override;
 
 /**
  * This class is used to create objects representing a shift exchange approval
@@ -25,7 +26,7 @@ final class ShiftExchangeApprovalExtended implements JsonSerializable {
 		$this->approved = $shiftExchangeApproval->getApproved();
 	}
 
-	#[\Override]
+	#[Override]
 	public function jsonSerialize(): array {
 		$data = [
 			'id' => $this->id,

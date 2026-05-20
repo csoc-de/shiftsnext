@@ -9,6 +9,7 @@ use OCA\ShiftsNext\Serializable\SerializableGroup;
 use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IGroup;
 use OCP\IUser;
+use Override;
 
 /**
  * This class is used to create objects representing a group user relation
@@ -21,7 +22,7 @@ final class GroupUserRelationExtended implements JsonSerializable {
 	) {
 	}
 
-	#[\Override]
+	#[Override]
 	public function jsonSerialize(): array {
 		return [
 			'group' => new SerializableGroup($this->group),

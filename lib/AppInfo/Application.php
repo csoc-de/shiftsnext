@@ -16,6 +16,7 @@ use OCP\EventDispatcher\IEventDispatcher;
 use OCP\Group\Events\GroupDeletedEvent;
 use OCP\User\Events\UserChangedEvent;
 use OCP\User\Events\UserDeletedEvent;
+use Override;
 
 final class Application extends App implements IBootstrap {
 	public const string APP_ID = 'shiftsnext';
@@ -34,13 +35,13 @@ final class Application extends App implements IBootstrap {
 		$dispatcher->addServiceListener(UserDeletedEvent::class, UserDeletedListener::class);
 	}
 
-	#[\Override]
+	#[Override]
 	public function register(IRegistrationContext $context): void {
 		include_once __DIR__ . '/../../vendor/autoload.php';
 		$context->registerMiddleware(VersionMatchMiddleware::class);
 	}
 
-	#[\Override]
+	#[Override]
 	public function boot(IBootContext $context): void {
 	}
 }

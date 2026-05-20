@@ -9,6 +9,7 @@ use OCA\ShiftsNext\Db\ShiftType;
 use OCA\ShiftsNext\Psalm\ShiftTypeAlias;
 use OCA\ShiftsNext\Serializable\SerializableGroup;
 use OCP\IGroup;
+use Override;
 
 /**
  * This class is used to create objects representing a shift type
@@ -41,7 +42,7 @@ final class ShiftTypeExtended implements JsonSerializable {
 		$this->caldav = $shiftType->getCaldav();
 	}
 
-	#[\Override]
+	#[Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,

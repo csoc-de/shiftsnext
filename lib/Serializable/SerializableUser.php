@@ -6,6 +6,7 @@ namespace OCA\ShiftsNext\Serializable;
 
 use JsonSerializable;
 use OCP\IUser;
+use Override;
 
 final class SerializableUser implements JsonSerializable {
 	public string $id;
@@ -16,7 +17,7 @@ final class SerializableUser implements JsonSerializable {
 		$this->displayName = $user->getDisplayName();
 	}
 
-	#[\Override]
+	#[Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,

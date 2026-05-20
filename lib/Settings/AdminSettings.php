@@ -12,6 +12,7 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\Settings\ISettings;
+use Override;
 
 final class AdminSettings implements ISettings {
 	public function __construct(
@@ -25,7 +26,7 @@ final class AdminSettings implements ISettings {
 	) {
 	}
 
-	#[\Override]
+	#[Override]
 	public function getForm(): TemplateResponse {
 		$this->initialState->provideInitialState(
 			'users',
@@ -68,12 +69,12 @@ final class AdminSettings implements ISettings {
 		return new TemplateResponse(Application::APP_ID, 'mainAdminSettings');
 	}
 
-	#[\Override]
+	#[Override]
 	public function getSection(): string {
 		return Application::APP_ID;
 	}
 
-	#[\Override]
+	#[Override]
 	public function getPriority(): int {
 		return 98;
 	}

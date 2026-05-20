@@ -9,6 +9,7 @@ use OCA\ShiftsNext\Db\ShiftTypeMapper;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Group\Events\GroupDeletedEvent;
+use Override;
 
 use function array_walk;
 
@@ -22,7 +23,7 @@ final class GroupDeletedListener implements IEventListener {
 	) {
 	}
 
-	#[\Override]
+	#[Override]
 	public function handle(Event $event): void {
 		if (!($event instanceof GroupDeletedEvent)) {
 			return;

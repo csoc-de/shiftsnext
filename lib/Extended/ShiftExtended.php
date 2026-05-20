@@ -8,6 +8,7 @@ use JsonSerializable;
 use OCA\ShiftsNext\Db\Shift;
 use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IUser;
+use Override;
 
 /**
  * This class is used to create objects representing a shift
@@ -28,7 +29,7 @@ final class ShiftExtended implements JsonSerializable {
 		$this->end = $shift->getEnd();
 	}
 
-	#[\Override]
+	#[Override]
 	public function jsonSerialize(): array {
 		return [
 			'id' => $this->id,
