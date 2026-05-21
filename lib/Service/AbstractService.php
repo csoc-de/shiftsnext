@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace OCA\ShiftsNext\Service;
 
-use OC;
+use OCP\Server;
 
 abstract class AbstractService {
 
 	/** Returns the late static binding instance from the DI container */
 	public static function get(): static {
-		return OC::$server->get(static::class);
+		return Server::get(static::class);
 	}
 }
