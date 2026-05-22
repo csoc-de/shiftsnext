@@ -8,8 +8,7 @@
 					</template>
 					<div class="flex flex-wrap gap-4">
 						<InputGroup>
-							<label for="common-calendar">
-								{{ t(APP_ID, "Common calendar") }}</label>
+							<label for="common-calendar">{{ t(APP_ID, "Common calendar") }}</label>
 							<NcSelect
 								v-model="commonCalendarOption"
 								inputId="common-calendar"
@@ -19,8 +18,7 @@
 								class="min-w-64" />
 						</InputGroup>
 						<InputGroup>
-							<label for="absence-calendar">
-								{{ t(APP_ID, "Absence calendar") }}</label>
+							<label for="absence-calendar">{{ t(APP_ID, "Absence calendar") }}</label>
 							<NcSelect
 								v-model="absenceCalendarOption"
 								inputId="absence-calendar"
@@ -30,8 +28,7 @@
 								class="min-w-64" />
 						</InputGroup>
 						<InputGroup>
-							<label for="sync-to-personal-calendar">
-								{{ t(APP_ID, "Personal calendar") }}</label>
+							<label for="sync-to-personal-calendar">{{ t(APP_ID, "Personal calendar") }}</label>
 							<NcCheckboxRadioSwitch
 								id="sync-to-personal-calendar"
 								v-model="syncToPersonalCalendar"
@@ -40,8 +37,7 @@
 							</NcCheckboxRadioSwitch>
 						</InputGroup>
 						<InputGroup>
-							<label for="ignore-absence-for-by-week-shifts">
-								{{ t(APP_ID, "Absence check") }}</label>
+							<label for="ignore-absence-for-by-week-shifts">{{ t(APP_ID, "Absence check") }}</label>
 							<NcCheckboxRadioSwitch
 								id="ignore-absence-for-by-week-shifts"
 								v-model="ignoreAbsenceForByWeekShifts"
@@ -57,8 +53,7 @@
 						{{ t(APP_ID, "Shift exchanges") }}
 					</template>
 					<InputGroup>
-						<label for="exchange-approval-type">
-							{{ t(APP_ID, "Required approvals") }}</label>
+						<label for="exchange-approval-type">{{ t(APP_ID, "Required approvals") }}</label>
 						<NcSelect
 							v-model="approvalTypeOption"
 							inputId="exchange-approval-type"

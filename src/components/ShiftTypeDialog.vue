@@ -44,9 +44,7 @@
 					<NcCheckboxRadioSwitch id="shift-type-active" v-model="active" :aria-label="t(APP_ID, 'Active')" />
 				</InputGroup>
 				<InputGroup class="col-span-2 sm:col-span-6">
-					<label for="shift-type-description">{{
-						t(APP_ID, "Description")
-					}}</label>
+					<label for="shift-type-description">{{ t(APP_ID, "Description") }}</label>
 					<NcTextArea
 						id="shift-type-description"
 						v-model.trim="description"
@@ -94,9 +92,7 @@
 					<template v-if="!shiftType">
 						<div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
 							<InputGroup class="col-span-2">
-								<label for="shift-type-repetition-frequency">{{
-									t(APP_ID, "Frequency")
-								}}</label>
+								<label for="shift-type-repetition-frequency">{{ t(APP_ID, "Frequency") }}</label>
 								<NcSelect
 									v-model="frequency"
 									inputId="shift-type-repetition-frequency"
@@ -105,9 +101,7 @@
 									:clearable="false" />
 							</InputGroup>
 							<InputGroup>
-								<label for="shift-type-repetition-interval">{{
-									t(APP_ID, "Interval")
-								}}</label>
+								<label for="shift-type-repetition-interval">{{ t(APP_ID, "Interval") }}</label>
 								<NcTextField
 									id="shift-type-repetition-interval"
 									v-model.trim="interval"
@@ -139,9 +133,7 @@
 								<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
 									<template v-if="weeklyType === 'by_day'">
 										<InputGroup>
-											<label for="shift-type-repetition-config-reference">
-												{{ t(APP_ID, "Reference date & time") }}
-											</label>
+											<label for="shift-type-repetition-config-reference">{{ t(APP_ID, "Reference date & time") }}</label>
 											<NcDateTimePickerNative
 												id="shift-type-repetition-config-reference"
 												v-model="byDayReferenceDate"
