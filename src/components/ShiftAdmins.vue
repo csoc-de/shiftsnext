@@ -29,14 +29,18 @@
 								<template v-if="!editedList[index]">
 									{{ relationUsers.map(({ display_name }) => display_name).join(', ') }}
 								</template>
-								<NcSelectUsers
-									v-else
-									v-model="selectedUserOptions2D[index]"
-									class="min-w-56"
-									multiple
-									noWrap
-									keepOpen
-									:options="userOptions" />
+								<template v-else>
+									<label :for="`selected-users-${index}`" class="sr-only">{{ t(APP_ID, "Admins") }}</label>
+									<NcSelectUsers
+										v-model="selectedUserOptions2D[index]"
+										:inputId="`selected-users-${index}`"
+										labelOutside
+										class="min-w-56"
+										multiple
+										noWrap
+										keepOpen
+										:options="userOptions" />
+								</template>
 							</td>
 							<td class="w-0">
 								<div class="flex items-center justify-center">
