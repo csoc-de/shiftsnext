@@ -13,6 +13,7 @@
 							<NcSelect
 								v-model="commonCalendarOption"
 								inputId="common-calendar"
+								labelOutside
 								:options="commonCalendarOptions"
 								required
 								class="min-w-64" />
@@ -23,6 +24,7 @@
 							<NcSelect
 								v-model="absenceCalendarOption"
 								inputId="absence-calendar"
+								labelOutside
 								:options="absenceCalendarOptions"
 								required
 								class="min-w-64" />
@@ -60,6 +62,7 @@
 						<NcSelect
 							v-model="approvalTypeOption"
 							inputId="exchange-approval-type"
+							labelOutside
 							:options="approvalTypeOptions"
 							:clearable="false"
 							class="min-w-64" />

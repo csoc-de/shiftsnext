@@ -26,6 +26,7 @@
 								v-model="userAOption"
 								required
 								inputId="user-a"
+								labelOutside
 								:disabled="!isShiftAdmin"
 								class="w-full"
 								:options="userAOptions"
@@ -47,6 +48,7 @@
 								v-model="shiftAOption"
 								required
 								inputId="shift-a"
+								labelOutside
 								:disabled="shiftASelectDisabled"
 								class="w-full"
 								:options="shiftAOptions"
@@ -67,6 +69,7 @@
 									v-model="userBOption"
 									required
 									inputId="user-b"
+									labelOutside
 									class="w-full"
 									:options="userBOptions"
 									:loading="userBOptionsLoading" />
@@ -87,6 +90,7 @@
 									v-model="shiftBOption"
 									required
 									inputId="shift-b"
+									labelOutside
 									:disabled="shiftBSelectDisabled"
 									class="w-full"
 									:options="shiftBOptions"
@@ -100,6 +104,7 @@
 									v-model="userBOption"
 									required
 									inputId="user-b"
+									labelOutside
 									class="w-full"
 									:options="userBOptions"
 									:loading="userBOptionsLoading" />
