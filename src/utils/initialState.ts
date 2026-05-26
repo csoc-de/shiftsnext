@@ -133,3 +133,11 @@ export function getInitialIgnoreAbsenceForByWeekShifts(): boolean {
 		'ignore_absence_for_by_week_shifts',
 	))
 }
+
+/**
+ * Returns all calendar for which the logged-in user had write permissions
+ * when the browser page was initially loaded
+ */
+export function getInitialWritableCalendars(): Calendar[] {
+	return structuredClone(loadState<Calendar[]>(APP_ID, 'calendars'))
+}

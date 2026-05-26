@@ -52,7 +52,29 @@
 						resize="vertical" />
 				</InputGroup>
 			</div>
-			<CustomFieldset>
+			<div class="flex *:flex-1 gap-2 items-end">
+				<InputGroup>
+					<label for="sync-to-calendar">{{ t(APP_ID, "Calendar synchronization") }}</label>
+					<NcCheckboxRadioSwitch
+						id="sync-to-calendar"
+						v-model="syncToCalendar"
+						type="checkbox">
+						{{ t(APP_ID, "Enable") }}
+					</NcCheckboxRadioSwitch>
+				</InputGroup>
+				<InputGroup>
+					<label for="calendar">{{ t(APP_ID, "Select calendar") }}</label>
+					<NcSelect
+						v-model="calendarOption"
+						inputId="calendar"
+						labelOutside
+						:options="calendarOptions"
+						required
+						:disabled="!syncToCalendar"
+						class="min-w-64" />
+				</InputGroup>
+			</div>
+			<CustomFieldset v-if="syncToCalendar">
 				<template #legend>
 					{{ t(APP_ID, "Calendar event fields") }}
 				</template>
@@ -205,8 +227,10 @@
 
 <script setup lang="ts">
 import type { Group } from '../models/group.ts'
+import type { NcSelectCalendarOption } from '../models/nextcloudVue.ts'
 
 import { t } from '@nextcloud/l10n'
+import { whenever } from '@vueuse/core'
 import { Temporal } from 'temporal-polyfill'
 import { computed, ref, watchEffect } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -244,7 +268,8 @@ import {
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getIsoWeekDate, userTimeZone } from '../utils/date.ts'
-import { getInitialShiftAdminGroups } from '../utils/initialState.ts'
+import { getInitialShiftAdminGroups, getInitialWritableCalendars } from '../utils/initialState.ts'
+import { getNcSelectCalendarOption } from '../utils/nextcloudVue.ts'
 
 const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
 
@@ -262,6 +287,7 @@ const frequencies = ref(REPETITION_FREQUENCIES)
 const showColorPicker = ref(false)
 
 const shiftAdminGroups = getInitialShiftAdminGroups()
+const calendarOptions = getInitialWritableCalendars()
 
 const group = ref<Group>()
 const name = ref('')
@@ -293,6 +319,8 @@ const byWeekAmount = ref(1)
 const caldavDescription = ref('')
 const caldavLocation = ref('')
 const caldavCategories = ref('')
+const syncToCalendar = ref(true)
+const calendarOption = ref<NcSelectCalendarOption | null>(null)
 
 if (shiftType) {
 	group.value = shiftType.group
@@ -303,6 +331,10 @@ if (shiftType) {
 	caldavDescription.value = shiftType.caldav.description ?? ''
 	caldavLocation.value = shiftType.caldav.location ?? ''
 	caldavCategories.value = shiftType.caldav.categories
+	syncToCalendar.value = shiftType.sync_to_calendar
+	if (shiftType.calendar) {
+		calendarOption.value = getNcSelectCalendarOption(shiftType.calendar)
+	}
 
 	frequency.value = shiftType.repetition.frequency
 	interval.value = shiftType.repetition.interval
@@ -383,6 +415,8 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 			location: caldavLocation.value,
 			categories: caldavCategories.value,
 		},
+		sync_to_calendar: syncToCalendar.value,
+		calendar_id: calendarOption.value?.id ?? null,
 	}
 
 	if (type === 'post') {
@@ -407,4 +441,6 @@ watchEffect(() => {
 		.toPlainDateTime()
 		.toZonedDateTime(timeZone.value)
 })
+
+whenever(() => !syncToCalendar.value, () => calendarOption.value = null)
 </script>

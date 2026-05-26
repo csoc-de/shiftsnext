@@ -102,6 +102,8 @@ final class ShiftTypeController extends ApiController {
 		bool $active,
 		array $repetition,
 		array $caldav,
+		bool $sync_to_calendar,
+		?int $calendar_id,
 	): JSONResponse {
 		try {
 			if (!$this->groupShiftAdminRelationService->isShiftAdmin($group_id)) {
@@ -113,6 +115,7 @@ final class ShiftTypeController extends ApiController {
 					$this->l->t('You do not have permissions to create shift types for group %1$s.', [$groupName]),
 				);
 			}
+			// TODO: check if logged-in user has write permissions for `$calendar_id`
 			$shiftType = $this->shiftTypeMapper->create(
 				$group_id,
 				$name,
@@ -121,6 +124,8 @@ final class ShiftTypeController extends ApiController {
 				$active,
 				$repetition,
 				$caldav,
+				$sync_to_calendar,
+				$calendar_id,
 			);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new JSONResponse($shiftTypeExtended);
@@ -141,6 +146,8 @@ final class ShiftTypeController extends ApiController {
 		string $color,
 		bool $active,
 		array $caldav,
+		bool $sync_to_calendar,
+		?int $calendar_id,
 	): JSONResponse {
 		try {
 			try {
@@ -158,8 +165,10 @@ final class ShiftTypeController extends ApiController {
 					$this->l->t('You do not have permissions to update shift types for group %1$s.', [$groupName]),
 				);
 			}
+			// TODO: check if logged-in user has write permissions for `$calendar_id`
 			$shiftType = $this->shiftTypeMapper->updateById(
 				$shiftType,
+				$calendar_id,
 				null,
 				$name,
 				$description,
@@ -167,6 +176,7 @@ final class ShiftTypeController extends ApiController {
 				$active,
 				null,
 				$caldav,
+				$sync_to_calendar,
 			);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new JSONResponse($shiftTypeExtended);

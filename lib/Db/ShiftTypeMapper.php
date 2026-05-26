@@ -81,6 +81,8 @@ final class ShiftTypeMapper extends QBMapper {
 		bool $active,
 		array $repetition,
 		array $caldav,
+		bool $syncToCalendar,
+		?int $calendarId,
 	): ShiftType {
 		$shiftType = new ShiftType();
 		$shiftType->setGroupId($groupId);
@@ -90,6 +92,8 @@ final class ShiftTypeMapper extends QBMapper {
 		$shiftType->setActive($active);
 		$shiftType->setRepetition($repetition);
 		$shiftType->setCaldav($caldav);
+		$shiftType->setSyncToCalendar($syncToCalendar);
+		$shiftType->setCalendarId($calendarId);
 		return $this->insert($shiftType);
 	}
 
@@ -100,6 +104,7 @@ final class ShiftTypeMapper extends QBMapper {
 	 */
 	public function updateById(
 		int|ShiftType $shiftType,
+		?int $calendarId,
 		?string $groupId = null,
 		?string $name = null,
 		?string $description = null,
@@ -107,6 +112,7 @@ final class ShiftTypeMapper extends QBMapper {
 		?bool $active = null,
 		?array $repetition = null,
 		?array $caldav = null,
+		?bool $syncToCalendar = null,
 	): ShiftType {
 		$shiftType = $this->findById($shiftType);
 		if ($groupId !== null) {
@@ -130,6 +136,10 @@ final class ShiftTypeMapper extends QBMapper {
 		if ($caldav !== null) {
 			$shiftType->setCaldav($caldav);
 		}
+		if ($syncToCalendar !== null) {
+			$shiftType->setSyncToCalendar($syncToCalendar);
+		}
+		$shiftType->setCalendarId($calendarId);
 		return $this->update($shiftType);
 	}
 

@@ -10,10 +10,15 @@ use OCA\ShiftsNext\Db\ShiftTypeMapper;
 use OCA\ShiftsNext\Exception\GroupNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Extended\ShiftTypeExtended;
+use OCA\ShiftsNext\Psalm\CalendarAlias;
 use OCP\IGroup;
 
 use function array_map;
+use function is_int;
 
+/**
+ * @psalm-import-type SanitizedCalendar from CalendarAlias
+ */
 final class ShiftTypeService {
 	public function __construct(
 		private ShiftTypeMapper $shiftTypeMapper,
@@ -22,12 +27,15 @@ final class ShiftTypeService {
 	}
 
 	/**
+	 * @param null|int|SanitizedCalendar $calendar
+	 *
 	 * @throws ShiftTypeNotFoundException {@see OCA\ShiftsNext\Db\ShiftTypeMapper::findById()}
 	 * @throws GroupNotFoundException {@see OCA\ShiftsNext\Service\GroupService::get()}
 	 */
 	public function getExtended(
 		int|ShiftType|ShiftTypeExtended $shiftType,
 		null|string|IGroup $group = null,
+		null|int|array $calendar = null,
 	): ShiftTypeExtended {
 		if ($shiftType instanceof ShiftTypeExtended) {
 			return $shiftType;
@@ -37,7 +45,12 @@ final class ShiftTypeService {
 		$group ??= $shiftType->getGroupId();
 		$group = $this->groupService->get($group);
 
-		return new ShiftTypeExtended($shiftType, $group);
+		$calendar ??= $shiftType->getCalendarId();
+		if (is_int($calendar)) {
+			$calendar = CalendarService::get()->safeGetCalendarById($calendar);
+		}
+
+		return new ShiftTypeExtended($shiftType, $group, $calendar);
 	}
 
 	/**
