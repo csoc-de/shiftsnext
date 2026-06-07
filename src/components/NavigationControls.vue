@@ -60,6 +60,7 @@
 				v-model="selectedGroups"
 				inputId="groups"
 				:options="groups"
+				:appendToBody="false"
 				label="display_name"
 				labelOutside
 				keepOpen
@@ -73,6 +74,7 @@
 				v-model="hiddenUserOptions"
 				inputId="hidden-users"
 				:options="userOptions"
+				:appendToBody="false"
 				label="displayName"
 				labelOutside
 				keepOpen

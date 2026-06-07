@@ -128,14 +128,20 @@
 			<template v-if="headerRow && shiftTypesRow">
 				<div
 					v-if="!hideOpenShifts"
-					class="rounded border border-solid border-nc-maxcontrast p-2">
+					class="rounded p-2"
+					:class="{
+						'border border-solid border-nc-maxcontrast': activeDisplayMode === 'team-week',
+					}">
 					<div class="font-semibold mb-2">
 						{{ t(APP_ID, 'Open shifts') }}
 					</div>
 					<div
 						v-for="({ type, data }, index) in shiftTypesRow.slice(1)"
 						:key="index"
-						class="border border-solid border-nc-maxcontrast rounded p-2 mb-2 last:mb-0">
+						class="rounded p-2 mb-2 last:mb-0"
+						:class="{
+							'border border-solid border-nc-maxcontrast': activeDisplayMode === 'team-week',
+						}">
 						<div
 							v-if="activeDisplayMode !== 'team-day'"
 							class="text-sm font-semibold mb-1">
@@ -156,18 +162,21 @@
 				<div
 					v-for="(shiftsRow, rowIndex) in shiftsRows"
 					:key="rowIndex"
-					class="rounded border border-solid border-nc-maxcontrast p-2"
+					class="rounded p-2"
 					:class="{
-						'bg-nc-primary-element-light text-nc-primary-element-light': shiftsRow[0].data.id === authUser.id,
+						'border border-solid border-nc-maxcontrast': activeDisplayMode === 'team-week',
+						'bg-nc-primary-element-light text-nc-primary-element-light':
+							activeDisplayMode !== 'personal-week' && shiftsRow[0].data.id === authUser.id,
 					}">
-					<div class="font-semibold mb-2">
+					<div v-if="activeDisplayMode !== 'personal-week'" class="font-semibold mb-2">
 						{{ shiftsRow[0].data.display_name }}
 					</div>
 					<div
 						v-for="({ type, data }, index) in shiftsRow.slice(1)"
 						:key="index"
-						class="border border-solid border-nc-maxcontrast rounded p-2 mb-2 last:mb-0"
+						class="rounded p-2 mb-2 last:mb-0"
 						:class="{
+							'border border-solid border-nc-maxcontrast': activeDisplayMode === 'team-week',
 							'!bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[index + 1] === 'disabled',
 						}"
 						:title="getShiftCellBlockersTitle(shiftsRow[0].data.id, index + 1)"
@@ -175,7 +184,9 @@
 							shiftCellStatesMulti[rowIndex]?.[index + 1] === 'enabled'
 								&& onShiftCellClick(shiftsRow[0].data.id)
 						">
-						<div class="text-sm font-semibold mb-1">
+						<div
+							v-if="activeDisplayMode !== 'team-day'"
+							class="text-sm font-semibold mb-1">
 							{{ getHeaderCellLabel(headerRow[index + 1]) }}
 						</div>
 						<div
