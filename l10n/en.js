@@ -1,6 +1,16 @@
 OC.L10N.register(
 	"shiftsnext",
 	{
+		"Display mode": "Display mode",
+		"Team day": "Team day",
+		"My week": "My week",
+		"Previous day": "Previous day",
+		"Next day": "Next day",
+		"Day": "Day",
+		"Weekends": "Weekends",
+		"Hide weekends": "Hide weekends",
+		"Hide weekly shifts": "Hide weekly shifts",
+		"Hide open shifts": "Hide open shifts",
 		"Show weekly shifts": "Show weekly shifts",
 		"Hidden users": "Hidden users",
 		"Shifts table blockers": "Shifts table blockers",

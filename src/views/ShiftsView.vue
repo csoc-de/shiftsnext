@@ -1,7 +1,7 @@
 <template>
 	<ContentHeader :title="t(APP_ID, 'Shifts')" :loading="loading">
 		<div class="font-semibold mt-1">
-			{{ isoWeekDate }}
+			{{ dateLabel }}
 		</div>
 		<template #right>
 			<div class="flex gap-1">
@@ -28,7 +28,7 @@
 		</template>
 	</ContentHeader>
 	<PaddedContainer v-if="!loading" class="!overflow-hidden">
-		<div class="overflow-auto h-full">
+		<div class="max-[834px]:hidden overflow-auto h-full">
 			<table class="h-fit w-full border-spacing-0">
 				<thead class="sticky z-[2] top-0 bg-nc-main">
 					<tr class="group">
@@ -57,7 +57,7 @@
 					</tr>
 				</thead>
 				<tbody class="h-full whitespace-pre-wrap">
-					<tr class="group">
+					<tr v-if="!hideOpenShifts" class="group">
 						<td
 							v-for="({ type, data }, columnIndex) in shiftTypesRow"
 							:key="columnIndex"
@@ -124,6 +124,78 @@
 				</tbody>
 			</table>
 		</div>
+		<div class="min-[835px]:hidden overflow-auto h-full flex flex-col gap-2">
+			<template v-if="headerRow && shiftTypesRow">
+				<div
+					v-if="!hideOpenShifts"
+					class="rounded border border-solid border-nc-maxcontrast p-2">
+					<div class="font-semibold mb-2">
+						{{ t(APP_ID, 'Open shifts') }}
+					</div>
+					<div
+						v-for="({ type, data }, index) in shiftTypesRow.slice(1)"
+						:key="index"
+						class="border border-solid border-nc-maxcontrast rounded p-2 mb-2 last:mb-0">
+						<div
+							v-if="activeDisplayMode !== 'team-day'"
+							class="text-sm font-semibold mb-1">
+							{{ getHeaderCellLabel(headerRow[index + 1]) }}
+						</div>
+						<div
+							v-if="type === 'shift-types'"
+							class="flex flex-col gap-1">
+							<template v-for="shiftTypeWrapper in data" :key="shiftTypeWrapper.shiftType.id">
+								<ShiftTypePill
+									v-if="shiftTypeWrapper.amount > 0 && shiftTypeWrapper.shiftType.active"
+									:shiftTypeWrapper="shiftTypeWrapper"
+									:columnIndex="index + 1" />
+							</template>
+						</div>
+					</div>
+				</div>
+				<div
+					v-for="(shiftsRow, rowIndex) in shiftsRows"
+					:key="rowIndex"
+					class="rounded border border-solid border-nc-maxcontrast p-2"
+					:class="{
+						'bg-nc-primary-element-light text-nc-primary-element-light': shiftsRow[0].data.id === authUser.id,
+					}">
+					<div class="font-semibold mb-2">
+						{{ shiftsRow[0].data.display_name }}
+					</div>
+					<div
+						v-for="({ type, data }, index) in shiftsRow.slice(1)"
+						:key="index"
+						class="border border-solid border-nc-maxcontrast rounded p-2 mb-2 last:mb-0"
+						:class="{
+							'!bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[index + 1] === 'disabled',
+						}"
+						:title="getShiftCellBlockersTitle(shiftsRow[0].data.id, index + 1)"
+						@click="
+							shiftCellStatesMulti[rowIndex]?.[index + 1] === 'enabled'
+								&& onShiftCellClick(shiftsRow[0].data.id)
+						">
+						<div class="text-sm font-semibold mb-1">
+							{{ getHeaderCellLabel(headerRow[index + 1]) }}
+						</div>
+						<div
+							v-if="type === 'shifts'"
+							class="flex flex-col gap-1">
+							<div
+								v-if="showAbsenceBlockers && getShiftCellBlockersTitle(shiftsRow[0].data.id, index + 1)"
+								class="text-xs font-semibold">
+								{{ t(APP_ID, '⚠ blocked') }}
+							</div>
+							<ShiftPill
+								v-for="shift in data"
+								:key="shift.id"
+								:shift="shift"
+								:columnIndex="index + 1" />
+						</div>
+					</div>
+				</div>
+			</template>
+		</div>
 	</PaddedContainer>
 </template>
 
@@ -151,7 +223,7 @@ import type { Shift, ShiftPostPayload } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
 
 import { t } from '@nextcloud/l10n'
-import { onKeyStroke, watchImmediate } from '@vueuse/core'
+import { onKeyStroke, useWindowSize, watchImmediate } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { Temporal } from 'temporal-polyfill'
 import {
@@ -205,11 +277,13 @@ import { useUserSettingsStore } from '../stores/userSettings.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { rotate } from '../utils/array.ts'
 import {
+	type IsoCalendarDate,
 	type IsoWeekDate,
 	type IsoWeekDateWithDay,
 
 	formatDate,
 	formatRange,
+	getIsoCalendarDate,
 	getIsoWeekDate,
 	getZonedDateTimeForDayOfWeek,
 	parseIsoWeekDate,
@@ -231,11 +305,16 @@ const {
 	selectedGroupIds,
 	hiddenUserIds,
 	showWeeklyShifts,
+	shiftsDisplayMode,
+	selectedIsoWeekDateWithDay,
+	hideWeekends,
+	hideOpenShifts,
 	currentIsoWeekDateWithDay,
 	isoWeekDate,
 } = storeToRefs(store)
 
 const { updateNow } = store
+const { width } = useWindowSize()
 
 updateNow()
 
@@ -250,6 +329,14 @@ const isShiftAdmin = getInitialIsShiftAdmin()
 
 const columnIndexOfWeek = computed(() => showWeeklyShifts.value ? 1 : -1)
 let columnIndexOfToday = -1
+const isMobileViewport = computed(() => width.value <= 834)
+const activeDisplayMode = computed(() => isMobileViewport.value ? shiftsDisplayMode.value : 'team-week')
+const dateLabel = computed(() => {
+	if (activeDisplayMode.value === 'team-day') {
+		return formatDate(parseIsoWeekDate(selectedIsoWeekDateWithDay.value), dayCellFormatOptions)
+	}
+	return isoWeekDate.value
+})
 
 /**
  * Returns a new {@link UndefinedMultiStepAction}
@@ -307,7 +394,19 @@ const shiftCellStatesMulti = computed<ShiftCellStateConfig[][]>(() => {
 	})
 })
 
-watchImmediate([isoWeekDate, selectedGroups, hiddenUserIds, showWeeklyShifts], initialize)
+watchImmediate(
+	[
+		isoWeekDate,
+		selectedGroups,
+		hiddenUserIds,
+		showWeeklyShifts,
+		activeDisplayMode,
+		selectedIsoWeekDateWithDay,
+		hideWeekends,
+		hideOpenShifts,
+	],
+	initialize,
+)
 
 /**
  * Initializes the view
@@ -325,14 +424,28 @@ function initialize(): void {
 
 	const usersPromise = getUsers({ group_ids: groupIds })
 	usersPromise.then((_users) => {
-		users = _users.filter(({ id }) => !hiddenUserIds.value.includes(id))
+		users = activeDisplayMode.value === 'personal-week'
+			? [authUser]
+			: _users.filter(({ id }) => !hiddenUserIds.value.includes(id))
 	})
 	promises.push(usersPromise)
 
-	const shiftsPromise = getShifts({
-		group_ids: groupIds,
-		week_date: isoWeekDate.value,
-	})
+	const shiftsFilters = activeDisplayMode.value === 'team-day'
+		? {
+				group_ids: groupIds,
+				calendar_date: getIsoCalendarDate(parseIsoWeekDate(selectedIsoWeekDateWithDay.value)) as IsoCalendarDate,
+			}
+		: activeDisplayMode.value === 'personal-week'
+			? {
+					group_ids: groupIds,
+					week_date: isoWeekDate.value,
+					user_id: authUser.id,
+				}
+			: {
+					group_ids: groupIds,
+					week_date: isoWeekDate.value,
+				}
+	const shiftsPromise = getShifts(shiftsFilters)
 	shiftsPromise.then((_shifts) => (shifts = _shifts))
 	promises.push(shiftsPromise)
 
@@ -431,10 +544,13 @@ function setupHeaderRow(): void {
 	columnIndexOfToday = -1
 	const zdtsOfWeek: Temporal.ZonedDateTime[] = []
 	const dayColumnOffset = showWeeklyShifts.value ? 1 : 0
-	for (let dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
-		const isoWeekDateForDayOfWeek: IsoWeekDateWithDay = `${isoWeekDate.value}-${dayOfWeek}`
+	const daysOfWeek = getVisibleDaysOfWeek()
+	for (const dayOfWeek of daysOfWeek) {
+		const isoWeekDateForDayOfWeek: IsoWeekDateWithDay = activeDisplayMode.value === 'team-day'
+			? selectedIsoWeekDateWithDay.value
+			: `${isoWeekDate.value}-${dayOfWeek}`
 		if (isoWeekDateForDayOfWeek === currentIsoWeekDateWithDay.value) {
-			columnIndexOfToday = dayOfWeek + dayColumnOffset
+			columnIndexOfToday = zdtsOfWeek.length + dayColumnOffset + 1
 		}
 		zdtsOfWeek.push(parseIsoWeekDate(isoWeekDateForDayOfWeek))
 	}
@@ -677,6 +793,9 @@ function placeShifts(): void {
 			shift.shift_type.repetition.weekly_type === 'by_day',
 		)
 		const columnIndex = getColumnIndex(isoWeekDate)
+		if (columnIndex < 0) {
+			continue
+		}
 		try {
 			placeShift(shift, columnIndex, false)
 		} catch (error) {
@@ -695,6 +814,16 @@ function placeShifts(): void {
 			logger.warn(error)
 		}
 	}
+}
+
+/**
+ * Returns visible day numbers for the current display mode.
+ */
+function getVisibleDaysOfWeek(): number[] {
+	if (activeDisplayMode.value === 'team-day') {
+		return [parseIsoWeekDate(selectedIsoWeekDateWithDay.value).dayOfWeek]
+	}
+	return hideWeekends.value ? [1, 2, 3, 4, 5] : [1, 2, 3, 4, 5, 6, 7]
 }
 
 /**
@@ -737,6 +866,24 @@ const dayCellFormatOptions: Intl.DateTimeFormatOptions = {
 	month: 'short',
 	weekday: 'short',
 	day: 'numeric',
+}
+
+/**
+ * Formats a header cell label for both table and mobile list layouts.
+ *
+ * @param cell The header cell to format
+ */
+function getHeaderCellLabel(cell: HeaderRow[number] | undefined): string {
+	if (!cell) {
+		return ''
+	}
+	if (cell.type === 'string') {
+		return cell.data
+	}
+	if (cell.type === 'week') {
+		return t(APP_ID, 'Weekly shifts')
+	}
+	return formatDate(cell.data, dayCellFormatOptions)
 }
 
 /**
