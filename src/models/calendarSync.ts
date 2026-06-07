@@ -13,4 +13,5 @@ export interface AbsenceBlocker {
 	start: string
 	end: string
 	all_day: boolean
+	title: string
 }

@@ -390,6 +390,7 @@ final class CalendarService {
 	 *     start: string,
 	 *     end: string,
 	 *     all_day: bool,
+	 *     title: string,
 	 * }>
 	 */
 	public function getAbsenceBlockers(
@@ -465,6 +466,7 @@ final class CalendarService {
 						'start' => $eventStart->format(Util::ECMA_DATE_TIME),
 						'end' => $eventEnd->format(Util::ECMA_DATE_TIME),
 						'all_day' => self::isAllDayEvent($vEvent, $eventStart, $eventEnd),
+						'title' => $eventSummary,
 					];
 				}
 			}

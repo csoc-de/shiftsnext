@@ -1338,6 +1338,7 @@ components:
         - start
         - end
         - all_day
+        - title
       type: object
       properties:
         user_id:
@@ -1350,6 +1351,8 @@ components:
           format: date-time
         all_day:
           type: boolean
+        title:
+          type: string
     ErrorResponse:
       required:
         - error

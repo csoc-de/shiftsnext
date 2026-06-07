@@ -18,6 +18,7 @@
 		"⚠ blocked": "⚠ blocked",
 		"all day": "all day",
 		"⚠ blocked: {ranges}": "⚠ blocked: {ranges}"
+		"⚠ blocked: {titles}": "⚠ blocked: {titles}",
 	},
 	"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

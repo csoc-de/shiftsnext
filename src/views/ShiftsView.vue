@@ -158,7 +158,7 @@
 								<div
 									v-if="showAbsenceBlockers && getShiftCellBlockersTitle(shiftsRow[0].data.id, columnIndex)"
 									class="text-xs font-semibold">
-									{{ t(APP_ID, '⚠ blocked') }}
+									{{ getShiftCellBlockedLabel(shiftsRow[0].data.id, columnIndex) }}
 								</div>
 								<ShiftPill
 									v-for="shift in data"
@@ -242,7 +242,7 @@
 							<div
 								v-if="showAbsenceBlockers && getShiftCellBlockersTitle(shiftsRow[0].data.id, index + 1)"
 								class="text-xs font-semibold">
-								{{ t(APP_ID, '⚠ blocked') }}
+								{{ getShiftCellBlockedLabel(shiftsRow[0].data.id, index + 1) }}
 							</div>
 							<ShiftPill
 								v-for="shift in data"
@@ -1262,12 +1262,18 @@ function getShiftCellBlockers(userId: string, columnIndex: number): AbsenceBlock
  * @param blocker The blocker to format
  */
 function formatBlocker(blocker: AbsenceBlocker): string {
+	const title = blocker.title.trim()
 	if (blocker.all_day) {
-		return t(APP_ID, 'all day')
+		return title
+			? `${title} (${t(APP_ID, 'all day')})`
+			: t(APP_ID, 'all day')
 	}
 	const start = Temporal.Instant.from(blocker.start).toZonedDateTimeISO(userTimeZone)
 	const end = Temporal.Instant.from(blocker.end).toZonedDateTimeISO(userTimeZone)
-	return formatRange(start, end, { hour: '2-digit', minute: '2-digit' })
+	const range = formatRange(start, end, { hour: '2-digit', minute: '2-digit' })
+	return title
+		? `${title} (${range})`
+		: range
 }
 
 /**
@@ -1284,6 +1290,22 @@ function getShiftCellBlockersTitle(userId: string, columnIndex: number): string 
 	return t(APP_ID, '⚠ blocked: {ranges}', {
 		ranges: blockers.map(formatBlocker).join(', '),
 	})
+}
+
+/**
+ * Returns the visible blocked label for a shifts cell.
+ *
+ * @param userId The user ID used in the shifts row
+ * @param columnIndex The table column index
+ */
+function getShiftCellBlockedLabel(userId: string, columnIndex: number): string {
+	const blockers = getShiftCellBlockers(userId, columnIndex)
+	const titles = [...new Set(blockers
+		.map(({ title }) => title.trim())
+		.filter((title) => title !== ''))].join(', ')
+	return titles
+		? t(APP_ID, '⚠ blocked: {titles}', { titles })
+		: t(APP_ID, '⚠ blocked')
 }
 
 provideShiftsContext({

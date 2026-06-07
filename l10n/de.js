@@ -142,6 +142,7 @@ OC.L10N.register(
 		"⚠ blocked": "⚠ blockiert",
 		"all day": "ganztägig",
 		"⚠ blocked: {ranges}": "⚠ blockiert: {ranges}",
+		"⚠ blocked: {titles}": "⚠ blockiert: {titles}",
 		"Participants": "Teilnehmer:innen",
 		"Admin": "Admin",
 		"All": "Alle",

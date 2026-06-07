@@ -19,6 +19,7 @@ OC.L10N.register(
 		"⚠ blocked": "⚠ blocked",
 		"all day": "all day",
 		"⚠ blocked: {ranges}": "⚠ blocked: {ranges}"
+		"⚠ blocked: {titles}": "⚠ blocked: {titles}",
 	},
 	"nplurals=2; plural=(n != 1);"
 );
