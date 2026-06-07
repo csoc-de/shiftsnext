@@ -1,59 +1,44 @@
 <template>
 	<div class="p-[var(--app-navigation-padding)] flex flex-col gap-2">
-		<InputGroup v-if="isMobileViewport" class="-mt-1">
-			<label for="shifts-display-mode">{{ t(APP_ID, "Display mode") }}</label>
-			<div id="shifts-display-mode" class="flex gap-1">
+		<template v-if="!isMobileViewport">
+			<IsoWeekDateInput
+				ref="isoWeekDateInput"
+				v-model="isoWeekDate"
+				fluid />
+			<div class="flex gap-1">
 				<NcButton
-					class="flex-1"
-					:variant="shiftsDisplayMode === 'team-day' ? 'primary' : 'secondary'"
-					@click="shiftsDisplayMode = 'team-day'">
-					{{ t(APP_ID, "Team day") }}
+					:aria-label="t(APP_ID, activeDisplayMode === 'team-day' ? 'Previous day' : 'Previous week')"
+					@click="decrease()">
+					<template #icon>
+						<ChevronLeft :size="20" />
+					</template>
+				</NcButton>
+				<NcButton
+					:aria-label="t(APP_ID, activeDisplayMode === 'team-day' ? 'Next day' : 'Next week')"
+					@click="increase()">
+					<template #icon>
+						<ChevronRight :size="20" />
+					</template>
 				</NcButton>
 				<NcButton
 					class="flex-1"
-					:variant="shiftsDisplayMode === 'personal-week' ? 'primary' : 'secondary'"
-					@click="shiftsDisplayMode = 'personal-week'">
-					{{ t(APP_ID, "My week") }}
+					@click="resetIsoWeekDate">
+					{{ t(APP_ID, "Today") }}
 				</NcButton>
 			</div>
-		</InputGroup>
-		<IsoWeekDateInput
-			ref="isoWeekDateInput"
-			v-model="isoWeekDate"
-			fluid />
-		<div class="flex gap-1">
-			<NcButton
-				:aria-label="t(APP_ID, activeDisplayMode === 'team-day' ? 'Previous day' : 'Previous week')"
-				@click="decrease()">
-				<template #icon>
-					<ChevronLeft :size="20" />
-				</template>
-			</NcButton>
-			<NcButton
-				:aria-label="t(APP_ID, activeDisplayMode === 'team-day' ? 'Next day' : 'Next week')"
-				@click="increase()">
-				<template #icon>
-					<ChevronRight :size="20" />
-				</template>
-			</NcButton>
-			<NcButton
-				class="flex-1"
-				@click="resetIsoWeekDate">
-				{{ t(APP_ID, "Today") }}
-			</NcButton>
-		</div>
-		<InputGroup v-if="activeDisplayMode === 'team-day'" class="-mt-1">
-			<label for="selected-day">{{ t(APP_ID, "Day") }}</label>
-			<div id="selected-day" class="grid grid-cols-3 gap-1">
-				<NcButton
-					v-for="dayOption in dayOptions"
-					:key="dayOption.value"
-					:variant="selectedIsoWeekDateWithDay === dayOption.value ? 'primary' : 'secondary'"
-					@click="setSelectedIsoWeekDateWithDay(dayOption.value)">
-					{{ dayOption.label }}
-				</NcButton>
-			</div>
-		</InputGroup>
+			<InputGroup v-if="activeDisplayMode === 'team-day'" class="-mt-1">
+				<label for="selected-day">{{ t(APP_ID, "Day") }}</label>
+				<div id="selected-day" class="grid grid-cols-3 gap-1">
+					<NcButton
+						v-for="dayOption in dayOptions"
+						:key="dayOption.value"
+						:variant="selectedIsoWeekDateWithDay === dayOption.value ? 'primary' : 'secondary'"
+						@click="setSelectedIsoWeekDateWithDay(dayOption.value)">
+						{{ dayOption.label }}
+					</NcButton>
+				</div>
+			</InputGroup>
+		</template>
 		<InputGroup class="-mt-1">
 			<label for="groups">{{ t(APP_ID, "Groups") }}</label>
 			<NcSelect

@@ -27,6 +27,53 @@
 			</div>
 		</template>
 	</ContentHeader>
+	<div class="min-[835px]:hidden px-4 pb-2 flex flex-col gap-2">
+		<div class="flex gap-1">
+			<NcButton
+				class="flex-1"
+				:variant="shiftsDisplayMode === 'team-day' ? 'primary' : 'secondary'"
+				@click="shiftsDisplayMode = 'team-day'">
+				{{ t(APP_ID, "Team day") }}
+			</NcButton>
+			<NcButton
+				class="flex-1"
+				:variant="shiftsDisplayMode === 'personal-week' ? 'primary' : 'secondary'"
+				@click="shiftsDisplayMode = 'personal-week'">
+				{{ t(APP_ID, "My week") }}
+			</NcButton>
+		</div>
+		<div class="flex gap-1">
+			<NcButton
+				:aria-label="t(APP_ID, activeDisplayMode === 'team-day' ? 'Previous day' : 'Previous week')"
+				@click="decreaseMobileDateSelection()">
+				<template #icon>
+					<ChevronLeft :size="20" />
+				</template>
+			</NcButton>
+			<NcButton
+				:aria-label="t(APP_ID, activeDisplayMode === 'team-day' ? 'Next day' : 'Next week')"
+				@click="increaseMobileDateSelection()">
+				<template #icon>
+					<ChevronRight :size="20" />
+				</template>
+			</NcButton>
+			<NcButton
+				class="flex-1"
+				@click="resetIsoWeekDate">
+				{{ t(APP_ID, "Today") }}
+			</NcButton>
+		</div>
+		<div v-if="activeDisplayMode === 'team-day'" class="grid gap-1" :style="{ gridTemplateColumns: `repeat(${mobileDayOptions.length}, minmax(0, 1fr))` }">
+			<NcButton
+				v-for="dayOption in mobileDayOptions"
+				:key="dayOption.value"
+				class="min-w-0"
+				:variant="selectedIsoWeekDateWithDay === dayOption.value ? 'primary' : 'secondary'"
+				@click="setSelectedIsoWeekDateWithDay(dayOption.value)">
+				{{ dayOption.label }}
+			</NcButton>
+		</div>
+	</div>
 	<PaddedContainer v-if="!loading" class="!overflow-hidden">
 		<div class="max-[834px]:hidden overflow-auto h-full">
 			<table class="h-fit w-full border-spacing-0">
@@ -248,6 +295,10 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import CalendarSync from 'vue-material-design-icons/CalendarSync.vue'
 // @ts-expect-error package has no types
 import Cancel from 'vue-material-design-icons/Cancel.vue'
+// @ts-expect-error package has no types
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
+// @ts-expect-error package has no types
+import ChevronRight from 'vue-material-design-icons/ChevronRight.vue'
 import ContentHeader from '../components/ContentHeader.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftPill from '../components/ShiftPill.vue'
@@ -291,6 +342,7 @@ import {
 	type IsoCalendarDate,
 	type IsoWeekDate,
 	type IsoWeekDateWithDay,
+	type IsoWeekDateWithoutDay,
 
 	formatDate,
 	formatRange,
@@ -324,7 +376,13 @@ const {
 	isoWeekDate,
 } = storeToRefs(store)
 
-const { updateNow } = store
+const {
+	updateNow,
+	resetIsoWeekDate,
+	setSelectedIsoWeekDateWithDay,
+	decreaseSelectedDay,
+	increaseSelectedDay,
+} = store
 const { width } = useWindowSize()
 
 updateNow()
@@ -348,6 +406,22 @@ const dateLabel = computed(() => {
 	}
 	return isoWeekDate.value
 })
+const mobileDayOptions = computed(() => {
+	const startDay = 1
+	const endDay = hideWeekends.value ? 5 : 7
+	const options: Array<{ value: IsoWeekDateWithDay, label: string }> = []
+	for (let day = startDay; day <= endDay; day++) {
+		const value = `${isoWeekDate.value}-${day}` as IsoWeekDateWithDay
+		options.push({
+			value,
+			label: formatDate(parseIsoWeekDate(value), {
+				weekday: 'short',
+				day: 'numeric',
+			}),
+		})
+	}
+	return options
+})
 
 /**
  * Returns a new {@link UndefinedMultiStepAction}
@@ -357,6 +431,36 @@ function getUndefinedMultiStepAction(): UndefinedMultiStepAction {
 		type: undefined,
 		columnIndex: -1,
 	}
+}
+
+/**
+ * Decreases day or week in mobile header controls.
+ */
+function decreaseMobileDateSelection(): void {
+	if (activeDisplayMode.value === 'team-day') {
+		decreaseSelectedDay()
+		return
+	}
+	const startOfWeek = parseIsoWeekDate(`${isoWeekDate.value}-1`)
+	isoWeekDate.value = getIsoWeekDate(
+		startOfWeek.subtract({ weeks: 1 }),
+		false,
+	) as IsoWeekDateWithoutDay
+}
+
+/**
+ * Increases day or week in mobile header controls.
+ */
+function increaseMobileDateSelection(): void {
+	if (activeDisplayMode.value === 'team-day') {
+		increaseSelectedDay()
+		return
+	}
+	const startOfWeek = parseIsoWeekDate(`${isoWeekDate.value}-1`)
+	isoWeekDate.value = getIsoWeekDate(
+		startOfWeek.add({ weeks: 1 }),
+		false,
+	) as IsoWeekDateWithoutDay
 }
 
 const multiStepAction = ref<MultiStepAction>(getUndefinedMultiStepAction())
