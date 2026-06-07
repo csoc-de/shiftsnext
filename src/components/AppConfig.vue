@@ -47,6 +47,16 @@
 								{{ t(APP_ID, "Ignore for weekly shifts") }}
 							</NcCheckboxRadioSwitch>
 						</InputGroup>
+						<InputGroup>
+							<label for="show-absence-blockers">
+								{{ t(APP_ID, "Shifts table blockers") }}</label>
+							<NcCheckboxRadioSwitch
+								id="show-absence-blockers"
+								v-model="showAbsenceBlockers"
+								type="checkbox">
+								{{ t(APP_ID, "Show visual absence blockers") }}
+							</NcCheckboxRadioSwitch>
+						</InputGroup>
 					</div>
 				</CustomFieldset>
 
@@ -89,7 +99,7 @@ import InputGroup from './InputGroup.vue'
 import { putAppConfig } from '../db/config.ts'
 import { EXCHANGE_APPROVAL_TYPES } from '../models/config.ts'
 import { APP_ID } from '../utils/appId.ts'
-import { getInitialAbsenceCalendar, getInitialApprovalType, getInitialCalendars, getInitialCommonCalendar, getInitialIgnoreAbsenceForByWeekShifts, getInitialSyncToPersonalCalendar } from '../utils/initialState.ts'
+import { getInitialAbsenceCalendar, getInitialApprovalType, getInitialCalendars, getInitialCommonCalendar, getInitialIgnoreAbsenceForByWeekShifts, getInitialShowAbsenceBlockers, getInitialSyncToPersonalCalendar } from '../utils/initialState.ts'
 import { getNcSelectCalendarOption, getNcSelectExchangeApprovalTypeOption } from '../utils/nextcloudVue.ts'
 import { showSavedToast } from '../utils/toast.ts'
 
@@ -112,6 +122,7 @@ const absenceCalendarOption = ref(initialAbsenceCalendar ? getNcSelectCalendarOp
 const syncToPersonalCalendar = ref(getInitialSyncToPersonalCalendar())
 
 const ignoreAbsenceForByWeekShifts = ref(getInitialIgnoreAbsenceForByWeekShifts())
+const showAbsenceBlockers = ref(getInitialShowAbsenceBlockers())
 
 const initialApprovalType = getInitialApprovalType()
 const approvalTypeOption
@@ -135,6 +146,7 @@ async function save() {
 			absence_calendar_id: absenceCalendarOption.value!.id,
 			sync_to_personal_calendar: syncToPersonalCalendar.value,
 			ignore_absence_for_by_week_shifts: ignoreAbsenceForByWeekShifts.value,
+			show_absence_blockers: showAbsenceBlockers.value,
 			exchange_approval_type: approvalTypeOption.value.id,
 		} })
 		showSavedToast()

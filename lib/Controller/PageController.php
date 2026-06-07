@@ -19,6 +19,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\IRequest;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
 
 final class PageController extends Controller {
 	public function __construct(IRequest $request) {
@@ -39,13 +40,28 @@ final class PageController extends Controller {
 	#[NoAdminRequired]
 	#[FrontpageRoute(verb: 'GET', url: '/{page}')]
 	public function page(
+		string $page,
+		IUserSession $userSession,
+		IURLGenerator $urlGenerator,
 		IInitialState $initialState,
 		ConfigService $configService,
 		GroupService $groupService,
 		GroupShiftAdminRelationService $groupShiftAdminRelationService,
 		GroupUserRelationService $groupUserRelationService,
 		CalendarService $calendarService,
-	): TemplateResponse {
+	): TemplateResponse|RedirectResponse {
+		if ($userSession->getUser() === null) {
+			$targetUrl = $urlGenerator->linkToRouteAbsolute(
+				Application::APP_ID . '.page.page',
+				['page' => $page],
+			);
+			$loginUrl = $urlGenerator->linkToRoute(
+				'core.login.showLoginForm',
+				['redirect_url' => $targetUrl],
+			);
+			return new RedirectResponse($loginUrl);
+		}
+
 		$groups = $groupService->getAllSerializable();
 
 		$adminGroupIds
@@ -57,9 +73,11 @@ final class PageController extends Controller {
 		$defaultGroups = $groupService->getAllSerializable(
 			$defaultGroupIds,
 		);
+		$hiddenUserIds = $configService->getHiddenUserIds();
 
 		$exchangeApprovalType
 			= $configService->getExchangeApprovalType()->value;
+		$showAbsenceBlockers = $configService->getShowAbsenceBlockers();
 
 		$initialState->provideInitialState(
 			'groups',
@@ -74,8 +92,16 @@ final class PageController extends Controller {
 			$defaultGroups,
 		);
 		$initialState->provideInitialState(
+			'hidden_user_ids',
+			$hiddenUserIds,
+		);
+		$initialState->provideInitialState(
 			'exchange_approval_type',
 			$exchangeApprovalType,
+		);
+		$initialState->provideInitialState(
+			'show_absence_blockers',
+			$showAbsenceBlockers,
 		);
 		$commonCalendar = $calendarService->safeGetCommonCalendar();
 		if ($commonCalendar !== null) {

@@ -1,7 +1,7 @@
 <template>
 	<ContentHeader :title="t(APP_ID, 'Shifts')" :loading="loading">
 		<div class="font-semibold mt-1">
-			{{ isoWeekDate }}
+			{{ dateLabel }}
 		</div>
 		<template #right>
 			<div class="flex gap-1">
@@ -27,8 +27,55 @@
 			</div>
 		</template>
 	</ContentHeader>
+	<div class="min-[835px]:hidden px-4 pb-2 flex flex-col gap-2">
+		<div class="flex gap-1">
+			<NcButton
+				class="flex-1"
+				:variant="shiftsDisplayMode === 'team-day' ? 'primary' : 'secondary'"
+				@click="shiftsDisplayMode = 'team-day'">
+				{{ t(APP_ID, "Team day") }}
+			</NcButton>
+			<NcButton
+				class="flex-1"
+				:variant="shiftsDisplayMode === 'personal-week' ? 'primary' : 'secondary'"
+				@click="shiftsDisplayMode = 'personal-week'">
+				{{ t(APP_ID, "My week") }}
+			</NcButton>
+		</div>
+		<div class="flex gap-1">
+			<NcButton
+				:aria-label="t(APP_ID, activeDisplayMode === 'team-day' ? 'Previous day' : 'Previous week')"
+				@click="decreaseMobileDateSelection()">
+				<template #icon>
+					<ChevronLeft :size="20" />
+				</template>
+			</NcButton>
+			<NcButton
+				:aria-label="t(APP_ID, activeDisplayMode === 'team-day' ? 'Next day' : 'Next week')"
+				@click="increaseMobileDateSelection()">
+				<template #icon>
+					<ChevronRight :size="20" />
+				</template>
+			</NcButton>
+			<NcButton
+				class="flex-1"
+				@click="resetIsoWeekDate">
+				{{ t(APP_ID, "Today") }}
+			</NcButton>
+		</div>
+		<div v-if="activeDisplayMode === 'team-day'" class="grid gap-1" :style="{ gridTemplateColumns: `repeat(${mobileDayOptions.length}, minmax(0, 1fr))` }">
+			<NcButton
+				v-for="dayOption in mobileDayOptions"
+				:key="dayOption.value"
+				class="min-w-0"
+				:variant="selectedIsoWeekDateWithDay === dayOption.value ? 'primary' : 'secondary'"
+				@click="setSelectedIsoWeekDateWithDay(dayOption.value)">
+				{{ dayOption.label }}
+			</NcButton>
+		</div>
+	</div>
 	<PaddedContainer v-if="!loading" class="!overflow-hidden">
-		<div class="overflow-auto h-full">
+		<div class="max-[834px]:hidden overflow-auto h-full">
 			<table class="h-fit w-full border-spacing-0">
 				<thead class="sticky z-[2] top-0 bg-nc-main">
 					<tr class="group">
@@ -57,7 +104,7 @@
 					</tr>
 				</thead>
 				<tbody class="h-full whitespace-pre-wrap">
-					<tr class="group">
+					<tr v-if="!hideOpenShifts" class="group">
 						<td
 							v-for="({ type, data }, columnIndex) in shiftTypesRow"
 							:key="columnIndex"
@@ -97,6 +144,7 @@
 									type === 'user' && data.id === authUser.id,
 								'border-l sticky left-0 z-[1] bg-nc-main': !columnIndex,
 							}"
+							:title="getShiftCellBlockersTitle(shiftsRow[0].data.id, columnIndex)"
 							@click="
 								shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'enabled'
 									&& onShiftCellClick(shiftsRow[0].data.id)
@@ -107,6 +155,11 @@
 							<div
 								v-else
 								class="flex size-full flex-col gap-1">
+								<div
+									v-if="showAbsenceBlockers && getShiftCellBlockersTitle(shiftsRow[0].data.id, columnIndex)"
+									class="text-xs font-semibold">
+									{{ getShiftCellBlockedLabel(shiftsRow[0].data.id, columnIndex) }}
+								</div>
 								<ShiftPill
 									v-for="shift in data"
 									:key="shift.id"
@@ -117,6 +170,89 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		<div class="min-[835px]:hidden overflow-auto h-full flex flex-col gap-2">
+			<template v-if="headerRow && shiftTypesRow">
+				<div
+					v-if="!hideOpenShifts"
+					class="rounded p-2"
+					:class="{
+						'border border-solid border-nc-maxcontrast': activeDisplayMode === 'team-week',
+					}">
+					<div class="font-semibold mb-2">
+						{{ t(APP_ID, 'Open shifts') }}
+					</div>
+					<div
+						v-for="({ type, data }, index) in shiftTypesRow.slice(1)"
+						:key="index"
+						class="rounded p-2 mb-2 last:mb-0"
+						:class="{
+							'border border-solid border-nc-maxcontrast': activeDisplayMode === 'team-week',
+						}">
+						<div
+							v-if="activeDisplayMode !== 'team-day'"
+							class="text-sm font-semibold mb-1">
+							{{ getHeaderCellLabel(headerRow[index + 1]) }}
+						</div>
+						<div
+							v-if="type === 'shift-types'"
+							class="flex flex-col gap-1">
+							<template v-for="shiftTypeWrapper in data" :key="shiftTypeWrapper.shiftType.id">
+								<ShiftTypePill
+									v-if="shiftTypeWrapper.amount > 0 && shiftTypeWrapper.shiftType.active"
+									:shiftTypeWrapper="shiftTypeWrapper"
+									:columnIndex="index + 1" />
+							</template>
+						</div>
+					</div>
+				</div>
+				<div
+					v-for="(shiftsRow, rowIndex) in shiftsRows"
+					:key="rowIndex"
+					class="rounded p-2"
+					:class="{
+						'border border-solid border-nc-maxcontrast': activeDisplayMode === 'team-week',
+						'bg-nc-primary-element-light text-nc-primary-element-light':
+							activeDisplayMode !== 'personal-week' && shiftsRow[0].data.id === authUser.id,
+					}">
+					<div v-if="activeDisplayMode !== 'personal-week'" class="font-semibold mb-2">
+						{{ shiftsRow[0].data.display_name }}
+					</div>
+					<div
+						v-for="({ type, data }, index) in shiftsRow.slice(1)"
+						:key="index"
+						class="rounded p-2 mb-2 last:mb-0"
+						:class="{
+							'border border-solid border-nc-maxcontrast': activeDisplayMode === 'team-week',
+							'!bg-nc-darker': shiftCellStatesMulti[rowIndex]?.[index + 1] === 'disabled',
+						}"
+						:title="getShiftCellBlockersTitle(shiftsRow[0].data.id, index + 1)"
+						@click="
+							shiftCellStatesMulti[rowIndex]?.[index + 1] === 'enabled'
+								&& onShiftCellClick(shiftsRow[0].data.id)
+						">
+						<div
+							v-if="activeDisplayMode !== 'team-day'"
+							class="text-sm font-semibold mb-1">
+							{{ getHeaderCellLabel(headerRow[index + 1]) }}
+						</div>
+						<div
+							v-if="type === 'shifts'"
+							class="flex flex-col gap-1">
+							<div
+								v-if="showAbsenceBlockers && getShiftCellBlockersTitle(shiftsRow[0].data.id, index + 1)"
+								class="text-xs font-semibold">
+								{{ getShiftCellBlockedLabel(shiftsRow[0].data.id, index + 1) }}
+							</div>
+							<ShiftPill
+								v-for="shift in data"
+								:key="shift.id"
+								:shift="shift"
+								:columnIndex="index + 1" />
+						</div>
+					</div>
+				</div>
+			</template>
 		</div>
 	</PaddedContainer>
 </template>
@@ -140,11 +276,12 @@ export const [injectShiftsContext, provideShiftsContext]
 </script>
 
 <script setup lang="ts">
+import type { AbsenceBlocker } from '../models/calendarSync.ts'
 import type { Shift, ShiftPostPayload } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
 
 import { t } from '@nextcloud/l10n'
-import { onKeyStroke, watchImmediate } from '@vueuse/core'
+import { onKeyStroke, useWindowSize, watchImmediate } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { Temporal } from 'temporal-polyfill'
 import {
@@ -158,11 +295,19 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import CalendarSync from 'vue-material-design-icons/CalendarSync.vue'
 // @ts-expect-error package has no types
 import Cancel from 'vue-material-design-icons/Cancel.vue'
+// @ts-expect-error package has no types
+import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
+// @ts-expect-error package has no types
+import ChevronRight from 'vue-material-design-icons/ChevronRight.vue'
 import ContentHeader from '../components/ContentHeader.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftPill from '../components/ShiftPill.vue'
 import ShiftTypePill from '../components/ShiftTypePill.vue'
-import { postSynchronizeByGroups, postSynchronizeByShifts } from '../db/calendarSync.ts'
+import {
+	getAbsenceBlockers,
+	postSynchronizeByGroups,
+	postSynchronizeByShifts,
+} from '../db/calendarSync.ts'
 import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
 import { getShiftTypes } from '../db/shiftType.ts'
 import { getUsers } from '../db/user.ts'
@@ -194,17 +339,25 @@ import { useUserSettingsStore } from '../stores/userSettings.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { rotate } from '../utils/array.ts'
 import {
+	type IsoCalendarDate,
 	type IsoWeekDate,
 	type IsoWeekDateWithDay,
+	type IsoWeekDateWithoutDay,
 
 	formatDate,
+	formatRange,
+	getIsoCalendarDate,
 	getIsoWeekDate,
 	getZonedDateTimeForDayOfWeek,
 	parseIsoWeekDate,
 	userTimeZone,
 } from '../utils/date.ts'
 import { isMember } from '../utils/groupUserRelation.ts'
-import { getInitialGroups, getInitialIsShiftAdmin } from '../utils/initialState.ts'
+import {
+	getInitialGroups,
+	getInitialIsShiftAdmin,
+	getInitialShowAbsenceBlockers,
+} from '../utils/initialState.ts'
 import { logger } from '../utils/logger.ts'
 import { compareShifts, compareShiftTypes } from '../utils/sort.ts'
 
@@ -213,11 +366,24 @@ const store = useUserSettingsStore()
 const {
 	selectedGroups,
 	selectedGroupIds,
+	hiddenUserIds,
+	showWeeklyShifts,
+	shiftsDisplayMode,
+	selectedIsoWeekDateWithDay,
+	hideWeekends,
+	hideOpenShifts,
 	currentIsoWeekDateWithDay,
 	isoWeekDate,
 } = storeToRefs(store)
 
-const { updateNow } = store
+const {
+	updateNow,
+	resetIsoWeekDate,
+	setSelectedIsoWeekDateWithDay,
+	decreaseSelectedDay,
+	increaseSelectedDay,
+} = store
+const { width } = useWindowSize()
 
 updateNow()
 
@@ -225,11 +391,37 @@ const loading = ref(true)
 const synchronizing = ref(false)
 
 const groups = ref(getInitialGroups())
+const showAbsenceBlockers = getInitialShowAbsenceBlockers()
+const absenceBlockersByUserAndDate = ref<Record<string, Record<string, AbsenceBlocker[]>>>({})
 
 const isShiftAdmin = getInitialIsShiftAdmin()
 
-const columnIndexOfWeek = 1
+const columnIndexOfWeek = computed(() => showWeeklyShifts.value ? 1 : -1)
 let columnIndexOfToday = -1
+const isMobileViewport = computed(() => width.value <= 834)
+const activeDisplayMode = computed(() => isMobileViewport.value ? shiftsDisplayMode.value : 'team-week')
+const dateLabel = computed(() => {
+	if (activeDisplayMode.value === 'team-day') {
+		return formatDate(parseIsoWeekDate(selectedIsoWeekDateWithDay.value), dayCellFormatOptions)
+	}
+	return isoWeekDate.value
+})
+const mobileDayOptions = computed(() => {
+	const startDay = 1
+	const endDay = hideWeekends.value ? 5 : 7
+	const options: Array<{ value: IsoWeekDateWithDay, label: string }> = []
+	for (let day = startDay; day <= endDay; day++) {
+		const value = `${isoWeekDate.value}-${day}` as IsoWeekDateWithDay
+		options.push({
+			value,
+			label: formatDate(parseIsoWeekDate(value), {
+				weekday: 'short',
+				day: 'numeric',
+			}),
+		})
+	}
+	return options
+})
 
 /**
  * Returns a new {@link UndefinedMultiStepAction}
@@ -239,6 +431,36 @@ function getUndefinedMultiStepAction(): UndefinedMultiStepAction {
 		type: undefined,
 		columnIndex: -1,
 	}
+}
+
+/**
+ * Decreases day or week in mobile header controls.
+ */
+function decreaseMobileDateSelection(): void {
+	if (activeDisplayMode.value === 'team-day') {
+		decreaseSelectedDay()
+		return
+	}
+	const startOfWeek = parseIsoWeekDate(`${isoWeekDate.value}-1`)
+	isoWeekDate.value = getIsoWeekDate(
+		startOfWeek.subtract({ weeks: 1 }),
+		false,
+	) as IsoWeekDateWithoutDay
+}
+
+/**
+ * Increases day or week in mobile header controls.
+ */
+function increaseMobileDateSelection(): void {
+	if (activeDisplayMode.value === 'team-day') {
+		increaseSelectedDay()
+		return
+	}
+	const startOfWeek = parseIsoWeekDate(`${isoWeekDate.value}-1`)
+	isoWeekDate.value = getIsoWeekDate(
+		startOfWeek.add({ weeks: 1 }),
+		false,
+	) as IsoWeekDateWithoutDay
 }
 
 const multiStepAction = ref<MultiStepAction>(getUndefinedMultiStepAction())
@@ -287,7 +509,19 @@ const shiftCellStatesMulti = computed<ShiftCellStateConfig[][]>(() => {
 	})
 })
 
-watchImmediate([isoWeekDate, selectedGroups], initialize)
+watchImmediate(
+	[
+		isoWeekDate,
+		selectedGroups,
+		hiddenUserIds,
+		showWeeklyShifts,
+		activeDisplayMode,
+		selectedIsoWeekDateWithDay,
+		hideWeekends,
+		hideOpenShifts,
+	],
+	initialize,
+)
 
 /**
  * Initializes the view
@@ -304,19 +538,106 @@ function initialize(): void {
 	promises.push(shiftTypesPromise)
 
 	const usersPromise = getUsers({ group_ids: groupIds })
-	usersPromise.then((_users) => (users = _users))
+	usersPromise.then((_users) => {
+		users = activeDisplayMode.value === 'personal-week'
+			? [authUser]
+			: _users.filter(({ id }) => !hiddenUserIds.value.includes(id))
+	})
 	promises.push(usersPromise)
 
-	const shiftsPromise = getShifts({
-		group_ids: groupIds,
-		week_date: isoWeekDate.value,
-	})
+	const shiftsFilters = activeDisplayMode.value === 'team-day'
+		? {
+				group_ids: groupIds,
+				calendar_date: getIsoCalendarDate(parseIsoWeekDate(selectedIsoWeekDateWithDay.value)) as IsoCalendarDate,
+			}
+		: activeDisplayMode.value === 'personal-week'
+			? {
+					group_ids: groupIds,
+					week_date: isoWeekDate.value,
+					user_id: authUser.id,
+				}
+			: {
+					group_ids: groupIds,
+					week_date: isoWeekDate.value,
+				}
+	const shiftsPromise = getShifts(shiftsFilters)
 	shiftsPromise.then((_shifts) => (shifts = _shifts))
 	promises.push(shiftsPromise)
 
 	Promise.all(promises)
-		.then(() => buildTable())
+		.then(async () => {
+			try {
+				await fetchAbsenceBlockers()
+			} catch (error) {
+				// Keep the shifts table usable even if blocker endpoint is unavailable
+				logger.warn(error instanceof Error ? error : String(error))
+			}
+			buildTable()
+		})
 		.finally(() => (loading.value = false))
+}
+
+/**
+ *
+ */
+async function fetchAbsenceBlockers(): Promise<void> {
+	absenceBlockersByUserAndDate.value = {}
+	if (!showAbsenceBlockers || users.length === 0) {
+		return
+	}
+	const blockers = await getAbsenceBlockers(
+		isoWeekDate.value,
+		users.map(({ id }) => id),
+	)
+	const mapped: Record<string, Record<string, AbsenceBlocker[]>> = {}
+	for (const blocker of blockers) {
+		mapped[blocker.user_id] ??= {}
+		const blockersByDate = mapped[blocker.user_id]!
+		for (const blockerDate of getBlockerIsoWeekDates(blocker)) {
+			blockersByDate[blockerDate] ??= []
+			blockersByDate[blockerDate].push(blocker)
+		}
+	}
+	absenceBlockersByUserAndDate.value = mapped
+}
+
+/**
+ * Returns all ISO week dates affected by a blocker.
+ *
+ * All-day blockers from CalDAV usually have an exclusive DTEND, so we subtract
+ * 1ns from positive ranges to include the last covered day correctly.
+ *
+ * @param blocker The blocker to evaluate
+ */
+function getBlockerIsoWeekDates(blocker: AbsenceBlocker): IsoWeekDate[] {
+	const start = Temporal.Instant.from(blocker.start).toZonedDateTimeISO(userTimeZone)
+	const rawEnd = Temporal.Instant.from(blocker.end).toZonedDateTimeISO(userTimeZone)
+	const safeEnd = Temporal.ZonedDateTime.compare(rawEnd, start) > 0
+		? rawEnd.subtract({ nanoseconds: 1 })
+		: start
+	const startDay = start.with({
+		hour: 0,
+		minute: 0,
+		second: 0,
+		millisecond: 0,
+		microsecond: 0,
+		nanosecond: 0,
+	})
+	const endDay = safeEnd.with({
+		hour: 0,
+		minute: 0,
+		second: 0,
+		millisecond: 0,
+		microsecond: 0,
+		nanosecond: 0,
+	})
+	const dates: IsoWeekDate[] = []
+	let cursor = startDay
+	while (Temporal.ZonedDateTime.compare(cursor, endDay) <= 0) {
+		dates.push(getIsoWeekDate(cursor, true))
+		cursor = cursor.add({ days: 1 })
+	}
+	return dates.length > 0 ? dates : [getIsoWeekDate(start, true)]
 }
 
 /**
@@ -337,10 +658,14 @@ function buildTable(): void {
 function setupHeaderRow(): void {
 	columnIndexOfToday = -1
 	const zdtsOfWeek: Temporal.ZonedDateTime[] = []
-	for (let dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
-		const isoWeekDateForDayOfWeek: IsoWeekDateWithDay = `${isoWeekDate.value}-${dayOfWeek}`
+	const dayColumnOffset = showWeeklyShifts.value ? 1 : 0
+	const daysOfWeek = getVisibleDaysOfWeek()
+	for (const dayOfWeek of daysOfWeek) {
+		const isoWeekDateForDayOfWeek: IsoWeekDateWithDay = activeDisplayMode.value === 'team-day'
+			? selectedIsoWeekDateWithDay.value
+			: `${isoWeekDate.value}-${dayOfWeek}`
 		if (isoWeekDateForDayOfWeek === currentIsoWeekDateWithDay.value) {
-			columnIndexOfToday = dayOfWeek + 1
+			columnIndexOfToday = zdtsOfWeek.length + dayColumnOffset + 1
 		}
 		zdtsOfWeek.push(parseIsoWeekDate(isoWeekDateForDayOfWeek))
 	}
@@ -353,7 +678,9 @@ function setupHeaderRow(): void {
 		data: isoWeekDate.value,
 	}
 	const dayHeaderCells: ZonedDateTimeDataCell[] = zdtsOfWeek.map((zdt): ZonedDateTimeDataCell => ({ type: 'zoned-date-time', data: zdt }))
-	headerRow.value = [userHeaderCell, weekHeaderCell, ...dayHeaderCells]
+	headerRow.value = showWeeklyShifts.value
+		? [userHeaderCell, weekHeaderCell, ...dayHeaderCells]
+		: [userHeaderCell, ...dayHeaderCells]
 }
 
 /**
@@ -401,7 +728,14 @@ function setupShiftsRows(): void {
 			= headerRow.value.length - numberOfFixedShiftsCells
 
 		for (let i = 0; i < numberOfShiftsDataCells; i++) {
-			shiftsDataCells.push({ type: 'shifts', data: [] })
+			const dayHeaderCell = headerRow.value[numberOfFixedShiftsCells + i]
+			const dayIsoWeekDate = dayHeaderCell?.type === 'zoned-date-time'
+				? getIsoWeekDate(dayHeaderCell.data, true)
+				: undefined
+			const blockers = dayIsoWeekDate
+				? absenceBlockersByUserAndDate.value[user.id]?.[dayIsoWeekDate] ?? []
+				: []
+			shiftsDataCells.push({ type: 'shifts', data: [], blockers })
 		}
 
 		shiftsCells.push(...shiftsDataCells)
@@ -416,6 +750,9 @@ function setupShiftsRows(): void {
 function placeWeeklyByWeekShiftTypes() {
 	if (!shiftTypesRow.value) {
 		throw new Error('setupShiftTypesRow needs to be called before')
+	}
+	if (!showWeeklyShifts.value) {
+		return
 	}
 	for (const shiftType of shiftTypes) {
 		const { repetition: { interval, weekly_type: weeklyType, config } }
@@ -559,12 +896,21 @@ function placeWeeklyByDayShiftTypes() {
  */
 function placeShifts(): void {
 	for (const shift of shifts) {
+		if (
+			!showWeeklyShifts.value
+			&& shift.shift_type.repetition.weekly_type === 'by_week'
+		) {
+			continue
+		}
 		const { start, shift_type: { id: shiftTypeId } } = shift
 		const isoWeekDate = getIsoWeekDate(
 			start,
 			shift.shift_type.repetition.weekly_type === 'by_day',
 		)
 		const columnIndex = getColumnIndex(isoWeekDate)
+		if (columnIndex < 0) {
+			continue
+		}
 		try {
 			placeShift(shift, columnIndex, false)
 		} catch (error) {
@@ -583,6 +929,16 @@ function placeShifts(): void {
 			logger.warn(error)
 		}
 	}
+}
+
+/**
+ * Returns visible day numbers for the current display mode.
+ */
+function getVisibleDaysOfWeek(): number[] {
+	if (activeDisplayMode.value === 'team-day') {
+		return [parseIsoWeekDate(selectedIsoWeekDateWithDay.value).dayOfWeek]
+	}
+	return hideWeekends.value ? [1, 2, 3, 4, 5] : [1, 2, 3, 4, 5, 6, 7]
 }
 
 /**
@@ -625,6 +981,24 @@ const dayCellFormatOptions: Intl.DateTimeFormatOptions = {
 	month: 'short',
 	weekday: 'short',
 	day: 'numeric',
+}
+
+/**
+ * Formats a header cell label for both table and mobile list layouts.
+ *
+ * @param cell The header cell to format
+ */
+function getHeaderCellLabel(cell: HeaderRow[number] | undefined): string {
+	if (!cell) {
+		return ''
+	}
+	if (cell.type === 'string') {
+		return cell.data
+	}
+	if (cell.type === 'week') {
+		return t(APP_ID, 'Weekly shifts')
+	}
+	return formatDate(cell.data, dayCellFormatOptions)
 }
 
 /**
@@ -865,6 +1239,73 @@ async function synchronizeByGroups() {
 	} finally {
 		synchronizing.value = false
 	}
+}
+
+/**
+ * Returns absence blockers for a specific user and table cell
+ *
+ * @param userId The user ID used in the shifts row
+ * @param columnIndex The table column index
+ */
+function getShiftCellBlockers(userId: string, columnIndex: number): AbsenceBlocker[] {
+	const row = getShiftsRow(userId)
+	const cell = row[columnIndex]
+	if (cell?.type !== 'shifts') {
+		return []
+	}
+	return cell.blockers ?? []
+}
+
+/**
+ * Formats a blocker range for the tooltip label
+ *
+ * @param blocker The blocker to format
+ */
+function formatBlocker(blocker: AbsenceBlocker): string {
+	const title = blocker.title.trim()
+	if (blocker.all_day) {
+		return title
+			? `${title} (${t(APP_ID, 'all day')})`
+			: t(APP_ID, 'all day')
+	}
+	const start = Temporal.Instant.from(blocker.start).toZonedDateTimeISO(userTimeZone)
+	const end = Temporal.Instant.from(blocker.end).toZonedDateTimeISO(userTimeZone)
+	const range = formatRange(start, end, { hour: '2-digit', minute: '2-digit' })
+	return title
+		? `${title} (${range})`
+		: range
+}
+
+/**
+ * Returns the tooltip text for blockers in a shifts cell
+ *
+ * @param userId The user ID used in the shifts row
+ * @param columnIndex The table column index
+ */
+function getShiftCellBlockersTitle(userId: string, columnIndex: number): string {
+	const blockers = getShiftCellBlockers(userId, columnIndex)
+	if (blockers.length === 0) {
+		return ''
+	}
+	return t(APP_ID, '⚠ blocked: {ranges}', {
+		ranges: blockers.map(formatBlocker).join(', '),
+	})
+}
+
+/**
+ * Returns the visible blocked label for a shifts cell.
+ *
+ * @param userId The user ID used in the shifts row
+ * @param columnIndex The table column index
+ */
+function getShiftCellBlockedLabel(userId: string, columnIndex: number): string {
+	const blockers = getShiftCellBlockers(userId, columnIndex)
+	const titles = [...new Set(blockers
+		.map(({ title }) => title.trim())
+		.filter((title) => title !== ''))].join(', ')
+	return titles
+		? t(APP_ID, '⚠ blocked: {titles}', { titles })
+		: t(APP_ID, '⚠ blocked')
 }
 
 provideShiftsContext({

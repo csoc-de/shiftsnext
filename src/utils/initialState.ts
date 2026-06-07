@@ -75,6 +75,14 @@ export function getInitialDefaultGroups(): Group[] {
 }
 
 /**
+ * Returns the hidden user IDs used inside the ShiftsView when the browser page
+ * was initially loaded
+ */
+export function getInitialHiddenUserIds(): string[] {
+	return structuredClone(loadState<string[]>(APP_ID, 'hidden_user_ids', []))
+}
+
+/**
  * Returns all users that existed when the browser page was initially loaded
  */
 export function getInitialUsers(): User[] {
@@ -131,5 +139,17 @@ export function getInitialIgnoreAbsenceForByWeekShifts(): boolean {
 	return structuredClone(loadState<boolean>(
 		APP_ID,
 		'ignore_absence_for_by_week_shifts',
+	))
+}
+
+/**
+ * Returns the "show absence blockers" setting that was set when the browser
+ * page was initially loaded
+ */
+export function getInitialShowAbsenceBlockers(): boolean {
+	return structuredClone(loadState<boolean>(
+		APP_ID,
+		'show_absence_blockers',
+		false,
 	))
 }
