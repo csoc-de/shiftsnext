@@ -97,6 +97,7 @@
 									type === 'user' && data.id === authUser.id,
 								'border-l sticky left-0 z-[1] bg-nc-main': !columnIndex,
 							}"
+							:title="getShiftCellBlockersTitle(shiftsRow[0].data.id, columnIndex)"
 							@click="
 								shiftCellStatesMulti[rowIndex]?.[columnIndex] === 'enabled'
 									&& onShiftCellClick(shiftsRow[0].data.id)
@@ -107,6 +108,11 @@
 							<div
 								v-else
 								class="flex size-full flex-col gap-1">
+								<div
+									v-if="showAbsenceBlockers && getShiftCellBlockersTitle(shiftsRow[0].data.id, columnIndex)"
+									class="text-xs font-semibold">
+									{{ t(APP_ID, '⚠ blocked') }}
+								</div>
 								<ShiftPill
 									v-for="shift in data"
 									:key="shift.id"
@@ -140,6 +146,7 @@ export const [injectShiftsContext, provideShiftsContext]
 </script>
 
 <script setup lang="ts">
+import type { AbsenceBlocker } from '../models/calendarSync.ts'
 import type { Shift, ShiftPostPayload } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
 
@@ -162,7 +169,11 @@ import ContentHeader from '../components/ContentHeader.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftPill from '../components/ShiftPill.vue'
 import ShiftTypePill from '../components/ShiftTypePill.vue'
-import { postSynchronizeByGroups, postSynchronizeByShifts } from '../db/calendarSync.ts'
+import {
+	getAbsenceBlockers,
+	postSynchronizeByGroups,
+	postSynchronizeByShifts,
+} from '../db/calendarSync.ts'
 import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
 import { getShiftTypes } from '../db/shiftType.ts'
 import { getUsers } from '../db/user.ts'
@@ -198,13 +209,18 @@ import {
 	type IsoWeekDateWithDay,
 
 	formatDate,
+	formatRange,
 	getIsoWeekDate,
 	getZonedDateTimeForDayOfWeek,
 	parseIsoWeekDate,
 	userTimeZone,
 } from '../utils/date.ts'
 import { isMember } from '../utils/groupUserRelation.ts'
-import { getInitialGroups, getInitialIsShiftAdmin } from '../utils/initialState.ts'
+import {
+	getInitialGroups,
+	getInitialIsShiftAdmin,
+	getInitialShowAbsenceBlockers,
+} from '../utils/initialState.ts'
 import { logger } from '../utils/logger.ts'
 import { compareShifts, compareShiftTypes } from '../utils/sort.ts'
 
@@ -213,6 +229,8 @@ const store = useUserSettingsStore()
 const {
 	selectedGroups,
 	selectedGroupIds,
+	hiddenUserIds,
+	showWeeklyShifts,
 	currentIsoWeekDateWithDay,
 	isoWeekDate,
 } = storeToRefs(store)
@@ -225,10 +243,12 @@ const loading = ref(true)
 const synchronizing = ref(false)
 
 const groups = ref(getInitialGroups())
+const showAbsenceBlockers = getInitialShowAbsenceBlockers()
+const absenceBlockersByUserAndDate = ref<Record<string, Record<string, AbsenceBlocker[]>>>({})
 
 const isShiftAdmin = getInitialIsShiftAdmin()
 
-const columnIndexOfWeek = 1
+const columnIndexOfWeek = computed(() => showWeeklyShifts.value ? 1 : -1)
 let columnIndexOfToday = -1
 
 /**
@@ -287,7 +307,7 @@ const shiftCellStatesMulti = computed<ShiftCellStateConfig[][]>(() => {
 	})
 })
 
-watchImmediate([isoWeekDate, selectedGroups], initialize)
+watchImmediate([isoWeekDate, selectedGroups, hiddenUserIds, showWeeklyShifts], initialize)
 
 /**
  * Initializes the view
@@ -304,7 +324,9 @@ function initialize(): void {
 	promises.push(shiftTypesPromise)
 
 	const usersPromise = getUsers({ group_ids: groupIds })
-	usersPromise.then((_users) => (users = _users))
+	usersPromise.then((_users) => {
+		users = _users.filter(({ id }) => !hiddenUserIds.value.includes(id))
+	})
 	promises.push(usersPromise)
 
 	const shiftsPromise = getShifts({
@@ -315,8 +337,79 @@ function initialize(): void {
 	promises.push(shiftsPromise)
 
 	Promise.all(promises)
-		.then(() => buildTable())
+		.then(async () => {
+			try {
+				await fetchAbsenceBlockers()
+			} catch (error) {
+				// Keep the shifts table usable even if blocker endpoint is unavailable
+				logger.warn(error instanceof Error ? error : String(error))
+			}
+			buildTable()
+		})
 		.finally(() => (loading.value = false))
+}
+
+/**
+ *
+ */
+async function fetchAbsenceBlockers(): Promise<void> {
+	absenceBlockersByUserAndDate.value = {}
+	if (!showAbsenceBlockers || users.length === 0) {
+		return
+	}
+	const blockers = await getAbsenceBlockers(
+		isoWeekDate.value,
+		users.map(({ id }) => id),
+	)
+	const mapped: Record<string, Record<string, AbsenceBlocker[]>> = {}
+	for (const blocker of blockers) {
+		mapped[blocker.user_id] ??= {}
+		const blockersByDate = mapped[blocker.user_id]!
+		for (const blockerDate of getBlockerIsoWeekDates(blocker)) {
+			blockersByDate[blockerDate] ??= []
+			blockersByDate[blockerDate].push(blocker)
+		}
+	}
+	absenceBlockersByUserAndDate.value = mapped
+}
+
+/**
+ * Returns all ISO week dates affected by a blocker.
+ *
+ * All-day blockers from CalDAV usually have an exclusive DTEND, so we subtract
+ * 1ns from positive ranges to include the last covered day correctly.
+ *
+ * @param blocker The blocker to evaluate
+ */
+function getBlockerIsoWeekDates(blocker: AbsenceBlocker): IsoWeekDate[] {
+	const start = Temporal.Instant.from(blocker.start).toZonedDateTimeISO(userTimeZone)
+	const rawEnd = Temporal.Instant.from(blocker.end).toZonedDateTimeISO(userTimeZone)
+	const safeEnd = Temporal.ZonedDateTime.compare(rawEnd, start) > 0
+		? rawEnd.subtract({ nanoseconds: 1 })
+		: start
+	const startDay = start.with({
+		hour: 0,
+		minute: 0,
+		second: 0,
+		millisecond: 0,
+		microsecond: 0,
+		nanosecond: 0,
+	})
+	const endDay = safeEnd.with({
+		hour: 0,
+		minute: 0,
+		second: 0,
+		millisecond: 0,
+		microsecond: 0,
+		nanosecond: 0,
+	})
+	const dates: IsoWeekDate[] = []
+	let cursor = startDay
+	while (Temporal.ZonedDateTime.compare(cursor, endDay) <= 0) {
+		dates.push(getIsoWeekDate(cursor, true))
+		cursor = cursor.add({ days: 1 })
+	}
+	return dates.length > 0 ? dates : [getIsoWeekDate(start, true)]
 }
 
 /**
@@ -337,10 +430,11 @@ function buildTable(): void {
 function setupHeaderRow(): void {
 	columnIndexOfToday = -1
 	const zdtsOfWeek: Temporal.ZonedDateTime[] = []
+	const dayColumnOffset = showWeeklyShifts.value ? 1 : 0
 	for (let dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) {
 		const isoWeekDateForDayOfWeek: IsoWeekDateWithDay = `${isoWeekDate.value}-${dayOfWeek}`
 		if (isoWeekDateForDayOfWeek === currentIsoWeekDateWithDay.value) {
-			columnIndexOfToday = dayOfWeek + 1
+			columnIndexOfToday = dayOfWeek + dayColumnOffset
 		}
 		zdtsOfWeek.push(parseIsoWeekDate(isoWeekDateForDayOfWeek))
 	}
@@ -353,7 +447,9 @@ function setupHeaderRow(): void {
 		data: isoWeekDate.value,
 	}
 	const dayHeaderCells: ZonedDateTimeDataCell[] = zdtsOfWeek.map((zdt): ZonedDateTimeDataCell => ({ type: 'zoned-date-time', data: zdt }))
-	headerRow.value = [userHeaderCell, weekHeaderCell, ...dayHeaderCells]
+	headerRow.value = showWeeklyShifts.value
+		? [userHeaderCell, weekHeaderCell, ...dayHeaderCells]
+		: [userHeaderCell, ...dayHeaderCells]
 }
 
 /**
@@ -401,7 +497,14 @@ function setupShiftsRows(): void {
 			= headerRow.value.length - numberOfFixedShiftsCells
 
 		for (let i = 0; i < numberOfShiftsDataCells; i++) {
-			shiftsDataCells.push({ type: 'shifts', data: [] })
+			const dayHeaderCell = headerRow.value[numberOfFixedShiftsCells + i]
+			const dayIsoWeekDate = dayHeaderCell?.type === 'zoned-date-time'
+				? getIsoWeekDate(dayHeaderCell.data, true)
+				: undefined
+			const blockers = dayIsoWeekDate
+				? absenceBlockersByUserAndDate.value[user.id]?.[dayIsoWeekDate] ?? []
+				: []
+			shiftsDataCells.push({ type: 'shifts', data: [], blockers })
 		}
 
 		shiftsCells.push(...shiftsDataCells)
@@ -416,6 +519,9 @@ function setupShiftsRows(): void {
 function placeWeeklyByWeekShiftTypes() {
 	if (!shiftTypesRow.value) {
 		throw new Error('setupShiftTypesRow needs to be called before')
+	}
+	if (!showWeeklyShifts.value) {
+		return
 	}
 	for (const shiftType of shiftTypes) {
 		const { repetition: { interval, weekly_type: weeklyType, config } }
@@ -559,6 +665,12 @@ function placeWeeklyByDayShiftTypes() {
  */
 function placeShifts(): void {
 	for (const shift of shifts) {
+		if (
+			!showWeeklyShifts.value
+			&& shift.shift_type.repetition.weekly_type === 'by_week'
+		) {
+			continue
+		}
 		const { start, shift_type: { id: shiftTypeId } } = shift
 		const isoWeekDate = getIsoWeekDate(
 			start,
@@ -865,6 +977,51 @@ async function synchronizeByGroups() {
 	} finally {
 		synchronizing.value = false
 	}
+}
+
+/**
+ * Returns absence blockers for a specific user and table cell
+ *
+ * @param userId The user ID used in the shifts row
+ * @param columnIndex The table column index
+ */
+function getShiftCellBlockers(userId: string, columnIndex: number): AbsenceBlocker[] {
+	const row = getShiftsRow(userId)
+	const cell = row[columnIndex]
+	if (cell?.type !== 'shifts') {
+		return []
+	}
+	return cell.blockers ?? []
+}
+
+/**
+ * Formats a blocker range for the tooltip label
+ *
+ * @param blocker The blocker to format
+ */
+function formatBlocker(blocker: AbsenceBlocker): string {
+	if (blocker.all_day) {
+		return t(APP_ID, 'all day')
+	}
+	const start = Temporal.Instant.from(blocker.start).toZonedDateTimeISO(userTimeZone)
+	const end = Temporal.Instant.from(blocker.end).toZonedDateTimeISO(userTimeZone)
+	return formatRange(start, end, { hour: '2-digit', minute: '2-digit' })
+}
+
+/**
+ * Returns the tooltip text for blockers in a shifts cell
+ *
+ * @param userId The user ID used in the shifts row
+ * @param columnIndex The table column index
+ */
+function getShiftCellBlockersTitle(userId: string, columnIndex: number): string {
+	const blockers = getShiftCellBlockers(userId, columnIndex)
+	if (blockers.length === 0) {
+		return ''
+	}
+	return t(APP_ID, '⚠ blocked: {ranges}', {
+		ranges: blockers.map(formatBlocker).join(', '),
+	})
 }
 
 provideShiftsContext({

@@ -57,9 +57,11 @@ final class PageController extends Controller {
 		$defaultGroups = $groupService->getAllSerializable(
 			$defaultGroupIds,
 		);
+		$hiddenUserIds = $configService->getHiddenUserIds();
 
 		$exchangeApprovalType
 			= $configService->getExchangeApprovalType()->value;
+		$showAbsenceBlockers = $configService->getShowAbsenceBlockers();
 
 		$initialState->provideInitialState(
 			'groups',
@@ -74,8 +76,16 @@ final class PageController extends Controller {
 			$defaultGroups,
 		);
 		$initialState->provideInitialState(
+			'hidden_user_ids',
+			$hiddenUserIds,
+		);
+		$initialState->provideInitialState(
 			'exchange_approval_type',
 			$exchangeApprovalType,
+		);
+		$initialState->provideInitialState(
+			'show_absence_blockers',
+			$showAbsenceBlockers,
 		);
 		$commonCalendar = $calendarService->safeGetCommonCalendar();
 		if ($commonCalendar !== null) {

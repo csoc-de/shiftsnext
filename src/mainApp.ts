@@ -1,4 +1,5 @@
 import axios from '@nextcloud/axios'
+import { linkTo } from '@nextcloud/router'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -21,3 +22,12 @@ app.use(router)
 app.use(createPinia())
 
 app.mount('#content')
+
+if (
+	import.meta.env.PROD
+		&& 'serviceWorker' in navigator
+		&& globalThis.isSecureContext
+) {
+	const swUrl = linkTo(APP_ID, 'service-worker.js')
+	navigator.serviceWorker.register(swUrl).catch(() => undefined)
+}

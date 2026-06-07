@@ -1,5 +1,6 @@
 import type { Temporal } from 'temporal-polyfill'
 import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
+import type { AbsenceBlocker } from './calendarSync.ts'
 import type { Shift } from './shift.ts'
 import type { RepetitionWeeklyType, ShiftType } from './shiftType.ts'
 import type { User } from './user.ts'
@@ -73,6 +74,7 @@ export interface ShiftTypesDataCell extends BaseCell {
 export interface ShiftsDataCell extends BaseCell {
 	type: 'shifts'
 	data: Shift[]
+	blockers?: AbsenceBlocker[]
 }
 
 export type ShiftCellStateConfig = 'neutral' | 'disabled' | 'enabled'
@@ -80,7 +82,9 @@ export type ShiftCellStateConfig = 'neutral' | 'disabled' | 'enabled'
 // Type aliases for cell tuples, each alias represents the cell types of a specific row type
 
 /** Represents the cell types of the header row */
-export type HeaderRow = [StringCell, WeekCell, ...ZonedDateTimeDataCell[]]
+export type HeaderRowWithWeek = [StringCell, WeekCell, ...ZonedDateTimeDataCell[]]
+export type HeaderRowWithoutWeek = [StringCell, ...ZonedDateTimeDataCell[]]
+export type HeaderRow = HeaderRowWithWeek | HeaderRowWithoutWeek
 
 /** Represents the cell types of the shift types row */
 export type ShiftTypesRow = [StringCell, ...ShiftTypesDataCell[]]
