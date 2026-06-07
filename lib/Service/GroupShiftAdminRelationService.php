@@ -31,7 +31,7 @@ use function in_array;
  */
 final class GroupShiftAdminRelationService {
 	public function __construct(
-		private string $userId,
+		private ?string $userId,
 		private GroupShiftAdminRelationMapper $groupShiftAdminRelationMapper,
 		private GroupService $groupService,
 		private UserService $userService,
@@ -46,8 +46,12 @@ final class GroupShiftAdminRelationService {
 	 * @return list<string>
 	 */
 	public function getShiftAdminGroupIds(?string $userId = null): array {
+		$effectiveUserId = $userId ?? $this->userId;
+		if ($effectiveUserId === null) {
+			return [];
+		}
 		$groupShiftAdminRelations = $this->groupShiftAdminRelationMapper->findAll(
-			userIds: [$userId ?? $this->userId],
+			userIds: [$effectiveUserId],
 		);
 		return array_map(
 			fn ($groupShiftAdminRelation) => $groupShiftAdminRelation->getGroupId(),

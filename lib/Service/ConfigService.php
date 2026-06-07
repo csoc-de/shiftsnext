@@ -36,7 +36,7 @@ use function json_encode;
  */
 final class ConfigService extends AbstractService {
 	public function __construct(
-		private string $userId,
+		private ?string $userId,
 		private IAppConfig $appConfig,
 		private IConfig $config,
 	) {
@@ -184,6 +184,9 @@ final class ConfigService extends AbstractService {
 	 * @return static
 	 */
 	public function setDefaultGroupIds(array $groupIds): static {
+		if ($this->userId === null) {
+			return $this;
+		}
 		$json = json_encode($groupIds);
 		if ($json === false) {
 			$json = '[]';
@@ -205,6 +208,9 @@ final class ConfigService extends AbstractService {
 	 * @return list<string>
 	 */
 	public function getDefaultGroupIds(): array {
+		if ($this->userId === null) {
+			return [];
+		}
 		/** @psalm-suppress DeprecatedMethod */
 		$value = $this->config->getUserValue(
 			$this->userId,
@@ -225,6 +231,9 @@ final class ConfigService extends AbstractService {
 	 * @return static
 	 */
 	public function setHiddenUserIds(array $userIds): static {
+		if ($this->userId === null) {
+			return $this;
+		}
 		$json = json_encode($userIds);
 		if ($json === false) {
 			$json = '[]';
@@ -246,6 +255,9 @@ final class ConfigService extends AbstractService {
 	 * @return list<string>
 	 */
 	public function getHiddenUserIds(): array {
+		if ($this->userId === null) {
+			return [];
+		}
 		/** @psalm-suppress DeprecatedMethod */
 		$value = $this->config->getUserValue(
 			$this->userId,
@@ -294,6 +306,9 @@ final class ConfigService extends AbstractService {
 	 * @return non-empty-string
 	 */
 	public function getTimeZone(?string $userId = null): string {
+		if ($userId === null && $this->userId === null) {
+			return 'UTC';
+		}
 		/** @psalm-suppress DeprecatedMethod */
 		return $this->config->getUserValue(
 			$userId ?? $this->userId,
@@ -313,6 +328,9 @@ final class ConfigService extends AbstractService {
 	 * @return non-empty-string
 	 */
 	public function getLanguage(?string $userId = null): string {
+		if ($userId === null && $this->userId === null) {
+			return 'en';
+		}
 		/** @psalm-suppress DeprecatedMethod */
 		return $this->config->getUserValue(
 			$userId ?? $this->userId,
@@ -332,6 +350,9 @@ final class ConfigService extends AbstractService {
 	 * @return non-empty-string
 	 */
 	public function getLocale(?string $userId = null): string {
+		if ($userId === null && $this->userId === null) {
+			return 'en';
+		}
 		/** @psalm-suppress DeprecatedMethod */
 		return $this->config->getUserValue(
 			$userId ?? $this->userId,
