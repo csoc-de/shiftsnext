@@ -1,6 +1,7 @@
 OC.L10N.register(
 	"shiftsnext",
 	{
+		"A new version is available. Reload now?": "A new version is available. Reload now?",
 		"Display mode": "Display mode",
 		"Team day": "Team day",
 		"My week": "My week",
