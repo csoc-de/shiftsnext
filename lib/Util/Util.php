@@ -14,7 +14,6 @@ use OCA\ShiftsNext\Exception\EcmaMalformedStringException;
 use OCA\ShiftsNext\Psalm\EcmaAlias;
 use OCA\ShiftsNext\Psalm\UtilAlias;
 use OCA\ShiftsNext\Service\ConfigService;
-
 use function array_search;
 
 /**

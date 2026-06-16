@@ -8,7 +8,6 @@ use OCP\IGroupManager;
 use OCP\IUserManager;
 use OCP\Server;
 use Test\TestCase;
-
 use function array_walk;
 
 /**

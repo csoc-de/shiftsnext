@@ -10,14 +10,12 @@ use OCP\IGroupManager;
 use OCP\IUser;
 use OCP\IUserManager;
 use OCP\Util;
-
 use function array_filter;
 use function array_map;
 use function array_merge;
 use function array_unique;
 use function in_array;
 use function usort;
-
 use const SORT_REGULAR;
 
 final class UserService {

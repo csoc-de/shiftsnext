@@ -10,7 +10,6 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Group\Events\GroupDeletedEvent;
 use Override;
-
 use function array_walk;
 
 /**

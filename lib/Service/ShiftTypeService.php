@@ -12,7 +12,6 @@ use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Extended\ShiftTypeExtended;
 use OCA\ShiftsNext\Psalm\CalendarAlias;
 use OCP\IGroup;
-
 use function array_map;
 use function is_int;
 

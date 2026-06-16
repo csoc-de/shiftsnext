@@ -18,7 +18,6 @@ use OCA\ShiftsNext\Util\Util;
 use Ramsey\Uuid\Uuid;
 use Sabre\VObject\Component\VCalendar;
 use Throwable;
-
 use function array_column;
 use function array_filter;
 use function array_map;

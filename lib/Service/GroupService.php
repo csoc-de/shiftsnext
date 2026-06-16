@@ -9,7 +9,6 @@ use OCA\ShiftsNext\Serializable\SerializableGroup;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\Util;
-
 use function array_filter;
 use function in_array;
 use function usort;

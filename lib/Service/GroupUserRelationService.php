@@ -15,7 +15,6 @@ use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IUser;
-
 use function array_map;
 use function array_values;
 use function in_array;
