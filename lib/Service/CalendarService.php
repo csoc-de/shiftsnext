@@ -50,6 +50,8 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns all calendars
+	 *
 	 * @return list<SanitizedCalendar>
 	 */
 	public function getCalendars(): array {
@@ -74,7 +76,7 @@ final class CalendarService extends AbstractService {
 	 * None-critical exceptions are catched and hints about the culprit are
 	 * included in a string array returned from this method
 	 *
-	 * @param CalendarChange[] $calendarChanges
+	 * @param CalendarChange[] $calendarChanges The calendar changes to apply
 	 *
 	 * @return list<string> Error messages
 	 *
@@ -112,7 +114,7 @@ final class CalendarService extends AbstractService {
 	/**
 	 * Either creates, updates or deletes an event based on `$calendarChange`
 	 *
-	 * @param CalendarChange $calendarChange
+	 * @param CalendarChange $calendarChange The calendar change to apply
 	 *
 	 * @return list<SanitizedCalendar> Calendars where applying the change failed
 	 *
@@ -203,6 +205,17 @@ final class CalendarService extends AbstractService {
 		return $failedCalendars;
 	}
 
+	/**
+	 * Creates an iCal stream (string) for the specified shift
+	 *
+	 * @param ShiftExtended $shift The shift to create the iCal stream for
+	 * @param bool $isPersonal Whether the stream is meant to be used for the
+	 *                         user's personal calendar or the common calendar.
+	 *                         If `false`, the user's display name is included
+	 *                         in the iCal event's SUMMARY field.
+	 *
+	 * @return string
+	 */
 	private function createICalendarStream(
 		ShiftExtended $shift,
 		bool $isPersonal,
@@ -265,6 +278,9 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the "common" calendar set in the admin settings by the Nextcloud
+	 * instance admin
+	 *
 	 * @return SanitizedCalendar
 	 *
 	 * @throws CalendarNotFoundException
@@ -275,6 +291,9 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the "common" calendar set in the admin settings by the Nextcloud
+	 * instance admin
+	 *
 	 * @return null|SanitizedCalendar `null` if not found
 	 */
 	public function safeGetCommonCalendar(): ?array {
@@ -283,6 +302,9 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the "absence" calendar set in the admin settings by the Nextcloud
+	 * instance admin
+	 *
 	 * @return SanitizedCalendar
 	 *
 	 * @throws CalendarNotFoundException
@@ -293,6 +315,9 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the "absence" calendar set in the admin settings by the Nextcloud
+	 * instance admin
+	 *
 	 * @return null|SanitizedCalendar `null` if not found
 	 */
 	public function safeGetAbsenceCalendar(): ?array {
@@ -301,6 +326,10 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the personal calendar of the specified user
+	 *
+	 * @param string $userId The user to get the personal calendar for
+	 *
 	 * @return SanitizedCalendar
 	 *
 	 * @throws CalendarNotFoundException
@@ -312,6 +341,10 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the calendar identified by `$id`
+	 *
+	 * @param int $id The ID of the calendar
+	 *
 	 * @return SanitizedCalendar
 	 *
 	 * @throws CalendarNotFoundException if no calendar for `$id` exists
@@ -326,6 +359,10 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the calendar identified by `$id`
+	 *
+	 * @param int $id The ID of the calendar
+	 *
 	 * @return null|SanitizedCalendar `null` if no calendar for `$id` exists
 	 */
 	public function safeGetCalendarById(int $id): ?array {
@@ -337,6 +374,11 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the calendar identified by `$userId` and `$calendarUri`
+	 *
+	 * @param string $userId The principals user ID
+	 * @param string $calendarUri The calendar URI
+	 *
 	 * @return SanitizedCalendar
 	 *
 	 * @throws CalendarNotFoundException if no calendar for `$userId` and
@@ -361,6 +403,12 @@ final class CalendarService extends AbstractService {
 	/**
 	 * Checks if there is an event in the absence calendar for `$userId`
 	 * between `$start` and `$end`
+	 *
+	 * @param string $userId The user to execute the absence check for
+	 * @param DateTimeImmutable $start The start of the checked period
+	 * @param DateTimeImmutable $end The end of the checked period
+	 *
+	 * @return bool
 	 */
 	public function isUserAbsent(
 		string $userId,
@@ -407,9 +455,12 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
-	 * This method returns the same values if the `$shiftId` does not change
+	 * Returns an array containing two calendar object URIs: one for the
+	 * not-deleted variant and the other one for the deleted variant
 	 *
-	 * @param int $shiftId
+	 * The return value is stable for identical `$shiftId` input values
+	 *
+	 * @param int $shiftId The shift to get the calendar object URIs for
 	 *
 	 * @return array{normal:string,deleted:string}
 	 */
@@ -419,11 +470,14 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
-	 * @param Calendar $calendar
+	 * Sanitizes a calendar (associative array) returned from many of the
+	 * {@see OCA\DAV\CalDAV\CalDavBackend} methods
+	 *
+	 * @param Calendar $calendar The calendar to sanitize
 	 *
 	 * @return SanitizedCalendar
 	 */
-	public static function sanitizeCalendar(array $calendar) {
+	public static function sanitizeCalendar(array $calendar): array {
 		return [
 			'id' => $calendar['id'],
 			'uri' => $calendar['uri'],
