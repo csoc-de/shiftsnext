@@ -16,7 +16,6 @@ use OCA\ShiftsNext\Extended\ShiftExtended;
 use OCA\ShiftsNext\Extended\ShiftTypeExtended;
 use OCP\IUser;
 use Throwable;
-
 use function array_map;
 use function explode;
 

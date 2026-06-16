@@ -16,7 +16,6 @@ use OCA\ShiftsNext\Serializable\SerializableGroup;
 use OCA\ShiftsNext\Serializable\SerializableUser;
 use OCP\IGroup;
 use OCP\IUser;
-
 use function array_all;
 use function array_any;
 use function array_diff;

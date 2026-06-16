@@ -18,7 +18,6 @@ use OCA\ShiftsNext\Extended\ShiftExchangeApprovalExtended;
 use OCA\ShiftsNext\Extended\ShiftExchangeExtended;
 use OCA\ShiftsNext\Extended\ShiftExtended;
 use OCP\IUser;
-
 use function array_map;
 
 final class ShiftExchangeService {

@@ -12,7 +12,6 @@ use OCA\ShiftsNext\Enum\ExchangeApprovalType;
 use OCA\ShiftsNext\Enum\UserConfigKey;
 use OCP\IAppConfig;
 use OCP\IConfig;
-
 use function is_string;
 use function json_decode;
 use function json_encode;

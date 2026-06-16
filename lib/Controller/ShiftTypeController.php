@@ -22,7 +22,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
-
 use function array_intersect;
 use function array_walk;
 

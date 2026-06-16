@@ -13,7 +13,6 @@ use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;
 use Throwable;
-
 use function array_intersect;
 
 final class UserController extends ApiController {

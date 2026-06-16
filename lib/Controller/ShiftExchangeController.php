@@ -33,7 +33,6 @@ use OCP\AppFramework\Http\JSONResponse;
 use OCP\IL10N;
 use OCP\IRequest;
 use Throwable;
-
 use function array_key_exists;
 use function array_walk;
 use function in_array;

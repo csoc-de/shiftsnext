@@ -11,7 +11,6 @@ use OCA\ShiftsNext\Exception\GroupNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Extended\ShiftTypeExtended;
 use OCP\IGroup;
-
 use function array_map;
 
 final class ShiftTypeService {

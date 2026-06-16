@@ -12,7 +12,6 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\User\Events\UserDeletedEvent;
 use Override;
-
 use function array_walk;
 
 /**
