@@ -139,5 +139,5 @@ export function getInitialIgnoreAbsenceForByWeekShifts(): boolean {
  * when the browser page was initially loaded
  */
 export function getInitialWritableCalendars(): Calendar[] {
-	return structuredClone(loadState<Calendar[]>(APP_ID, 'calendars'))
+	return structuredClone(loadState<Calendar[]>(APP_ID, 'writable_calendars'))
 }

@@ -92,6 +92,10 @@ final class PageController extends Controller {
 			);
 		}
 		$initialState->provideInitialState(
+			'writable_calendars',
+			$calendarService->getWritableCalendars(),
+		);
+		$initialState->provideInitialState(
 			'group_shift_admin_relations_by_group',
 			$groupShiftAdminRelationService->getAllGroupedByGroup(),
 		);

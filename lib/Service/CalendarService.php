@@ -23,6 +23,7 @@ use function array_filter;
 use function array_map;
 use function array_merge;
 use function array_push;
+use function array_values;
 use function in_array;
 use function mb_ereg_replace;
 use function mb_split;
@@ -46,6 +47,7 @@ final class CalendarService extends AbstractService {
 		private ShiftService $shiftService,
 		private CalendarChangeMapper $calendarChangeMapper,
 		private UserService $userService,
+		private string $userId,
 	) {
 	}
 
@@ -67,6 +69,25 @@ final class CalendarService extends AbstractService {
 			array_push($calendars, ...$userCalendars);
 		}
 		return array_map(self::sanitizeCalendar(...), $calendars);
+	}
+
+	/**
+	 * Returns all calendars for which `$userId` has write permissions
+	 *
+	 * @param null|string $userId If `null`, the logged-in user is used
+	 *
+	 * @return list<SanitizedCalendar>
+	 */
+	public function getWritableCalendars(?string $userId = null): array {
+		/** @var list<Calendar> */
+		$calendars = $this->calDavBackend->getCalendarsForUser(
+			'principals/users/' . ($userId ?? $this->userId)
+		);
+		$calendars = array_filter(
+			$calendars,
+			fn ($calendar) => !($calendar['{http://owncloud.org/ns}read-only'] ?? false),
+		);
+		return array_map(self::sanitizeCalendar(...), array_values($calendars));
 	}
 
 	/**
