@@ -18,6 +18,7 @@ use OCA\ShiftsNext\Util\Util;
 use Ramsey\Uuid\Uuid;
 use Sabre\VObject\Component\VCalendar;
 use Throwable;
+use function array_any;
 use function array_column;
 use function array_filter;
 use function array_map;
@@ -88,6 +89,24 @@ final class CalendarService extends AbstractService {
 			fn ($calendar) => !($calendar['{http://owncloud.org/ns}read-only'] ?? false),
 		);
 		return array_map(self::sanitizeCalendar(...), array_values($calendars));
+	}
+
+	/**
+	 * Checks if `$userId` has write access for `$calendarId`
+	 *
+	 * @param int $calendarId The calendar to check
+	 * @param null|string $userId If `null`, the logged-in user is used
+	 *
+	 * @return bool
+	 */
+	public function hasUserWriteAccessForCalendar(
+		int $calendarId,
+		?string $userId = null,
+	): bool {
+		return array_any(
+			$this->getWritableCalendars($userId ?? $this->userId),
+			fn ($calendar) => $calendar['id'] === $calendarId,
+		);
 	}
 
 	/**

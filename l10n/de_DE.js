@@ -30,6 +30,7 @@ OC.L10N.register(
 		"You do not have permissions to create shift types for group %1$s.": "Sie haben keine Berechtigung, um Schicht-Typen für Gruppe %1$s zu erstellen.",
 		"You do not have permissions to update shift types for group %1$s.": "Sie haben keine Berechtigung, um Schicht-Typen für Gruppe %1$s zu aktualisieren.",
 		"You do not have permissions to delete shift types for group %1$s.": "Sie haben keine Berechtigung, um Schicht-Typen für Gruppe %1$s zu löschen.",
+		"You need to have write access for calendar %1$s in order to choose it for synchronization.": "Sie benötigen Schreibzugriff auf den Kalender %1$s, um ihn für die Synchronisierung auszuwählen.",
 		"The app has been updated. Please reload the page.": "Die App wurde aktualisiert. Bitte Seite neu laden.",
 		"Shifts Next": "Shifts Next",
 		"App for managing shifts": "App zum Schichten verwalten",

@@ -11,6 +11,7 @@ use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Psalm\ShiftTypeAlias;
 use OCA\ShiftsNext\Response\ErrorResponse;
 use OCA\ShiftsNext\Service\CalendarChangeService;
+use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\ShiftTypeService;
@@ -40,6 +41,7 @@ final class ShiftTypeController extends ApiController {
 		private GroupService $groupService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
 		private CalendarChangeService $calendarChangeService,
+		private CalendarService $calendarService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -114,7 +116,22 @@ final class ShiftTypeController extends ApiController {
 					$this->l->t('You do not have permissions to create shift types for group %1$s.', [$groupName]),
 				);
 			}
-			// TODO: check if logged-in user has write permissions for `$calendar_id`
+			if (
+				$sync_to_calendar
+				&& $calendar_id !== null
+				&& !$this->calendarService->hasUserWriteAccessForCalendar($calendar_id)
+			) {
+				$calendar = $this->calendarService->getCalendarById($calendar_id);
+				throw new HttpException(
+					Http::STATUS_FORBIDDEN,
+					"You lack write access for calendar $calendar_id",
+					null,
+					$this->l->t(
+						'You need to have write access for calendar %1$s in order to choose it for synchronization.',
+						[$calendar['displayName']]
+					),
+				);
+			}
 			$shiftType = $this->shiftTypeMapper->create(
 				$group_id,
 				$name,
@@ -164,7 +181,23 @@ final class ShiftTypeController extends ApiController {
 					$this->l->t('You do not have permissions to update shift types for group %1$s.', [$groupName]),
 				);
 			}
-			// TODO: check if logged-in user has write permissions for `$calendar_id`
+			if (
+				$sync_to_calendar
+				&& $calendar_id !== null
+				&& $calendar_id !== $shiftType->getCalendarId()
+				&& !$this->calendarService->hasUserWriteAccessForCalendar($calendar_id)
+			) {
+				$calendar = $this->calendarService->getCalendarById($calendar_id);
+				throw new HttpException(
+					Http::STATUS_FORBIDDEN,
+					"You lack write access for calendar $calendar_id",
+					null,
+					$this->l->t(
+						'You need to have write access for calendar %1$s in order to choose it for synchronization.',
+						[$calendar['displayName']]
+					),
+				);
+			}
 			$shiftType = $this->shiftTypeMapper->updateById(
 				$shiftType,
 				$calendar_id,
