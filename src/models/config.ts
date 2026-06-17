@@ -45,4 +45,6 @@ export interface Calendar {
 	principalUri: string
 	displayName: string
 	ownerDisplayName: string
+	ownerPrincipal?: string
+	readOnly?: boolean
 }

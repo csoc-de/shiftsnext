@@ -478,7 +478,7 @@ final class CalendarService extends AbstractService {
 	 * @return SanitizedCalendar
 	 */
 	public static function sanitizeCalendar(array $calendar): array {
-		return [
+		$sanitizedCalendar = [
 			'id' => $calendar['id'],
 			'uri' => $calendar['uri'],
 			'principalUri' => $calendar['principaluri'],
@@ -486,5 +486,12 @@ final class CalendarService extends AbstractService {
 			'ownerDisplayName'
 				=> $calendar['{http://nextcloud.com/ns}owner-displayname'],
 		];
+		if (array_key_exists('{http://owncloud.org/ns}owner-principal', $calendar)) {
+			$sanitizedCalendar['ownerPrincipal'] = $calendar['{http://owncloud.org/ns}owner-principal'];
+		}
+		if (array_key_exists('{http://owncloud.org/ns}read-only', $calendar)) {
+			$sanitizedCalendar['readOnly'] = $calendar['{http://owncloud.org/ns}read-only'];
+		}
+		return $sanitizedCalendar;
 	}
 }
