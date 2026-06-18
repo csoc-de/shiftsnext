@@ -53,7 +53,6 @@ import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import InputGroup from './InputGroup.vue'
-import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
 	type ApprovalDiscriminator,
 	type Approved,
@@ -123,7 +122,6 @@ async function onSubmit() {
 		if ('shift_b' in updatedShiftExchange) {
 			shiftIds.push(updatedShiftExchange.shift_b.id)
 		}
-		postSynchronizeByShifts({ shift_ids: shiftIds })
 	} finally {
 		saving.value = false
 	}

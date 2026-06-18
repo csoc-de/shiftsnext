@@ -158,7 +158,6 @@ import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
-import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { getShifts } from '../db/shift.ts'
 import { getUsers } from '../db/user.ts'
 import {
@@ -361,7 +360,6 @@ async function onSubmit() {
 		if ('shift_b' in createdShiftExchange) {
 			shiftIds.push(createdShiftExchange.shift_b.id)
 		}
-		postSynchronizeByShifts({ shift_ids: shiftIds })
 	} finally {
 		saving.value = false
 	}

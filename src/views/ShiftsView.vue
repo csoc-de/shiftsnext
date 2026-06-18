@@ -14,16 +14,6 @@
 						<Cancel :size="24" />
 					</template>
 				</NcButton>
-				<NcButton
-					v-if="isShiftAdmin"
-					:disabled="synchronizing"
-					:aria-label="t(APP_ID, 'Synchronize with calendar app')"
-					variant="secondary"
-					@click="synchronizeByGroups()">
-					<template #icon>
-						<CalendarSync :size="24" />
-					</template>
-				</NcButton>
 			</div>
 		</template>
 	</ContentHeader>
@@ -155,14 +145,11 @@ import {
 } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 // @ts-expect-error package has no types
-import CalendarSync from 'vue-material-design-icons/CalendarSync.vue'
-// @ts-expect-error package has no types
 import Cancel from 'vue-material-design-icons/Cancel.vue'
 import ContentHeader from '../components/ContentHeader.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
 import ShiftPill from '../components/ShiftPill.vue'
 import ShiftTypePill from '../components/ShiftTypePill.vue'
-import { postSynchronizeByGroups, postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { deleteShift, getShifts, patchShift, postShift } from '../db/shift.ts'
 import { getShiftTypes } from '../db/shiftType.ts'
 import { getUsers } from '../db/user.ts'
@@ -204,7 +191,6 @@ import {
 	userTimeZone,
 } from '../utils/date.ts'
 import { isMember } from '../utils/groupUserRelation.ts'
-import { getInitialGroups, getInitialIsShiftAdmin } from '../utils/initialState.ts'
 import { logger } from '../utils/logger.ts'
 import { compareShifts, compareShiftTypes } from '../utils/sort.ts'
 
@@ -222,11 +208,6 @@ const { updateNow } = store
 updateNow()
 
 const loading = ref(true)
-const synchronizing = ref(false)
-
-const groups = ref(getInitialGroups())
-
-const isShiftAdmin = getInitialIsShiftAdmin()
 
 const columnIndexOfWeek = 1
 let columnIndexOfToday = -1
@@ -670,7 +651,6 @@ async function onShiftCellClick(userId: string): Promise<void> {
 		if (!affectedShift) {
 			return
 		}
-		postSynchronizeByShifts({ shift_ids: [affectedShift.id] })
 	} finally {
 		createOrUpdateRequestPending.value = false
 	}
@@ -849,22 +829,6 @@ function setMultiStepAction(newAction: MultiStepAction): void {
  */
 function resetMultiStepAction(): void {
 	multiStepAction.value = getUndefinedMultiStepAction()
-}
-
-/**
- * Syncs the calendar by groups
- */
-async function synchronizeByGroups() {
-	let groupIds = selectedGroupIds.value
-	if (groupIds.length === 0) {
-		groupIds = groups.value.map(({ id }) => id)
-	}
-	try {
-		synchronizing.value = true
-		await postSynchronizeByGroups({ group_ids: groupIds })
-	} finally {
-		synchronizing.value = false
-	}
 }
 
 provideShiftsContext({

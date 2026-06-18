@@ -77,7 +77,6 @@ import InformationOutline from 'vue-material-design-icons/InformationOutline.vue
 import { injectShiftsContext } from '../views/ShiftsView.vue'
 import DelayBox from './DelayBox.vue'
 import ShiftInfoPopover from './ShiftInfoPopover.vue'
-import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getContrastColor } from '../utils/color.ts'
 import { isShiftAdmin } from '../utils/groupShiftAdmin.ts'
@@ -143,8 +142,7 @@ function startDeletion() {
  */
 async function continueDeletion() {
 	toggleDelayBox(false)
-	const { id } = await onShiftDeletionAttempt(shift, columnIndex)
-	postSynchronizeByShifts({ shift_ids: [id] })
+	await onShiftDeletionAttempt(shift, columnIndex)
 }
 
 /**

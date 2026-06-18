@@ -10,10 +10,10 @@ use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Psalm\ShiftTypeAlias;
 use OCA\ShiftsNext\Response\ErrorResponse;
-use OCA\ShiftsNext\Service\CalendarChangeService;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
+use OCA\ShiftsNext\Service\ShiftService;
 use OCA\ShiftsNext\Service\ShiftTypeService;
 use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
@@ -40,8 +40,8 @@ final class ShiftTypeController extends ApiController {
 		private ShiftTypeService $shiftTypeService,
 		private GroupService $groupService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
-		private CalendarChangeService $calendarChangeService,
 		private CalendarService $calendarService,
+		private ShiftService $shiftService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -237,7 +237,7 @@ final class ShiftTypeController extends ApiController {
 				);
 			}
 			$shifts = $this->shiftMapper->findAll(shiftTypeId: $shiftType->getId());
-			array_walk($shifts, $this->calendarChangeService->safeCreate(...));
+			array_walk($shifts, $this->shiftService->deleteByIdAndSyncCalendars(...));
 			$shiftType = $this->shiftTypeMapper->deleteById($shiftType);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new JSONResponse($shiftTypeExtended);

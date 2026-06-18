@@ -8,10 +8,9 @@ use DateInterval;
 use DateTimeImmutable;
 use DateTimeZone;
 use OCA\DAV\CalDAV\CalDavBackend;
-use OCA\ShiftsNext\Db\CalendarChange;
-use OCA\ShiftsNext\Db\CalendarChangeMapper;
+use OCA\ShiftsNext\Db\Shift;
+use OCA\ShiftsNext\Enum\SyncShiftOperation;
 use OCA\ShiftsNext\Exception\CalendarNotFoundException;
-use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Extended\ShiftExtended;
 use OCA\ShiftsNext\Psalm\CalendarAlias;
 use OCA\ShiftsNext\Util\Util;
@@ -45,8 +44,6 @@ final class CalendarService extends AbstractService {
 	public function __construct(
 		private CalDavBackend $calDavBackend,
 		private ConfigService $configService,
-		private ShiftService $shiftService,
-		private CalendarChangeMapper $calendarChangeMapper,
 		private UserService $userService,
 		private string $userId,
 	) {
@@ -110,88 +107,29 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
-	 * Sequentially applies `$calendarChanges` and deletes them afterwards if
-	 * applying was successful
+	 * Syncs `$shift` with the calendar app
 	 *
-	 * None-critical exceptions are catched and hints about the culprit are
-	 * included in a string array returned from this method
+	 * @param ShiftExtended $shift The shift to sync
+	 * @param SyncShiftOperation $operation The sync operation
 	 *
-	 * @param CalendarChange[] $calendarChanges The calendar changes to apply
-	 *
-	 * @return list<string> Error messages
-	 *
-	 * @throws CalendarNotFoundException
-	 *                                   {@see OCA\ShiftsNext\Service\ConfigService::getCommonCalendarId()}
+	 * @return void
 	 */
-	public function applyChanges(array $calendarChanges): array {
-		$errors = [];
-
-		foreach ($calendarChanges as $change) {
-			$calendars = $this->applyChange($change);
-
-			foreach ($calendars as $calendar) {
-				$errors[]
-					= 'Failed to apply change to calendar '
-					. "'{$calendar['displayName']}' of user "
-					. "'{$calendar['ownerDisplayName']}'";
-			}
-
-			if ($calendars) {
-				continue;
-			}
-
-			$changeId = $change->getId();
-			try {
-				$this->calendarChangeMapper->deleteById($changeId);
-			} catch (Throwable) {
-				$errors[] = "Failed to delete calendar change `$changeId`";
-			}
-		}
-
-		return $errors;
-	}
-
-	/**
-	 * Either creates, updates or deletes an event based on `$calendarChange`
-	 *
-	 * @param CalendarChange $calendarChange The calendar change to apply
-	 *
-	 * @return list<SanitizedCalendar> Calendars where applying the change failed
-	 *
-	 * @throws CalendarNotFoundException
-	 *                                   {@see OCA\ShiftsNext\Service\ConfigService::getCommonCalendarId()}
-	 */
-	public function applyChange(CalendarChange $calendarChange): array {
-		$userId = $calendarChange->getUserId();
-		$shiftId = $calendarChange->getShiftId();
-
-		try {
-			$shift = $this->shiftService->getExtended($shiftId);
-		} catch (ShiftNotFoundException) {
-			// Failing to get the shift, because it does not exist, is expected
-			$shift = null;
-		}
-
+	public function syncShift(ShiftExtended $shift, SyncShiftOperation $operation): void {
 		['normal' => $objectUri, 'deleted' => $objectUriDeleted]
-			= self::getCalendarObjectUri($shiftId);
-
+			= self::getCalendarObjectUri($shift->id);
 		$calendars = [];
-
 		try {
 			$calendars[] = $this->getCommonCalendar();
 		} catch (CalendarNotFoundException) {
 			// Failing to get the common calendar is fine
 		}
-
 		if ($this->configService->getSyncToPersonalCalendar()) {
 			try {
-				$calendars[] = $this->getPersonalCalendar($userId);
+				$calendars[] = $this->getPersonalCalendar($shift->user->getUID());
 			} catch (CalendarNotFoundException) {
 				// Failing to get the personal calendar is fine
 			}
 		}
-
-		$failedCalendars = [];
 		foreach ($calendars as $calendar) {
 			/** @var null|CalendarObject */
 			$deletedObject = $this->calDavBackend->getCalendarObject(
@@ -201,34 +139,23 @@ final class CalendarService extends AbstractService {
 			if ($deletedObject !== null) {
 				$this->calDavBackend->restoreCalendarObject($deletedObject);
 			}
-
 			/** @var null|CalendarObject */
 			$calendarObject = $this->calDavBackend->getCalendarObject(
 				$calendar['id'],
 				$objectUri,
 			);
-
 			$calendarObjectExists = $calendarObject !== null;
-
 			try {
-				if ($shift && $shift->user->getUID() === $userId) {
-					$isPersonal
-						= $calendar['uri']
-							=== CalDavBackend::PERSONAL_CALENDAR_URI;
-					$stream = $this->createICalendarStream($shift, $isPersonal);
-
+				if ($operation === SyncShiftOperation::CreateOrUpdate) {
+					$stream = $this->createICalendarStream(
+						$shift,
+						$calendar['uri'] === CalDavBackend::PERSONAL_CALENDAR_URI,
+					);
+					$args = [$calendar['id'], $objectUri, $stream];
 					if ($calendarObjectExists) {
-						$this->calDavBackend->updateCalendarObject(
-							$calendar['id'],
-							$objectUri,
-							$stream,
-						);
+						$this->calDavBackend->updateCalendarObject(...$args);
 					} else {
-						$this->calDavBackend->createCalendarObject(
-							$calendar['id'],
-							$objectUri,
-							$stream,
-						);
+						$this->calDavBackend->createCalendarObject(...$args);
 					}
 				} elseif ($calendarObjectExists) {
 					$this->calDavBackend->deleteCalendarObject(
@@ -238,11 +165,9 @@ final class CalendarService extends AbstractService {
 					);
 				}
 			} catch (Throwable) {
-				$failedCalendars[] = $calendar;
+				// Ignore
 			}
 		}
-
-		return $failedCalendars;
 	}
 
 	/**
