@@ -20,6 +20,11 @@ namespace OCA\ShiftsNext\Psalm;
  *     start: string,
  *     end: string,
  * }
+ *
+ * @psalm-type ShiftNotificationSubjectParameters = array{
+ *     shiftAdminId: string,
+ *     shiftExtended: ShiftExtendedSerialized,
+ * }
  */
 final class ShiftAlias {
 }

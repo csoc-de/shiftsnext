@@ -21,6 +21,7 @@ use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\ConfigService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\GroupUserRelationService;
+use OCA\ShiftsNext\Service\NotificationService;
 use OCA\ShiftsNext\Service\ShiftExchangeService;
 use OCA\ShiftsNext\Service\ShiftService;
 use OCA\ShiftsNext\Service\UserService;
@@ -59,6 +60,7 @@ final class ShiftExchangeController extends ApiController {
 		private UserService $userService,
 		private ConfigService $configService,
 		private CalendarService $calendarService,
+		private NotificationService $notificationService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -445,6 +447,39 @@ final class ShiftExchangeController extends ApiController {
 			}
 
 			$shiftExchangeExtended = $this->shiftExchangeService->getExtended($shiftExchange);
+			$approvedSubjectReceiverIds = [];
+			$createdByAdminSubjectReceiverIds = [];
+			$createdByParticipantSubjectReceiverIds = [];
+			// This can only be true on exchange creation, if the exchange was created
+			// by an appropriate shift admin which also is the desired admin for the approval
+			// and exchange_approval_type === 'admin'
+			if ($approved) {
+				if ($this->userId !== $userAId) {
+					$approvedSubjectReceiverIds[] = $userAId;
+				}
+				if ($this->userId !== $userBId) {
+					$approvedSubjectReceiverIds[] = $userBId;
+				}
+			} else {
+				if ($this->userId === $userAId || $this->userId === $userBId) {
+					$createdByParticipantSubjectReceiverIds[]
+						= $this->userId === $userAId ? $userBId : $userAId;
+				} elseif ($approvalType !== ExchangeApprovalType::Admin) {
+					$createdByAdminSubjectReceiverIds[] = $userAId;
+					$createdByAdminSubjectReceiverIds[] = $userBId;
+				}
+				if (
+					$approvalType !== ExchangeApprovalType::Users
+					&& $admin_approval_user_id !== null
+					&& $admin_approval_user_id !== $this->userId
+				) {
+					if ($isGroupShiftAdmin) {
+						$createdByAdminSubjectReceiverIds[] = $admin_approval_user_id;
+					} else {
+						$createdByParticipantSubjectReceiverIds[] = $admin_approval_user_id;
+					}
+				}
+			}
 			return new JSONResponse($shiftExchangeExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);

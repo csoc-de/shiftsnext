@@ -8,6 +8,7 @@ use OCA\ShiftsNext\Listener\GroupDeletedListener;
 use OCA\ShiftsNext\Listener\UserChangedListener;
 use OCA\ShiftsNext\Listener\UserDeletedListener;
 use OCA\ShiftsNext\Middleware\VersionMatchMiddleware;
+use OCA\ShiftsNext\Notification\Notifier;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -38,6 +39,7 @@ final class Application extends App implements IBootstrap {
 	public function register(IRegistrationContext $context): void {
 		include_once __DIR__ . '/../../vendor/autoload.php';
 		$context->registerMiddleware(VersionMatchMiddleware::class);
+		$context->registerNotifierService(Notifier::class);
 	}
 
 	#[\Override]

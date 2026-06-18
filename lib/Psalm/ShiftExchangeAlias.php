@@ -37,6 +37,11 @@ namespace OCA\ShiftsNext\Psalm;
  * @psalm-type AdminApprovalUpdate = ApprovalUpdate & array{
  *     user_id?: null|string,
  * }
+ *
+ * @psalm-type ExchangeNotificationSubjectParameters = array{
+ *     actorId: string,
+ *     exchangeExtended: ShiftExchangeExtendedSerialized,
+ * }
  */
 final class ShiftExchangeAlias {
 }

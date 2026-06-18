@@ -8,6 +8,7 @@ use IntlDateFormatter;
 use OCA\ShiftsNext\Db\ShiftExchangeMapper;
 use OCA\ShiftsNext\Db\ShiftMapper;
 use OCA\ShiftsNext\Db\ShiftTypeMapper;
+use OCA\ShiftsNext\Enum\ShiftNotificationSubject;
 use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
@@ -18,6 +19,7 @@ use OCA\ShiftsNext\Service\ConfigService;
 use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
 use OCA\ShiftsNext\Service\GroupUserRelationService;
+use OCA\ShiftsNext\Service\NotificationService;
 use OCA\ShiftsNext\Service\ShiftService;
 use OCA\ShiftsNext\Service\UserService;
 use OCA\ShiftsNext\Util\Util;
@@ -35,6 +37,7 @@ final class ShiftController extends ApiController {
 		private IL10N $l,
 		string $appName,
 		IRequest $request,
+		private string $userId,
 		private ShiftMapper $shiftMapper,
 		private ShiftTypeMapper $shiftTypeMapper,
 		private ShiftExchangeMapper $shiftExchangeMapper,
@@ -46,6 +49,7 @@ final class ShiftController extends ApiController {
 		private UserService $userService,
 		private CalendarService $calendarService,
 		private ConfigService $configService,
+		private NotificationService $notificationService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -196,6 +200,11 @@ final class ShiftController extends ApiController {
 			);
 			$shiftExtended = $this->shiftService->getExtended($shift);
 			$this->calendarChangeService->safeCreate($shiftExtended);
+			$this->notificationService->sendShiftNotification(
+				$user_id,
+				ShiftNotificationSubject::Assigned,
+				$shiftExtended,
+			);
 			return new JSONResponse($shiftExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
@@ -294,12 +303,25 @@ final class ShiftController extends ApiController {
 					$this->l->t('Cannot move shift as there is a pending shift exchange for the shift.'),
 				);
 			}
+			$previousUserId = $shift->getUserId();
 			// This queues a removal of the shift from the previous user's calendar
 			$this->calendarChangeService->safeCreate($shift);
 			$shift = $this->shiftMapper->updateById($shift, $user_id);
 			$shiftExtended = $this->shiftService->getExtended($shift);
 			// This queues a creation of the shift in $user_id's calendar
 			$this->calendarChangeService->safeCreate($shiftExtended);
+			// This notifies the previous user
+			$this->notificationService->sendShiftNotification(
+				$previousUserId,
+				ShiftNotificationSubject::Moved,
+				$shiftExtended,
+			);
+			// This notifies the new user
+			$this->notificationService->sendShiftNotification(
+				$user_id,
+				ShiftNotificationSubject::Assigned,
+				$shiftExtended,
+			);
 			return new JSONResponse($shiftExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
@@ -338,6 +360,11 @@ final class ShiftController extends ApiController {
 			$shift = $this->shiftMapper->deleteById($shift);
 			$shiftExtended = $this->shiftService->getExtended($shift);
 			$this->calendarChangeService->safeCreate($shiftExtended);
+			$this->notificationService->sendShiftNotification(
+				$shift->getUserId(),
+				ShiftNotificationSubject::Deleted,
+				$shiftExtended,
+			);
 			return new JSONResponse($shiftExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
