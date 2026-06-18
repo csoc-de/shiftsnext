@@ -1,4 +1,5 @@
 import type { Temporal } from 'temporal-polyfill'
+import type { InjectionKey, Ref } from 'vue'
 import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
 import type { Shift } from './shift.ts'
 import type { RepetitionWeeklyType, ShiftType } from './shiftType.ts'
@@ -118,3 +119,93 @@ export type DefinedMultiStepAction
 	= CreationMultiStepAction | MotionMultiStepAction
 
 export type MultiStepAction = UndefinedMultiStepAction | DefinedMultiStepAction
+
+// Injection keys for multi step action
+
+export const setMultiStepActionIK
+	= Symbol('setMultiStepActionIK') as InjectionKey<
+		(action: MultiStepAction) => void
+	>
+
+export const resetMultiStepActionIK
+	= Symbol('resetMultiStepActionIK') as InjectionKey<() => void>
+
+export const multiStepActionIK
+	= Symbol('multiStepActionIK') as InjectionKey<Ref<MultiStepAction>>
+
+// Injection keys for shift deletion
+
+export const onShiftDeletionAttemptIK
+	= Symbol('onShiftDeletionAttemptIK') as InjectionKey<
+		(shift: Shift, columnIndex: number) => Promise<Shift>
+	>
+
+export const deletionShiftIK
+	= Symbol('deletionShiftIK') as InjectionKey<Ref<Shift | undefined>>
+
+export const setDeletionShiftIK
+	= Symbol('setDeletionShiftIK') as InjectionKey<(shift: Shift) => void>
+
+export const resetDeletionShiftIK
+	= Symbol('resetDeletionShiftIK') as InjectionKey<() => void>
+
+// Injection keys for cell click
+
+export const onShiftCellClickIK
+	= Symbol('onShiftCellClickIK') as InjectionKey<(userId: string) => Promise<void>>
+
+// Injection keys for column index of today
+
+export const columnIndexOfTodayIK
+	= Symbol('columnIndexOfTodayIK') as InjectionKey<Ref<number>>
+
+export const ZDT_CELL_FORMAT_OPTIONS = {
+	month: 'short',
+	weekday: 'long',
+	day: '2-digit',
+} as const satisfies Intl.DateTimeFormatOptions
+
+export const WEEK_COLUMN_INDEX = 1
+
+export const ROW_TYPES = ['header', 'shift-types', 'shifts'] as const
+
+export type RowType = typeof ROW_TYPES[number]
+
+/**
+ * Returns an array of table cell classes built based on the passed parameters
+ *
+ * @param rowType The row type to get the classes for
+ * @param columnIndexes Determines which additional classes need to be added
+ */
+export function getCellClasses(
+	rowType: RowType,
+	columnIndexes?: Partial<Record<'cell' | 'today' | 'focus', number>>,
+): string[] {
+	const classes = ['border', 'border-solid', 'border-nc-maxcontrast']
+	if (rowType === ROW_TYPES[0]) {
+		classes.push('p-2', 'text-center')
+	} else {
+		classes.push('h-full')
+	}
+	if (!columnIndexes) {
+		return classes
+	}
+	if (Number(columnIndexes.cell) === WEEK_COLUMN_INDEX) {
+		classes.push('bg-nc-dark')
+	}
+	if (Number(columnIndexes.cell) === Number(columnIndexes.today)) {
+		classes.push(
+			'bg-nc-primary-element-light',
+			'text-nc-primary-element-light',
+		)
+	}
+	if (Number(columnIndexes.cell) === Number(columnIndexes.focus)) {
+		classes.push(
+			'!bg-nc-primary-element-hover',
+			'!text-nc-primary-element',
+		)
+	}
+	return classes
+}
+
+export const DAY_COLUMNS_OFFSET = 2
