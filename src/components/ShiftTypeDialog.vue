@@ -52,7 +52,7 @@
 						resize="vertical" />
 				</InputGroup>
 			</div>
-			<div class="flex *:flex-1 gap-2 items-end">
+			<div class="flex gap-2 items-end">
 				<InputGroup>
 					<label for="sync-to-calendar">{{ t(APP_ID, "Calendar synchronization") }}</label>
 					<NcCheckboxRadioSwitch
@@ -62,13 +62,14 @@
 						{{ t(APP_ID, "Enable") }}
 					</NcCheckboxRadioSwitch>
 				</InputGroup>
-				<InputGroup>
+				<InputGroup class="flex-1 min-w-0">
 					<label for="calendar">{{ t(APP_ID, "Select calendar") }}</label>
 					<NcSelect
 						v-model="calendarOption"
 						inputId="calendar"
 						labelOutside
 						:options="calendarOptions"
+						:clearable="false"
 						required
 						:disabled="!syncToCalendar"
 						class="min-w-64" />
@@ -227,7 +228,6 @@
 
 <script setup lang="ts">
 import type { Group } from '../models/group.ts'
-import type { NcSelectCalendarOption } from '../models/nextcloudVue.ts'
 
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
@@ -268,7 +268,7 @@ import {
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getIsoWeekDate, userTimeZone } from '../utils/date.ts'
-import { getInitialShiftAdminGroups, getInitialWritableCalendars } from '../utils/initialState.ts'
+import { getInitialCommonCalendar, getInitialShiftAdminGroups, getInitialWritableCalendars } from '../utils/initialState.ts'
 import { getNcSelectCalendarOption } from '../utils/nextcloudVue.ts'
 
 const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
@@ -287,7 +287,19 @@ const frequencies = ref(REPETITION_FREQUENCIES)
 const showColorPicker = ref(false)
 
 const shiftAdminGroups = getInitialShiftAdminGroups()
-const calendarOptions = getInitialWritableCalendars()
+
+const initialCommonCalendar = getInitialCommonCalendar()!
+const commonCalendarOption = ref({
+	...initialCommonCalendar,
+	id: null,
+	label: `${t(APP_ID, 'Global setting')} (${initialCommonCalendar.ownerDisplayName} - ${initialCommonCalendar.displayName})`,
+})
+
+const calendars = getInitialWritableCalendars()
+const calendarOptions = [
+	commonCalendarOption.value,
+	...calendars.map(getNcSelectCalendarOption),
+]
 
 const group = ref<Group>()
 const name = ref('')
@@ -320,7 +332,7 @@ const caldavDescription = ref('')
 const caldavLocation = ref('')
 const caldavCategories = ref('')
 const syncToCalendar = ref(true)
-const calendarOption = ref<NcSelectCalendarOption | null>(null)
+const calendarOption = ref(calendarOptions[0]!)
 
 if (shiftType) {
 	group.value = shiftType.group
@@ -333,9 +345,13 @@ if (shiftType) {
 	caldavCategories.value = shiftType.caldav.categories
 	syncToCalendar.value = shiftType.sync_to_calendar
 	if (shiftType.calendar) {
+		// TODO: test if editing a shift type, which currently has set a calendar
+		// for which the editor does not have write access, works as intended
 		calendarOption.value = getNcSelectCalendarOption(shiftType.calendar)
+		if (!calendarOptions.some(({ id }) => id === calendarOption.value.id)) {
+			calendarOptions.push(calendarOption.value)
+		}
 	}
-
 	frequency.value = shiftType.repetition.frequency
 	interval.value = shiftType.repetition.interval
 	weeklyType.value = shiftType.repetition.weekly_type
@@ -416,7 +432,7 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 			categories: caldavCategories.value,
 		},
 		sync_to_calendar: syncToCalendar.value,
-		calendar_id: calendarOption.value?.id ?? null,
+		calendar_id: calendarOption.value.id,
 	}
 
 	if (type === 'post') {
@@ -442,5 +458,5 @@ watchEffect(() => {
 		.toZonedDateTime(timeZone.value)
 })
 
-whenever(() => !syncToCalendar.value, () => calendarOption.value = null)
+whenever(() => !syncToCalendar.value, () => calendarOption.value = calendarOptions[0]!)
 </script>
