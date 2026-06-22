@@ -26,6 +26,7 @@ final class ShiftService {
 		private ShiftTypeService $shiftTypeService,
 		private ConfigService $configService,
 		private UserService $userService,
+		private CalendarService $calendarService,
 	) {
 	}
 
@@ -124,7 +125,7 @@ final class ShiftService {
 			$end,
 		);
 		$shiftExtended = $this->getExtended($shift);
-		CalendarService::get()->syncShift($shiftExtended, SyncShiftOperation::CreateOrUpdate);
+		$this->calendarService->syncShift($shiftExtended, SyncShiftOperation::CreateOrUpdate);
 		return $shiftExtended;
 	}
 
@@ -137,7 +138,7 @@ final class ShiftService {
 	): ShiftExtended {
 		$shiftExtended = $this->getExtended($shift);
 		if ($userId !== null && $userId !== $shiftExtended->user->getUID()) {
-			CalendarService::get()->syncShift($shiftExtended, SyncShiftOperation::Delete);
+			$this->calendarService->syncShift($shiftExtended, SyncShiftOperation::Delete);
 		}
 		$shift = $this->shiftMapper->updateById(
 			$shift,
@@ -147,13 +148,13 @@ final class ShiftService {
 			$end,
 		);
 		$shiftExtended = $this->getExtended($shift);
-		CalendarService::get()->syncShift($shiftExtended, SyncShiftOperation::CreateOrUpdate);
+		$this->calendarService->syncShift($shiftExtended, SyncShiftOperation::CreateOrUpdate);
 		return $shiftExtended;
 	}
 
 	public function deleteByIdAndSyncCalendars(int|Shift $shift): ShiftExtended {
 		$shiftExtended = $this->getExtended($shift);
-		CalendarService::get()->syncShift($shiftExtended, SyncShiftOperation::Delete);
+		$this->calendarService->syncShift($shiftExtended, SyncShiftOperation::Delete);
 		$this->shiftMapper->deleteById($shift);
 		return $shiftExtended;
 	}

@@ -22,6 +22,7 @@ final class ShiftTypeService {
 	public function __construct(
 		private ShiftTypeMapper $shiftTypeMapper,
 		private GroupService $groupService,
+		private CalendarService $calendarService,
 	) {
 	}
 
@@ -46,7 +47,7 @@ final class ShiftTypeService {
 
 		$calendar ??= $shiftType->getCalendarId();
 		if (is_int($calendar)) {
-			$calendar = CalendarService::get()->safeGetCalendarById($calendar);
+			$calendar = $this->calendarService->safeGetCalendarById($calendar);
 		}
 
 		return new ShiftTypeExtended($shiftType, $group, $calendar);
