@@ -112,6 +112,9 @@ final class ShiftService {
 		}
 	}
 
+	/**
+	 * Creates a new shift and synchronizes it with the calendar app
+	 */
 	public function createAndSyncCalendars(
 		string $userId,
 		int $shiftTypeId,
@@ -129,6 +132,9 @@ final class ShiftService {
 		return $shiftExtended;
 	}
 
+	/**
+	 * Updates `$shift` and synchronizes it with the calendar app
+	 */
 	public function updateByIdAndSyncCalendars(
 		int|Shift $shift,
 		?string $userId = null,
@@ -152,6 +158,9 @@ final class ShiftService {
 		return $shiftExtended;
 	}
 
+	/**
+	 * Deletes `$shift` and removes it from the calendar app
+	 */
 	public function deleteByIdAndSyncCalendars(int|Shift $shift): ShiftExtended {
 		$shiftExtended = $this->getExtended($shift);
 		$this->calendarService->syncShift($shiftExtended, SyncShiftOperation::Delete);
