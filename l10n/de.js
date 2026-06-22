@@ -95,6 +95,8 @@ OC.L10N.register(
 		"Create shift type": "Schicht-Typ erstellen",
 		"Active": "Aktiv",
 		"Calendar settings": "Kalender-Einstellungen",
+		"Attention": "Achtung",
+		"Changing these settings will not automatically update calendar events for already existing shifts.": "Das Ändern dieser Einstellungen aktualisiert nicht automatisch die Kalendereinträge für bereits bestehende Schichten.",
 		"Synchronization": "Synchronisierung",
 		"Select calendar": "Kalender auswählen",
 		"Global setting": "Globale Einstellung",

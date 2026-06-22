@@ -57,6 +57,12 @@
 					{{ t(APP_ID, "Calendar settings") }}
 				</template>
 				<div class="flex flex-col gap-2">
+					<NcNoteCard
+						v-if="shiftType"
+						type="info"
+						:heading="t(APP_ID, 'Attention')"
+						:text="t(APP_ID, 'Changing these settings will not automatically update calendar events for already existing shifts.')"
+						class="m-0" />
 					<div class="flex gap-2 items-end">
 						<InputGroup>
 							<label for="sync-to-calendar">{{ t(APP_ID, "Synchronization") }}</label>
@@ -245,6 +251,7 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwit
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
 import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
