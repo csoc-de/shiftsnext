@@ -52,59 +52,66 @@
 						resize="vertical" />
 				</InputGroup>
 			</div>
-			<div class="flex gap-2 items-end">
-				<InputGroup>
-					<label for="sync-to-calendar">{{ t(APP_ID, "Calendar synchronization") }}</label>
-					<NcCheckboxRadioSwitch
-						id="sync-to-calendar"
-						v-model="syncToCalendar"
-						type="checkbox">
-						{{ t(APP_ID, "Enable") }}
-					</NcCheckboxRadioSwitch>
-				</InputGroup>
-				<InputGroup class="flex-1 min-w-0">
-					<label for="calendar">{{ t(APP_ID, "Select calendar") }}</label>
-					<NcSelect
-						v-model="calendarOption"
-						inputId="calendar"
-						labelOutside
-						:options="calendarOptions"
-						:clearable="false"
-						required
-						:disabled="!syncToCalendar"
-						class="min-w-64" />
-				</InputGroup>
-			</div>
-			<CustomFieldset v-if="syncToCalendar">
+			<CustomFieldset>
 				<template #legend>
-					{{ t(APP_ID, "Calendar event fields") }}
+					{{ t(APP_ID, "Calendar settings") }}
 				</template>
 				<div class="flex flex-col gap-2">
-					<div>{{ t(APP_ID, 'The values of these fields will be inserted into the corresponding calendar event fields when synchronizing shifts to the calendar app.') }}</div>
-					<InputGroup>
-						<label for="shift-type-caldav-description">{{ t(APP_ID, "Description") }}</label>
-						<NcTextArea
-							id="shift-type-caldav-description"
-							v-model.trim="caldavDescription"
-							labelOutside
-							resize="vertical" />
-					</InputGroup>
-					<InputGroup>
-						<label for="shift-type-caldav-location">{{ t(APP_ID, "Location") }}</label>
-						<NcTextField
-							id="shift-type-caldav-location"
-							v-model.trim="caldavLocation"
-							labelOutside />
-					</InputGroup>
-					<InputGroup>
-						<label for="shift-type-caldav-categories">{{ t(APP_ID, "Categories") }}</label>
-						<NcTextField
-							id="shift-type-caldav-categories"
-							v-model.trim="caldavCategories"
-							labelOutside
-							:placeholder="t(APP_ID, 'Category 1, Category 2\\, with comma')"
-							:helperText="t(APP_ID, `Separate categories by commas. To make the comma a part of the category, prepend the comma using a backslash: \\,`)" />
-					</InputGroup>
+					<div class="flex gap-2 items-end">
+						<InputGroup>
+							<label for="sync-to-calendar">{{ t(APP_ID, "Synchronization") }}</label>
+							<NcCheckboxRadioSwitch
+								id="sync-to-calendar"
+								v-model="syncToCalendar"
+								type="checkbox">
+								{{ t(APP_ID, "Enable") }}
+							</NcCheckboxRadioSwitch>
+						</InputGroup>
+						<InputGroup class="flex-1 min-w-0">
+							<label for="calendar">{{ t(APP_ID, "Select calendar") }}</label>
+							<NcSelect
+								v-model="calendarOption"
+								inputId="calendar"
+								labelOutside
+								:options="calendarOptions"
+								:clearable="false"
+								required
+								:disabled="!syncToCalendar"
+								class="min-w-64" />
+						</InputGroup>
+					</div>
+					<CustomFieldset v-if="syncToCalendar">
+						<template #legend>
+							{{ t(APP_ID, "Calendar event fields") }}
+						</template>
+						<div class="flex flex-col gap-2">
+							<div>{{ t(APP_ID, 'The values of these fields will be inserted into the corresponding calendar event fields when synchronizing shifts to the calendar app.') }}</div>
+							<InputGroup>
+								<label for="shift-type-caldav-description">{{ t(APP_ID, "Description") }}</label>
+								<NcTextArea
+									id="shift-type-caldav-description"
+									v-model.trim="caldavDescription"
+									labelOutside
+									resize="vertical" />
+							</InputGroup>
+							<InputGroup>
+								<label for="shift-type-caldav-location">{{ t(APP_ID, "Location") }}</label>
+								<NcTextField
+									id="shift-type-caldav-location"
+									v-model.trim="caldavLocation"
+									labelOutside />
+							</InputGroup>
+							<InputGroup>
+								<label for="shift-type-caldav-categories">{{ t(APP_ID, "Categories") }}</label>
+								<NcTextField
+									id="shift-type-caldav-categories"
+									v-model.trim="caldavCategories"
+									labelOutside
+									:placeholder="t(APP_ID, 'Category 1, Category 2\\, with comma')"
+									:helperText="t(APP_ID, `Separate categories by commas. To make the comma a part of the category, prepend the comma using a backslash: \\,`)" />
+							</InputGroup>
+						</div>
+					</CustomFieldset>
 				</div>
 			</CustomFieldset>
 			<CustomFieldset>
