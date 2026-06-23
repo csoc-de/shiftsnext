@@ -25,7 +25,7 @@ use function in_array;
  */
 final class GroupUserRelationService {
 	public function __construct(
-		private string $userId,
+		private ?string $userId,
 		private IGroupManager $groupManager,
 		private GroupService $groupService,
 		private UserService $userService,
@@ -41,7 +41,11 @@ final class GroupUserRelationService {
 	 * @return bool
 	 */
 	public function isMember(string $groupId, ?string $userId = null): bool {
-		return $this->groupManager->isInGroup($userId ?? $this->userId, $groupId);
+		$effectiveUserId = $userId ?? $this->userId;
+		if ($effectiveUserId === null) {
+			return false;
+		}
+		return $this->groupManager->isInGroup($effectiveUserId, $groupId);
 	}
 
 	/**

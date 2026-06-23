@@ -22,6 +22,7 @@ use function json_encode;
  * @psalm-type AppConfig = array{
  *     common_calendar_id: int,
  *     absence_calendar_id: int,
+ *     show_absence_blockers: bool,
  *     sync_to_personal_calendar: bool,
  *     ignore_absence_for_by_week_shifts: bool,
  *     exchange_approval_type: 'users'|'admin'|'all',
@@ -29,11 +30,12 @@ use function json_encode;
  *
  * @psalm-type UserConfig = array{
  *     defaultGroupIds: list<string>,
+ *     hiddenUserIds: list<string>,
  * }
  */
 final class ConfigService extends AbstractService {
 	public function __construct(
-		private string $userId,
+		private ?string $userId,
 		private IAppConfig $appConfig,
 		private IConfig $config,
 	) {
@@ -84,6 +86,27 @@ final class ConfigService extends AbstractService {
 		return $this->appConfig->getValueInt(
 			Application::APP_ID,
 			AppConfigKey::AbsenceCalendarId->value,
+		);
+	}
+
+	/**
+	 * @psalm-suppress PossiblyUnusedMethod Called dynamically by
+	 * {@see OCA\ShiftsNext\Service\ConfigService::setConfigValue()}
+	 */
+	public function setShowAbsenceBlockers(bool $value): static {
+		$this->appConfig->setValueBool(
+			Application::APP_ID,
+			AppConfigKey::ShowAbsenceBlockers->value,
+			$value,
+		);
+		return $this;
+	}
+
+	public function getShowAbsenceBlockers(): bool {
+		return $this->appConfig->getValueBool(
+			Application::APP_ID,
+			AppConfigKey::ShowAbsenceBlockers->value,
+			false,
 		);
 	}
 
@@ -160,6 +183,9 @@ final class ConfigService extends AbstractService {
 	 * @return static
 	 */
 	public function setDefaultGroupIds(array $groupIds): static {
+		if ($this->userId === null) {
+			return $this;
+		}
 		$json = json_encode($groupIds);
 		if ($json === false) {
 			$json = '[]';
@@ -181,11 +207,61 @@ final class ConfigService extends AbstractService {
 	 * @return list<string>
 	 */
 	public function getDefaultGroupIds(): array {
+		if ($this->userId === null) {
+			return [];
+		}
 		/** @psalm-suppress DeprecatedMethod */
 		$value = $this->config->getUserValue(
 			$this->userId,
 			Application::APP_ID,
 			UserConfigKey::DefaultGroupIds->value,
+			'[]',
+		);
+		/** @var list<string> */
+		return json_decode($value);
+	}
+
+	/**
+	 * Sets user IDs for the logged-in user, which should be hidden on the shifts
+	 * view
+	 *
+	 * @param list<string> $userIds
+	 *
+	 * @return static
+	 */
+	public function setHiddenUserIds(array $userIds): static {
+		if ($this->userId === null) {
+			return $this;
+		}
+		$json = json_encode($userIds);
+		if ($json === false) {
+			$json = '[]';
+		}
+		/** @psalm-suppress DeprecatedMethod */
+		$this->config->setUserValue(
+			$this->userId,
+			Application::APP_ID,
+			UserConfigKey::HiddenUserIds->value,
+			$json,
+		);
+		return $this;
+	}
+
+	/**
+	 * Gets user IDs for the logged-in user, which should be hidden on the shifts
+	 * view
+	 *
+	 * @return list<string>
+	 */
+	public function getHiddenUserIds(): array {
+		if ($this->userId === null) {
+			return [];
+		}
+		/** @psalm-suppress DeprecatedMethod */
+		$value = $this->config->getUserValue(
+			$this->userId,
+			Application::APP_ID,
+			UserConfigKey::HiddenUserIds->value,
 			'[]',
 		);
 		/** @var list<string> */
@@ -229,6 +305,9 @@ final class ConfigService extends AbstractService {
 	 * @return non-empty-string
 	 */
 	public function getTimeZone(?string $userId = null): string {
+		if ($userId === null && $this->userId === null) {
+			return 'UTC';
+		}
 		/** @psalm-suppress DeprecatedMethod */
 		return $this->config->getUserValue(
 			$userId ?? $this->userId,
@@ -248,6 +327,9 @@ final class ConfigService extends AbstractService {
 	 * @return non-empty-string
 	 */
 	public function getLanguage(?string $userId = null): string {
+		if ($userId === null && $this->userId === null) {
+			return 'en';
+		}
 		/** @psalm-suppress DeprecatedMethod */
 		return $this->config->getUserValue(
 			$userId ?? $this->userId,
@@ -267,6 +349,9 @@ final class ConfigService extends AbstractService {
 	 * @return non-empty-string
 	 */
 	public function getLocale(?string $userId = null): string {
+		if ($userId === null && $this->userId === null) {
+			return 'en';
+		}
 		/** @psalm-suppress DeprecatedMethod */
 		return $this->config->getUserValue(
 			$userId ?? $this->userId,

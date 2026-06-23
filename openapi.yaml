@@ -723,6 +723,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /calendars/absence-blockers:
+    get:
+      tags:
+        - calendar
+      summary: Get absence blockers for users in a week
+      parameters:
+        - in: query
+          name: week_date
+          schema:
+            type: string
+          example: 2024-W01
+        - in: query
+          name: user_ids[]
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/UserId'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AbsenceBlocker'
   /config/app:
     put:
       tags:
@@ -763,6 +789,22 @@ paths:
         group filter values on the shifts view
       requestBody:
         $ref: '#/components/requestBodies/DefaultGroups'
+      responses:
+        '204':
+          description: No content
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /config/user/hidden-users:
+    put:
+      tags:
+        - config
+      summary: Sets hidden user IDs for the caller in the shifts view
+      requestBody:
+        $ref: '#/components/requestBodies/HiddenUsers'
       responses:
         '204':
           description: No content
@@ -1225,6 +1267,7 @@ components:
       required:
         - common_calendar_id
         - absence_calendar_id
+        - show_absence_blockers
         - sync_to_personal_calendar
         - ignore_absence_for_by_week_shifts
         - exchange_approval_type
@@ -1234,6 +1277,8 @@ components:
           $ref: '#/components/schemas/WriteOnlyId'
         absence_calendar_id:
           $ref: '#/components/schemas/WriteOnlyId'
+        show_absence_blockers:
+          type: boolean
         sync_to_personal_calendar:
           type: boolean
         ignore_absence_for_by_week_shifts:
@@ -1254,6 +1299,7 @@ components:
     UserConfig:
       required:
         - defaultGroupIds
+        - hiddenUserIds
       type: object
       properties:
         defaultGroupIds:
@@ -1261,6 +1307,11 @@ components:
           writeOnly: true
           items:
             $ref: '#/components/schemas/WriteOnlyGroupId'
+        hiddenUserIds:
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/WriteOnlyUserId'
     DefaultGroups:
       required:
         - group_ids
@@ -1271,6 +1322,37 @@ components:
           writeOnly: true
           items:
             $ref: '#/components/schemas/WriteOnlyGroupId'
+    HiddenUsers:
+      required:
+        - user_ids
+      type: object
+      properties:
+        user_ids:
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/WriteOnlyUserId'
+    AbsenceBlocker:
+      required:
+        - user_id
+        - start
+        - end
+        - all_day
+        - title
+      type: object
+      properties:
+        user_id:
+          $ref: '#/components/schemas/WriteOnlyUserId'
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        all_day:
+          type: boolean
+        title:
+          type: string
     ErrorResponse:
       required:
         - error
@@ -1329,3 +1411,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DefaultGroups'
+    HiddenUsers:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HiddenUsers'
