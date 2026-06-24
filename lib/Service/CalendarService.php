@@ -248,7 +248,7 @@ final class CalendarService extends AbstractService {
 	 *
 	 * @return SanitizedCalendar
 	 *
-	 * @throws CalendarNotFoundException
+	 * @throws CalendarNotFoundException if not found
 	 */
 	public function getCommonCalendar(): array {
 		$id = $this->configService->getCommonCalendarId();
@@ -272,7 +272,7 @@ final class CalendarService extends AbstractService {
 	 *
 	 * @return SanitizedCalendar
 	 *
-	 * @throws CalendarNotFoundException
+	 * @throws CalendarNotFoundException if not found
 	 */
 	public function getAbsenceCalendar(): array {
 		$id = $this->configService->getAbsenceCalendarId();
@@ -297,7 +297,7 @@ final class CalendarService extends AbstractService {
 	 *
 	 * @return SanitizedCalendar
 	 *
-	 * @throws CalendarNotFoundException
+	 * @throws CalendarNotFoundException if not found
 	 */
 	public function getPersonalCalendar(string $userId): array {
 		/** @var string */
