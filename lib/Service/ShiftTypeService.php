@@ -47,7 +47,7 @@ final class ShiftTypeService {
 
 		$calendar ??= $shiftType->getCalendarId();
 		if (is_int($calendar)) {
-			$calendar = $this->calendarService->safeGetCalendarById($calendar);
+			$calendar = $this->calendarService->getCalendarById($calendar);
 		}
 
 		return new ShiftTypeExtended($shiftType, $group, $calendar);

@@ -122,6 +122,14 @@ final class ShiftTypeController extends ApiController {
 				&& !$this->calendarService->hasUserWriteAccessForCalendar($calendar_id)
 			) {
 				$calendar = $this->calendarService->getCalendarById($calendar_id);
+				if ($calendar === null) {
+					throw new HttpException(
+						Http::STATUS_UNPROCESSABLE_ENTITY,
+						"No calendar with ID $calendar_id exists",
+						null,
+						$this->l->t('The specified calendar does not exist.'),
+					);
+				}
 				throw new HttpException(
 					Http::STATUS_FORBIDDEN,
 					"You lack write access for calendar $calendar_id",
@@ -188,6 +196,14 @@ final class ShiftTypeController extends ApiController {
 				&& !$this->calendarService->hasUserWriteAccessForCalendar($calendar_id)
 			) {
 				$calendar = $this->calendarService->getCalendarById($calendar_id);
+				if ($calendar === null) {
+					throw new HttpException(
+						Http::STATUS_UNPROCESSABLE_ENTITY,
+						"No calendar with ID $calendar_id exists",
+						null,
+						$this->l->t('The specified calendar does not exist.'),
+					);
+				}
 				throw new HttpException(
 					Http::STATUS_FORBIDDEN,
 					"You lack write access for calendar $calendar_id",

@@ -36,14 +36,14 @@ final class AdminSettings implements ISettings {
 			'calendars',
 			$this->calendarService->getCalendars(),
 		);
-		$commonCalendar = $this->calendarService->safeGetCommonCalendar();
+		$commonCalendar = $this->calendarService->getCommonCalendar();
 		if ($commonCalendar !== null) {
 			$this->initialState->provideInitialState(
 				'common_calendar',
 				$commonCalendar,
 			);
 		}
-		$absenceCalendar = $this->calendarService->safeGetAbsenceCalendar();
+		$absenceCalendar = $this->calendarService->getAbsenceCalendar();
 		if ($absenceCalendar !== null) {
 			$this->initialState->provideInitialState(
 				'absence_calendar',

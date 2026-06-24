@@ -10,7 +10,6 @@ use DateTimeZone;
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\ShiftsNext\Db\Shift;
 use OCA\ShiftsNext\Enum\SyncShiftOperation;
-use OCA\ShiftsNext\Exception\CalendarNotFoundException;
 use OCA\ShiftsNext\Extended\ShiftExtended;
 use OCA\ShiftsNext\Psalm\CalendarAlias;
 use OCA\ShiftsNext\Util\Util;
@@ -118,16 +117,12 @@ final class CalendarService extends AbstractService {
 		['normal' => $objectUri, 'deleted' => $objectUriDeleted]
 			= self::getCalendarObjectUri($shift->id);
 		$calendars = [];
-		try {
-			$calendars[] = $this->getCommonCalendar();
-		} catch (CalendarNotFoundException) {
-			// Failing to get the common calendar is fine
+		if ($commonCalendar = $this->getCommonCalendar()) {
+			$calendars[] = $commonCalendar;
 		}
 		if ($this->configService->getSyncToPersonalCalendar()) {
-			try {
-				$calendars[] = $this->getPersonalCalendar($shift->user->getUID());
-			} catch (CalendarNotFoundException) {
-				// Failing to get the personal calendar is fine
+			if ($personalCalendar = $this->getPersonalCalendar($shift->user->getUID())) {
+				$calendars[] = $personalCalendar;
 			}
 		}
 		foreach ($calendars as $calendar) {
@@ -246,37 +241,10 @@ final class CalendarService extends AbstractService {
 	 * Returns the "common" calendar set in the admin settings by the Nextcloud
 	 * instance admin
 	 *
-	 * @return SanitizedCalendar
-	 *
-	 * @throws CalendarNotFoundException if not found
-	 */
-	public function getCommonCalendar(): array {
-		$id = $this->configService->getCommonCalendarId();
-		return $this->getCalendarById($id);
-	}
-
-	/**
-	 * Returns the "common" calendar set in the admin settings by the Nextcloud
-	 * instance admin
-	 *
 	 * @return null|SanitizedCalendar `null` if not found
 	 */
-	public function safeGetCommonCalendar(): ?array {
-		$id = $this->configService->getCommonCalendarId();
-		return $this->safeGetCalendarById($id);
-	}
-
-	/**
-	 * Returns the "absence" calendar set in the admin settings by the Nextcloud
-	 * instance admin
-	 *
-	 * @return SanitizedCalendar
-	 *
-	 * @throws CalendarNotFoundException if not found
-	 */
-	public function getAbsenceCalendar(): array {
-		$id = $this->configService->getAbsenceCalendarId();
-		return $this->getCalendarById($id);
+	public function getCommonCalendar(): ?array {
+		return $this->getCalendarById($this->configService->getCommonCalendarId());
 	}
 
 	/**
@@ -285,9 +253,8 @@ final class CalendarService extends AbstractService {
 	 *
 	 * @return null|SanitizedCalendar `null` if not found
 	 */
-	public function safeGetAbsenceCalendar(): ?array {
-		$id = $this->configService->getAbsenceCalendarId();
-		return $this->safeGetCalendarById($id);
+	public function getAbsenceCalendar(): ?array {
+		return $this->getCalendarById($this->configService->getAbsenceCalendarId());
 	}
 
 	/**
@@ -295,45 +262,12 @@ final class CalendarService extends AbstractService {
 	 *
 	 * @param string $userId The user to get the personal calendar for
 	 *
-	 * @return SanitizedCalendar
-	 *
-	 * @throws CalendarNotFoundException if not found
+	 * @return null|SanitizedCalendar `null` if not found
 	 */
-	public function getPersonalCalendar(string $userId): array {
+	public function getPersonalCalendar(string $userId): ?array {
 		/** @var string */
 		$uri = CalDavBackend::PERSONAL_CALENDAR_URI;
 		return $this->getCalendarByUri($userId, $uri);
-	}
-
-	/**
-	 * Returns the personal calendar of the specified user
-	 *
-	 * @param string $userId The user to get the personal calendar for
-	 *
-	 * @return null|SanitizedCalendar `null` if not found
-	 */
-	public function safeGetPersonalCalendar(string $userId): ?array {
-		/** @var string */
-		$uri = CalDavBackend::PERSONAL_CALENDAR_URI;
-		return $this->safeGetCalendarByUri($userId, $uri);
-	}
-
-	/**
-	 * Returns the calendar identified by `$id`
-	 *
-	 * @param int $id The ID of the calendar
-	 *
-	 * @return SanitizedCalendar
-	 *
-	 * @throws CalendarNotFoundException if no calendar for `$id` exists
-	 */
-	public function getCalendarById(int $id): array {
-		/** @var null|Calendar */
-		$calendar = $this->calDavBackend->getCalendarById($id);
-		if (!$calendar) {
-			throw new CalendarNotFoundException("Calendar with ID $id not found");
-		}
-		return self::sanitizeCalendar($calendar);
 	}
 
 	/**
@@ -343,39 +277,10 @@ final class CalendarService extends AbstractService {
 	 *
 	 * @return null|SanitizedCalendar `null` if no calendar for `$id` exists
 	 */
-	public function safeGetCalendarById(int $id): ?array {
-		try {
-			return $this->getCalendarById($id);
-		} catch (CalendarNotFoundException) {
-			return null;
-		}
-	}
-
-	/**
-	 * Returns the calendar identified by `$userId` and `$calendarUri`
-	 *
-	 * @param string $userId The principals user ID
-	 * @param string $calendarUri The calendar URI
-	 *
-	 * @return SanitizedCalendar
-	 *
-	 * @throws CalendarNotFoundException if no calendar for `$userId` and
-	 *                                   `$calendarUri` exists
-	 */
-	public function getCalendarByUri(string $userId, string $calendarUri): array {
-		$principalUri = "principals/users/$userId";
+	public function getCalendarById(int $id): ?array {
 		/** @var null|Calendar */
-		$calendar = $this->calDavBackend->getCalendarByUri(
-			$principalUri,
-			$calendarUri,
-		);
-		if (!$calendar) {
-			throw new CalendarNotFoundException(
-				"Couldn't find calendar by principal URI $principalUri"
-				. " and calendar URI $calendarUri"
-			);
-		}
-		return self::sanitizeCalendar($calendar);
+		$calendar = $this->calDavBackend->getCalendarById($id);
+		return $calendar === null ? null : self::sanitizeCalendar($calendar);
 	}
 
 	/**
@@ -387,15 +292,17 @@ final class CalendarService extends AbstractService {
 	 * @return null|SanitizedCalendar `null` if no calendar for `$userId` and
 	 *                                `$calendarUri` exists
 	 */
-	public function safeGetCalendarByUri(
+	public function getCalendarByUri(
 		string $userId,
 		string $calendarUri,
 	): ?array {
-		try {
-			return $this->getCalendarByUri($userId, $calendarUri);
-		} catch (CalendarNotFoundException) {
-			return null;
-		}
+		$principalUri = "principals/users/$userId";
+		/** @var null|Calendar */
+		$calendar = $this->calDavBackend->getCalendarByUri(
+			$principalUri,
+			$calendarUri,
+		);
+		return $calendar === null ? null : self::sanitizeCalendar($calendar);
 	}
 
 	/**
@@ -417,6 +324,9 @@ final class CalendarService extends AbstractService {
 		$userDisplayName = $user->getDisplayName();
 
 		$calendar = $this->getAbsenceCalendar();
+		if (!$calendar) {
+			return false;
+		}
 
 		/** @var list<SearchResult> */
 		$results = $this->calDavBackend->search(
