@@ -26,10 +26,14 @@ final class ShiftTypeMapper extends QBMapper {
 
 	/**
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
+	 * @param null|int[] $calendarIds Adds `WHERE calendar_id IN($calendarIds)`
 	 *
 	 * @return list<ShiftType>
 	 */
-	public function findAll(?array $groupIds = null): array {
+	public function findAll(
+		?array $groupIds = null,
+		?array $calendarIds = null,
+	): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -38,6 +42,11 @@ final class ShiftTypeMapper extends QBMapper {
 		if ($groupIds !== null) {
 			$qb->where(
 				$qb->expr()->in('group_id', $qb->createNamedParameter($groupIds, IQueryBuilder::PARAM_STR_ARRAY)),
+			);
+		}
+		if ($calendarIds !== null) {
+			$qb->where(
+				$qb->expr()->in('calendar_id', $qb->createNamedParameter($calendarIds, IQueryBuilder::PARAM_INT_ARRAY)),
 			);
 		}
 

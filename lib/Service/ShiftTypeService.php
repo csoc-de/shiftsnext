@@ -55,13 +55,17 @@ final class ShiftTypeService {
 
 	/**
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
+	 * @param null|int[] $calendarIds Adds `WHERE calendar_id IN($calendarIds)`
 	 *
 	 * @return list<ShiftTypeExtended>
 	 *
 	 * @throws Exception {@see OCA\ShiftsNext\Service\ShiftTypeService::getExtended()}
 	 */
-	public function getAllExtended(?array $groupIds = null): array {
-		$shiftTypes = $this->shiftTypeMapper->findAll($groupIds);
+	public function getAllExtended(
+		?array $groupIds = null,
+		?array $calendarIds = null,
+	): array {
+		$shiftTypes = $this->shiftTypeMapper->findAll($groupIds, $calendarIds);
 		return array_map($this->getExtended(...), $shiftTypes);
 	}
 }
