@@ -114,10 +114,15 @@ final class CalendarService extends AbstractService {
 	 * @return void
 	 */
 	public function syncShift(ShiftExtended $shift, SyncShiftOperation $operation): void {
+		if (!$shift->shiftType->syncToCalendar) {
+			return;
+		}
 		['normal' => $objectUri, 'deleted' => $objectUriDeleted]
 			= self::getCalendarObjectUri($shift->id);
 		$calendars = [];
-		if ($commonCalendar = $this->getCommonCalendar()) {
+		if ($shift->shiftType->calendar !== null) {
+			$calendars[] = $shift->shiftType->calendar;
+		} elseif ($commonCalendar = $this->getCommonCalendar()) {
 			$calendars[] = $commonCalendar;
 		}
 		if ($this->configService->getSyncToPersonalCalendar()) {
