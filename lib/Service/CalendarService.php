@@ -306,6 +306,19 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the personal calendar of the specified user
+	 *
+	 * @param string $userId The user to get the personal calendar for
+	 *
+	 * @return null|SanitizedCalendar `null` if not found
+	 */
+	public function safeGetPersonalCalendar(string $userId): ?array {
+		/** @var string */
+		$uri = CalDavBackend::PERSONAL_CALENDAR_URI;
+		return $this->safeGetCalendarByUri($userId, $uri);
+	}
+
+	/**
 	 * Returns the calendar identified by `$id`
 	 *
 	 * @param int $id The ID of the calendar
