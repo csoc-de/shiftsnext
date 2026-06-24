@@ -366,6 +366,26 @@ final class CalendarService extends AbstractService {
 	}
 
 	/**
+	 * Returns the calendar identified by `$userId` and `$calendarUri`
+	 *
+	 * @param string $userId The principals user ID
+	 * @param string $calendarUri The calendar URI
+	 *
+	 * @return null|SanitizedCalendar `null` if no calendar for `$userId` and
+	 *                                `$calendarUri` exists
+	 */
+	public function safeGetCalendarByUri(
+		string $userId,
+		string $calendarUri,
+	): ?array {
+		try {
+			return $this->getCalendarByUri($userId, $calendarUri);
+		} catch (CalendarNotFoundException) {
+			return null;
+		}
+	}
+
+	/**
 	 * Checks if there is an event in the absence calendar for `$userId`
 	 * between `$start` and `$end`
 	 *
