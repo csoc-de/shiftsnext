@@ -285,7 +285,7 @@ export function reviver(key: string, value: unknown): unknown {
  * @param style The formatting style
  */
 export function formatDuration(
-	duration: Temporal.DurationLike,
+	duration: Temporal.DurationLikeObject,
 	style?: 'long' | 'short' | 'narrow' | 'digital',
 ) {
 	try {
