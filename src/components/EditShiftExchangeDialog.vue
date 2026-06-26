@@ -44,6 +44,13 @@
 </template>
 
 <script setup lang="ts">
+import type {
+	ApprovalDiscriminator,
+	Approved,
+	ShiftExchange,
+	ShiftExchangePatchPayload,
+} from '../models/shiftExchange.ts'
+
 import { t } from '@nextcloud/l10n'
 import { computed, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -54,11 +61,6 @@ import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import InputGroup from './InputGroup.vue'
 import {
-	type ApprovalDiscriminator,
-	type Approved,
-	type ShiftExchange,
-	type ShiftExchangePatchPayload,
-
 	APPROVED_OPTIONS,
 	approvedTranslations,
 } from '../models/shiftExchange.ts'

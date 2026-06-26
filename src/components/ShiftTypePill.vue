@@ -55,6 +55,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ShiftTypeWrapper } from '../models/shiftsTable.ts'
+
 import { t } from '@nextcloud/l10n'
 import { computed, ref, watch } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
@@ -66,9 +68,6 @@ import ArrowAll from 'vue-material-design-icons/ArrowAll.vue'
 import InformationOutline from 'vue-material-design-icons/InformationOutline.vue'
 import { injectShiftsContext } from '../views/ShiftsView.vue'
 import ShiftInfoPopover from './ShiftInfoPopover.vue'
-import {
-	type ShiftTypeWrapper,
-} from '../models/shiftsTable.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getContrastColor } from '../utils/color.ts'
 import { isShiftAdmin } from '../utils/groupShiftAdmin.ts'

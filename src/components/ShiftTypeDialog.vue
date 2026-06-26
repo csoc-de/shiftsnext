@@ -241,6 +241,17 @@
 
 <script setup lang="ts">
 import type { Group } from '../models/group.ts'
+import type {
+	Repetition,
+	RepetitionFrequency,
+	RepetitionWeeklyType,
+	ShiftType,
+	ShiftTypePayload,
+	ShiftTypePayloadType,
+	ShiftTypePostPayload,
+	ShiftTypePutPayload,
+	ShortDayToAmountMap,
+} from '../models/shiftType.ts'
 
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
@@ -265,16 +276,6 @@ import InputGroup from './InputGroup.vue'
 import IsoWeekDateInput from './IsoWeekDateInput.vue'
 import ShiftTypeRepetitionDetails from './ShiftTypeRepetitionDetails.vue'
 import {
-	type Repetition,
-	type RepetitionFrequency,
-	type RepetitionWeeklyType,
-	type ShiftType,
-	type ShiftTypePayload,
-	type ShiftTypePayloadType,
-	type ShiftTypePostPayload,
-	type ShiftTypePutPayload,
-	type ShortDayToAmountMap,
-
 	REPETITION_FREQUENCIES,
 	REPETITION_WEEKLY_TYPES,
 	shortDayToLocalDayMap,

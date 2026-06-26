@@ -42,6 +42,8 @@
 </template>
 
 <script setup lang="ts">
+import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
+
 import { t } from '@nextcloud/l10n'
 import { watchImmediate } from '@vueuse/core'
 import { Temporal } from 'temporal-polyfill'
@@ -50,8 +52,6 @@ import NcSelect from '@nextcloud/vue/components/NcSelect'
 import InputGroup from './InputGroup.vue'
 import { APP_ID } from '../utils/appId.ts'
 import {
-	type IsoWeekDateWithoutDay,
-
 	buildIsoWeekDate,
 	getNumberOfWeeks,
 	parseIsoWeekDate,

@@ -1,3 +1,4 @@
+import type { Calendar, ExchangeApprovalType } from '../models/config.ts'
 import type {
 	NcSelectCalendarOption,
 	NcSelectExchangeApprovalTypeOption,
@@ -7,12 +8,7 @@ import type {
 import type { Shift } from '../models/shift.ts'
 import type { User } from '../models/user.ts'
 
-import {
-	type Calendar,
-	type ExchangeApprovalType,
-
-	exchangeApprovalTypeTranslations,
-} from '../models/config.ts'
+import { exchangeApprovalTypeTranslations } from '../models/config.ts'
 
 /**
  * Get the NcSelectUsersOption for a User

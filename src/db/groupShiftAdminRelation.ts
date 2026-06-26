@@ -1,10 +1,11 @@
+import type { AxiosError } from '@nextcloud/axios'
 import type { ErrorResponsePayload } from '../models/error.ts'
 import type {
 	GroupShiftAdminRelationsByGroup,
 	GroupShiftAdminRelationsByGroupPutPayload,
 } from '../models/groupShiftAdminRelation.ts'
 
-import axios, { type AxiosError } from '@nextcloud/axios'
+import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { handleError } from '../utils/error.ts'
 import { GROUP_SHIFT_ADMIN_RELATIONS_PATH } from '../utils/url.ts'

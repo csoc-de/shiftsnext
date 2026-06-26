@@ -143,6 +143,11 @@ import type {
 	NcSelectShiftOption,
 	NcSelectUsersOption,
 } from '../models/nextcloudVue.ts'
+import type {
+	ShiftExchangePostPayload,
+	ShiftExchangePostPayloadBase,
+	ShiftExchangeType,
+} from '../models/shiftExchange.ts'
 
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
@@ -161,10 +166,6 @@ import InputGroup from './InputGroup.vue'
 import { getShifts } from '../db/shift.ts'
 import { getUsers } from '../db/user.ts'
 import {
-	type ShiftExchangePostPayload,
-	type ShiftExchangePostPayloadBase,
-	type ShiftExchangeType,
-
 	EXCHANGE_TYPES,
 	exchangeTypeTranslations,
 } from '../models/shiftExchange.ts'
