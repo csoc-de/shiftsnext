@@ -359,8 +359,6 @@ if (shiftType) {
 	caldavCategories.value = shiftType.caldav.categories
 	syncToCalendar.value = shiftType.sync_to_calendar
 	if (shiftType.calendar) {
-		// TODO: test if editing a shift type, which currently has set a calendar
-		// for which the editor does not have write access, works as intended
 		calendarOption.value = getNcSelectCalendarOption(shiftType.calendar)
 		if (!calendarOptions.some(({ id }) => id === calendarOption.value.id)) {
 			calendarOptions.push(calendarOption.value)
