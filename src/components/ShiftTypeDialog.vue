@@ -44,9 +44,7 @@
 					<NcCheckboxRadioSwitch id="shift-type-active" v-model="active" :aria-label="t(APP_ID, 'Active')" />
 				</InputGroup>
 				<InputGroup class="col-span-2 sm:col-span-6">
-					<label for="shift-type-description">{{
-						t(APP_ID, "Description")
-					}}</label>
+					<label for="shift-type-description">{{ t(APP_ID, "Description") }}</label>
 					<NcTextArea
 						id="shift-type-description"
 						v-model.trim="description"
@@ -56,34 +54,70 @@
 			</div>
 			<CustomFieldset>
 				<template #legend>
-					{{ t(APP_ID, "Calendar event fields") }}
+					{{ t(APP_ID, "Calendar settings") }}
 				</template>
 				<div class="flex flex-col gap-2">
-					<div>{{ t(APP_ID, 'The values of these fields will be inserted into the corresponding calendar event fields when synchronizing shifts to the calendar app.') }}</div>
-					<InputGroup>
-						<label for="shift-type-caldav-description">{{ t(APP_ID, "Description") }}</label>
-						<NcTextArea
-							id="shift-type-caldav-description"
-							v-model.trim="caldavDescription"
-							labelOutside
-							resize="vertical" />
-					</InputGroup>
-					<InputGroup>
-						<label for="shift-type-caldav-location">{{ t(APP_ID, "Location") }}</label>
-						<NcTextField
-							id="shift-type-caldav-location"
-							v-model.trim="caldavLocation"
-							labelOutside />
-					</InputGroup>
-					<InputGroup>
-						<label for="shift-type-caldav-categories">{{ t(APP_ID, "Categories") }}</label>
-						<NcTextField
-							id="shift-type-caldav-categories"
-							v-model.trim="caldavCategories"
-							labelOutside
-							:placeholder="t(APP_ID, 'Category 1, Category 2\\, with comma')"
-							:helperText="t(APP_ID, `Separate categories by commas. To make the comma a part of the category, prepend the comma using a backslash: \\,`)" />
-					</InputGroup>
+					<NcNoteCard
+						v-if="shiftType"
+						type="info"
+						:heading="t(APP_ID, 'Attention')"
+						:text="t(APP_ID, 'Changing these settings will not automatically update calendar events for already existing shifts.')"
+						class="m-0" />
+					<div class="flex gap-2 items-end">
+						<InputGroup>
+							<label for="sync-to-calendar">{{ t(APP_ID, "Synchronization") }}</label>
+							<NcCheckboxRadioSwitch
+								id="sync-to-calendar"
+								v-model="syncToCalendar"
+								type="checkbox">
+								{{ t(APP_ID, "Enable") }}
+							</NcCheckboxRadioSwitch>
+						</InputGroup>
+						<InputGroup class="flex-1 min-w-0">
+							<label for="calendar">{{ t(APP_ID, "Select calendar") }}</label>
+							<NcSelect
+								v-model="calendarOption"
+								inputId="calendar"
+								labelOutside
+								:options="calendarOptions"
+								:clearable="false"
+								required
+								:disabled="!syncToCalendar"
+								class="min-w-64" />
+						</InputGroup>
+					</div>
+					<CustomFieldset v-if="syncToCalendar">
+						<template #legend>
+							{{ t(APP_ID, "Calendar event fields") }}
+						</template>
+						<div class="flex flex-col gap-2">
+							<div>{{ t(APP_ID, 'The values of these fields will be inserted into the corresponding calendar event fields when synchronizing shifts to the calendar app.') }}</div>
+							<InputGroup>
+								<label for="shift-type-caldav-description">{{ t(APP_ID, "Description") }}</label>
+								<NcTextArea
+									id="shift-type-caldav-description"
+									v-model.trim="caldavDescription"
+									labelOutside
+									resize="vertical" />
+							</InputGroup>
+							<InputGroup>
+								<label for="shift-type-caldav-location">{{ t(APP_ID, "Location") }}</label>
+								<NcTextField
+									id="shift-type-caldav-location"
+									v-model.trim="caldavLocation"
+									labelOutside />
+							</InputGroup>
+							<InputGroup>
+								<label for="shift-type-caldav-categories">{{ t(APP_ID, "Categories") }}</label>
+								<NcTextField
+									id="shift-type-caldav-categories"
+									v-model.trim="caldavCategories"
+									labelOutside
+									:placeholder="t(APP_ID, 'Category 1, Category 2\\, with comma')"
+									:helperText="t(APP_ID, `Separate categories by commas. To make the comma a part of the category, prepend the comma using a backslash: \\,`)" />
+							</InputGroup>
+						</div>
+					</CustomFieldset>
 				</div>
 			</CustomFieldset>
 			<CustomFieldset>
@@ -94,9 +128,7 @@
 					<template v-if="!shiftType">
 						<div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
 							<InputGroup class="col-span-2">
-								<label for="shift-type-repetition-frequency">{{
-									t(APP_ID, "Frequency")
-								}}</label>
+								<label for="shift-type-repetition-frequency">{{ t(APP_ID, "Frequency") }}</label>
 								<NcSelect
 									v-model="frequency"
 									inputId="shift-type-repetition-frequency"
@@ -105,9 +137,7 @@
 									:clearable="false" />
 							</InputGroup>
 							<InputGroup>
-								<label for="shift-type-repetition-interval">{{
-									t(APP_ID, "Interval")
-								}}</label>
+								<label for="shift-type-repetition-interval">{{ t(APP_ID, "Interval") }}</label>
 								<NcTextField
 									id="shift-type-repetition-interval"
 									v-model.trim="interval"
@@ -139,9 +169,7 @@
 								<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
 									<template v-if="weeklyType === 'by_day'">
 										<InputGroup>
-											<label for="shift-type-repetition-config-reference">
-												{{ t(APP_ID, "Reference date & time") }}
-											</label>
+											<label for="shift-type-repetition-config-reference">{{ t(APP_ID, "Reference date & time") }}</label>
 											<NcDateTimePickerNative
 												id="shift-type-repetition-config-reference"
 												v-model="byDayReferenceDate"
@@ -213,8 +241,20 @@
 
 <script setup lang="ts">
 import type { Group } from '../models/group.ts'
+import type {
+	Repetition,
+	RepetitionFrequency,
+	RepetitionWeeklyType,
+	ShiftType,
+	ShiftTypePayload,
+	ShiftTypePayloadType,
+	ShiftTypePostPayload,
+	ShiftTypePutPayload,
+	ShortDayToAmountMap,
+} from '../models/shiftType.ts'
 
 import { t } from '@nextcloud/l10n'
+import { whenever } from '@vueuse/core'
 import { Temporal } from 'temporal-polyfill'
 import { computed, ref, watchEffect } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -222,6 +262,7 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwit
 import NcColorPicker from '@nextcloud/vue/components/NcColorPicker'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
+import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
 import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
@@ -235,16 +276,6 @@ import InputGroup from './InputGroup.vue'
 import IsoWeekDateInput from './IsoWeekDateInput.vue'
 import ShiftTypeRepetitionDetails from './ShiftTypeRepetitionDetails.vue'
 import {
-	type Repetition,
-	type RepetitionFrequency,
-	type RepetitionWeeklyType,
-	type ShiftType,
-	type ShiftTypePayload,
-	type ShiftTypePayloadType,
-	type ShiftTypePostPayload,
-	type ShiftTypePutPayload,
-	type ShortDayToAmountMap,
-
 	REPETITION_FREQUENCIES,
 	REPETITION_WEEKLY_TYPES,
 	shortDayToLocalDayMap,
@@ -252,7 +283,8 @@ import {
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getIsoWeekDate, userTimeZone } from '../utils/date.ts'
-import { getInitialShiftAdminGroups } from '../utils/initialState.ts'
+import { getInitialCommonCalendar, getInitialShiftAdminGroups, getInitialWritableCalendars } from '../utils/initialState.ts'
+import { getNcSelectCalendarOption } from '../utils/nextcloudVue.ts'
 
 const { shiftType = undefined } = defineProps<{ shiftType?: ShiftType }>()
 
@@ -270,6 +302,19 @@ const frequencies = ref(REPETITION_FREQUENCIES)
 const showColorPicker = ref(false)
 
 const shiftAdminGroups = getInitialShiftAdminGroups()
+
+const initialCommonCalendar = getInitialCommonCalendar()!
+const commonCalendarOption = ref({
+	...initialCommonCalendar,
+	id: null,
+	label: `${t(APP_ID, 'Global setting')} (${initialCommonCalendar.ownerDisplayName} - ${initialCommonCalendar.displayName})`,
+})
+
+const calendars = getInitialWritableCalendars()
+const calendarOptions = [
+	commonCalendarOption.value,
+	...calendars.map(getNcSelectCalendarOption),
+]
 
 const group = ref<Group>()
 const name = ref('')
@@ -301,6 +346,8 @@ const byWeekAmount = ref(1)
 const caldavDescription = ref('')
 const caldavLocation = ref('')
 const caldavCategories = ref('')
+const syncToCalendar = ref(true)
+const calendarOption = ref(calendarOptions[0]!)
 
 if (shiftType) {
 	group.value = shiftType.group
@@ -311,7 +358,13 @@ if (shiftType) {
 	caldavDescription.value = shiftType.caldav.description ?? ''
 	caldavLocation.value = shiftType.caldav.location ?? ''
 	caldavCategories.value = shiftType.caldav.categories
-
+	syncToCalendar.value = shiftType.sync_to_calendar
+	if (shiftType.calendar) {
+		calendarOption.value = getNcSelectCalendarOption(shiftType.calendar)
+		if (!calendarOptions.some(({ id }) => id === calendarOption.value.id)) {
+			calendarOptions.push(calendarOption.value)
+		}
+	}
 	frequency.value = shiftType.repetition.frequency
 	interval.value = shiftType.repetition.interval
 	weeklyType.value = shiftType.repetition.weekly_type
@@ -391,6 +444,8 @@ function buildPayload<T extends ShiftTypePayloadType>(type: T): ShiftTypePayload
 			location: caldavLocation.value,
 			categories: caldavCategories.value,
 		},
+		sync_to_calendar: syncToCalendar.value,
+		calendar_id: calendarOption.value.id,
 	}
 
 	if (type === 'post') {
@@ -415,4 +470,6 @@ watchEffect(() => {
 		.toPlainDateTime()
 		.toZonedDateTime(timeZone.value)
 })
+
+whenever(() => !syncToCalendar.value, () => calendarOption.value = calendarOptions[0]!)
 </script>

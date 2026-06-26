@@ -13,6 +13,8 @@ use DateTimeImmutable;
  *     principaluri: string,
  *     '{DAV:}displayname': string,
  *     '{http://nextcloud.com/ns}owner-displayname': string,
+ *     '{http://owncloud.org/ns}owner-principal'?: string,
+ *     '{http://owncloud.org/ns}read-only'?: bool,
  * }
  *
  * @psalm-type CalendarObject = array{
@@ -35,6 +37,8 @@ use DateTimeImmutable;
  *     principalUri: string,
  *     displayName: string,
  *     ownerDisplayName: string,
+ *     ownerPrincipal?: string,
+ *     readOnly?: bool,
  * }
  *
  * @psalm-type SearchResultObject = array{

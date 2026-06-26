@@ -16,11 +16,11 @@
 </template>
 
 <script setup lang="ts">
+import type { Approved } from '../models/shiftExchange.ts'
+
 import { computed } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import {
-	type Approved,
-
 	approvedColorClasses,
 	approvedIconComponents,
 	approvedTranslations,

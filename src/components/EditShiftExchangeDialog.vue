@@ -44,6 +44,13 @@
 </template>
 
 <script setup lang="ts">
+import type {
+	ApprovalDiscriminator,
+	Approved,
+	ShiftExchange,
+	ShiftExchangePatchPayload,
+} from '../models/shiftExchange.ts'
+
 import { t } from '@nextcloud/l10n'
 import { computed, ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -53,13 +60,7 @@ import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import InputGroup from './InputGroup.vue'
-import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import {
-	type ApprovalDiscriminator,
-	type Approved,
-	type ShiftExchange,
-	type ShiftExchangePatchPayload,
-
 	APPROVED_OPTIONS,
 	approvedTranslations,
 } from '../models/shiftExchange.ts'
@@ -123,7 +124,6 @@ async function onSubmit() {
 		if ('shift_b' in updatedShiftExchange) {
 			shiftIds.push(updatedShiftExchange.shift_b.id)
 		}
-		postSynchronizeByShifts({ shift_ids: shiftIds })
 	} finally {
 		saving.value = false
 	}

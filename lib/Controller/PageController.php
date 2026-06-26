@@ -77,20 +77,24 @@ final class PageController extends Controller {
 			'exchange_approval_type',
 			$exchangeApprovalType,
 		);
-		$commonCalendar = $calendarService->safeGetCommonCalendar();
+		$commonCalendar = $calendarService->getCommonCalendar();
 		if ($commonCalendar !== null) {
 			$initialState->provideInitialState(
 				'common_calendar',
 				$commonCalendar,
 			);
 		}
-		$absenceCalendar = $calendarService->safeGetAbsenceCalendar();
+		$absenceCalendar = $calendarService->getAbsenceCalendar();
 		if ($absenceCalendar !== null) {
 			$initialState->provideInitialState(
 				'absence_calendar',
 				$absenceCalendar,
 			);
 		}
+		$initialState->provideInitialState(
+			'writable_calendars',
+			$calendarService->getWritableCalendars(),
+		);
 		$initialState->provideInitialState(
 			'group_shift_admin_relations_by_group',
 			$groupShiftAdminRelationService->getAllGroupedByGroup(),

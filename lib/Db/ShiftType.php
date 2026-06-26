@@ -25,6 +25,10 @@ use OCP\AppFramework\Db\Entity;
  * @method void setRepetition(array $repetition)
  * @method Caldav getCaldav()
  * @method void setCaldav(array $caldav)
+ * @method bool getSyncToCalendar()
+ * @method void setSyncToCalendar(bool $syncToCalendar)
+ * @method ?int getCalendarId()
+ * @method void setCalendarId(?int $calendarId)
  */
 final class ShiftType extends Entity {
 	/** @var string */
@@ -41,6 +45,10 @@ final class ShiftType extends Entity {
 	protected $repetition;
 	/** @var Caldav */
 	protected $caldav;
+	/** @var bool */
+	protected $syncToCalendar;
+	/** @var ?int */
+	protected $calendarId;
 
 	public function __construct() {
 		$this->addType('groupId', 'string');
@@ -50,5 +58,7 @@ final class ShiftType extends Entity {
 		$this->addType('active', 'boolean');
 		$this->addType('repetition', 'json');
 		$this->addType('caldav', 'json');
+		$this->addType('syncToCalendar', 'boolean');
+		$this->addType('calendarId', 'integer');
 	}
 }

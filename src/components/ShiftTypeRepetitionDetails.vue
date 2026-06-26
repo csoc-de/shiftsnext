@@ -31,11 +31,11 @@
 </template>
 
 <script setup lang="ts">
+import type { Repetition } from '../models/shiftType.ts'
+
 import { n, t } from '@nextcloud/l10n'
 import { computed } from 'vue'
 import {
-	type Repetition,
-
 	reorderedShortDays,
 	shortDayToLocalDayMap,
 } from '../models/shiftType.ts'

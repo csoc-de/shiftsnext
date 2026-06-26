@@ -1,7 +1,8 @@
+import type { AxiosError } from '@nextcloud/axios'
 import type { AppConfig, ConfigPutPayload, DefaultGroupsPutPayload } from '../models/config.ts'
 import type { ErrorResponsePayload } from '../models/error.ts'
 
-import axios, { type AxiosError } from '@nextcloud/axios'
+import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { handleError } from '../utils/error.ts'
 import { CONFIG_PATH } from '../utils/url.ts'

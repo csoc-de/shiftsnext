@@ -2,6 +2,7 @@ import type { Temporal } from 'temporal-polyfill'
 import type { Group } from '../models/group.ts'
 import type { SearchParams } from '../models/url.ts'
 import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
+import type { Calendar } from './config.ts'
 
 import { getDayNames, getFirstDay, t } from '@nextcloud/l10n'
 import { APP_ID } from '../utils/appId.ts'
@@ -115,10 +116,13 @@ export interface ShiftType {
 	active: boolean
 	repetition: Repetition
 	caldav: Caldav
+	sync_to_calendar: boolean
+	calendar: Calendar | null
 }
 
-export interface ShiftTypePostPayload extends Omit<ShiftType, 'id' | 'group'> {
+export interface ShiftTypePostPayload extends Omit<ShiftType, 'id' | 'group' | 'calendar'> {
 	group_id: string
+	calendar_id: number | null
 }
 
 export type ShiftTypePutPayload = Omit<ShiftTypePostPayload, 'group_id' | 'repetition'>

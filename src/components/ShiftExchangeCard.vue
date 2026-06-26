@@ -132,6 +132,12 @@
 </template>
 
 <script setup lang="ts">
+import type {
+	ApprovalDiscriminator,
+	ShiftExchange,
+	ShiftExchangeType,
+} from '../models/shiftExchange.ts'
+
 import { t } from '@nextcloud/l10n'
 import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
@@ -145,10 +151,6 @@ import DelayBox from './DelayBox.vue'
 import EditShiftExchangeDialog from './EditShiftExchangeDialog.vue'
 import ShiftExchangeApprovedStatus from './ShiftExchangeApprovedStatus.vue'
 import {
-	type ApprovalDiscriminator,
-	type ShiftExchange,
-	type ShiftExchangeType,
-
 	exchangeTypeTranslations,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'

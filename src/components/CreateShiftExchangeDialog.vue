@@ -21,11 +21,12 @@
 					</template>
 					<div class="flex flex-col gap-2">
 						<InputGroup>
-							<label for="user-a"> {{ t(APP_ID, "Participant") }}</label>
+							<label for="user-a">{{ t(APP_ID, "Participant") }}</label>
 							<NcSelectUsers
 								v-model="userAOption"
 								required
 								inputId="user-a"
+								labelOutside
 								:disabled="!isShiftAdmin"
 								class="w-full"
 								:options="userAOptions"
@@ -42,11 +43,12 @@
 								hideLabel />
 						</InputGroup>
 						<InputGroup>
-							<label for="shift-a"> {{ t(APP_ID, "Shift") }}</label>
+							<label for="shift-a">{{ t(APP_ID, "Shift") }}</label>
 							<NcSelect
 								v-model="shiftAOption"
 								required
 								inputId="shift-a"
+								labelOutside
 								:disabled="shiftASelectDisabled"
 								class="w-full"
 								:options="shiftAOptions"
@@ -62,11 +64,12 @@
 					<div class="flex flex-col gap-2">
 						<template v-if="exchangeType === 'regular'">
 							<InputGroup>
-								<label for="user-b"> {{ t(APP_ID, "Participant") }}</label>
+								<label for="user-b">{{ t(APP_ID, "Participant") }}</label>
 								<NcSelectUsers
 									v-model="userBOption"
 									required
 									inputId="user-b"
+									labelOutside
 									class="w-full"
 									:options="userBOptions"
 									:loading="userBOptionsLoading" />
@@ -82,11 +85,12 @@
 									hideLabel />
 							</InputGroup>
 							<InputGroup>
-								<label for="shift-b"> {{ t(APP_ID, "Shift") }}</label>
+								<label for="shift-b">{{ t(APP_ID, "Shift") }}</label>
 								<NcSelect
 									v-model="shiftBOption"
 									required
 									inputId="shift-b"
+									labelOutside
 									:disabled="shiftBSelectDisabled"
 									class="w-full"
 									:options="shiftBOptions"
@@ -95,11 +99,12 @@
 						</template>
 						<template v-else>
 							<InputGroup>
-								<label for="user-b"> {{ t(APP_ID, "Participant") }}</label>
+								<label for="user-b">{{ t(APP_ID, "Participant") }}</label>
 								<NcSelectUsers
 									v-model="userBOption"
 									required
 									inputId="user-b"
+									labelOutside
 									class="w-full"
 									:options="userBOptions"
 									:loading="userBOptionsLoading" />
@@ -138,6 +143,11 @@ import type {
 	NcSelectShiftOption,
 	NcSelectUsersOption,
 } from '../models/nextcloudVue.ts'
+import type {
+	ShiftExchangePostPayload,
+	ShiftExchangePostPayloadBase,
+	ShiftExchangeType,
+} from '../models/shiftExchange.ts'
 
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
@@ -153,14 +163,9 @@ import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import CustomFieldset from './CustomFieldset.vue'
 import InputGroup from './InputGroup.vue'
-import { postSynchronizeByShifts } from '../db/calendarSync.ts'
 import { getShifts } from '../db/shift.ts'
 import { getUsers } from '../db/user.ts'
 import {
-	type ShiftExchangePostPayload,
-	type ShiftExchangePostPayloadBase,
-	type ShiftExchangeType,
-
 	EXCHANGE_TYPES,
 	exchangeTypeTranslations,
 } from '../models/shiftExchange.ts'
@@ -356,7 +361,6 @@ async function onSubmit() {
 		if ('shift_b' in createdShiftExchange) {
 			shiftIds.push(createdShiftExchange.shift_b.id)
 		}
-		postSynchronizeByShifts({ shift_ids: shiftIds })
 	} finally {
 		saving.value = false
 	}

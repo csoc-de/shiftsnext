@@ -10,23 +10,32 @@ use OCA\ShiftsNext\Db\ShiftTypeMapper;
 use OCA\ShiftsNext\Exception\GroupNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Extended\ShiftTypeExtended;
+use OCA\ShiftsNext\Psalm\CalendarAlias;
 use OCP\IGroup;
 use function array_map;
+use function is_int;
 
+/**
+ * @psalm-import-type SanitizedCalendar from CalendarAlias
+ */
 final class ShiftTypeService {
 	public function __construct(
 		private ShiftTypeMapper $shiftTypeMapper,
 		private GroupService $groupService,
+		private CalendarService $calendarService,
 	) {
 	}
 
 	/**
+	 * @param null|int|SanitizedCalendar $calendar
+	 *
 	 * @throws ShiftTypeNotFoundException {@see OCA\ShiftsNext\Db\ShiftTypeMapper::findById()}
 	 * @throws GroupNotFoundException {@see OCA\ShiftsNext\Service\GroupService::get()}
 	 */
 	public function getExtended(
 		int|ShiftType|ShiftTypeExtended $shiftType,
 		null|string|IGroup $group = null,
+		null|int|array $calendar = null,
 	): ShiftTypeExtended {
 		if ($shiftType instanceof ShiftTypeExtended) {
 			return $shiftType;
@@ -36,18 +45,27 @@ final class ShiftTypeService {
 		$group ??= $shiftType->getGroupId();
 		$group = $this->groupService->get($group);
 
-		return new ShiftTypeExtended($shiftType, $group);
+		$calendar ??= $shiftType->getCalendarId();
+		if (is_int($calendar)) {
+			$calendar = $this->calendarService->getCalendarById($calendar);
+		}
+
+		return new ShiftTypeExtended($shiftType, $group, $calendar);
 	}
 
 	/**
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
+	 * @param null|int[] $calendarIds Adds `WHERE calendar_id IN($calendarIds)`
 	 *
 	 * @return list<ShiftTypeExtended>
 	 *
 	 * @throws Exception {@see OCA\ShiftsNext\Service\ShiftTypeService::getExtended()}
 	 */
-	public function getAllExtended(?array $groupIds = null): array {
-		$shiftTypes = $this->shiftTypeMapper->findAll($groupIds);
+	public function getAllExtended(
+		?array $groupIds = null,
+		?array $calendarIds = null,
+	): array {
+		$shiftTypes = $this->shiftTypeMapper->findAll($groupIds, $calendarIds);
 		return array_map($this->getExtended(...), $shiftTypes);
 	}
 }

@@ -10,9 +10,10 @@ use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Psalm\ShiftTypeAlias;
 use OCA\ShiftsNext\Response\ErrorResponse;
-use OCA\ShiftsNext\Service\CalendarChangeService;
+use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\GroupService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
+use OCA\ShiftsNext\Service\ShiftService;
 use OCA\ShiftsNext\Service\ShiftTypeService;
 use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
@@ -39,7 +40,8 @@ final class ShiftTypeController extends ApiController {
 		private ShiftTypeService $shiftTypeService,
 		private GroupService $groupService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
-		private CalendarChangeService $calendarChangeService,
+		private CalendarService $calendarService,
+		private ShiftService $shiftService,
 	) {
 		parent::__construct($appName, $request);
 	}
@@ -101,6 +103,8 @@ final class ShiftTypeController extends ApiController {
 		bool $active,
 		array $repetition,
 		array $caldav,
+		bool $sync_to_calendar,
+		?int $calendar_id,
 	): JSONResponse {
 		try {
 			if (!$this->groupShiftAdminRelationService->isShiftAdmin($group_id)) {
@@ -112,6 +116,30 @@ final class ShiftTypeController extends ApiController {
 					$this->l->t('You do not have permissions to create shift types for group %1$s.', [$groupName]),
 				);
 			}
+			if (
+				$sync_to_calendar
+				&& $calendar_id !== null
+				&& !$this->calendarService->hasUserWriteAccessForCalendar($calendar_id)
+			) {
+				$calendar = $this->calendarService->getCalendarById($calendar_id);
+				if ($calendar === null) {
+					throw new HttpException(
+						Http::STATUS_UNPROCESSABLE_ENTITY,
+						"No calendar with ID $calendar_id exists",
+						null,
+						$this->l->t('The specified calendar does not exist.'),
+					);
+				}
+				throw new HttpException(
+					Http::STATUS_FORBIDDEN,
+					"You lack write access for calendar $calendar_id",
+					null,
+					$this->l->t(
+						'You need to have write access for calendar %1$s in order to choose it for synchronization.',
+						[$calendar['displayName']]
+					),
+				);
+			}
 			$shiftType = $this->shiftTypeMapper->create(
 				$group_id,
 				$name,
@@ -120,6 +148,8 @@ final class ShiftTypeController extends ApiController {
 				$active,
 				$repetition,
 				$caldav,
+				$sync_to_calendar,
+				$calendar_id,
 			);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new JSONResponse($shiftTypeExtended);
@@ -140,6 +170,8 @@ final class ShiftTypeController extends ApiController {
 		string $color,
 		bool $active,
 		array $caldav,
+		bool $sync_to_calendar,
+		?int $calendar_id,
 	): JSONResponse {
 		try {
 			try {
@@ -157,8 +189,34 @@ final class ShiftTypeController extends ApiController {
 					$this->l->t('You do not have permissions to update shift types for group %1$s.', [$groupName]),
 				);
 			}
+			if (
+				$sync_to_calendar
+				&& $calendar_id !== null
+				&& $calendar_id !== $shiftType->getCalendarId()
+				&& !$this->calendarService->hasUserWriteAccessForCalendar($calendar_id)
+			) {
+				$calendar = $this->calendarService->getCalendarById($calendar_id);
+				if ($calendar === null) {
+					throw new HttpException(
+						Http::STATUS_UNPROCESSABLE_ENTITY,
+						"No calendar with ID $calendar_id exists",
+						null,
+						$this->l->t('The specified calendar does not exist.'),
+					);
+				}
+				throw new HttpException(
+					Http::STATUS_FORBIDDEN,
+					"You lack write access for calendar $calendar_id",
+					null,
+					$this->l->t(
+						'You need to have write access for calendar %1$s in order to choose it for synchronization.',
+						[$calendar['displayName']]
+					),
+				);
+			}
 			$shiftType = $this->shiftTypeMapper->updateById(
 				$shiftType,
+				$calendar_id,
 				null,
 				$name,
 				$description,
@@ -166,6 +224,7 @@ final class ShiftTypeController extends ApiController {
 				$active,
 				null,
 				$caldav,
+				$sync_to_calendar,
 			);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new JSONResponse($shiftTypeExtended);
@@ -194,7 +253,7 @@ final class ShiftTypeController extends ApiController {
 				);
 			}
 			$shifts = $this->shiftMapper->findAll(shiftTypeId: $shiftType->getId());
-			array_walk($shifts, $this->calendarChangeService->safeCreate(...));
+			array_walk($shifts, $this->shiftService->deleteByIdAndSyncCalendars(...));
 			$shiftType = $this->shiftTypeMapper->deleteById($shiftType);
 			$shiftTypeExtended = $this->shiftTypeService->getExtended($shiftType);
 			return new JSONResponse($shiftTypeExtended);

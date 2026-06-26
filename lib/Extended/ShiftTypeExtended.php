@@ -6,6 +6,7 @@ namespace OCA\ShiftsNext\Extended;
 
 use JsonSerializable;
 use OCA\ShiftsNext\Db\ShiftType;
+use OCA\ShiftsNext\Psalm\CalendarAlias;
 use OCA\ShiftsNext\Psalm\ShiftTypeAlias;
 use OCA\ShiftsNext\Serializable\SerializableGroup;
 use OCP\IGroup;
@@ -17,6 +18,7 @@ use Override;
  *
  * @psalm-import-type Repetition from ShiftTypeAlias
  * @psalm-import-type Caldav from ShiftTypeAlias
+ * @psalm-import-type SanitizedCalendar from CalendarAlias
  */
 final class ShiftTypeExtended implements JsonSerializable {
 	public int $id;
@@ -28,10 +30,15 @@ final class ShiftTypeExtended implements JsonSerializable {
 	public array $repetition;
 	/** @var Caldav */
 	public array $caldav;
+	public bool $syncToCalendar;
 
+	/**
+	 * @param null|SanitizedCalendar $calendar
+	 */
 	public function __construct(
 		ShiftType $shiftType,
 		public IGroup $group,
+		public ?array $calendar,
 	) {
 		$this->id = $shiftType->getId();
 		$this->name = $shiftType->getName();
@@ -40,6 +47,7 @@ final class ShiftTypeExtended implements JsonSerializable {
 		$this->active = $shiftType->getActive();
 		$this->repetition = $shiftType->getRepetition();
 		$this->caldav = $shiftType->getCaldav();
+		$this->syncToCalendar = $shiftType->getSyncToCalendar();
 	}
 
 	#[Override]
@@ -53,6 +61,8 @@ final class ShiftTypeExtended implements JsonSerializable {
 			'active' => $this->active,
 			'repetition' => (object)$this->repetition,
 			'caldav' => (object)$this->caldav,
+			'sync_to_calendar' => $this->syncToCalendar,
+			'calendar' => $this->calendar,
 		];
 	}
 }

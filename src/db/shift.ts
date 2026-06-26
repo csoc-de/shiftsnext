@@ -1,3 +1,4 @@
+import type { AxiosError } from '@nextcloud/axios'
 import type { ErrorResponsePayload } from '../models/error.ts'
 import type {
 	Shift,
@@ -6,7 +7,7 @@ import type {
 	ShiftPostPayload,
 } from '../models/shift.ts'
 
-import axios, { type AxiosError } from '@nextcloud/axios'
+import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import { transformResponse } from '../utils/axios.ts'
 import { handleError } from '../utils/error.ts'

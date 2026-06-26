@@ -33,6 +33,12 @@ export const [injectShiftTypesContext, provideShiftTypesContext]
 </script>
 
 <script setup lang="ts">
+import type {
+	ShiftType,
+	ShiftTypePostPayload,
+	ShiftTypePutPayload,
+} from '../models/shiftType.ts'
+
 import { t } from '@nextcloud/l10n'
 import { ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -46,11 +52,6 @@ import {
 	postShiftType,
 	putShiftType,
 } from '../db/shiftType.ts'
-import {
-	type ShiftType,
-	type ShiftTypePostPayload,
-	type ShiftTypePutPayload,
-} from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
 
 const loading = ref(true)

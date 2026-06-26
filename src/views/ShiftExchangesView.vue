@@ -54,6 +54,12 @@ export const [injectShiftExchangesContext, provideShiftExchangesContext]
 </script>
 
 <script setup lang="ts">
+import type {
+	ShiftExchange,
+	ShiftExchangePatchPayload,
+	ShiftExchangePostPayload,
+} from '../models/shiftExchange.ts'
+
 import { t } from '@nextcloud/l10n'
 import { ref } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -67,11 +73,6 @@ import {
 	patchShiftExchange,
 	postShiftExchange,
 } from '../db/shiftExchange.ts'
-import {
-	type ShiftExchange,
-	type ShiftExchangePatchPayload,
-	type ShiftExchangePostPayload,
-} from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { compare } from '../utils/sort.ts'
 

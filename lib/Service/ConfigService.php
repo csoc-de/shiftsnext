@@ -67,6 +67,14 @@ final class ConfigService extends AbstractService {
 		);
 	}
 
+	public function deleteCommonCalendarId(): static {
+		$this->appConfig->deleteKey(
+			Application::APP_ID,
+			AppConfigKey::CommonCalendarId->value,
+		);
+		return $this;
+	}
+
 	/**
 	 * @psalm-suppress PossiblyUnusedMethod Called dynamically by
 	 * {@see OCA\ShiftsNext\Service\ConfigService::setConfigValue()}
@@ -85,6 +93,14 @@ final class ConfigService extends AbstractService {
 			Application::APP_ID,
 			AppConfigKey::AbsenceCalendarId->value,
 		);
+	}
+
+	public function deleteAbsenceCalendarId(): static {
+		$this->appConfig->deleteKey(
+			Application::APP_ID,
+			AppConfigKey::AbsenceCalendarId->value,
+		);
+		return $this;
 	}
 
 	/**

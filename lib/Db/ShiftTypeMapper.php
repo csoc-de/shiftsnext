@@ -26,10 +26,14 @@ final class ShiftTypeMapper extends QBMapper {
 
 	/**
 	 * @param null|string[] $groupIds Adds `WHERE group_id IN($groupIds)`
+	 * @param null|int[] $calendarIds Adds `WHERE calendar_id IN($calendarIds)`
 	 *
 	 * @return list<ShiftType>
 	 */
-	public function findAll(?array $groupIds = null): array {
+	public function findAll(
+		?array $groupIds = null,
+		?array $calendarIds = null,
+	): array {
 		$qb = $this->db->getQueryBuilder();
 
 		$qb->select('*')
@@ -38,6 +42,11 @@ final class ShiftTypeMapper extends QBMapper {
 		if ($groupIds !== null) {
 			$qb->where(
 				$qb->expr()->in('group_id', $qb->createNamedParameter($groupIds, IQueryBuilder::PARAM_STR_ARRAY)),
+			);
+		}
+		if ($calendarIds !== null) {
+			$qb->where(
+				$qb->expr()->in('calendar_id', $qb->createNamedParameter($calendarIds, IQueryBuilder::PARAM_INT_ARRAY)),
 			);
 		}
 
@@ -81,6 +90,8 @@ final class ShiftTypeMapper extends QBMapper {
 		bool $active,
 		array $repetition,
 		array $caldav,
+		bool $syncToCalendar,
+		?int $calendarId,
 	): ShiftType {
 		$shiftType = new ShiftType();
 		$shiftType->setGroupId($groupId);
@@ -90,6 +101,8 @@ final class ShiftTypeMapper extends QBMapper {
 		$shiftType->setActive($active);
 		$shiftType->setRepetition($repetition);
 		$shiftType->setCaldav($caldav);
+		$shiftType->setSyncToCalendar($syncToCalendar);
+		$shiftType->setCalendarId($calendarId);
 		return $this->insert($shiftType);
 	}
 
@@ -100,6 +113,7 @@ final class ShiftTypeMapper extends QBMapper {
 	 */
 	public function updateById(
 		int|ShiftType $shiftType,
+		?int $calendarId,
 		?string $groupId = null,
 		?string $name = null,
 		?string $description = null,
@@ -107,6 +121,7 @@ final class ShiftTypeMapper extends QBMapper {
 		?bool $active = null,
 		?array $repetition = null,
 		?array $caldav = null,
+		?bool $syncToCalendar = null,
 	): ShiftType {
 		$shiftType = $this->findById($shiftType);
 		if ($groupId !== null) {
@@ -130,6 +145,10 @@ final class ShiftTypeMapper extends QBMapper {
 		if ($caldav !== null) {
 			$shiftType->setCaldav($caldav);
 		}
+		if ($syncToCalendar !== null) {
+			$shiftType->setSyncToCalendar($syncToCalendar);
+		}
+		$shiftType->setCalendarId($calendarId);
 		return $this->update($shiftType);
 	}
 

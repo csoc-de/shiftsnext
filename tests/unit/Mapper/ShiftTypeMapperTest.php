@@ -22,6 +22,8 @@ use Test\TestCase;
  *     duration: string,
  *     repetition: Repetition,
  *     caldav: Caldav,
+ *     syncToCalendar: bool,
+ *     calendarId: null|int,
  * }
  *
  * @group DB
@@ -56,6 +58,8 @@ class ShiftTypeMapperTest extends TestCase {
 				],
 			],
 			'caldav' => ['categories' => 'Control center'],
+			'syncToCalendar' => true,
+			'calendarId' => null,
 		], [
 			'groupId' => 'Black Team',
 			'name' => 'Late shift',
@@ -81,6 +85,8 @@ class ShiftTypeMapperTest extends TestCase {
 				],
 			],
 			'caldav' => ['categories' => 'Control center'],
+			'syncToCalendar' => true,
+			'calendarId' => null,
 		], [
 			'groupId' => 'Blue Team',
 			'name' => 'Early shift',
@@ -106,6 +112,8 @@ class ShiftTypeMapperTest extends TestCase {
 				],
 			],
 			'caldav' => ['categories' => 'Control center'],
+			'syncToCalendar' => true,
+			'calendarId' => null,
 		], [
 			'groupId' => 'Blue Team',
 			'name' => 'Late shift',
@@ -131,6 +139,8 @@ class ShiftTypeMapperTest extends TestCase {
 				],
 			],
 			'caldav' => ['categories' => 'Control center'],
+			'syncToCalendar' => true,
+			'calendarId' => null,
 		], [
 			'groupId' => 'Blue Team',
 			'name' => 'Night shift',
@@ -156,6 +166,8 @@ class ShiftTypeMapperTest extends TestCase {
 				],
 			],
 			'caldav' => ['categories' => 'Control center'],
+			'syncToCalendar' => true,
+			'calendarId' => null,
 		], [
 			'groupId' => 'Black Team',
 			'name' => 'Office duty',
@@ -172,6 +184,8 @@ class ShiftTypeMapperTest extends TestCase {
 				],
 			],
 			'caldav' => ['categories' => 'Control center'],
+			'syncToCalendar' => true,
+			'calendarId' => null,
 		],
 	];
 

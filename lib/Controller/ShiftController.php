@@ -12,7 +12,6 @@ use OCA\ShiftsNext\Exception\HttpException;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Response\ErrorResponse;
-use OCA\ShiftsNext\Service\CalendarChangeService;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\ConfigService;
 use OCA\ShiftsNext\Service\GroupService;
@@ -41,7 +40,6 @@ final class ShiftController extends ApiController {
 		private ShiftService $shiftService,
 		private GroupUserRelationService $groupUserService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
-		private CalendarChangeService $calendarChangeService,
 		private GroupService $groupService,
 		private UserService $userService,
 		private CalendarService $calendarService,
@@ -188,15 +186,14 @@ final class ShiftController extends ApiController {
 					),
 				);
 			}
-			$shift = $this->shiftMapper->create(
-				$user_id,
-				$shift_type_id,
-				$start,
-				$end,
+			return new JSONResponse(
+				$this->shiftService->createAndSyncCalendars(
+					$user_id,
+					$shift_type_id,
+					$start,
+					$end,
+				)
 			);
-			$shiftExtended = $this->shiftService->getExtended($shift);
-			$this->calendarChangeService->safeCreate($shiftExtended);
-			return new JSONResponse($shiftExtended);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -294,13 +291,12 @@ final class ShiftController extends ApiController {
 					$this->l->t('Cannot move shift as there is a pending shift exchange for the shift.'),
 				);
 			}
-			// This queues a removal of the shift from the previous user's calendar
-			$this->calendarChangeService->safeCreate($shift);
-			$shift = $this->shiftMapper->updateById($shift, $user_id);
-			$shiftExtended = $this->shiftService->getExtended($shift);
-			// This queues a creation of the shift in $user_id's calendar
-			$this->calendarChangeService->safeCreate($shiftExtended);
-			return new JSONResponse($shiftExtended);
+			return new JSONResponse(
+				$this->shiftService->updateByIdAndSyncCalendars(
+					$shift,
+					$user_id,
+				)
+			);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}
@@ -335,10 +331,9 @@ final class ShiftController extends ApiController {
 					$this->l->t('You do not have permissions to delete shifts for group %1$s.', [$groupName]),
 				);
 			}
-			$shift = $this->shiftMapper->deleteById($shift);
-			$shiftExtended = $this->shiftService->getExtended($shift);
-			$this->calendarChangeService->safeCreate($shiftExtended);
-			return new JSONResponse($shiftExtended);
+			return new JSONResponse(
+				$this->shiftService->deleteByIdAndSyncCalendars($shift),
+			);
 		} catch (Throwable $th) {
 			return new ErrorResponse($th);
 		}

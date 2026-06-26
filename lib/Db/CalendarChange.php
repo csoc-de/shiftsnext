@@ -13,6 +13,8 @@ use OCP\AppFramework\Db\Entity;
  * @method void setUserId(string $userId)
  * @method int getShiftId()
  * @method void setShiftId(int $shiftId)
+ *
+ * @psalm-suppress UnusedClass
  */
 final class CalendarChange extends Entity {
 	/** @var string */

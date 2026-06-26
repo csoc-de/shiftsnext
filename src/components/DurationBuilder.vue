@@ -38,7 +38,7 @@ const propertyTranslations: PropertyTranslations = {
 	seconds: t(APP_ID, 'Seconds'),
 }
 
-const durationLike = ref<Temporal.DurationLike>({})
+const durationLike = ref<Temporal.DurationLikeObject>({})
 
 const { pause: pauseDurationLikeWatcher, resume: resumeDurationLikeWatcher }
 	= watch(

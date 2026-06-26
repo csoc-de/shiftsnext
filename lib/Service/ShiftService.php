@@ -9,6 +9,7 @@ use Exception;
 use OCA\ShiftsNext\Db\Shift;
 use OCA\ShiftsNext\Db\ShiftMapper;
 use OCA\ShiftsNext\Db\ShiftType;
+use OCA\ShiftsNext\Enum\SyncShiftOperation;
 use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Exception\UserNotFoundException;
@@ -25,6 +26,7 @@ final class ShiftService {
 		private ShiftTypeService $shiftTypeService,
 		private ConfigService $configService,
 		private UserService $userService,
+		private CalendarService $calendarService,
 	) {
 	}
 
@@ -108,5 +110,61 @@ final class ShiftService {
 		} catch (Throwable) {
 			return null;
 		}
+	}
+
+	/**
+	 * Creates a new shift and synchronizes it with the calendar app
+	 */
+	public function createAndSyncCalendars(
+		string $userId,
+		int $shiftTypeId,
+		string $start,
+		string $end,
+	): ShiftExtended {
+		$shift = $this->shiftMapper->create(
+			$userId,
+			$shiftTypeId,
+			$start,
+			$end,
+		);
+		$shiftExtended = $this->getExtended($shift);
+		$this->calendarService->syncShift($shiftExtended, SyncShiftOperation::CreateOrUpdate);
+		return $shiftExtended;
+	}
+
+	/**
+	 * Updates `$shift` and synchronizes it with the calendar app
+	 */
+	public function updateByIdAndSyncCalendars(
+		int|Shift $shift,
+		?string $userId = null,
+		?int $shiftTypeId = null,
+		?string $start = null,
+		?string $end = null,
+	): ShiftExtended {
+		$shiftExtended = $this->getExtended($shift);
+		if ($userId !== null && $userId !== $shiftExtended->user->getUID()) {
+			$this->calendarService->syncShift($shiftExtended, SyncShiftOperation::Delete);
+		}
+		$shift = $this->shiftMapper->updateById(
+			$shift,
+			$userId,
+			$shiftTypeId,
+			$start,
+			$end,
+		);
+		$shiftExtended = $this->getExtended($shift);
+		$this->calendarService->syncShift($shiftExtended, SyncShiftOperation::CreateOrUpdate);
+		return $shiftExtended;
+	}
+
+	/**
+	 * Deletes `$shift` and removes it from the calendar app
+	 */
+	public function deleteByIdAndSyncCalendars(int|Shift $shift): ShiftExtended {
+		$shiftExtended = $this->getExtended($shift);
+		$this->calendarService->syncShift($shiftExtended, SyncShiftOperation::Delete);
+		$this->shiftMapper->deleteById($shift);
+		return $shiftExtended;
 	}
 }

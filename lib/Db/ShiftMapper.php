@@ -180,6 +180,8 @@ final class ShiftMapper extends QBMapper {
 
 	/**
 	 * @throws ShiftNotFoundException {@see OCA\ShiftsNext\Db\ShiftMapper::findById()}
+	 *
+	 * @psalm-suppress PossiblyUnusedReturnValue
 	 */
 	public function deleteById(int|Shift $shift): Shift {
 		$shift = $this->findById($shift);

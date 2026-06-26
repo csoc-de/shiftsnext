@@ -16,7 +16,6 @@ use OCA\ShiftsNext\Exception\ShiftNotFoundException;
 use OCA\ShiftsNext\Exception\ShiftTypeNotFoundException;
 use OCA\ShiftsNext\Psalm\ShiftExchangeAlias;
 use OCA\ShiftsNext\Response\ErrorResponse;
-use OCA\ShiftsNext\Service\CalendarChangeService;
 use OCA\ShiftsNext\Service\CalendarService;
 use OCA\ShiftsNext\Service\ConfigService;
 use OCA\ShiftsNext\Service\GroupShiftAdminRelationService;
@@ -53,7 +52,6 @@ final class ShiftExchangeController extends ApiController {
 		private GroupUserRelationService $groupUserService,
 		private GroupShiftAdminRelationService $groupShiftAdminRelationService,
 		private string $userId,
-		private CalendarChangeService $calendarChangeService,
 		private UserService $userService,
 		private ConfigService $configService,
 		private CalendarService $calendarService,
@@ -406,23 +404,9 @@ final class ShiftExchangeController extends ApiController {
 			);
 
 			if ($approved) {
-				// This queues a removal of shift A from user A's calendar
-				$this->calendarChangeService->safeCreate($shiftA);
-
-				$updatedShiftA
-					= $this->shiftMapper->updateById($shiftA->id, $userBId);
-
-				// This queues a creation of shift A in user B's calendar
-				$this->calendarChangeService->safeCreate($updatedShiftA);
+				$this->shiftService->updateByIdAndSyncCalendars($shiftA->id, $userBId);
 				if ($shiftB !== null) {
-					// This queues a removal of shift B from user B's calendar
-					$this->calendarChangeService->safeCreate($shiftB);
-
-					$updatedShiftB
-						= $this->shiftMapper->updateById($shiftB->id, $userAId);
-
-					// This queues a creation of shift B in user A's calendar
-					$this->calendarChangeService->safeCreate($updatedShiftB);
+					$this->shiftService->updateByIdAndSyncCalendars($shiftB->id, $userAId);
 				}
 			}
 
@@ -579,23 +563,9 @@ final class ShiftExchangeController extends ApiController {
 			);
 
 			if ($approved) {
-				// This queues a removal of shift A from user A's calendar
-				$this->calendarChangeService->safeCreate($shiftA);
-
-				$updatedShiftA
-					= $this->shiftMapper->updateById($shiftA->id, $userBId);
-
-				// This queues a creation of shift A in user B's calendar
-				$this->calendarChangeService->safeCreate($updatedShiftA);
+				$this->shiftService->updateByIdAndSyncCalendars($shiftA->id, $userBId);
 				if ($shiftB !== null) {
-					// This queues a removal of shift B from user B's calendar
-					$this->calendarChangeService->safeCreate($shiftB);
-
-					$updatedShiftB
-						= $this->shiftMapper->updateById($shiftB->id, $userAId);
-
-					// This queues a creation of shift B in user A's calendar
-					$this->calendarChangeService->safeCreate($updatedShiftB);
+					$this->shiftService->updateByIdAndSyncCalendars($shiftB->id, $userAId);
 				}
 			}
 

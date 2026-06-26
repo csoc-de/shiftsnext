@@ -60,6 +60,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ShiftType } from '../models/shiftType.ts'
+
 import { t } from '@nextcloud/l10n'
 import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
@@ -72,10 +74,6 @@ import Pencil from 'vue-material-design-icons/Pencil.vue'
 import { injectShiftTypesContext } from '../views/ShiftTypesView.vue'
 import DelayBox from './DelayBox.vue'
 import ShiftTypeDialog from './ShiftTypeDialog.vue'
-import { postSynchronizeByGroups } from '../db/calendarSync.ts'
-import {
-	type ShiftType,
-} from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
 
 const { shiftType } = defineProps<{ shiftType: ShiftType }>()
@@ -94,7 +92,6 @@ async function _remove(): Promise<void> {
 	delayBoxVisible.value = false
 	try {
 		await remove(shiftType.id)
-		postSynchronizeByGroups({ group_ids: [shiftType.group.id] })
 	} finally {
 		deleting.value = false
 	}
