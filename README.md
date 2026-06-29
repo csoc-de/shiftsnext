@@ -47,21 +47,24 @@ There are certain functionalities of the app which are not available to all user
 
 For these functionalities you need to define shift admins per Nextcloud group. We deliberately decided against using regular Nextcloud group admins to restrict these functionalities as it might be undesirable to give users regular Nextcloud group admin privileges merely because this app requires it.
 
-#### How to assign Shift admins and groups
-1. Navigate to _Administration settings_, _Shifts Next_, _Shift admins_
-2. Select the Nextcloud group and the user(s) you want to assign shift admin privileges to
-3. Click _Save_
+#### How to assign shift admins
 
-The Users assigned as _Shift admins_ will then be able to create _Shift types_ for the group they are managing.
-Example:
+1. Open the _Add group_ selection and select the Nextcloud group you want to manage shift admins for
+2. Click the _Edit_ button in the table row for the group you just selected
+3. In the appearing selection, choose the shift admins for that group
+4. Click _Save_
 
-For "Add group" select "workers_a" (nextcloud group), then add the user "manager_a" (nextcloud user) as Admin. Click save.
+The users assigned as shift admins will then be able to create shift types for the group they are managing.
 
-| Group | Admins |
-|-------|--------|
-| workers_a | manager_a |
+##### Example
 
-The user "manager_a" can now create shift types assigned to the group "workers_a" and assign these shifts to users in that group.
+Select the group "Workers A" from the _Add group_ selection, then add the user "Manager A" as shift admin and save.
+
+| Group     | Admins    |
+| --------- | --------- |
+| Workers A | Manager A |
+
+The user "Manager A" is now able to create shift types for the group "Workers A" and assign shifts of these types to members of that group.
 
 ## Usage
 
@@ -99,7 +102,7 @@ Decide if you want shifts created from this type to be synchronized to the calen
 
 ##### Select calendar
 
-By default, shifts are synchronized to the _common_ calendar set in the _Administration settings_ by the Nextcloud admin. If you want to synchronize shifts created from this type to another calendar, choose the desired calendar from the list. Besides the "Global setting" (_common_ calendar), the list only includes calendars for which the logged-in user has write access. This has the following implications. If user "A" creates a shift type with its calendar set to calendar "X", for which user "A" has write access, and user "B" without write access to calendar "X" edits this shift type, user "B" will still see calendar "X" in the list, but once user "B" has switched and saved the shift type with a different calendar, user "B" won't be able to switch back to calendar "X" and save the shift type. 
+By default, shifts are synchronized to the _common_ calendar set in the _Administration settings_ by the Nextcloud admin. If you want to synchronize shifts created from this type to another calendar, choose the desired calendar from the list. Besides the "Global setting" (_common_ calendar), the list only includes calendars for which the logged-in user has write access. This has the following implications. If user "A" creates a shift type with its calendar set to calendar "X", for which user "A" has write access, and user "B" without write access to calendar "X" edits this shift type, user "B" will still see calendar "X" in the list, but once user "B" has switched and saved the shift type with a different calendar, user "B" won't be able to switch back to calendar "X" and save the shift type.
 
 ##### Calendar event fields
 
