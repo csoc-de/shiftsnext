@@ -47,6 +47,22 @@ There are certain functionalities of the app which are not available to all user
 
 For these functionalities you need to define shift admins per Nextcloud group. We deliberately decided against using regular Nextcloud group admins to restrict these functionalities as it might be undesirable to give users regular Nextcloud group admin privileges merely because this app requires it.
 
+#### How to assign Shift admins and groups
+1. Navigate to _Administration settings_, _Shifts Next_, _Shift admins_
+2. Select the Nextcloud group and the user(s) you want to assign shift admin privileges to
+3. Click _Save_
+
+The Users assigned as _Shift admins_ will then be able to create _Shift types_ for the group they are managing.
+Example:
+
+For "Add group" select "workers_a" (nextcloud group), then add the user "manager_a" (nextcloud user) as Admin. Click save.
+
+| Group | Admins |
+|-------|--------|
+| workers_a | manager_a |
+
+The user "manager_a" can now create shift types assigned to the group "workers_a" and assign these shifts to users in that group.
+
 ## Usage
 
 ### Types
