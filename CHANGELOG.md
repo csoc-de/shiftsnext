@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.11.0] - 2026-06-29
+
+### Added
+
+- Support Nextcloud versions 34 and 35
+- The calendar to which shifts are synchronized to can now be specified per shift type by appropriate group shift admins. Previously, only a single global (_common_) calendar could be defined by the Nextcloud admin.
+- Synchronization to the calendar app can now be disabled per shift type
+
+### Changed
+
+- Update README regarding shift type calendar settings
+- Remove the calendar sync button from the shifts view, as manually triggering the calendar synchronization hasn't been necessary for quite some time
+
+### Fixed
+
+- Deleting the _common_ or _absence_ calendar now resets the value set in the [administration settings](#calendar).
+
 ## [2.10.0] - 2026-02-26
 
 ### Added
@@ -11,7 +28,7 @@
 - Improve _Calendar sync_ section in the README
 - Improve explanation of the _Amount_ input fields of the shift type config in the README
 - Shift exchanges are now immediately marked as _done_ as soon as one of the required approvals is rejected. Previously, exchanges weren't marked as _done_ as long as at least one required approval was still pending.
-- The navigation items for shift types and shift exchanges now use a more detailed label 
+- The navigation items for shift types and shift exchanges now use a more detailed label
 
 ### Fixed
 
