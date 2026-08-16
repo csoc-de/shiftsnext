@@ -27,7 +27,6 @@ final class Application extends App implements IBootstrap {
 		parent::__construct(self::APP_ID, $urlParams);
 
 		/**
-		 * @psalm-suppress DeprecatedInterface
 		 * @var IEventDispatcher
 		 */
 		$dispatcher = $this->getContainer()->get(IEventDispatcher::class);
