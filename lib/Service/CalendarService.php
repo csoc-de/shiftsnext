@@ -6,6 +6,7 @@ namespace OCA\ShiftsNext\Service;
 
 use DateInterval;
 use DateTimeImmutable;
+use DateTimeInterface;
 use DateTimeZone;
 use OCA\DAV\CalDAV\CalDavBackend;
 use OCA\ShiftsNext\Db\Shift;
@@ -15,6 +16,8 @@ use OCA\ShiftsNext\Psalm\CalendarAlias;
 use OCA\ShiftsNext\Util\Util;
 use Ramsey\Uuid\Uuid;
 use Sabre\VObject\Component\VCalendar;
+use Sabre\VObject\Component\VEvent;
+use Sabre\VObject\Reader;
 use Throwable;
 use function array_any;
 use function array_column;
@@ -22,11 +25,17 @@ use function array_filter;
 use function array_map;
 use function array_merge;
 use function array_push;
+use function array_unique;
 use function array_values;
+use function explode;
 use function in_array;
 use function mb_ereg_replace;
 use function mb_split;
 use function mb_strtolower;
+use function preg_split;
+use function rtrim;
+use function str_contains;
+use function str_starts_with;
 use function trim;
 
 /**
@@ -44,7 +53,7 @@ final class CalendarService extends AbstractService {
 		private CalDavBackend $calDavBackend,
 		private ConfigService $configService,
 		private UserService $userService,
-		private string $userId,
+		private ?string $userId,
 	) {
 	}
 
@@ -73,12 +82,16 @@ final class CalendarService extends AbstractService {
 	 *
 	 * @param null|string $userId If `null`, the logged-in user is used
 	 *
-	 * @return list<SanitizedCalendar>
+	 * @return list<SanitizedCalendar> Empty if there is no logged-in user
 	 */
 	public function getWritableCalendars(?string $userId = null): array {
+		$effectiveUserId = $userId ?? $this->userId;
+		if ($effectiveUserId === null) {
+			return [];
+		}
 		/** @var list<Calendar> */
 		$calendars = $this->calDavBackend->getCalendarsForUser(
-			'principals/users/' . ($userId ?? $this->userId)
+			'principals/users/' . $effectiveUserId
 		);
 		$calendars = array_filter(
 			$calendars,
@@ -325,12 +338,38 @@ final class CalendarService extends AbstractService {
 		DateTimeImmutable $start,
 		DateTimeImmutable $end,
 	): bool {
-		$user = $this->userService->get($userId);
-		$userDisplayName = $user->getDisplayName();
+		$blockers = $this->getAbsenceBlockers($start, $end, [$userId]);
+		return in_array($userId, array_column($blockers, 'user_id'), true);
+	}
 
+	/**
+	 * Returns all absence calendar events blocking the users in `$userIds`
+	 * between `$start` and `$end`
+	 *
+	 * @param DateTimeImmutable $start The start of the checked period
+	 * @param DateTimeImmutable $end The end of the checked period
+	 * @param null|list<string> $userIds The users to return blockers for. If
+	 *                                   `null`, all users are considered.
+	 *
+	 * @return list<array{
+	 *     user_id: string,
+	 *     start: string,
+	 *     end: string,
+	 *     all_day: bool,
+	 *     title: string,
+	 * }>
+	 *
+	 * @psalm-suppress MixedAssignment, MixedMethodCall The Sabre VObject
+	 *                 classes are not visible to Psalm
+	 */
+	public function getAbsenceBlockers(
+		DateTimeImmutable $start,
+		DateTimeImmutable $end,
+		?array $userIds = null,
+	): array {
 		$calendar = $this->getAbsenceCalendar();
-		if (!$calendar) {
-			return false;
+		if ($calendar === null) {
+			return [];
 		}
 
 		/** @var list<SearchResult> */
@@ -339,32 +378,198 @@ final class CalendarService extends AbstractService {
 			'',
 			[],
 			['timerange' => ['start' => $start, 'end' => $end]],
-			25,
+			100,
 			0,
 		);
 
-		// Extract only the relevant data from the results
-		$eventTitles = array_column(
-			array_column(
-				array_merge(
-					...array_column(
-						$results,
-						'objects',
-					)
-				),
-				'SUMMARY',
-			),
-			0,
+		$users = $this->userService->getAll($userIds);
+		$userIdMap = [];
+		$emailMap = [];
+		$displayNameMap = [];
+		foreach ($users as $user) {
+			$userId = $user->getUID();
+			$userIdMap[self::normalizeIdentity($userId)] = $userId;
+			$displayNameMap[self::normalizeIdentity($user->getDisplayName())] = $userId;
+			$email = $user->getEMailAddress();
+			if ($email !== null && $email !== '') {
+				$emailMap[self::normalizeIdentity($email)] = $userId;
+			}
+		}
+
+		$blockers = [];
+		foreach ($results as $result) {
+			$summary = $result['objects'][0]['SUMMARY'][0] ?? '';
+			/** @var null|CalendarObject */
+			$calendarObject = $this->calDavBackend->getCalendarObject(
+				$calendar['id'],
+				$result['uri'],
+			);
+			if ($calendarObject === null) {
+				continue;
+			}
+
+			try {
+				$vCalendar = Reader::read($calendarObject['calendardata']);
+			} catch (Throwable) {
+				continue;
+			}
+			foreach ($vCalendar->select('VEVENT') as $vEvent) {
+				if (!$vEvent instanceof VEvent) {
+					continue;
+				}
+				/** @var null|DateTimeInterface */
+				$eventStart = $vEvent->DTSTART?->getDateTime();
+				if ($eventStart === null) {
+					continue;
+				}
+				/** @var DateTimeInterface */
+				$eventEnd = $vEvent->DTEND?->getDateTime() ?? $eventStart;
+				if ($eventEnd < $start || $eventStart > $end) {
+					continue;
+				}
+				$eventSummary = (string)($vEvent->SUMMARY?->getValue() ?? $summary);
+				$resolvedUserIds = $this->resolveEventParticipants(
+					$vEvent,
+					$eventSummary,
+					$userIdMap,
+					$emailMap,
+					$displayNameMap,
+				);
+				foreach ($resolvedUserIds as $resolvedUserId) {
+					$blockers[] = [
+						'user_id' => $resolvedUserId,
+						'start' => $eventStart->format(Util::ECMA_DATE_TIME),
+						'end' => $eventEnd->format(Util::ECMA_DATE_TIME),
+						'all_day' => self::isAllDayEvent($vEvent, $eventStart, $eventEnd),
+						'title' => $eventSummary,
+					];
+				}
+			}
+		}
+		return $blockers;
+	}
+
+	/**
+	 * Resolves the users participating in `$vEvent`
+	 *
+	 * Participants are matched against the user ID, the email address and the
+	 * display name, both via the event's attendees and its summary
+	 *
+	 * @param VEvent $vEvent The event to resolve the participants for
+	 * @param string $summary The event's summary
+	 * @param array<string,string> $userIdMap Normalized user ID to user ID
+	 * @param array<string,string> $emailMap Normalized email to user ID
+	 * @param array<string,string> $displayNameMap Normalized display name to user ID
+	 *
+	 * @return list<string>
+	 *
+	 * @psalm-suppress MixedAssignment, MixedMethodCall The Sabre VObject
+	 *                 classes are not visible to Psalm
+	 */
+	private function resolveEventParticipants(
+		VEvent $vEvent,
+		string $summary,
+		array $userIdMap,
+		array $emailMap,
+		array $displayNameMap,
+	): array {
+		$tokens = [];
+		foreach ($vEvent->select('ATTENDEE') as $attendee) {
+			$tokens[] = (string)$attendee->getValue();
+			$tokens[] = (string)($attendee['CN']?->getValue() ?? '');
+			$tokens[] = (string)($attendee['EMAIL']?->getValue() ?? '');
+			$tokens[] = (string)($attendee['X-NC-USER-ID']?->getValue() ?? '');
+		}
+		foreach ($vEvent->select('PARTICIPANT') as $participant) {
+			$tokens[] = (string)$participant->getValue();
+			$tokens[] = (string)($participant['CN']?->getValue() ?? '');
+			$tokens[] = (string)($participant['EMAIL']?->getValue() ?? '');
+			$tokens[] = (string)($participant['X-NC-USER-ID']?->getValue() ?? '');
+		}
+		$tokens[] = $summary;
+		$tokens = array_merge(
+			$tokens,
+			preg_split('/[,;]/', $summary) ?: [],
 		);
 
-		$sanitizedTitles = array_map(
-			fn ($title) => mb_strtolower(trim($title)),
-			$eventTitles,
-		);
+		$resolvedUserIds = [];
+		foreach ($tokens as $token) {
+			foreach (self::toIdentityCandidates($token) as $candidate) {
+				$userId
+					= $userIdMap[$candidate]
+					?? $emailMap[$candidate]
+					?? $displayNameMap[$candidate]
+					?? null;
+				if ($userId !== null) {
+					$resolvedUserIds[] = $userId;
+				}
+			}
+		}
 
-		return
-			in_array(mb_strtolower(trim($userDisplayName)), $sanitizedTitles, true)
-			|| in_array(mb_strtolower(trim($userId)), $sanitizedTitles, true);
+		/** @var list<string> */
+		return array_values(array_unique($resolvedUserIds));
+	}
+
+	/**
+	 * @return list<string>
+	 */
+	private static function toIdentityCandidates(string $raw): array {
+		$candidates = [];
+		$normalized = self::normalizeIdentity($raw);
+		if ($normalized !== '') {
+			$candidates[] = $normalized;
+		}
+		$withoutMailto = self::normalizeIdentity(
+			str_starts_with($raw, 'mailto:') ? substr($raw, 7) : $raw,
+		);
+		if ($withoutMailto !== '') {
+			$candidates[] = $withoutMailto;
+		}
+		if (str_contains($raw, '/')) {
+			$segments = explode('/', rtrim($raw, '/'));
+			$lastSegment = $segments[count($segments) - 1] ?? '';
+			$lastSegmentNormalized = self::normalizeIdentity($lastSegment);
+			if ($lastSegmentNormalized !== '') {
+				$candidates[] = $lastSegmentNormalized;
+			}
+		}
+		return array_values(array_unique($candidates));
+	}
+
+	private static function normalizeIdentity(string $value): string {
+		return mb_strtolower(trim($value));
+	}
+
+	/**
+	 * Checks if `$vEvent` spans one or more full days
+	 *
+	 * @param VEvent $vEvent The event to check
+	 * @param DateTimeInterface $start The event's start
+	 * @param DateTimeInterface $end The event's end
+	 *
+	 * @return bool
+	 *
+	 * @psalm-suppress MixedArrayAccess, MixedAssignment, MixedMethodCall The
+	 *                 Sabre VObject classes are not visible to Psalm
+	 */
+	private static function isAllDayEvent(
+		VEvent $vEvent,
+		DateTimeInterface $start,
+		DateTimeInterface $end,
+	): bool {
+		$dateType = '';
+		if ($vEvent->DTSTART !== null) {
+			$valueParameter = $vEvent->DTSTART['VALUE'];
+			if ($valueParameter !== null) {
+				$dateType = (string)$valueParameter->getValue();
+			}
+		}
+		if (mb_strtolower($dateType) === 'date') {
+			return true;
+		}
+		return $start->format('H:i:s') === '00:00:00'
+			&& $end->format('H:i:s') === '00:00:00'
+			&& $end > $start;
 	}
 
 	/**

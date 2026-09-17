@@ -16,6 +16,7 @@ export const exchangeApprovalTypeTranslations: ExchangeApprovalTypeTranslations 
 export interface AppConfig {
 	common_calendar_id: number
 	absence_calendar_id: number
+	show_absence_blockers: boolean
 	sync_to_personal_calendar: boolean
 	ignore_absence_for_by_week_shifts: boolean
 	exchange_approval_type: ExchangeApprovalType
@@ -23,6 +24,7 @@ export interface AppConfig {
 
 export interface UserConfig {
 	defaultGroupIds: string[]
+	hiddenUserIds: string[]
 }
 
 export type Config = AppConfig | UserConfig
