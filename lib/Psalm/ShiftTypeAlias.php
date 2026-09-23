@@ -12,6 +12,7 @@ namespace OCA\ShiftsNext\Psalm;
  * @psalm-type RepetitionBase = array{
  *     frequency: RepetitionFrequency,
  *     interval: int,
+ *     until?: ?string,
  * }
  *
  * @psalm-type RepetitionWeeklyType = 'by_day' | 'by_week'

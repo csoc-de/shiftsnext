@@ -15,6 +15,12 @@ export type RepetitionFrequency = (typeof REPETITION_FREQUENCIES)[number]
 export interface RepetitionBase {
 	frequency: RepetitionFrequency
 	interval: number
+	/**
+	 * The last date shifts can still be created for, based on this shift
+	 * type. `null` (or `undefined`, for shift types that were created before
+	 * this property existed) means shifts can be created indefinitely.
+	 */
+	until?: Temporal.PlainDate | null
 }
 
 export const REPETITION_WEEKLY_TYPES = ['by_day', 'by_week'] as const
@@ -125,7 +131,12 @@ export interface ShiftTypePostPayload extends Omit<ShiftType, 'id' | 'group' | '
 	calendar_id: number | null
 }
 
-export type ShiftTypePutPayload = Omit<ShiftTypePostPayload, 'group_id' | 'repetition'>
+/**
+ * `repetition` can be changed after a shift type has been created, since
+ * already existing shifts are independent database records and are not
+ * affected by later changes to the shift type's repetition
+ */
+export type ShiftTypePutPayload = Omit<ShiftTypePostPayload, 'group_id'>
 
 export type ShiftTypePayloadType = 'post' | 'put'
 

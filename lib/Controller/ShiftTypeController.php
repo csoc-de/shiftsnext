@@ -159,6 +159,7 @@ final class ShiftTypeController extends ApiController {
 	}
 
 	/**
+	 * @param Repetition $repetition
 	 * @param Caldav $caldav
 	 */
 	#[NoAdminRequired]
@@ -169,6 +170,7 @@ final class ShiftTypeController extends ApiController {
 		string $description,
 		string $color,
 		bool $active,
+		array $repetition,
 		array $caldav,
 		bool $sync_to_calendar,
 		?int $calendar_id,
@@ -222,7 +224,7 @@ final class ShiftTypeController extends ApiController {
 				$description,
 				$color,
 				$active,
-				null,
+				$repetition,
 				$caldav,
 				$sync_to_calendar,
 			);

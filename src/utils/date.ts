@@ -266,6 +266,13 @@ export function reviver(key: string, value: unknown): unknown {
 				// Failing is expected
 			}
 		}
+		if (key === 'until') {
+			try {
+				return Temporal.PlainDate.from(value)
+			} catch {
+				// Failing is expected
+			}
+		}
 		if (key === 'duration') {
 			return Temporal.Duration.from(value)
 		}
