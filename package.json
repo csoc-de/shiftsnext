@@ -20,18 +20,18 @@
   "dependencies": {
     "@nextcloud/auth": "^2.6.0",
     "@nextcloud/axios": "^2.6.0",
-    "@nextcloud/dialogs": "^7.4.1",
+    "@nextcloud/dialogs": "^7.5.0",
     "@nextcloud/initial-state": "^3.0.0",
     "@nextcloud/l10n": "^3.4.1",
     "@nextcloud/logger": "^3.0.3",
-    "@nextcloud/router": "^3.1.0",
-    "@nextcloud/vue": "^9.9.0",
-    "@vueuse/core": "^14.0.0",
+    "@nextcloud/router": "^3.2.0",
+    "@nextcloud/vue": "^9.13.1",
+    "@vueuse/core": "^15.0.0",
     "pinia": "^4.0.3",
-    "temporal-polyfill": "^1.0.4",
-    "vue": "^3.5.41",
+    "temporal-polyfill": "^1.0.5",
+    "vue": "^3.5.43",
     "vue-material-design-icons": "^5.3.1",
-    "vue-router": "^5.2.0"
+    "vue-router": "^5.4.0"
   },
   "devDependencies": {
     "@nextcloud/browserslist-config": "^3.1.2",
@@ -39,12 +39,12 @@
     "@nextcloud/stylelint-config": "^3.2.2",
     "@nextcloud/vite-config": "^2.5.4",
     "@vue/tsconfig": "^0.9.1",
-    "autoprefixer": "^10.5.4",
-    "postcss": "^8.5.26",
+    "autoprefixer": "^10.6.1",
+    "postcss": "^8.5.29",
     "tailwindcss": "^3.4.19",
     "typescript": "^6.0.3",
-    "vite": "^7.3.6",
-    "vue-tsc": "^3.3.10"
+    "vite": "^7.3.7",
+    "vue-tsc": "^3.3.12"
   },
   "engines": {
     "node": "^24.15.0",
