@@ -663,62 +663,34 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ReadOnlyUser'
-  /calendars/synchronize-by-groups:
-    post:
+  /calendars/absence-blockers:
+    get:
       tags:
         - calendar
-      summary: Synchronize shifts identified by `group_ids` with calendars
-      description: When calling this endpoint, the backend only applies
-        previously created pending calendar changes. Those changes are created
-        automatically on certain actions, namely creating, updating or deleting
-        a shift (which includes updating a shift due to a shift exchange).
-      requestBody:
-        $ref: '#/components/requestBodies/SynchronizeCalendarByGroups'
+      summary: Get absence blockers for users in a week
+      parameters:
+        - in: query
+          name: week_date
+          schema:
+            type: string
+          example: 2024-W01
+        - in: query
+          name: user_ids[]
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/UserId'
       responses:
         '200':
-          description: It's possible that errors occur during synchronization.
-            The response contains an array with all the errors that occured.
+          description: Successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: string
-                  example: Lorem ipsum dolor sit amet
-        '400':
-          description: Body parsing error. Might also occur if some
-            configuration is missing, in which case the body contains more
-            details.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-  /calendars/synchronize-by-shifts:
-    post:
-      tags:
-        - calendar
-      summary: Synchronize shifts identified by `shift_ids` with calendars
-      description: When calling this endpoint, the backend only applies
-        previously created pending calendar changes. Those changes are created
-        automatically on certain actions, namely creating, updating or deleting
-        a shift (which includes updating a shift due to a shift exchange).
-      requestBody:
-        $ref: '#/components/requestBodies/SynchronizeCalendarByShifts'
-      responses:
-        '200':
-          description: It's possible that errors occur during synchronization.
-            The response contains an array with all the errors that occured.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  type: string
-                  example: Lorem ipsum dolor sit amet
-        '400':
-          description: Body parsing error. Might also occur if some
-            configuration is missing, in which case the body contains more
-            details.
+                  $ref: '#/components/schemas/AbsenceBlocker'
+        '422':
+          description: The `week_date` filter is not a valid ISO week date
           content:
             application/json:
               schema:
@@ -763,6 +735,22 @@ paths:
         group filter values on the shifts view
       requestBody:
         $ref: '#/components/requestBodies/DefaultGroups'
+      responses:
+        '204':
+          description: No content
+        '403':
+          description: Authorization error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /config/user/hidden-users:
+    put:
+      tags:
+        - config
+      summary: Sets hidden user IDs for the caller in the shifts view
+      requestBody:
+        $ref: '#/components/requestBodies/HiddenUsers'
       responses:
         '204':
           description: No content
@@ -1188,32 +1176,6 @@ components:
       allOf:
         - $ref: '#/components/schemas/User'
         - readOnly: true
-    SynchronizeCalendarByGroupsPost:
-      required:
-        - group_ids
-      type: object
-      properties:
-        group_ids:
-          description: Limits the synchronization to those shifts whose shift
-            type has one of the specified group IDs. All groups, for which the
-            caller has no shift admin privileges, are omitted.
-          type: array
-          writeOnly: true
-          items:
-            $ref: '#/components/schemas/WriteOnlyGroupId'
-    SynchronizeCalendarByShiftsPost:
-      required:
-        - shift_ids
-      type: object
-      properties:
-        shift_ids:
-          description: Limits the synchronization to shifts identified by
-            the specified shift IDs. The caller does not need shift admin
-            privileges to synchronize those shifts.
-          type: array
-          writeOnly: true
-          items:
-            $ref: '#/components/schemas/WriteOnlyId'
     AppConfigEnvelope:
       required:
         - values
@@ -1225,6 +1187,7 @@ components:
       required:
         - common_calendar_id
         - absence_calendar_id
+        - show_absence_blockers
         - sync_to_personal_calendar
         - ignore_absence_for_by_week_shifts
         - exchange_approval_type
@@ -1234,6 +1197,8 @@ components:
           $ref: '#/components/schemas/WriteOnlyId'
         absence_calendar_id:
           $ref: '#/components/schemas/WriteOnlyId'
+        show_absence_blockers:
+          type: boolean
         sync_to_personal_calendar:
           type: boolean
         ignore_absence_for_by_week_shifts:
@@ -1254,6 +1219,7 @@ components:
     UserConfig:
       required:
         - defaultGroupIds
+        - hiddenUserIds
       type: object
       properties:
         defaultGroupIds:
@@ -1261,6 +1227,11 @@ components:
           writeOnly: true
           items:
             $ref: '#/components/schemas/WriteOnlyGroupId'
+        hiddenUserIds:
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/WriteOnlyUserId'
     DefaultGroups:
       required:
         - group_ids
@@ -1271,6 +1242,37 @@ components:
           writeOnly: true
           items:
             $ref: '#/components/schemas/WriteOnlyGroupId'
+    HiddenUsers:
+      required:
+        - user_ids
+      type: object
+      properties:
+        user_ids:
+          type: array
+          writeOnly: true
+          items:
+            $ref: '#/components/schemas/WriteOnlyUserId'
+    AbsenceBlocker:
+      required:
+        - user_id
+        - start
+        - end
+        - all_day
+        - title
+      type: object
+      properties:
+        user_id:
+          $ref: '#/components/schemas/WriteOnlyUserId'
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        all_day:
+          type: boolean
+        title:
+          type: string
     ErrorResponse:
       required:
         - error
@@ -1304,16 +1306,6 @@ components:
           schema:
             $ref: '#/components/schemas/GroupShiftAdminRelationGroupedByGroup'
       required: true
-    SynchronizeCalendarByGroups:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SynchronizeCalendarByGroupsPost'
-    SynchronizeCalendarByShifts:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/SynchronizeCalendarByShiftsPost'
     AppConfig:
       content:
         application/json:
@@ -1329,3 +1321,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DefaultGroups'
+    HiddenUsers:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HiddenUsers'

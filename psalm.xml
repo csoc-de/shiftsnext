@@ -48,6 +48,8 @@
 				<referencedClass name="OCA\DAV\CalDAV\CalDavBackend" />
 				<referencedClass name="OCA\DAV\Events\*" />
 				<referencedClass name="Sabre\VObject\Component\VCalendar" />
+				<referencedClass name="Sabre\VObject\Component\VEvent" />
+				<referencedClass name="Sabre\VObject\Reader" />
 			</errorLevel>
 		</UndefinedClass>
 		<UndefinedDocblockClass>
@@ -55,6 +57,7 @@
 				<referencedClass name="Doctrine\DBAL\Schema\Table" />
 				<referencedClass name="OC\DB\Exceptions\DbalException" />
 				<referencedClass name="OCA\DAV\Events\*" />
+				<referencedClass name="Sabre\VObject\Component\VEvent" />
 			</errorLevel>
 		</UndefinedDocblockClass>
 		<UnusedClass>

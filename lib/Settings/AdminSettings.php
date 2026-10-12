@@ -51,6 +51,10 @@ final class AdminSettings implements ISettings {
 			);
 		}
 		$this->initialState->provideInitialState(
+			'show_absence_blockers',
+			$this->configService->getShowAbsenceBlockers(),
+		);
+		$this->initialState->provideInitialState(
 			'sync_to_personal_calendar',
 			$this->configService->getSyncToPersonalCalendar(),
 		);

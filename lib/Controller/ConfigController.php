@@ -62,4 +62,14 @@ final class ConfigController extends ApiController {
 		$this->configService->setDefaultGroupIds($group_ids);
 		return new Response(Http::STATUS_NO_CONTENT);
 	}
+
+	/**
+	 * @param list<string> $user_ids
+	 */
+	#[NoAdminRequired]
+	#[FrontpageRoute(verb: 'PUT', url: '/api/config/user/hidden-users')]
+	public function hiddenUsers(array $user_ids): Response {
+		$this->configService->setHiddenUserIds($user_ids);
+		return new Response(Http::STATUS_NO_CONTENT);
+	}
 }

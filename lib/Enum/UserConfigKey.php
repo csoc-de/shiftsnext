@@ -6,4 +6,5 @@ namespace OCA\ShiftsNext\Enum;
 
 enum UserConfigKey: string {
 	case DefaultGroupIds = 'defaultGroupIds';
+	case HiddenUserIds = 'hiddenUserIds';
 }

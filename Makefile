@@ -108,6 +108,7 @@ appstore:
 	"l10n" \
 	"lib" \
 	"templates" \
+	"service-worker.js" \
 	"vendor" \
 	"$(appstore_sign_dir)/$(app_name)"
 
