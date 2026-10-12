@@ -397,7 +397,7 @@ function placeWeeklyByWeekShiftTypes() {
 		throw new Error('setupShiftTypesRow needs to be called before')
 	}
 	for (const shiftType of shiftTypes) {
-		const { repetition: { interval, weekly_type: weeklyType, config } }
+		const { repetition: { interval, weekly_type: weeklyType, config, until } }
 			= shiftType
 		if (weeklyType === 'by_day') {
 			continue
@@ -410,6 +410,9 @@ function placeWeeklyByWeekShiftTypes() {
 				intervalZdt = intervalZdt.add(Temporal.Duration.from({ weeks: interval }))
 				intervalIsoWeekDate = getIsoWeekDate(intervalZdt, false)
 				continue
+			}
+			if (until && Temporal.PlainDate.compare(intervalZdt.toPlainDate(), until) > 0) {
+				break
 			}
 			const { amount } = config
 			const columnIndex = getColumnIndex(intervalIsoWeekDate)
@@ -438,7 +441,7 @@ function placeWeeklyByDayShiftTypes() {
 		throw new Error('setupShiftTypesRow needs to be called before')
 	}
 	for (const shiftType of shiftTypes) {
-		const { repetition: { interval, weekly_type: weeklyType, config } }
+		const { repetition: { interval, weekly_type: weeklyType, config, until } }
 			= shiftType
 		if (weeklyType === 'by_week') {
 			continue
@@ -481,6 +484,9 @@ function placeWeeklyByDayShiftTypes() {
 				)
 
 				if (comparisonResult === -1) {
+					continue
+				}
+				if (until && Temporal.PlainDate.compare(zdtOfLocalWeekDay.toPlainDate(), until) > 0) {
 					continue
 				}
 				const zdtOfLocalWeekDayInReferenceTimeZone

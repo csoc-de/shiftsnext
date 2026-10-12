@@ -139,6 +139,14 @@ _Reference week_ and _[Interval](#frequency--interval)_ determine if shifts can 
 
 _Amount_ sets the maximum number of occurrences a shift of this type can be created in a single week.
 
+##### End date
+
+By default, a shift type has no end date, meaning shifts can be created from it indefinitely. Setting _End date_ makes shifts of this type _creatable_ only up to and including that date; no shift type slots are shown for later weeks/days. Leave the field empty to go back to repeating indefinitely.
+
+##### Editing repetition settings
+
+All of the settings described above can still be changed after a shift type has been created. Doing so only affects which shifts can be created going forward; it has no effect on shifts that already exist, since those are independent records that keep their own start/end time regardless of later changes to the shift type they were created from.
+
 ### Shifts
 
 The second row of the table, labeled _Open shifts_, displays all shifts determined to be _creatable_ for the selected week. To be more precise, it actually displays shift types, because not yet assigned shifts don't actually exist: assigning a shift means creating a shift. _By week_ shifts/types are displayed in the second column. The remaining columns to the right display _By day_ shifts/types. The exact day column, where a shift/type is displayed in, depends on the shift's start time/the type's reference time + time zone, respectively. **Note:** The shift/types displayed in the _By day_ columns are browser time zone aware. If, for example, a shift type named _Foo_ exists, with its reference set to `2025-07-14T06:00:00+02:00[Europe/Berlin]` and Monday amount set to _0_ and Tuesday amount set to _1_, this type will displayed in the Monday column with amount _1_, if a user's browser time zone is _America/Los_Angeles_, because `2025-07-14T06:00:00+02:00[Europe/Berlin]` translates to `2025-07-13T21:00:00-07:00[America/Los_Angeles]`, i.e. the reference time is on a different day.
