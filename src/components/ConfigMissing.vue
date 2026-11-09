@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full flex flex-col items-center justify-center text-nc-plain gap-3 font-semibold">
+	<div class="w-full flex flex-col items-center justify-center text-nc-main gap-3 font-semibold">
 		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-html="wipMessage" />
 		<!-- eslint-disable-next-line vue/no-v-html -->
