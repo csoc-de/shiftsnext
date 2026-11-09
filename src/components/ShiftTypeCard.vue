@@ -67,9 +67,7 @@ import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
 import NcUserStatusIcon from '@nextcloud/vue/components/NcUserStatusIcon'
-// @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
-// @ts-expect-error package has no types
 import Pencil from 'vue-material-design-icons/Pencil.vue'
 import { injectShiftTypesContext } from '../views/ShiftTypesView.vue'
 import DelayBox from './DelayBox.vue'

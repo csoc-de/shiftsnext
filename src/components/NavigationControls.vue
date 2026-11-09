@@ -47,9 +47,7 @@ import { storeToRefs } from 'pinia'
 import { ref, useTemplateRef } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
-// @ts-expect-error package has no types
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
-// @ts-expect-error package has no types
 import ChevronRight from 'vue-material-design-icons/ChevronRight.vue'
 import InputGroup from './InputGroup.vue'
 import IsoWeekDateInput from './IsoWeekDateInput.vue'

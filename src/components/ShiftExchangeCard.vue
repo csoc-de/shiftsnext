@@ -142,9 +142,7 @@ import { t } from '@nextcloud/l10n'
 import { ref } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
-// @ts-expect-error package has no types
 import Comment from 'vue-material-design-icons/Comment.vue'
-// @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import DelayBox from './DelayBox.vue'

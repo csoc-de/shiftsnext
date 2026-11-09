@@ -68,11 +68,8 @@ import { t } from '@nextcloud/l10n'
 import { computed, onUnmounted, ref, watch } from 'vue'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcActions from '@nextcloud/vue/components/NcActions'
-// @ts-expect-error package has no types
 import ArrowAll from 'vue-material-design-icons/ArrowAll.vue'
-// @ts-expect-error package has no types
 import Delete from 'vue-material-design-icons/Delete.vue'
-// @ts-expect-error package has no types
 import InformationOutline from 'vue-material-design-icons/InformationOutline.vue'
 import { injectShiftsContext } from '../views/ShiftsView.vue'
 import DelayBox from './DelayBox.vue'

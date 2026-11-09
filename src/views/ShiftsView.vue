@@ -164,7 +164,6 @@ import {
 	ref,
 } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
-// @ts-expect-error package has no types
 import Cancel from 'vue-material-design-icons/Cancel.vue'
 import ContentHeader from '../components/ContentHeader.vue'
 import PaddedContainer from '../components/PaddedContainer.vue'
