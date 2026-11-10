@@ -15,9 +15,15 @@ export interface ShiftTypeWrapperBase {
 
 export interface ShiftTypeWeeklyByDayWrapper extends ShiftTypeWrapperBase {
 	weeklyType: 'by_day'
-	/** Start of the shift, already adjusted for the runtimes time zone */
+	/**
+	 * Start of the shift, already adjusted for the time zone set in the
+	 * personal settings of the logged-in user
+	 */
 	shiftStart: Temporal.ZonedDateTime
-	/** End of the shift, already adjusted for the runtimes time zone */
+	/**
+	 * End of the shift, already adjusted for the time zone set in the
+	 * personal settings of the logged-in user
+	 */
 	shiftEnd: Temporal.ZonedDateTime
 }
 

@@ -170,7 +170,8 @@ export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.
  *
  * The time zone of the returned string depends on the following:
  *
- * - If `date` is an instance of `Date`, the runtime's time zone will be used
+ * - If `date` is an instance of `Date`, the time zone set in the personal
+ * settings of the logged-in user will be used
  * - If `date` is an instance of `ZonedDateTime`, `date`'s time zone will be used
  *
  * @param date Defaults to the current date
