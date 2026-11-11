@@ -168,11 +168,12 @@ export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.
 /**
  * Returns the ISO calendar date for `date`
  *
- * The time zone of the returned string depends on the following:
+ * The returned string is relative to one of the following:
  *
- * - If `date` is an instance of `Date`, the time zone set in the personal
- * settings of the logged-in user will be used
- * - If `date` is an instance of `ZonedDateTime`, `date`'s time zone will be used
+ * - If `date` is an instance of {@link Date}, the string is relative to the
+ * time zone set in the personal settings of the logged-in user
+ * - If `date` is an instance of {@link Temporal.ZonedDateTime}, the string is
+ * relative to the time zone of `date`
  *
  * @param date Defaults to the current date
  */
