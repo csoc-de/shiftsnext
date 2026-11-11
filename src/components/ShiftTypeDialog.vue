@@ -240,7 +240,7 @@ import {
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getContrastColor } from '../utils/color.ts'
-import { getIsoWeekDate, userTimeZone } from '../utils/date.ts'
+import { getIsoWeekDate, getSystemTimeZone } from '../utils/date.ts'
 import { getInitialCommonCalendar, getInitialShiftAdminGroups, getInitialWritableCalendars } from '../utils/initialState.ts'
 import { getNcSelectCalendarOption } from '../utils/nextcloudVue.ts'
 
@@ -281,13 +281,13 @@ const active = ref(true)
 const frequency = ref<RepetitionFrequency>('weekly')
 const interval = ref(1)
 const weeklyType = ref<RepetitionWeeklyType>('by_day')
-const byDayReferenceZdt = ref(Temporal.Now.zonedDateTimeISO(userTimeZone).with({
+const byDayReferenceZdt = ref(Temporal.Now.zonedDateTimeISO(getSystemTimeZone()).with({
 	second: 0,
 	millisecond: 0,
 	microsecond: 0,
 	nanosecond: 0,
 }))
-const timeZone = ref(userTimeZone)
+const timeZone = ref(getSystemTimeZone())
 const duration = ref(new Temporal.Duration())
 const shortDayToAmountMap = ref<ShortDayToAmountMap>({
 	MO: 0,
@@ -342,7 +342,7 @@ if (shiftType) {
 
 const byDayReferenceDate = ref<Date | null>(new Date(byDayReferenceZdt.value
 	.toPlainDateTime()
-	.toZonedDateTime(userTimeZone)
+	.toZonedDateTime(getSystemTimeZone())
 	.epochMilliseconds))
 
 const durationString = computed(() => duration.value.toString())
@@ -423,7 +423,7 @@ watchEffect(() => {
 		return
 	}
 	byDayReferenceZdt.value = toTemporalInstant.call(byDayReferenceDate.value)
-		.toZonedDateTimeISO(userTimeZone)
+		.toZonedDateTimeISO(getSystemTimeZone())
 		.toPlainDateTime()
 		.toZonedDateTime(timeZone.value)
 })

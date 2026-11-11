@@ -124,6 +124,7 @@ import type {
 
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
+import { toTemporalInstant } from 'temporal-polyfill'
 import { computed, ref, watch } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDateTimePickerNative from '@nextcloud/vue/components/NcDateTimePickerNative'
@@ -142,7 +143,7 @@ import {
 	exchangeTypeTranslations,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
-import { getIsoCalendarDate } from '../utils/date.ts'
+import { getIsoCalendarDate, getSystemTimeZone } from '../utils/date.ts'
 import { getInitialIsShiftAdmin } from '../utils/initialState.ts'
 import { getNcSelectShiftOption, getNcSelectUsersOption } from '../utils/nextcloudVue.ts'
 import { compare } from '../utils/sort.ts'
@@ -164,6 +165,9 @@ const userAOptions = ref<NcSelectUsersOption[]>([getNcSelectUsersOption(authUser
 const userAOptionsLoading = ref(false)
 const userAOption = ref<NcSelectUsersOption | undefined>(userAOptions.value[0]!)
 const dateA = ref<Date>()
+const zdtA = computed(() => dateA.value
+	? toTemporalInstant.call(dateA.value).toZonedDateTimeISO(getSystemTimeZone())
+	: undefined)
 const shiftASelectDisabled = computed(() => !userAOption.value || !dateA.value)
 const shiftAOptions = ref<NcSelectShiftOption[]>()
 const shiftAOptionsLoading = ref(false)
@@ -173,6 +177,9 @@ const userBOptions = ref<NcSelectUsersOption[]>([])
 const userBOptionsLoading = ref(true)
 const userBOption = ref<NcSelectUsersOption>()
 const dateB = ref<Date>()
+const zdtB = computed(() => dateB.value
+	? toTemporalInstant.call(dateB.value).toZonedDateTimeISO(getSystemTimeZone())
+	: undefined)
 const shiftBSelectDisabled = computed(() => !userBOption.value || !dateB.value)
 const shiftBOptions = ref<NcSelectShiftOption[]>()
 const shiftBOptionsLoading = ref(false)
@@ -241,13 +248,13 @@ async function loadShiftsA(): Promise<void> {
 	if (!userAOption.value) {
 		return
 	}
-	if (!dateA.value) {
+	if (!zdtA.value) {
 		return
 	}
 	shiftAOptionsLoading.value = true
 	try {
 		const shifts = await getShifts({
-			calendar_date: getIsoCalendarDate(dateA.value),
+			calendar_date: getIsoCalendarDate(zdtA.value),
 			user_id: userAOption.value.id,
 		})
 		shiftAOptions.value = shifts.map(getNcSelectShiftOption)
@@ -284,13 +291,13 @@ async function loadShiftsB(): Promise<void> {
 	if (!userBOption.value) {
 		return
 	}
-	if (!dateB.value) {
+	if (!zdtB.value) {
 		return
 	}
 	shiftBOptionsLoading.value = true
 	try {
 		const shifts = await getShifts({
-			calendar_date: getIsoCalendarDate(dateB.value),
+			calendar_date: getIsoCalendarDate(zdtB.value),
 			user_id: userBOption.value.id,
 			group_ids: shiftAOption.value
 				? [shiftAOption.value.shift_type.group.id]
