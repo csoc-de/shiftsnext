@@ -4,29 +4,12 @@ body[id][id] {
 	}
 
 	.v-select.select {
+		margin-block-end: 0;
 		min-width: 100px;
 	}
 
 	.dialog__actions {
 		margin-block-start: 12px;
-	}
-
-	input:not(
-	[type="range"],
-	.input-field__input,
-	[type="submit"],
-	[type="button"],
-	[type="reset"],
-	.multiselect__input,
-	.select2-input,
-	.action-input__input,
-	[class^="vs__"]
-	),
-	select,
-	.v-select.select,
-	div[contenteditable="true"],
-	.textarea:has(.textarea__input--label-outside) {
-		margin: 0;
 	}
 
 	.checkbox-content--button-variant {

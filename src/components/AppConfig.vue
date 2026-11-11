@@ -6,45 +6,29 @@
 					<template #legend>
 						{{ t(APP_ID, "Calendar") }}
 					</template>
-					<div class="flex flex-wrap gap-4">
-						<InputGroup>
-							<label for="common-calendar">{{ t(APP_ID, "Common calendar") }}</label>
-							<NcSelect
-								v-model="commonCalendarOption"
-								inputId="common-calendar"
-								labelOutside
-								:options="commonCalendarOptions"
-								required
-								class="min-w-64" />
-						</InputGroup>
-						<InputGroup>
-							<label for="absence-calendar">{{ t(APP_ID, "Absence calendar") }}</label>
-							<NcSelect
-								v-model="absenceCalendarOption"
-								inputId="absence-calendar"
-								labelOutside
-								:options="absenceCalendarOptions"
-								required
-								class="min-w-64" />
-						</InputGroup>
-						<InputGroup>
-							<label for="sync-to-personal-calendar">{{ t(APP_ID, "Personal calendar") }}</label>
-							<NcCheckboxRadioSwitch
-								id="sync-to-personal-calendar"
-								v-model="syncToPersonalCalendar"
-								type="checkbox">
-								{{ t(APP_ID, "Synchronize") }}
-							</NcCheckboxRadioSwitch>
-						</InputGroup>
-						<InputGroup>
-							<label for="ignore-absence-for-by-week-shifts">{{ t(APP_ID, "Absence check") }}</label>
-							<NcCheckboxRadioSwitch
-								id="ignore-absence-for-by-week-shifts"
-								v-model="ignoreAbsenceForByWeekShifts"
-								type="checkbox">
-								{{ t(APP_ID, "Ignore for weekly shifts") }}
-							</NcCheckboxRadioSwitch>
-						</InputGroup>
+					<div class="flex flex-wrap gap-4 items-end">
+						<NcSelect
+							v-model="commonCalendarOption"
+							:inputLabel="t(APP_ID, 'Common calendar')"
+							:options="commonCalendarOptions"
+							required
+							class="min-w-64" />
+						<NcSelect
+							v-model="absenceCalendarOption"
+							:inputLabel="t(APP_ID, 'Absence calendar')"
+							:options="absenceCalendarOptions"
+							required
+							class="min-w-64" />
+						<NcCheckboxRadioSwitch
+							v-model="syncToPersonalCalendar"
+							type="checkbox">
+							{{ t(APP_ID, "Synchronize personal calendar") }}
+						</NcCheckboxRadioSwitch>
+						<NcCheckboxRadioSwitch
+							v-model="ignoreAbsenceForByWeekShifts"
+							type="checkbox">
+							{{ t(APP_ID, "Ignore absence check for weekly shifts") }}
+						</NcCheckboxRadioSwitch>
 					</div>
 				</CustomFieldset>
 
@@ -52,16 +36,12 @@
 					<template #legend>
 						{{ t(APP_ID, "Shift exchanges") }}
 					</template>
-					<InputGroup>
-						<label for="exchange-approval-type">{{ t(APP_ID, "Required approvals") }}</label>
-						<NcSelect
-							v-model="approvalTypeOption"
-							inputId="exchange-approval-type"
-							labelOutside
-							:options="approvalTypeOptions"
-							:clearable="false"
-							class="min-w-64" />
-					</InputGroup>
+					<NcSelect
+						v-model="approvalTypeOption"
+						:inputLabel="t(APP_ID, 'Required approvals')"
+						:options="approvalTypeOptions"
+						:clearable="false"
+						class="min-w-64" />
 				</CustomFieldset>
 			</div>
 			<NcButton
@@ -83,7 +63,6 @@ import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwit
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
 import CustomFieldset from './CustomFieldset.vue'
-import InputGroup from './InputGroup.vue'
 import { putAppConfig } from '../db/config.ts'
 import { EXCHANGE_APPROVAL_TYPES } from '../models/config.ts'
 import { APP_ID } from '../utils/appId.ts'

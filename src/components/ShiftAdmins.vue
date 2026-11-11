@@ -29,18 +29,15 @@
 								<template v-if="!editedList[index]">
 									{{ relationUsers.map(({ display_name }) => display_name).join(', ') }}
 								</template>
-								<template v-else>
-									<label :for="`selected-users-${index}`" class="sr-only">{{ t(APP_ID, "Admins") }}</label>
-									<NcSelectUsers
-										v-model="selectedUserOptions2D[index]"
-										:inputId="`selected-users-${index}`"
-										labelOutside
-										class="min-w-56"
-										multiple
-										noWrap
-										keepOpen
-										:options="userOptions" />
-								</template>
+								<NcSelectUsers
+									v-else
+									v-model="selectedUserOptions2D[index]"
+									:inputLabel="t(APP_ID, 'Admins')"
+									class="min-w-56"
+									multiple
+									noWrap
+									keepOpen
+									:options="userOptions" />
 							</td>
 							<td class="w-0">
 								<div class="flex items-center justify-center">
@@ -68,16 +65,12 @@
 				</tbody>
 			</table>
 		</div>
-		<InputGroup class="mt-3 items-start">
-			<label for="selected-group">{{ t(APP_ID, "Add group") }}</label>
-			<NcSelect
-				v-model="group"
-				inputId="selected-group"
-				:options="groups"
-				label="display_name"
-				labelOutside
-				class="min-w-44" />
-		</InputGroup>
+		<NcSelect
+			v-model="group"
+			:options="groups"
+			label="display_name"
+			:inputLabel="t(APP_ID, 'Add group')"
+			class="mt-4 min-w-44" />
 	</NcSettingsSection>
 </template>
 
@@ -94,7 +87,6 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import NcSettingsSection from '@nextcloud/vue/components/NcSettingsSection'
-import InputGroup from './InputGroup.vue'
 import { putGroupShiftAdminRelationsGroupedByGroup } from '../db/groupShiftAdminRelation.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { getInitialGroupShiftAdminRelationsByGroup, getInitialUsers } from '../utils/initialState.ts'

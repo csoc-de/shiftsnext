@@ -4,53 +4,41 @@
 		:name="dialogName"
 		size="normal">
 		<form id="shift-type-form" class="flex flex-col gap-2" @submit.prevent="onSubmit">
-			<div class="grid grid-cols-2 gap-2 sm:grid-cols-6">
-				<InputGroup class="sm:col-span-2">
-					<label for="shift-type-group-id">{{ t(APP_ID, "Group") }}</label>
-					<NcSelect
-						v-model="group"
-						:disabled="!!shiftType"
-						inputId="shift-type-group-id"
-						:options="shiftAdminGroups"
-						label="display_name"
-						labelOutside
-						:clearable="false"
-						required
-						class="w-full !min-w-0" />
-				</InputGroup>
-				<InputGroup class="sm:col-span-2">
-					<label for="shift-type-name">{{ t(APP_ID, "Name") }}</label>
-					<NcTextField
-						id="shift-type-name"
-						v-model.trim="name"
-						labelOutside
-						required />
-				</InputGroup>
-				<InputGroup>
-					<span class="cursor-pointer" @click="showColorPicker = true">{{ t(APP_ID, "Color") }}</span>
-					<NcColorPicker
-						v-slot="{ attrs }"
-						v-model="color"
-						v-model:shown="showColorPicker"
-						container=".modal-mask">
-						<div
-							v-bind="attrs"
-							:style="{ backgroundColor: color }"
-							class="h-nc-clickable-area !w-full rounded-nc-element cursor-pointer" />
-					</NcColorPicker>
-				</InputGroup>
-				<InputGroup>
-					<label for="shift-type-active">{{ t(APP_ID, "Active") }}</label>
-					<NcCheckboxRadioSwitch id="shift-type-active" v-model="active" :aria-label="t(APP_ID, 'Active')" />
-				</InputGroup>
-				<InputGroup class="col-span-2 sm:col-span-6">
-					<label for="shift-type-description">{{ t(APP_ID, "Description") }}</label>
-					<NcTextArea
-						id="shift-type-description"
-						v-model.trim="description"
-						labelOutside
-						resize="vertical" />
-				</InputGroup>
+			<div class="grid grid-cols-2 gap-2 items-end sm:grid-cols-6">
+				<NcSelect
+					v-model="group"
+					:disabled="!!shiftType"
+					:options="shiftAdminGroups"
+					label="display_name"
+					:inputLabel="t(APP_ID, 'Group')"
+					:clearable="false"
+					required
+					class="sm:col-span-2 w-full !min-w-0" />
+				<NcTextField
+					v-model.trim="name"
+					:label="t(APP_ID, 'Name')"
+					required
+					class="sm:col-span-2" />
+				<NcColorPicker
+					v-model="color"
+					container=".modal-mask">
+					<NcButton
+						class="w-full border-none"
+						:style="{
+							backgroundColor: color,
+							color: getContrastColor(color),
+						}">
+						{{ t(APP_ID, "Color") }}
+					</NcButton>
+				</NcColorPicker>
+				<NcCheckboxRadioSwitch v-model="active">
+					{{ t(APP_ID, "Active") }}
+				</NcCheckboxRadioSwitch>
+				<NcTextArea
+					v-model.trim="description"
+					:label="t(APP_ID, 'Description')"
+					resize="vertical"
+					class="col-span-2 sm:col-span-6" />
 			</div>
 			<CustomFieldset>
 				<template #legend>
@@ -63,28 +51,20 @@
 						:heading="t(APP_ID, 'Attention')"
 						:text="t(APP_ID, 'Changing these settings will not automatically update calendar events for already existing shifts.')"
 						class="m-0" />
-					<div class="flex gap-2 items-end">
-						<InputGroup>
-							<label for="sync-to-calendar">{{ t(APP_ID, "Synchronization") }}</label>
-							<NcCheckboxRadioSwitch
-								id="sync-to-calendar"
-								v-model="syncToCalendar"
-								type="checkbox">
-								{{ t(APP_ID, "Enable") }}
-							</NcCheckboxRadioSwitch>
-						</InputGroup>
-						<InputGroup class="flex-1 min-w-0">
-							<label for="calendar">{{ t(APP_ID, "Select calendar") }}</label>
-							<NcSelect
-								v-model="calendarOption"
-								inputId="calendar"
-								labelOutside
-								:options="calendarOptions"
-								:clearable="false"
-								required
-								:disabled="!syncToCalendar"
-								class="min-w-64" />
-						</InputGroup>
+					<div class="flex flex-wrap gap-2 items-end">
+						<NcCheckboxRadioSwitch
+							v-model="syncToCalendar"
+							type="checkbox">
+							{{ t(APP_ID, "Enable synchronization") }}
+						</NcCheckboxRadioSwitch>
+						<NcSelect
+							v-model="calendarOption"
+							:inputLabel="t(APP_ID, 'Select calendar')"
+							:options="calendarOptions"
+							:clearable="false"
+							required
+							:disabled="!syncToCalendar"
+							class="flex-1 min-w-64" />
 					</div>
 					<CustomFieldset v-if="syncToCalendar">
 						<template #legend>
@@ -92,30 +72,18 @@
 						</template>
 						<div class="flex flex-col gap-2">
 							<div>{{ t(APP_ID, 'The values of these fields will be inserted into the corresponding calendar event fields when synchronizing shifts to the calendar app.') }}</div>
-							<InputGroup>
-								<label for="shift-type-caldav-description">{{ t(APP_ID, "Description") }}</label>
-								<NcTextArea
-									id="shift-type-caldav-description"
-									v-model.trim="caldavDescription"
-									labelOutside
-									resize="vertical" />
-							</InputGroup>
-							<InputGroup>
-								<label for="shift-type-caldav-location">{{ t(APP_ID, "Location") }}</label>
-								<NcTextField
-									id="shift-type-caldav-location"
-									v-model.trim="caldavLocation"
-									labelOutside />
-							</InputGroup>
-							<InputGroup>
-								<label for="shift-type-caldav-categories">{{ t(APP_ID, "Categories") }}</label>
-								<NcTextField
-									id="shift-type-caldav-categories"
-									v-model.trim="caldavCategories"
-									labelOutside
-									:placeholder="t(APP_ID, 'Category 1, Category 2\\, with comma')"
-									:helperText="t(APP_ID, `Separate categories by commas. To make the comma a part of the category, prepend the comma using a backslash: \\,`)" />
-							</InputGroup>
+							<NcTextArea
+								v-model.trim="caldavDescription"
+								:label="t(APP_ID, 'Description')"
+								resize="vertical" />
+							<NcTextField
+								v-model.trim="caldavLocation"
+								:label="t(APP_ID, 'Location')" />
+							<NcTextField
+								v-model.trim="caldavCategories"
+								:label="t(APP_ID, 'Categories')"
+								:placeholder="t(APP_ID, 'Category 1, Category 2\\, with comma')"
+								:helperText="t(APP_ID, `Separate categories by commas. To make the comma a part of the category, prepend the comma using a backslash: \\,`)" />
 						</div>
 					</CustomFieldset>
 				</div>
@@ -127,28 +95,23 @@
 				<div class="flex flex-col gap-2">
 					<template v-if="!shiftType">
 						<div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
-							<InputGroup class="col-span-2">
-								<label for="shift-type-repetition-frequency">{{ t(APP_ID, "Frequency") }}</label>
-								<NcSelect
-									v-model="frequency"
-									inputId="shift-type-repetition-frequency"
-									labelOutside
-									:options="frequencies"
-									:clearable="false" />
-							</InputGroup>
-							<InputGroup>
-								<label for="shift-type-repetition-interval">{{ t(APP_ID, "Interval") }}</label>
-								<NcTextField
-									id="shift-type-repetition-interval"
-									v-model.trim="interval"
-									labelOutside
-									type="number"
-									min="1"
-									required />
-							</InputGroup>
+							<NcSelect
+								v-model="frequency"
+								:inputLabel="t(APP_ID, 'Frequency')"
+								:options="frequencies"
+								:clearable="false"
+								class="col-span-2" />
+							<NcTextField
+								v-model.trim="interval"
+								:label="t(APP_ID, 'Interval')"
+								type="number"
+								min="1"
+								required />
 						</div>
-						<InputGroup>
-							<div>{{ t(APP_ID, "Weekly type") }}</div>
+						<CustomFieldset>
+							<template #legend>
+								{{ t(APP_ID, "Weekly type") }}
+							</template>
 							<NcRadioGroup
 								v-model="weeklyType"
 								:label=" t(APP_ID, 'Weekly type')"
@@ -160,7 +123,7 @@
 									:label="weeklyTypeTranslations[type]"
 									class="whitespace-nowrap" />
 							</NcRadioGroup>
-						</InputGroup>
+						</CustomFieldset>
 						<CustomFieldset>
 							<template #legend>
 								{{ t(APP_ID, "Config") }}
@@ -168,22 +131,13 @@
 							<div class="flex flex-col gap-2">
 								<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
 									<template v-if="weeklyType === 'by_day'">
-										<InputGroup>
-											<label for="shift-type-repetition-config-reference">{{ t(APP_ID, "Reference date & time") }}</label>
-											<NcDateTimePickerNative
-												id="shift-type-repetition-config-reference"
-												v-model="byDayReferenceDate"
-												class="w-full"
-												type="datetime-local"
-												hideLabel
-												required />
-										</InputGroup>
-										<InputGroup>
-											<label for="shift-type-repetition-config-time-zone">{{ t(APP_ID, "Time zone") }}</label>
-											<NcTimezonePicker
-												v-model="timeZone"
-												inputId="shift-type-repetition-config-time-zone" />
-										</InputGroup>
+										<NcDateTimePickerNative
+											v-model="byDayReferenceDate"
+											class="w-full"
+											type="datetime-local"
+											:label="t(APP_ID, 'Reference date & time')"
+											required />
+										<NcTimezonePicker v-model="timeZone" />
 									</template>
 									<IsoWeekDateInput
 										v-else
@@ -192,8 +146,10 @@
 										:weekLabel="t(APP_ID, 'Reference week')"
 										class="sm:col-span-2" />
 								</div>
-								<InputGroup v-if="weeklyType === 'by_day'">
-									<div>{{ t(APP_ID, 'Amount') }}</div>
+								<CustomFieldset v-if="weeklyType === 'by_day'">
+									<template #legend>
+										{{ t(APP_ID, 'Amount') }}
+									</template>
 									<div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
 										<NcTextField
 											v-for="(localDay, shortDay) in shortDayToLocalDayMap"
@@ -204,7 +160,7 @@
 											min="0"
 											required />
 									</div>
-								</InputGroup>
+								</CustomFieldset>
 								<NcTextField
 									v-else
 									v-model.trim="byWeekAmount"
@@ -213,10 +169,12 @@
 									:label="t(APP_ID, 'Amount')"
 									min="1"
 									required />
-								<InputGroup v-if="weeklyType === 'by_day'">
-									<div>{{ t(APP_ID, "Duration") }} ({{ durationString }})</div>
+								<CustomFieldset v-if="weeklyType === 'by_day'">
+									<template #legend>
+										{{ t(APP_ID, "Duration") }} ({{ durationString }})
+									</template>
 									<DurationBuilder v-model="duration" class="grid grid-cols-2 sm:grid-cols-4 gap-2" />
-								</InputGroup>
+								</CustomFieldset>
 							</div>
 						</CustomFieldset>
 					</template>
@@ -272,7 +230,6 @@ import NcTimezonePicker from '@nextcloud/vue/components/NcTimezonePicker'
 import { injectShiftTypesContext } from '../views/ShiftTypesView.vue'
 import CustomFieldset from './CustomFieldset.vue'
 import DurationBuilder from './DurationBuilder.vue'
-import InputGroup from './InputGroup.vue'
 import IsoWeekDateInput from './IsoWeekDateInput.vue'
 import ShiftTypeRepetitionDetails from './ShiftTypeRepetitionDetails.vue'
 import {
@@ -282,6 +239,7 @@ import {
 	weeklyTypeTranslations,
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
+import { getContrastColor } from '../utils/color.ts'
 import { getIsoWeekDate, userTimeZone } from '../utils/date.ts'
 import { getInitialCommonCalendar, getInitialShiftAdminGroups, getInitialWritableCalendars } from '../utils/initialState.ts'
 import { getNcSelectCalendarOption } from '../utils/nextcloudVue.ts'
@@ -299,7 +257,6 @@ const dialogName = shiftType
 	: t(APP_ID, 'Create shift type')
 
 const frequencies = ref(REPETITION_FREQUENCIES)
-const showColorPicker = ref(false)
 
 const shiftAdminGroups = getInitialShiftAdminGroups()
 

@@ -1,43 +1,19 @@
 <template>
-	<div
-		class="flex flex-wrap gap-2"
-		:class="{ 'w-full': fluid }">
-		<InputGroup
-			:inline="inline"
-			:class="{
-				'items-start': !inline,
-				'flex-1': fluid,
-				'whitespace-nowrap': inline && fluid,
-			}">
-			<label :for="_yearInputId">{{ yearLabel }}</label>
-			<NcSelect
-				v-model="year"
-				:disabled="disabled"
-				class="min-w-[8.2rem]"
-				:class="{ 'w-full': fluid }"
-				:options="years"
-				:clearable="false"
-				:inputId="_yearInputId"
-				labelOutside />
-		</InputGroup>
-		<InputGroup
-			:inline="inline"
-			:class="{
-				'items-start': !inline,
-				'flex-1': fluid,
-				'whitespace-nowrap': inline && fluid,
-			}">
-			<label :for="_weekInputId">{{ weekLabel }}</label>
-			<NcSelect
-				v-model="week"
-				:disabled="disabled"
-				class="min-w-[7.1rem]"
-				:class="{ 'w-full': fluid }"
-				:options="weeks"
-				:clearable="false"
-				:inputId="_weekInputId"
-				labelOutside />
-		</InputGroup>
+	<div class="flex flex-wrap gap-2">
+		<NcSelect
+			v-model="year"
+			:disabled="disabled"
+			class="min-w-[8.2rem] flex-1"
+			:options="years"
+			:clearable="false"
+			:inputLabel="yearLabel" />
+		<NcSelect
+			v-model="week"
+			:disabled="disabled"
+			class="min-w-[7.1rem] flex-1"
+			:options="weeks"
+			:clearable="false"
+			:inputLabel="weekLabel" />
 	</div>
 </template>
 
@@ -47,9 +23,8 @@ import type { IsoWeekDateWithoutDay } from '../utils/date.ts'
 import { t } from '@nextcloud/l10n'
 import { watchImmediate } from '@vueuse/core'
 import { Temporal } from 'temporal-polyfill'
-import { computed, nextTick, ref, useId, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
-import InputGroup from './InputGroup.vue'
 import { APP_ID } from '../utils/appId.ts'
 import {
 	buildIsoWeekDate,
@@ -63,11 +38,7 @@ const isoWeekDate = defineModel<IsoWeekDateWithoutDay>({ required: true })
 const {
 	yearLabel = t(APP_ID, 'Year'),
 	weekLabel = t(APP_ID, 'Week'),
-	yearInputId = '',
-	weekInputId = '',
-	inline = false,
 	disabled = false,
-	fluid = false,
 } = defineProps<{
 	/**
 	 * The label for the year input
@@ -82,41 +53,12 @@ const {
 	 */
 	weekLabel?: string
 	/**
-	 * The HTML element ID for the year input
-	 *
-	 * @default `iso-week-date-year-${useId()}`
-	 */
-	yearInputId?: string
-	/**
-	 * The HTML element ID for the week input
-	 *
-	 * @default `iso-week-date-week-${useId()}`
-	 */
-	weekInputId?: string
-	/**
-	 * Whether the year and week labels and inputs should be rendered as inline
-	 *
-	 * @default false
-	 */
-	inline?: boolean
-	/**
 	 * Whether the year and week inputs should be disabled
 	 *
 	 * @default false
 	 */
 	disabled?: boolean
-	/**
-	 * Whether the whole component should be rendered as full width
-	 *
-	 * @default false
-	 */
-	fluid?: boolean
 }>()
-
-const id = useId()
-
-const _yearInputId = computed(() => yearInputId || `iso-week-date-year-${id}`)
-const _weekInputId = computed(() => weekInputId || `iso-week-date-week-${id}`)
 
 defineExpose({ decrease, increase })
 

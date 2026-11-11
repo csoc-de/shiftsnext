@@ -6,8 +6,10 @@
 			id="shift-exchange-form"
 			class="flex flex-col gap-2"
 			@submit.prevent="onSubmit">
-			<InputGroup v-if="discriminator">
-				<div>{{ approvalLabel }}</div>
+			<CustomFieldset v-if="discriminator">
+				<template #legend>
+					{{ approvalLabel }}
+				</template>
 				<NcRadioGroup
 					v-model="approvedString"
 					:label="approvalLabel"
@@ -18,15 +20,11 @@
 						:value="`${option}`"
 						:label="approvedTranslations[`${option}`]" />
 				</NcRadioGroup>
-			</InputGroup>
-			<InputGroup>
-				<label for="comment">{{ t(APP_ID, "Comment") }}</label>
-				<NcTextArea
-					id="comment"
-					v-model.trim="comment"
-					resize="vertical"
-					labelOutside />
-			</InputGroup>
+			</CustomFieldset>
+			<NcTextArea
+				v-model.trim="comment"
+				resize="vertical"
+				:label="t(APP_ID, 'Comment')" />
 		</form>
 		<template #actions>
 			<NcButton :disabled="saving" @click="emit('close')">
@@ -59,7 +57,7 @@ import NcRadioGroup from '@nextcloud/vue/components/NcRadioGroup'
 import NcRadioGroupButton from '@nextcloud/vue/components/NcRadioGroupButton'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
-import InputGroup from './InputGroup.vue'
+import CustomFieldset from './CustomFieldset.vue'
 import {
 	APPROVED_OPTIONS,
 	approvedTranslations,

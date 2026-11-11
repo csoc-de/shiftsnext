@@ -2,8 +2,7 @@
 	<div class="p-[var(--app-navigation-padding)] flex flex-col gap-2">
 		<IsoWeekDateInput
 			ref="isoWeekDateInput"
-			v-model="isoWeekDate"
-			fluid />
+			v-model="isoWeekDate" />
 		<div class="flex gap-1">
 			<NcButton
 				:aria-label="t(APP_ID, 'Previous week')"
@@ -25,19 +24,15 @@
 				{{ t(APP_ID, "Today") }}
 			</NcButton>
 		</div>
-		<InputGroup class="-mt-1">
-			<label for="groups">{{ t(APP_ID, "Groups") }}</label>
-			<NcSelect
-				v-model="selectedGroups"
-				inputId="groups"
-				:options="groups"
-				label="display_name"
-				labelOutside
-				keepOpen
-				multiple
-				noWrap
-				class="min-w-48" />
-		</InputGroup>
+		<NcSelect
+			v-model="selectedGroups"
+			:options="groups"
+			label="display_name"
+			:inputLabel="t(APP_ID, 'Groups')"
+			keepOpen
+			multiple
+			noWrap
+			class="mt-1 min-w-48" />
 	</div>
 </template>
 
@@ -49,7 +44,6 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
 import ChevronLeft from 'vue-material-design-icons/ChevronLeft.vue'
 import ChevronRight from 'vue-material-design-icons/ChevronRight.vue'
-import InputGroup from './InputGroup.vue'
 import IsoWeekDateInput from './IsoWeekDateInput.vue'
 import { useUserSettingsStore } from '../stores/userSettings.ts'
 import { APP_ID } from '../utils/appId.ts'

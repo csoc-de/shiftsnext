@@ -4,56 +4,49 @@
 		:name="t(APP_ID, 'Create shift exchange')"
 		size="normal">
 		<form id="shift-exchange-form" @submit.prevent="onSubmit">
-			<NcRadioGroup
-				v-model="exchangeType"
-				:label="t(APP_ID, 'Exchange type')"
-				hideLabel>
-				<NcRadioGroupButton
-					v-for="type in EXCHANGE_TYPES"
-					:key="type"
-					:label="exchangeTypeTranslations[type]"
-					:value="type" />
-			</NcRadioGroup>
+			<CustomFieldset>
+				<template #legend>
+					{{ t(APP_ID, "Exchange type") }}
+				</template>
+				<NcRadioGroup
+					v-model="exchangeType"
+					:label="t(APP_ID, 'Exchange type')"
+					hideLabel>
+					<NcRadioGroupButton
+						v-for="type in EXCHANGE_TYPES"
+						:key="type"
+						:label="exchangeTypeTranslations[type]"
+						:value="type" />
+				</NcRadioGroup>
+			</CustomFieldset>
 			<div class="grid grid-cols-2 gap-4">
 				<CustomFieldset class="col-span-2 md:col-span-1">
 					<template #legend>
 						A
 					</template>
 					<div class="flex flex-col gap-2">
-						<InputGroup>
-							<label for="user-a">{{ t(APP_ID, "Participant") }}</label>
-							<NcSelectUsers
-								v-model="userAOption"
-								required
-								inputId="user-a"
-								labelOutside
-								:disabled="!isShiftAdmin"
-								class="w-full"
-								:options="userAOptions"
-								:loading="userAOptionsLoading" />
-						</InputGroup>
-						<InputGroup>
-							<label for="date-a">{{ t(APP_ID, "Date") }}</label>
-							<NcDateTimePickerNative
-								id="date-a"
-								v-model="dateA"
-								required
-								class="w-full"
-								type="date"
-								hideLabel />
-						</InputGroup>
-						<InputGroup>
-							<label for="shift-a">{{ t(APP_ID, "Shift") }}</label>
-							<NcSelect
-								v-model="shiftAOption"
-								required
-								inputId="shift-a"
-								labelOutside
-								:disabled="shiftASelectDisabled"
-								class="w-full"
-								:options="shiftAOptions"
-								:loading="shiftAOptionsLoading" />
-						</InputGroup>
+						<NcSelectUsers
+							v-model="userAOption"
+							required
+							:inputLabel="t(APP_ID, 'Participant')"
+							:disabled="!isShiftAdmin"
+							class="w-full"
+							:options="userAOptions"
+							:loading="userAOptionsLoading" />
+						<NcDateTimePickerNative
+							v-model="dateA"
+							required
+							class="w-full"
+							type="date"
+							:label="t(APP_ID, 'Date')" />
+						<NcSelect
+							v-model="shiftAOption"
+							required
+							:inputLabel="t(APP_ID, 'Shift')"
+							:disabled="shiftASelectDisabled"
+							class="w-full"
+							:options="shiftAOptions"
+							:loading="shiftAOptionsLoading" />
 					</div>
 				</CustomFieldset>
 
@@ -63,63 +56,43 @@
 					</template>
 					<div class="flex flex-col gap-2">
 						<template v-if="exchangeType === 'regular'">
-							<InputGroup>
-								<label for="user-b">{{ t(APP_ID, "Participant") }}</label>
-								<NcSelectUsers
-									v-model="userBOption"
-									required
-									inputId="user-b"
-									labelOutside
-									class="w-full"
-									:options="userBOptions"
-									:loading="userBOptionsLoading" />
-							</InputGroup>
-							<InputGroup>
-								<label for="date-b">{{ t(APP_ID, "Date") }}</label>
-								<NcDateTimePickerNative
-									id="date-b"
-									v-model="dateB"
-									required
-									class="w-full"
-									type="date"
-									hideLabel />
-							</InputGroup>
-							<InputGroup>
-								<label for="shift-b">{{ t(APP_ID, "Shift") }}</label>
-								<NcSelect
-									v-model="shiftBOption"
-									required
-									inputId="shift-b"
-									labelOutside
-									:disabled="shiftBSelectDisabled"
-									class="w-full"
-									:options="shiftBOptions"
-									:loading="shiftBOptionsLoading" />
-							</InputGroup>
+							<NcSelectUsers
+								v-model="userBOption"
+								required
+								:inputLabel="t(APP_ID, 'Participant')"
+								class="w-full"
+								:options="userBOptions"
+								:loading="userBOptionsLoading" />
+							<NcDateTimePickerNative
+								v-model="dateB"
+								required
+								class="w-full"
+								type="date"
+								:label="t(APP_ID, 'Date')" />
+							<NcSelect
+								v-model="shiftBOption"
+								required
+								:inputLabel="t(APP_ID, 'Shift')"
+								:disabled="shiftBSelectDisabled"
+								class="w-full"
+								:options="shiftBOptions"
+								:loading="shiftBOptionsLoading" />
 						</template>
-						<template v-else>
-							<InputGroup>
-								<label for="user-b">{{ t(APP_ID, "Participant") }}</label>
-								<NcSelectUsers
-									v-model="userBOption"
-									required
-									inputId="user-b"
-									labelOutside
-									class="w-full"
-									:options="userBOptions"
-									:loading="userBOptionsLoading" />
-							</InputGroup>
-						</template>
+						<NcSelectUsers
+							v-else
+							v-model="userBOption"
+							required
+							:inputLabel="t(APP_ID, 'Participant')"
+							class="w-full"
+							:options="userBOptions"
+							:loading="userBOptionsLoading" />
 					</div>
 				</CustomFieldset>
-				<InputGroup class="col-span-2">
-					<label for="comment">{{ t(APP_ID, "Comment") }}</label>
-					<NcTextArea
-						id="comment"
-						v-model.trim="comment"
-						resize="vertical"
-						labelOutside />
-				</InputGroup>
+				<NcTextArea
+					v-model.trim="comment"
+					resize="vertical"
+					class="col-span-2"
+					:label="t(APP_ID, 'Comment')" />
 			</div>
 		</form>
 
@@ -162,7 +135,6 @@ import NcSelectUsers from '@nextcloud/vue/components/NcSelectUsers'
 import NcTextArea from '@nextcloud/vue/components/NcTextArea'
 import { injectShiftExchangesContext } from '../views/ShiftExchangesView.vue'
 import CustomFieldset from './CustomFieldset.vue'
-import InputGroup from './InputGroup.vue'
 import { getShifts } from '../db/shift.ts'
 import { getUsers } from '../db/user.ts'
 import {
