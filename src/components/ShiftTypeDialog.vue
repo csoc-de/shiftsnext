@@ -213,7 +213,7 @@ import type {
 
 import { t } from '@nextcloud/l10n'
 import { whenever } from '@vueuse/core'
-import { Temporal } from 'temporal-polyfill'
+import { Temporal, toTemporalInstant } from 'temporal-polyfill'
 import { computed, ref, watchEffect } from 'vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
@@ -422,7 +422,7 @@ watchEffect(() => {
 	if (!byDayReferenceDate.value) {
 		return
 	}
-	byDayReferenceZdt.value = Temporal.Instant.fromEpochMilliseconds(byDayReferenceDate.value.valueOf())
+	byDayReferenceZdt.value = toTemporalInstant.call(byDayReferenceDate.value)
 		.toZonedDateTimeISO(userTimeZone)
 		.toPlainDateTime()
 		.toZonedDateTime(timeZone.value)

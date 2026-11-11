@@ -1,6 +1,6 @@
 import { loadState } from '@nextcloud/initial-state'
 import { getCanonicalLocale } from '@nextcloud/l10n'
-import { Temporal } from 'temporal-polyfill'
+import { Temporal, toTemporalInstant } from 'temporal-polyfill'
 
 export const locale = getCanonicalLocale()
 
@@ -81,7 +81,7 @@ export function getIsoWeekDate<T extends boolean>(
 	withDay: T,
 ): T extends true ? IsoWeekDateWithDay : IsoWeekDateWithoutDay {
 	if ('toISOString' in date) {
-		date = Temporal.Instant.fromEpochMilliseconds(date.valueOf()).toZonedDateTimeISO(userTimeZone)
+		date = toTemporalInstant.call(date).toZonedDateTimeISO(userTimeZone)
 	}
 	return buildIsoWeekDate(
 		date.yearOfWeek!,
@@ -179,7 +179,7 @@ export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.
  */
 export function getIsoCalendarDate(date: Date | Temporal.ZonedDateTime = new Date()): IsoCalendarDate {
 	if ('toISOString' in date) {
-		date = Temporal.Instant.fromEpochMilliseconds(date.valueOf()).toZonedDateTimeISO(userTimeZone)
+		date = toTemporalInstant.call(date).toZonedDateTimeISO(userTimeZone)
 	}
 	const year = String(date.year).padStart(4, '0')
 	const month = String(date.month).padStart(2, '0')
