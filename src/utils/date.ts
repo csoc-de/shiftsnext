@@ -4,11 +4,18 @@ import { Temporal, toTemporalInstant } from 'temporal-polyfill'
 
 export const locale = getCanonicalLocale()
 
+/**
+ * Returns the current system time zone by calling {@link Temporal.Now.timeZoneId}
+ */
+export function getSystemTimeZone() {
+	return Temporal.Now.timeZoneId()
+}
+
 export const userTimeZone = loadState<{ core?: { user?: { timezone?: string } } }>(
 	'core',
 	'capabilities',
 	{},
-).core?.user?.timezone ?? Temporal.Now.timeZoneId()
+).core?.user?.timezone ?? getSystemTimeZone()
 
 /**
  * ISO calendar date, e.g. `"2024-01-01"`
