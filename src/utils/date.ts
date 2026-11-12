@@ -2,6 +2,7 @@ import { loadState } from '@nextcloud/initial-state'
 import { getCanonicalLocale } from '@nextcloud/l10n'
 import { Temporal, toTemporalInstant } from 'temporal-polyfill'
 
+/** The locale set in the personal settings of the logged-in user */
 export const userLocale = getCanonicalLocale()
 
 /**
@@ -11,6 +12,7 @@ export function getSystemTimeZone() {
 	return Temporal.Now.timeZoneId()
 }
 
+/** The time zone set in the personal settings of the logged-in user */
 export const userTimeZone = loadState<{ core?: { user?: { timezone?: string } } }>(
 	'core',
 	'capabilities',
