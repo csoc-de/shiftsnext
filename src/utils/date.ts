@@ -1,6 +1,6 @@
 import { loadState } from '@nextcloud/initial-state'
 import { getCanonicalLocale } from '@nextcloud/l10n'
-import { Intl as IntlExtended, Temporal, toTemporalInstant } from 'temporal-polyfill'
+import { Intl as IntlExtended, Temporal } from 'temporal-polyfill'
 
 /** The locale set in the personal settings of the logged-in user */
 export const userLocale = getCanonicalLocale()
@@ -182,25 +182,15 @@ export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): IntlE
 }
 
 /**
- * Returns the ISO calendar date for `date`
+ * Returns the ISO calendar date for `value`
  *
- * The returned string is relative to one of the following:
- *
- * - If `date` is an instance of {@link Date}, the string is relative to the
- * time zone set in the personal settings of the logged-in user
- * - If `date` is an instance of {@link Temporal.ZonedDateTime}, the string is
- * relative to the time zone of `date`
- *
- * @param date Defaults to the current date
+ * @param value Defaults to now
  */
-export function getIsoCalendarDate(date: Date | Temporal.ZonedDateTime = new Date()): IsoCalendarDate {
-	if ('toISOString' in date) {
-		date = toTemporalInstant.call(date).toZonedDateTimeISO(userTimeZone)
+export function getIsoCalendarDate(value: TemporalPlainDateCompatibleObject = Temporal.Now.zonedDateTimeISO(userTimeZone)): IsoCalendarDate {
+	if ('toPlainDate' in value) {
+		value = value.toPlainDate()
 	}
-	const year = String(date.year).padStart(4, '0')
-	const month = String(date.month).padStart(2, '0')
-	const day = String(date.day).padStart(2, '0')
-	return `${year}-${month}-${day}`
+	return value.toString() as IsoCalendarDate
 }
 
 /**
