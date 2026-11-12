@@ -118,19 +118,20 @@ export function getZonedDateTimeForDayOfWeek(
 }
 
 /**
- * Formats `date` using the specified `options`
+ * Formats `date` using {@link userLocale} and the specified `options`
  *
  * @param date The date to format
- * @param options The options to use when formatting `date`
+ * @param options The options to use when formatting `date`. If specified, the
+ * {@link Intl.DateTimeFormatOptions.timeZone | timeZone} option takes
+ * precendence over the {@link Temporal.ZonedDateTime.timeZoneId | timeZoneId}
+ * of `date` in case `date` is a {@link Temporal.ZonedDateTime} instance
  */
 export function formatDate(
 	date: DateLike,
 	options: Intl.DateTimeFormatOptions = {},
 ): string {
-	if ('toZonedDateTime' in date) {
-		date = date.toZonedDateTime(userTimeZone)
-	}
-	if ('calendarId' in date) {
+	if ('timeZoneId' in date) {
+		options.timeZone ??= date.timeZoneId
 		date = new Date(date.epochMilliseconds)
 	}
 	return getDateTimeFormatter(options).format(date)
