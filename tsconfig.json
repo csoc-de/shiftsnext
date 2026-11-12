@@ -2,7 +2,7 @@
 	"extends": "@vue/tsconfig/tsconfig.dom.json",
 	"include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
 	"compilerOptions": {
-		"lib": ["ES2025", "DOM"],
+		"lib": ["ESNext", "DOM"],
 		"outDir": "./js/",
 		"noUncheckedIndexedAccess": true,
 	}
