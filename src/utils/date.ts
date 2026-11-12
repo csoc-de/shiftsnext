@@ -1,6 +1,6 @@
 import { loadState } from '@nextcloud/initial-state'
 import { getCanonicalLocale } from '@nextcloud/l10n'
-import { Temporal, toTemporalInstant } from 'temporal-polyfill'
+import { Intl as IntlExtended, Temporal, toTemporalInstant } from 'temporal-polyfill'
 
 /** The locale set in the personal settings of the logged-in user */
 export const userLocale = getCanonicalLocale()
@@ -184,9 +184,9 @@ export function formatRange(
  * @param options The options to use when creating the formatter. If no time zone
  * is specified, the {@link userTimeZone} is used.
  */
-export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
+export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): IntlExtended.DateTimeFormat {
 	options.timeZone ??= userTimeZone
-	return new Intl.DateTimeFormat(userLocale, options)
+	return new IntlExtended.DateTimeFormat(userLocale, options)
 }
 
 /**
