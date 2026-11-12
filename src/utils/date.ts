@@ -171,7 +171,7 @@ export function formatTemporalObjectRange(
  */
 export function formatDuration(
 	duration: Temporal.DurationLikeObject,
-	style?: 'long' | 'short' | 'narrow' | 'digital',
+	style?: Intl.DurationFormatStyle,
 ) {
 	try {
 		return new Intl.DurationFormat(userLocale, { style }).format(duration)
