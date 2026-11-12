@@ -165,9 +165,10 @@ export function formatRange(
 
 /**
  * Returns a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat | Intl.DateTimeFormat}
- * instance with the specified `options`
+ * instance with the specified `options` using {@link userLocale}
  *
- * @param options The options to use when creating the formatter
+ * @param options The options to use when creating the formatter. If no time zone
+ * is specified, the {@link userTimeZone} is used.
  */
 export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
 	options.timeZone ??= userTimeZone
@@ -287,6 +288,7 @@ export function reviver(key: string, value: unknown): unknown {
 /**
  * Formats a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/Duration | Temporal.Duration} using
  * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DurationFormat | Intl.DurationFormat}
+ * and {@link userLocale}
  *
  * If Intl.DurationFormat is not supported, the plain
  * {@link https://en.wikipedia.org/wiki/ISO_8601#Durations | ISO 8061 Duration}
