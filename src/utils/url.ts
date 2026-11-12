@@ -37,9 +37,7 @@ export function generateUrlWithSearchParams(
 			value = [value]
 		}
 		for (const item of value) {
-			const stringified
-				= item instanceof Date ? item.toISOString() : String(item)
-			urlInstance.searchParams.append(key, stringified)
+			urlInstance.searchParams.append(key, String(item))
 		}
 	}
 	return urlInstance.toString()
