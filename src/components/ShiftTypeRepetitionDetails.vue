@@ -40,7 +40,7 @@ import {
 	shortDayToLocalDayMap,
 } from '../models/shiftType.ts'
 import { APP_ID } from '../utils/appId.ts'
-import { formatDate, formatDuration } from '../utils/date.ts'
+import { formatDuration, formatTemporalObject } from '../utils/date.ts'
 
 const { repetition } = defineProps<{
 	repetition: Repetition
@@ -63,7 +63,7 @@ const daysWithAmounts = computed(() => {
 })
 
 const formattedTime = computed(() => repetition.weekly_type === 'by_day'
-	? formatDate(
+	? formatTemporalObject(
 		repetition.config.reference,
 		{
 			timeStyle: 'short',

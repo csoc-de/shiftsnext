@@ -140,7 +140,7 @@ import {
 	exchangeTypeTranslations,
 } from '../models/shiftExchange.ts'
 import { APP_ID } from '../utils/appId.ts'
-import { formatRange } from '../utils/date.ts'
+import { formatTemporalObjectRange } from '../utils/date.ts'
 import { isShiftAdminAll } from '../utils/groupShiftAdmin.ts'
 import { getInitialApprovalType } from '../utils/initialState.ts'
 import { authUser } from '../utils/user.ts'
@@ -192,7 +192,7 @@ if (
 	'timeZoneId' in shiftExchange.shift_a.start
 	&& 'timeZoneId' in shiftExchange.shift_a.end
 ) {
-	formattedShiftARange = formatRange(
+	formattedShiftARange = formatTemporalObjectRange(
 		shiftExchange.shift_a.start,
 		shiftExchange.shift_a.end,
 		dateTimeFormatOptions,
@@ -201,7 +201,7 @@ if (
 	'toZonedDateTime' in shiftExchange.shift_a.start
 	&& 'toZonedDateTime' in shiftExchange.shift_a.end
 ) {
-	formattedShiftARange = formatRange(
+	formattedShiftARange = formatTemporalObjectRange(
 		shiftExchange.shift_a.start,
 		shiftExchange.shift_a.end,
 		dateOnlyFormatOptions,
@@ -214,7 +214,7 @@ if ('shift_b' in shiftExchange) {
 		'timeZoneId' in shiftExchange.shift_b.start
 		&& 'timeZoneId' in shiftExchange.shift_b.end
 	) {
-		formattedShiftBRange = formatRange(
+		formattedShiftBRange = formatTemporalObjectRange(
 			shiftExchange.shift_b.start,
 			shiftExchange.shift_b.end,
 			dateTimeFormatOptions,
@@ -223,7 +223,7 @@ if ('shift_b' in shiftExchange) {
 		'toZonedDateTime' in shiftExchange.shift_b.start
 		&& 'toZonedDateTime' in shiftExchange.shift_b.end
 	) {
-		formattedShiftBRange = formatRange(
+		formattedShiftBRange = formatTemporalObjectRange(
 			shiftExchange.shift_b.start,
 			shiftExchange.shift_b.end,
 			dateOnlyFormatOptions,

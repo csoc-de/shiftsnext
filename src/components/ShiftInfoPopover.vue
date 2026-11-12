@@ -23,7 +23,7 @@ import type { Shift } from '../models/shift.ts'
 import type { ShiftTypeWrapper } from '../models/shiftsTable.ts'
 
 import NcPopover from '@nextcloud/vue/components/NcPopover'
-import { formatRange } from '../utils/date.ts'
+import { formatTemporalObjectRange } from '../utils/date.ts'
 
 const visible = defineModel<boolean>('visible', { required: true })
 
@@ -63,8 +63,13 @@ if ('id' in shiftOrTypeWrapper) {
 
 let formattedRange = ''
 if ('timeZoneId' in start && 'timeZoneId' in end) {
-	formattedRange = formatRange(start, end, { dateStyle: 'short', timeStyle: 'short' })
+	formattedRange = formatTemporalObjectRange(start, end, {
+		dateStyle: 'short',
+		timeStyle: 'short',
+	})
 } else if ('toZonedDateTime' in start && 'toZonedDateTime' in end) {
-	formattedRange = formatRange(start, end, { dateStyle: 'short' })
+	formattedRange = formatTemporalObjectRange(start, end, {
+		dateStyle: 'short',
+	})
 }
 </script>

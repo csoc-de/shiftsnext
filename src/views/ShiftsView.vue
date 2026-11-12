@@ -41,7 +41,7 @@
 								}}
 							</template>
 							<template v-else>
-								{{ formatDate(data, dayCellFormatOptions) }}
+								{{ formatTemporalObject(data, dayCellFormatOptions) }}
 							</template>
 						</th>
 					</tr>
@@ -181,7 +181,7 @@ import { useUserSettingsStore } from '../stores/userSettings.ts'
 import { APP_ID } from '../utils/appId.ts'
 import { rotate } from '../utils/array.ts'
 import {
-	formatDate,
+	formatTemporalObject,
 	getIsoWeekDate,
 	getZonedDateTimeForDayOfWeek,
 	parseIsoWeekDate,

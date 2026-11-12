@@ -49,6 +49,8 @@ export type IsoWeekDate = IsoWeekDateWithoutDay | IsoWeekDateWithDay
 
 export type DateLike = Date | Temporal.ZonedDateTime | Temporal.PlainDate
 
+export type FormatTemporalObjectValue = Intl.FormattableTemporalObject | Temporal.ZonedDateTime
+
 /**
  * Builds an ISO week date
  *
@@ -118,23 +120,23 @@ export function getZonedDateTimeForDayOfWeek(
 }
 
 /**
- * Formats `date` using {@link userLocale} and the specified `options`
+ * Formats `value` using {@link userLocale} and the specified `options`
  *
- * @param date The date to format
- * @param options The options to use when formatting `date`. If specified, the
+ * @param value The value to format
+ * @param options The options to use when formatting `value`. If specified, the
  * {@link Intl.DateTimeFormatOptions.timeZone | timeZone} option takes
  * precendence over the {@link Temporal.ZonedDateTime.timeZoneId | timeZoneId}
- * of `date` in case `date` is a {@link Temporal.ZonedDateTime} instance
+ * of `value` in case `value` is a {@link Temporal.ZonedDateTime} instance
  */
-export function formatDate(
-	date: DateLike,
+export function formatTemporalObject(
+	value: FormatTemporalObjectValue,
 	options: Intl.DateTimeFormatOptions = {},
 ): string {
-	if ('timeZoneId' in date) {
-		options.timeZone ??= date.timeZoneId
-		date = new Date(date.epochMilliseconds)
+	if ('timeZoneId' in value) {
+		options.timeZone ??= value.timeZoneId
+		value = value.toInstant()
 	}
-	return getDateTimeFormatter(options).format(date)
+	return getDateTimeFormatter(options).format(value)
 }
 
 /**
@@ -147,32 +149,32 @@ export function formatDate(
  * precendence over the {@link Temporal.ZonedDateTime.timeZoneId | timeZoneId}
  * of `start` in case `start` is a {@link Temporal.ZonedDateTime} instance
  */
-export function formatRange(
-	start: Date,
-	end: Date,
+export function formatTemporalObjectRange(
+	start: FormatTemporalObjectValue,
+	end: FormatTemporalObjectValue,
 	options?: Intl.DateTimeFormatOptions,
 ): string
-export function formatRange(
-	start: Temporal.PlainDate,
-	end: Temporal.PlainDate,
+export function formatTemporalObjectRange(
+	start: FormatTemporalObjectValue,
+	end: FormatTemporalObjectValue,
 	options?: Intl.DateTimeFormatOptions,
 ): string
-export function formatRange(
-	start: Temporal.ZonedDateTime,
-	end: Temporal.ZonedDateTime,
+export function formatTemporalObjectRange(
+	start: FormatTemporalObjectValue,
+	end: FormatTemporalObjectValue,
 	options?: Intl.DateTimeFormatOptions,
 ): string
-export function formatRange(
-	start: DateLike,
-	end: DateLike,
+export function formatTemporalObjectRange(
+	start: FormatTemporalObjectValue,
+	end: FormatTemporalObjectValue,
 	options: Intl.DateTimeFormatOptions = {},
 ): string {
 	if ('timeZoneId' in start) {
 		options.timeZone ??= start.timeZoneId
-		start = new Date(start.epochMilliseconds)
+		start = (start.toInstant())
 	}
 	if ('timeZoneId' in end) {
-		end = new Date(end.epochMilliseconds)
+		end = (end.toInstant())
 	}
 	return getDateTimeFormatter(options).formatRange(start, end)
 }
