@@ -2,7 +2,7 @@ import { loadState } from '@nextcloud/initial-state'
 import { getCanonicalLocale } from '@nextcloud/l10n'
 import { Temporal, toTemporalInstant } from 'temporal-polyfill'
 
-export const locale = getCanonicalLocale()
+export const userLocale = getCanonicalLocale()
 
 /**
  * Returns the current system time zone by calling {@link Temporal.Now.timeZoneId}
@@ -169,7 +169,7 @@ export function formatRange(
  */
 export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): Intl.DateTimeFormat {
 	options.timeZone ??= userTimeZone
-	return new Intl.DateTimeFormat(locale, options)
+	return new Intl.DateTimeFormat(userLocale, options)
 }
 
 /**
@@ -298,7 +298,7 @@ export function formatDuration(
 	style?: 'long' | 'short' | 'narrow' | 'digital',
 ) {
 	try {
-		return new Intl.DurationFormat(locale, { style }).format(duration)
+		return new Intl.DurationFormat(userLocale, { style }).format(duration)
 	} catch {
 		return duration.toString()
 	}
