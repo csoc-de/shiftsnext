@@ -47,7 +47,7 @@ export type IsoWeekDateWithDay = `${string}-W${string}-${number}`
  */
 export type IsoWeekDate = IsoWeekDateWithoutDay | IsoWeekDateWithDay
 
-export type DateLike = Date | Temporal.ZonedDateTime | Temporal.PlainDate
+export type TemporalPlainDateCompatibleObject = Temporal.ZonedDateTime | Temporal.PlainDateTime | Temporal.PlainDate
 
 export type FormatTemporalObjectValue = Intl.FormattableTemporalObject | Temporal.ZonedDateTime
 
@@ -75,29 +75,19 @@ export function buildIsoWeekDate<D extends number | undefined = undefined>(
 }
 
 /**
- * Returns the ISO week date for `date`
+ * Returns the ISO week date for `value`
  *
- * @example
- * ```JavaScript
- * const date = new Date("2024-10-07T12:00:00.000Z")
- * getIsoWeekDate(date, true)
- * // returns "2024-W41-1", because Monday October 07 2024 is the first day of week 41 in 2024
- * ```
- *
- * @param date Defaults to the current date
+ * @param value Defaults to now
  * @param withDay If false, the returned string does not include the weekday
  */
 export function getIsoWeekDate<T extends boolean>(
-	date: DateLike = new Date(),
+	value: TemporalPlainDateCompatibleObject = Temporal.Now.zonedDateTimeISO(userTimeZone),
 	withDay: T,
 ): T extends true ? IsoWeekDateWithDay : IsoWeekDateWithoutDay {
-	if ('toISOString' in date) {
-		date = toTemporalInstant.call(date).toZonedDateTimeISO(userTimeZone)
-	}
 	return buildIsoWeekDate(
-		date.yearOfWeek!,
-		date.weekOfYear!,
-		withDay ? date.dayOfWeek : undefined,
+		value.yearOfWeek!,
+		value.weekOfYear!,
+		withDay ? value.dayOfWeek : undefined,
 	)
 }
 
