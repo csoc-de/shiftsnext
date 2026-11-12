@@ -51,44 +51,20 @@ export type TemporalPlainDateCompatibleObject = Temporal.ZonedDateTime | Tempora
 
 export type FormatTemporalObjectValue = Intl.FormattableTemporalObject | Temporal.ZonedDateTime
 
-/**
- * Builds an ISO week date
- *
- * @param year The ISO week-numbering year
- * @param week The ISO week number
- * @param day The weekday number (1 = Monday, 7 = Sunday)
- */
-export function buildIsoWeekDate<D extends number | undefined = undefined>(
-	year: number,
-	week: number,
-	day?: D,
-): D extends number ? IsoWeekDateWithDay : IsoWeekDateWithoutDay {
-	const paddedYear = String(year).padStart(4, '0')
-	const paddedWeek = String(week).padStart(2, '0')
-	let isoWeekDate: IsoWeekDate = `${paddedYear}-W${paddedWeek}`
-	if (day !== undefined) {
-		isoWeekDate = `${isoWeekDate}-${day}`
-	}
-	return isoWeekDate as D extends number
-		? IsoWeekDateWithDay
-		: IsoWeekDateWithoutDay
-}
+export type NumberOfWeeks = 52 | 53
 
 /**
- * Returns the ISO week date for `value`
+ * Gets the number of weeks in `year`, using the ISO 8601 calendar
  *
- * @param value Defaults to now
- * @param withDay If false, the returned string does not include the weekday
+ * @param year The year to get the number of weeks for
  */
-export function getIsoWeekDate<T extends boolean>(
-	value: TemporalPlainDateCompatibleObject = Temporal.Now.zonedDateTimeISO(userTimeZone),
-	withDay: T,
-): T extends true ? IsoWeekDateWithDay : IsoWeekDateWithoutDay {
-	return buildIsoWeekDate(
-		value.yearOfWeek!,
-		value.weekOfYear!,
-		withDay ? value.dayOfWeek : undefined,
-	)
+export function getNumberOfWeeks(year: number): NumberOfWeeks {
+	return Temporal.ZonedDateTime.from({
+		timeZone: userTimeZone,
+		year,
+		month: 12,
+		day: 28,
+	}).weekOfYear as NumberOfWeeks
 }
 
 /**
@@ -107,6 +83,18 @@ export function getZonedDateTimeForDayOfWeek(
 	const distanceOfDays = dayOfWeek - referenceDayOfWeek
 	const duration = Temporal.Duration.from({ days: distanceOfDays })
 	return base.add(duration)
+}
+
+/**
+ * Returns a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat | Intl.DateTimeFormat}
+ * instance with the specified `options` using {@link userLocale}
+ *
+ * @param options The options to use when creating the formatter. If no time zone
+ * is specified, the {@link userTimeZone} is used.
+ */
+export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): IntlExtended.DateTimeFormat {
+	options.timeZone ??= userTimeZone
+	return new IntlExtended.DateTimeFormat(userLocale, options)
 }
 
 /**
@@ -170,15 +158,26 @@ export function formatTemporalObjectRange(
 }
 
 /**
- * Returns a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat | Intl.DateTimeFormat}
- * instance with the specified `options` using {@link userLocale}
+ * Formats a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/Duration | Temporal.Duration} using
+ * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DurationFormat | Intl.DurationFormat}
+ * and {@link userLocale}
  *
- * @param options The options to use when creating the formatter. If no time zone
- * is specified, the {@link userTimeZone} is used.
+ * If Intl.DurationFormat is not supported, the plain
+ * {@link https://en.wikipedia.org/wiki/ISO_8601#Durations | ISO 8061 Duration}
+ * string is returned
+ *
+ * @param duration The duration to format
+ * @param style The formatting style
  */
-export function getDateTimeFormatter(options: Intl.DateTimeFormatOptions): IntlExtended.DateTimeFormat {
-	options.timeZone ??= userTimeZone
-	return new IntlExtended.DateTimeFormat(userLocale, options)
+export function formatDuration(
+	duration: Temporal.DurationLikeObject,
+	style?: 'long' | 'short' | 'narrow' | 'digital',
+) {
+	try {
+		return new Intl.DurationFormat(userLocale, { style }).format(duration)
+	} catch {
+		return duration.toString()
+	}
 }
 
 /**
@@ -191,6 +190,46 @@ export function getIsoCalendarDate(value: TemporalPlainDateCompatibleObject = Te
 		value = value.toPlainDate()
 	}
 	return value.toString() as IsoCalendarDate
+}
+
+/**
+ * Builds an ISO week date
+ *
+ * @param year The ISO week-numbering year
+ * @param week The ISO week number
+ * @param day The weekday number (1 = Monday, 7 = Sunday)
+ */
+export function buildIsoWeekDate<D extends number | undefined = undefined>(
+	year: number,
+	week: number,
+	day?: D,
+): D extends number ? IsoWeekDateWithDay : IsoWeekDateWithoutDay {
+	const paddedYear = String(year).padStart(4, '0')
+	const paddedWeek = String(week).padStart(2, '0')
+	let isoWeekDate: IsoWeekDate = `${paddedYear}-W${paddedWeek}`
+	if (day !== undefined) {
+		isoWeekDate = `${isoWeekDate}-${day}`
+	}
+	return isoWeekDate as D extends number
+		? IsoWeekDateWithDay
+		: IsoWeekDateWithoutDay
+}
+
+/**
+ * Returns the ISO week date for `value`
+ *
+ * @param value Defaults to now
+ * @param withDay If false, the returned string does not include the weekday
+ */
+export function getIsoWeekDate<T extends boolean>(
+	value: TemporalPlainDateCompatibleObject = Temporal.Now.zonedDateTimeISO(userTimeZone),
+	withDay: T,
+): T extends true ? IsoWeekDateWithDay : IsoWeekDateWithoutDay {
+	return buildIsoWeekDate(
+		value.yearOfWeek!,
+		value.weekOfYear!,
+		withDay ? value.dayOfWeek : undefined,
+	)
 }
 
 /**
@@ -231,22 +270,6 @@ export function parseIsoWeekDate(isoWeekDate: IsoWeekDateWithDay): Temporal.Zone
 	return firstDayOfWeek.add({ weeks: week - 1, days: day - 1 })
 }
 
-export type NumberOfWeeks = 52 | 53
-
-/**
- * Gets the number of weeks in `year`, using the ISO 8601 calendar
- *
- * @param year The year to get the number of weeks for
- */
-export function getNumberOfWeeks(year: number): NumberOfWeeks {
-	return Temporal.ZonedDateTime.from({
-		timeZone: userTimeZone,
-		year,
-		month: 12,
-		day: 28,
-	}).weekOfYear as NumberOfWeeks
-}
-
 /**
  * Revives key value pairs
  *
@@ -279,27 +302,4 @@ export function reviver(key: string, value: unknown): unknown {
 		}
 	}
 	return value
-}
-
-/**
- * Formats a {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal/Duration | Temporal.Duration} using
- * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DurationFormat | Intl.DurationFormat}
- * and {@link userLocale}
- *
- * If Intl.DurationFormat is not supported, the plain
- * {@link https://en.wikipedia.org/wiki/ISO_8601#Durations | ISO 8061 Duration}
- * string is returned
- *
- * @param duration The duration to format
- * @param style The formatting style
- */
-export function formatDuration(
-	duration: Temporal.DurationLikeObject,
-	style?: 'long' | 'short' | 'narrow' | 'digital',
-) {
-	try {
-		return new Intl.DurationFormat(userLocale, { style }).format(duration)
-	} catch {
-		return duration.toString()
-	}
 }
