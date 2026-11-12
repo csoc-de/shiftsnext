@@ -50,13 +50,7 @@
 					<div>{{ shiftExchange.shift_a.shift_type.group.display_name }}</div>
 					<div>{{ shiftExchange.shift_a.shift_type.name }}</div>
 					<div>
-						{{ formatRange(
-							shiftExchange.shift_a.start,
-							shiftExchange.shift_a.end,
-							'toZonedDateTime' in shiftExchange.shift_a.start
-								? dateOnlyFormatOptions
-								: dateTimeFormatOptions,
-						) }}
+						{{ formattedShiftARange }}
 					</div>
 				</div>
 
@@ -72,13 +66,7 @@
 						<div>{{ shiftExchange.shift_b.shift_type.group.display_name }}</div>
 						<div>{{ shiftExchange.shift_b.shift_type.name }}</div>
 						<div>
-							{{ formatRange(
-								shiftExchange.shift_b.start,
-								shiftExchange.shift_b.end,
-								'toZonedDateTime' in shiftExchange.shift_b.start
-									? dateOnlyFormatOptions
-									: dateTimeFormatOptions,
-							) }}
+							{{ formattedShiftBRange }}
 						</div>
 					</template>
 					<template v-if="'transfer_to_user' in shiftExchange">
@@ -198,6 +186,50 @@ const renderEditUserBButton = !shiftExchange.done && isUserB
 const renderEditAdminButton = !shiftExchange.done && isGroupShiftAdmin
 const renderCommentButton = !shiftExchange.done && (isUserA || isUserB || isGroupShiftAdmin)
 const renderDeleteButton = (!shiftExchange.done && (isUserA || isUserB)) || isGroupShiftAdmin
+
+let formattedShiftARange = ''
+if (
+	'timeZoneId' in shiftExchange.shift_a.start
+	&& 'timeZoneId' in shiftExchange.shift_a.end
+) {
+	formattedShiftARange = formatRange(
+		shiftExchange.shift_a.start,
+		shiftExchange.shift_a.end,
+		dateTimeFormatOptions,
+	)
+} else if (
+	'toZonedDateTime' in shiftExchange.shift_a.start
+	&& 'toZonedDateTime' in shiftExchange.shift_a.end
+) {
+	formattedShiftARange = formatRange(
+		shiftExchange.shift_a.start,
+		shiftExchange.shift_a.end,
+		dateOnlyFormatOptions,
+	)
+}
+
+let formattedShiftBRange = ''
+if ('shift_b' in shiftExchange) {
+	if (
+		'timeZoneId' in shiftExchange.shift_b.start
+		&& 'timeZoneId' in shiftExchange.shift_b.end
+	) {
+		formattedShiftBRange = formatRange(
+			shiftExchange.shift_b.start,
+			shiftExchange.shift_b.end,
+			dateTimeFormatOptions,
+		)
+	} else if (
+		'toZonedDateTime' in shiftExchange.shift_b.start
+		&& 'toZonedDateTime' in shiftExchange.shift_b.end
+	) {
+		formattedShiftBRange = formatRange(
+			shiftExchange.shift_b.start,
+			shiftExchange.shift_b.end,
+			dateOnlyFormatOptions,
+		)
+	}
+}
 
 /**
  * Opens the edit dialog

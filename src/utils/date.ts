@@ -142,23 +142,36 @@ export function formatDate(
  *
  * @param start The start date
  * @param end The end date
- * @param options The options to use when formatting `dates`
+ * @param options The options to use when formatting the range. If specified, the
+ * {@link Intl.DateTimeFormatOptions.timeZone | timeZone} option takes
+ * precendence over the {@link Temporal.ZonedDateTime.timeZoneId | timeZoneId}
+ * of `start` in case `start` is a {@link Temporal.ZonedDateTime} instance
  */
+export function formatRange(
+	start: Date,
+	end: Date,
+	options?: Intl.DateTimeFormatOptions,
+): string
+export function formatRange(
+	start: Temporal.PlainDate,
+	end: Temporal.PlainDate,
+	options?: Intl.DateTimeFormatOptions,
+): string
+export function formatRange(
+	start: Temporal.ZonedDateTime,
+	end: Temporal.ZonedDateTime,
+	options?: Intl.DateTimeFormatOptions,
+): string
 export function formatRange(
 	start: DateLike,
 	end: DateLike,
 	options: Intl.DateTimeFormatOptions = {},
-) {
-	if ('toZonedDateTime' in start) {
-		start = start.toZonedDateTime(userTimeZone)
-	}
-	if ('calendarId' in start) {
+): string {
+	if ('timeZoneId' in start) {
+		options.timeZone ??= start.timeZoneId
 		start = new Date(start.epochMilliseconds)
 	}
-	if ('toZonedDateTime' in end) {
-		end = end.toZonedDateTime(userTimeZone)
-	}
-	if ('calendarId' in end) {
+	if ('timeZoneId' in end) {
 		end = new Date(end.epochMilliseconds)
 	}
 	return getDateTimeFormatter(options).formatRange(start, end)

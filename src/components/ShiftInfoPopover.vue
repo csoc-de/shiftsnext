@@ -60,12 +60,11 @@ if ('id' in shiftOrTypeWrapper) {
 		},
 	} = shiftOrTypeWrapper)
 }
-const formattedRange = formatRange(
-	start,
-	end,
-	{
-		dateStyle: 'short',
-		timeStyle: 'toZonedDateTime' in start ? undefined : 'short',
-	},
-)
+
+let formattedRange = ''
+if ('timeZoneId' in start && 'timeZoneId' in end) {
+	formattedRange = formatRange(start, end, { dateStyle: 'short', timeStyle: 'short' })
+} else if ('toZonedDateTime' in start && 'toZonedDateTime' in end) {
+	formattedRange = formatRange(start, end, { dateStyle: 'short' })
+}
 </script>
