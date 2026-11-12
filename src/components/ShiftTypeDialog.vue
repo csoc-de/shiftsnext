@@ -298,7 +298,7 @@ const shortDayToAmountMap = ref<ShortDayToAmountMap>({
 	SA: 0,
 	SU: 0,
 })
-const byWeekReference = ref(getIsoWeekDate(undefined, false))
+const byWeekReference = ref(getIsoWeekDate(Temporal.Now.zonedDateTimeISO(getSystemTimeZone()), false))
 const byWeekAmount = ref(1)
 const caldavDescription = ref('')
 const caldavLocation = ref('')
