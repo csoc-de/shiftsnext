@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.12.0] - 2026-11-13
+
+### Added
+
+- Support Nextcloud version 36
+
+### Changed
+
+- Improve the [_How to assign shift admins_](https://github.com/csoc-de/shiftsnext#how-to-assign-shift-admins) section in the README
+- Improve the README regarding the time zone used when rendering shifts and shift types on the shifts view
+- All form inputs now use floating labels
+
+### Fixed
+
+- On the intial _Config missing_ view, which is shown if the app has not yet been configured, the text color now features a better contrast in regards to a light/dark background, improving readability
+- A mismatch between the user's system time zone and the time zone configured in the personal settings of the logged-in user is now properly handled when creating shift types and exchanges
+
 ## [2.11.0] - 2026-06-29
 
 ### Added
@@ -15,7 +32,7 @@
 
 ### Fixed
 
-- Deleting the _common_ or _absence_ calendar now resets the value set in the [administration settings](#calendar).
+- Deleting the _common_ or _absence_ calendar now resets the value set in the [administration settings](https://github.com/csoc-de/shiftsnext#calendar).
 
 ## [2.10.0] - 2026-02-26
 
@@ -25,7 +42,7 @@
 
 ### Changed
 
-- Improve _Calendar sync_ section in the README
+- Improve [_Calendar sync_](https://github.com/csoc-de/shiftsnext#calendar-sync) section in the README
 - Improve explanation of the _Amount_ input fields of the shift type config in the README
 - Shift exchanges are now immediately marked as _done_ as soon as one of the required approvals is rejected. Previously, exchanges weren't marked as _done_ as long as at least one required approval was still pending.
 - The navigation items for shift types and shift exchanges now use a more detailed label
