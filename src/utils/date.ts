@@ -128,18 +128,38 @@ export function formatTemporalObject(
  * of `start` in case `start` is a {@link Temporal.ZonedDateTime} instance
  */
 export function formatTemporalObjectRange(
-	start: FormatTemporalObjectValue,
-	end: FormatTemporalObjectValue,
+	start: Temporal.PlainDate,
+	end: Temporal.PlainDate,
 	options?: Intl.DateTimeFormatOptions,
 ): string
 export function formatTemporalObjectRange(
-	start: FormatTemporalObjectValue,
-	end: FormatTemporalObjectValue,
+	start: Temporal.PlainYearMonth,
+	end: Temporal.PlainYearMonth,
 	options?: Intl.DateTimeFormatOptions,
 ): string
 export function formatTemporalObjectRange(
-	start: FormatTemporalObjectValue,
-	end: FormatTemporalObjectValue,
+	start: Temporal.PlainMonthDay,
+	end: Temporal.PlainMonthDay,
+	options?: Intl.DateTimeFormatOptions,
+): string
+export function formatTemporalObjectRange(
+	start: Temporal.PlainTime,
+	end: Temporal.PlainTime,
+	options?: Intl.DateTimeFormatOptions,
+): string
+export function formatTemporalObjectRange(
+	start: Temporal.PlainDateTime,
+	end: Temporal.PlainDateTime,
+	options?: Intl.DateTimeFormatOptions,
+): string
+export function formatTemporalObjectRange(
+	start: Temporal.Instant,
+	end: Temporal.Instant,
+	options?: Intl.DateTimeFormatOptions,
+): string
+export function formatTemporalObjectRange(
+	start: Temporal.ZonedDateTime,
+	end: Temporal.ZonedDateTime,
 	options?: Intl.DateTimeFormatOptions,
 ): string
 export function formatTemporalObjectRange(
@@ -149,10 +169,10 @@ export function formatTemporalObjectRange(
 ): string {
 	if ('timeZoneId' in start) {
 		options.timeZone ??= start.timeZoneId
-		start = (start.toInstant())
+		start = start.toInstant()
 	}
 	if ('timeZoneId' in end) {
-		end = (end.toInstant())
+		end = end.toInstant()
 	}
 	return getDateTimeFormatter(options).formatRange(start, end)
 }
